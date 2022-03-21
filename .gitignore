@@ -1,0 +1,13 @@
+
+lib/.DS_Store
+.DS_Store
+/.classpath
+/.project
+/target/
+bin/
+*.dylib
+*.dll
+*.so
+chem_phys_data_combined_with_ice_opera.tsv.gz
+hs_err_*
+rebel.xml
