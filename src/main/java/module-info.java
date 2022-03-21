@@ -1,7 +1,14 @@
 module com.sciome.bmdexpress2
 {
+
 	requires javafx.controls;
 	requires javafx.fxml;
+	requires javafx.graphics;
+	requires javafx.base;
+
+	requires javafx.swing;
+	requires javafx.web;
+
 	requires java.desktop;
 	requires com.fasterxml.jackson.annotation;
 	requires fontawesomefx;
@@ -17,11 +24,7 @@ module com.sciome.bmdexpress2
 	requires com.fasterxml.jackson.core;
 	requires com.fasterxml.jackson.databind;
 	requires java.management;
-	requires javafx.swing;
-	requires javafx.web;
 	requires org.controlsfx.controls;
-	requires javafx.graphics;
-	requires javafx.base;
 
 	opens com.sciome.bmdexpress2 to javafx.fxml;
 	opens com.sciome.bmdexpress2.mvp.view.mainstage to javafx.fxml;

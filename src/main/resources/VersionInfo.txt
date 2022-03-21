@@ -1,11 +1,31 @@
 <html>
 <body>
+
+
 <h1>
- BMDExpress 2.3
+ BMDExpress 3
 </h1>
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on July 15, 2020</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on March 24, 2022</h2>
+<h3>
+New Features
+</h3>
+<ul>
+<li>Update BMDS models to 3.x.x</li>
+<li>Model Averaging ToxicR</li>
+<li>Curve Fit Pre-filter</li>
+<li>Curve Plot Overlay</li>
+
+</ul>
+
+
+
+
+<h1>
+ BMDExpress 2.3
+</h1>
+<h2>New Features released on July 15, 2020</h2>
 <h3>
 New Features
 </h3>

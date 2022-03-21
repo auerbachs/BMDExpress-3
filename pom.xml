@@ -36,32 +36,7 @@
     
     <dependencies>
 
-    
-    	<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
-	<dependency>
-	    <groupId>org.openjfx</groupId>
-	    <artifactId>javafx-swing</artifactId>
-	    <version>11.0.1</version>
-	</dependency>
-	
-		<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-web -->
-	<dependency>
-	    <groupId>org.openjfx</groupId>
-	    <artifactId>javafx-web</artifactId>
-	    <version>11.0.1</version>
-	</dependency>
-		
-		
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-controls</artifactId>
-            <version>11</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>11</version>
-        </dependency>
+   
         
         
         	<dependency>
