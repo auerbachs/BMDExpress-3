@@ -23,6 +23,7 @@
         
          <!-- Jcommon Version -->
         <jcommon.version>1.0.23</jcommon.version>
+         <javafx.version>15.0.1</javafx.version>
     </properties>
     
     
@@ -37,9 +38,44 @@
     <dependencies>
 
    
+          <!-- JavaFX -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         
+        <dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-web</artifactId>
+		    <version>${javafx.version}</version>
+		     <scope>runtime</scope>
+		</dependency>
+		
+		
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+             <scope>runtime</scope>
+        </dependency>
         
-        	<dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+             <scope>runtime</scope>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+             <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
