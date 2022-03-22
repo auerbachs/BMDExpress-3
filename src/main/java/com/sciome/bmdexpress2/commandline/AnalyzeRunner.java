@@ -591,35 +591,35 @@ public class AnalyzeRunner
 		// get the dataset to run
 
 		for (OneWayANOVAResults ways : project.getOneWayANOVAResults())
-			if (bmdsConfig.getInputCategory().equalsIgnoreCase("anova"))
+			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
 				if (bmdsConfig.getInputName() == null)
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(ways);
 
 		for (WilliamsTrendResults will : project.getWilliamsTrendResults())
-			if (bmdsConfig.getInputCategory().equalsIgnoreCase("williams"))
+			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
 				if (bmdsConfig.getInputName() == null)
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(will);
 
 		for (OriogenResults ori : project.getOriogenResults())
-			if (bmdsConfig.getInputCategory().equalsIgnoreCase("oriogen"))
+			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
 				if (bmdsConfig.getInputName() == null)
 					processables.add(ori);
 				else if (ori.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(ori);
 
 		for (CurveFitPrefilterResults curve : project.getCurveFitPrefilterResults())
-			if (bmdsConfig.getInputCategory().equalsIgnoreCase("curvefit"))
+			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
 				if (bmdsConfig.getInputName() == null)
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(curve);
 
 		for (DoseResponseExperiment exps : project.getDoseResponseExperiments())
-			if (bmdsConfig.getInputCategory().equalsIgnoreCase("expression"))
+			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
 				if (bmdsConfig.getInputName() == null)
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
@@ -721,35 +721,35 @@ public class AnalyzeRunner
 		// get the dataset to run
 
 		for (OneWayANOVAResults ways : project.getOneWayANOVAResults())
-			if (maConfig.getInputCategory().equalsIgnoreCase("anova"))
+			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
 				if (maConfig.getInputName() == null)
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(ways);
 
 		for (WilliamsTrendResults will : project.getWilliamsTrendResults())
-			if (maConfig.getInputCategory().equalsIgnoreCase("williams"))
+			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
 				if (maConfig.getInputName() == null)
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(will);
 
 		for (OriogenResults ori : project.getOriogenResults())
-			if (maConfig.getInputCategory().equalsIgnoreCase("oriogen"))
+			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
 				if (maConfig.getInputName() == null)
 					processables.add(ori);
 				else if (ori.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(ori);
 
 		for (CurveFitPrefilterResults curve : project.getCurveFitPrefilterResults())
-			if (maConfig.getInputCategory().equalsIgnoreCase("curvefit"))
+			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
 				if (maConfig.getInputName() == null)
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(curve);
 
 		for (DoseResponseExperiment exps : project.getDoseResponseExperiments())
-			if (maConfig.getInputCategory().equalsIgnoreCase("expression"))
+			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
 				if (maConfig.getInputName() == null)
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(maConfig.getInputName()))
@@ -797,35 +797,35 @@ public class AnalyzeRunner
 		// get the dataset to run
 
 		for (OneWayANOVAResults ways : project.getOneWayANOVAResults())
-			if (config.getInputCategory().equalsIgnoreCase("anova"))
+			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
 				if (config.getInputName() == null)
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(ways);
 
 		for (WilliamsTrendResults will : project.getWilliamsTrendResults())
-			if (config.getInputCategory().equalsIgnoreCase("williams"))
+			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
 				if (config.getInputName() == null)
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(will);
 
 		for (OriogenResults ori : project.getOriogenResults())
-			if (config.getInputCategory().equalsIgnoreCase("oriogen"))
+			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
 				if (config.getInputName() == null)
 					processables.add(ori);
 				else if (ori.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(ori);
 
 		for (CurveFitPrefilterResults curve : project.getCurveFitPrefilterResults())
-			if (config.getInputCategory().equalsIgnoreCase("curvefit"))
+			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
 				if (config.getInputName() == null)
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(curve);
 
 		for (DoseResponseExperiment exps : project.getDoseResponseExperiments())
-			if (config.getInputCategory().equalsIgnoreCase("expression"))
+			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
 				if (config.getInputName() == null)
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(config.getInputName()))

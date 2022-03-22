@@ -13,6 +13,7 @@ import java.util.Iterator;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
@@ -45,63 +46,99 @@ public class DeleteRunner
 				c.printStackTrace();
 			}
 		}
-		
-		if(analysisGroup.equals(BMDExpressCommandLine.EXPRESSION)) {
+
+		if (analysisGroup.equals(BMDExpressCommandLine.EXPRESSION))
+		{
 			Iterator<DoseResponseExperiment> it = project.getDoseResponseExperiments().iterator();
-			while(it.hasNext()) {
+			while (it.hasNext())
+			{
 				DoseResponseExperiment curr = it.next();
-				if(curr.getName().equals(analysisName)) {
-					it.remove();
-					break;
-				}
-			}
-		} else if(analysisGroup.equals(BMDExpressCommandLine.ONE_WAY_ANOVA)) {
-			Iterator<OneWayANOVAResults> it = project.getOneWayANOVAResults().iterator();
-			while(it.hasNext()) {
-				OneWayANOVAResults curr = it.next();
-				if(curr.getName().equals(analysisName)) {
-					it.remove();
-					break;
-				}
-			}
-		} else if(analysisGroup.equals(BMDExpressCommandLine.ORIOGEN)) {
-			Iterator<OriogenResults> it = project.getOriogenResults().iterator();
-			while(it.hasNext()) {
-				OriogenResults curr = it.next();
-				if(curr.getName().equals(analysisName)) {
-					it.remove();
-					break;
-				}
-			}
-		} else if(analysisGroup.equals(BMDExpressCommandLine.WILLIAMS)) {
-			Iterator<WilliamsTrendResults> it = project.getWilliamsTrendResults().iterator();
-			while(it.hasNext()) {
-				WilliamsTrendResults curr = it.next();
-				if(curr.getName().equals(analysisName)) {
-					it.remove();
-					break;
-				}
-			}
-		} else if(analysisGroup.equals(BMDExpressCommandLine.BMD_ANALYSIS)) {
-			Iterator<BMDResult> it = project.getbMDResult().iterator();
-			while(it.hasNext()) {
-				BMDResult curr = it.next();
-				if(curr.getName().equals(analysisName)) {
-					it.remove();
-					break;
-				}
-			}
-		} else if(analysisGroup.equals(BMDExpressCommandLine.CATEGORICAL)) {
-			Iterator<CategoryAnalysisResults> it = project.getCategoryAnalysisResults().iterator();
-			while(it.hasNext()) {
-				CategoryAnalysisResults curr = it.next();
-				if(curr.getName().equals(analysisName)) {
+				if (curr.getName().equals(analysisName))
+				{
 					it.remove();
 					break;
 				}
 			}
 		}
-		
+		else if (analysisGroup.equals(BMDExpressCommandLine.ONE_WAY_ANOVA))
+		{
+			Iterator<OneWayANOVAResults> it = project.getOneWayANOVAResults().iterator();
+			while (it.hasNext())
+			{
+				OneWayANOVAResults curr = it.next();
+				if (curr.getName().equals(analysisName))
+				{
+					it.remove();
+					break;
+				}
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.ORIOGEN))
+		{
+			Iterator<OriogenResults> it = project.getOriogenResults().iterator();
+			while (it.hasNext())
+			{
+				OriogenResults curr = it.next();
+				if (curr.getName().equals(analysisName))
+				{
+					it.remove();
+					break;
+				}
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.WILLIAMS))
+		{
+			Iterator<WilliamsTrendResults> it = project.getWilliamsTrendResults().iterator();
+			while (it.hasNext())
+			{
+				WilliamsTrendResults curr = it.next();
+				if (curr.getName().equals(analysisName))
+				{
+					it.remove();
+					break;
+				}
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
+		{
+			Iterator<CurveFitPrefilterResults> it = project.getCurveFitPrefilterResults().iterator();
+			while (it.hasNext())
+			{
+				CurveFitPrefilterResults curr = it.next();
+				if (curr.getName().equals(analysisName))
+				{
+					it.remove();
+					break;
+				}
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.BMD_ANALYSIS))
+		{
+			Iterator<BMDResult> it = project.getbMDResult().iterator();
+			while (it.hasNext())
+			{
+				BMDResult curr = it.next();
+				if (curr.getName().equals(analysisName))
+				{
+					it.remove();
+					break;
+				}
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.CATEGORICAL))
+		{
+			Iterator<CategoryAnalysisResults> it = project.getCategoryAnalysisResults().iterator();
+			while (it.hasNext())
+			{
+				CategoryAnalysisResults curr = it.next();
+				if (curr.getName().equals(analysisName))
+				{
+					it.remove();
+					break;
+				}
+			}
+		}
+
 		try
 		{
 			File selectedFile = new File(inputBM2);
@@ -119,7 +156,7 @@ public class DeleteRunner
 		{
 			i.printStackTrace();
 		}
-		
+
 		System.out.println("delete");
 		System.out.println(inputBM2 + " " + analysisGroup + " " + analysisName);
 	}

@@ -14,6 +14,7 @@ import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.CombinedDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
@@ -141,6 +142,30 @@ public class ExportRunner
 			else
 			{
 				for (WilliamsTrendResults experiment : project.getWilliamsTrendResults())
+				{
+					if (analysisName.equals(experiment.getName()))
+					{
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						break;
+					}
+				}
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
+		{
+			if (analysisName == null || analysisName.trim().equals(""))
+			{
+				List<BMDExpressAnalysisDataSet> dataset = new ArrayList<BMDExpressAnalysisDataSet>();
+				for (CurveFitPrefilterResults experiment : project.getCurveFitPrefilterResults())
+				{
+					dataset.add(experiment);
+				}
+				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+			}
+			else
+			{
+				for (CurveFitPrefilterResults experiment : project.getCurveFitPrefilterResults())
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
