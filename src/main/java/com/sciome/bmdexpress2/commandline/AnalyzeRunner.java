@@ -678,6 +678,8 @@ public class AnalyzeRunner
 		// bmdsConfig setup
 		ModelInputParameters inputParameters = new ModelInputParameters();
 
+		inputParameters.setBMDSMajorVersion("3.x with shared library/DLL");
+
 		inputParameters.setBmdMethod(BMD_METHOD.TOXICR);
 		inputParameters.setMAMethod("Laplace Model Averaging");
 		if (maConfig.getMethod().equals(2))

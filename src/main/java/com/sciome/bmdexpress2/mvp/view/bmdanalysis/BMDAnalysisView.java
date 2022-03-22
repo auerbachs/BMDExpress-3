@@ -1094,7 +1094,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 
 			if (this.toxicRMAMethodRadio.isSelected())
 				inputParameters.setMAMethod("Laplace Model Averaging");
-			else if (this.toxicRMAMethodRadio.isSelected())
+			else if (this.toxicRMCMCMAMethodRadio.isSelected())
 				inputParameters.setMAMethod("MCMC Model Averaging");
 			else
 				inputParameters.setMAMethod("");
