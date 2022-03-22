@@ -459,8 +459,12 @@ public class AnalyzeRunner
 		ModelInputParameters inputParameters = new ModelInputParameters();
 
 		inputParameters.setBmdMethod(BMD_METHOD.TOXICR);
+		inputParameters.setBMDSMajorVersion("3.x with shared library/DLL");
 		if (bmdsConfig.getMethod().equals(1))
+		{
 			inputParameters.setBmdMethod(BMD_METHOD.ORIGINAL);
+			inputParameters.setBMDSMajorVersion("2.x");
+		}
 
 		inputParameters.setFast(false);
 		if (bmdsConfig.getBmdsInputConfig().getBmdUBmdLEstimationMethod().equals(2))
@@ -556,28 +560,46 @@ public class AnalyzeRunner
 			if (modelConfig instanceof HillConfig)
 			{
 				HillModel hillModel = new HillModel();
-				hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
+				if (bmdsConfig.getMethod().equals(1))
+					hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
+				else
+					hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
 				modelsToRun.add(hillModel);
 			}
 			if (modelConfig instanceof PowerConfig)
 			{
 				PowerModel powerModel = new PowerModel();
-				powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
+				if (bmdsConfig.getMethod().equals(1))
+					powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
+				else
+					powerModel.setVersion("Power EPA BMDS MLE ToxicR");
 				modelsToRun.add(powerModel);
 			}
 			if (modelConfig instanceof PolyConfig)
 			{
 				PolyModel polymodel = new PolyModel();
-				polymodel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+
 				polymodel.setDegree(((PolyConfig) modelConfig).getDegree());
+				if (bmdsConfig.getMethod().equals(1))
+					polymodel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+				else if (polymodel.getDegree() == 1)
+					polymodel.setVersion("Linear EPA BMDS MLE ToxicR");
+				else
+					polymodel.setVersion("Poly " + polymodel.getDegree() + " EPA BMDS MLE ToxicR");
 				modelsToRun.add(polymodel);
 			}
 
 			if (modelConfig instanceof ExponentialConfig)
 			{
 				ExponentialModel exponentialModel = new ExponentialModel();
-				exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+
 				exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
+
+				if (bmdsConfig.getMethod().equals(1))
+					exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+				else
+					exponentialModel.setVersion(
+							"Exponential " + exponentialModel.getOption() + " EPA BMDS MLE ToxicR");
 				modelsToRun.add(exponentialModel);
 			}
 
@@ -657,8 +679,12 @@ public class AnalyzeRunner
 		ModelInputParameters inputParameters = new ModelInputParameters();
 
 		inputParameters.setBmdMethod(BMD_METHOD.TOXICR);
+		inputParameters.setMAMethod("Laplace Model Averaging");
 		if (maConfig.getMethod().equals(2))
+		{
 			inputParameters.setBmdMethod(BMD_METHOD.TOXICR_MCMC);
+			inputParameters.setMAMethod("MCMC Model Averaging");
+		}
 
 		inputParameters.setFast(false);
 		if (maConfig.getBmdsInputConfig().getBmdUBmdLEstimationMethod().equals(2))

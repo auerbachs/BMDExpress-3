@@ -30,9 +30,9 @@ import com.sciome.bmdexpress2.util.annotation.URLUtils;
 public class PathwayToGeneSymbolUtility
 {
 
-	private static PathwayToGeneSymbolUtility		instance				= null;
-	private Map<String, Map<String, Set<String>>>	dbToPathwayToGeneSet	= new HashMap<>();
-	private String									geoID					= "";
+	private static PathwayToGeneSymbolUtility instance = null;
+	private Map<String, Map<String, Set<String>>> dbToPathwayToGeneSet = new HashMap<>();
+	private String geoID = "";
 
 	public static PathwayToGeneSymbolUtility getInstance()
 	{
@@ -76,7 +76,6 @@ public class PathwayToGeneSymbolUtility
 		Map<String, String> goTermToDescriptionMap = new HashMap<>();
 		String fName = "gotermlevel.gz";
 		String http = BMDExpressProperties.getInstance().getUpdateURL() + "/go/" + fName;
-		// System.out.println("URL: " + http);
 		goTermToDescriptionMap = new Hashtable<String, String>();
 
 		dbToPathwayToGeneSet.put("GO", new HashMap<>());
@@ -105,7 +104,6 @@ public class PathwayToGeneSymbolUtility
 			fName = "genes2gos.gz";
 			http = BMDExpressProperties.getInstance().getUpdateURL() + "/arrays/" + chipInfo.getProvider()
 					+ "/" + chipInfo.getGeoID() + "/" + fName;
-			// System.out.println("URL: " + http);
 			filePath = BMDExpressConstants.getInstance().ANNOTATION_BASE_PATH + File.separator
 					+ GOTermMap.folders[1] + File.separator + chipInfo.getProvider() + File.separator
 					+ chipInfo.getGeoID() + File.separator;
@@ -174,7 +172,6 @@ public class PathwayToGeneSymbolUtility
 		}
 		catch (IOException e)
 		{
-			// System.out.println("Read preferences problem: " + e);
 			e.printStackTrace();
 		}
 
@@ -249,7 +246,6 @@ public class PathwayToGeneSymbolUtility
 			}
 			catch (IOException e)
 			{
-				// System.out.println("Read preferences problem: " + e);
 				e.printStackTrace();
 			}
 		}

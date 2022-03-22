@@ -48,11 +48,12 @@ public class PolyFitThread extends Thread implements IFitThread
 	private final double DEFAULTDOUBLE = -9999;
 
 	private String tmpFolder;
-	private Map<String,NormalDeviance> deviance;
+	private Map<String, NormalDeviance> deviance;
 
 	public PolyFitThread(CountDownLatch cDownLatch, int degree, List<ProbeResponse> probeResponses,
 			List<StatResult> polyResults, int numThreads, int instanceIndex, int killTime, String tmpFolder,
-			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,Map<String,NormalDeviance> deviance)
+			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
+			Map<String, NormalDeviance> deviance)
 	{
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
@@ -114,7 +115,6 @@ public class PolyFitThread extends Thread implements IFitThread
 		{
 
 			PolyResult polyResult = (PolyResult) polyResults.get(probeIndex);
-			// System.out.println(probeResponses.get(probeIndex).getProbe().getId());
 
 			if (cancel)
 			{
@@ -144,16 +144,16 @@ public class PolyFitThread extends Thread implements IFitThread
 				if (inputParameters.getPolyDegree() == 1)
 					results = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-							inputParameters.getConstantVariance() != 1,dev, inputParameters.isFast());
+							inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast());
 				else
 				{
 					// run it in both directions.
 					double[] results1 = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-							inputParameters.getConstantVariance() != 1, true,dev, inputParameters.isFast());
+							inputParameters.getConstantVariance() != 1, true, dev, inputParameters.isFast());
 					double[] results2 = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-							inputParameters.getConstantVariance() != 1, false,dev, inputParameters.isFast());
+							inputParameters.getConstantVariance() != 1, false, dev, inputParameters.isFast());
 
 					if ((results1[0] > results2[0] && results2[0] != DEFAULTDOUBLE)
 							|| results1[0] == DEFAULTDOUBLE)

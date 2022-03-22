@@ -23,14 +23,14 @@ import com.sciome.bmdexpress2.util.NumberManager;
  */
 public class FilePolyFit extends FileFitBase
 {
-	private String			polyEXE, dPath;
+	private String polyEXE, dPath;
 
-	private final int		SIX			= 6;
-	private final double	minDouble	= -9999;
-	private final String	newline		= "\n";
-	private final String	space1		= " ";
+	private final int SIX = 6;
+	private final double minDouble = -9999;
+	private final String newline = "\n";
+	private final String space1 = " ";
 
-	private final String[]	FLAGS		= { "Wald Confidence Interval", "Asymptotic Correlation Matrix",
+	private final String[] FLAGS = { "Wald Confidence Interval", "Asymptotic Correlation Matrix",
 			"Likelihoods of Interest", "Tests of Interest", "beta_", "fitted ", "BMD = ", "BMDL = ",
 			"BMDU = " };
 
@@ -57,7 +57,6 @@ public class FilePolyFit extends FileFitBase
 
 		if (infile != null)
 		{
-			// System.out.println("Pathf = " + infile.getPath());
 			executeModel(polyEXE, infile.getPath());// infile.getAbsolutePath());
 			File outFile = readOutputs(fileName, outputs);
 			infile.delete();

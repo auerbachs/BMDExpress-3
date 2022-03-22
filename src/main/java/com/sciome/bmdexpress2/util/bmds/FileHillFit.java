@@ -66,7 +66,6 @@ public class FileHillFit extends FileFitBase
 
 		if (infile != null)
 		{
-			// System.out.println("Pathf = " + infile.getPath());
 			executeModel(hillEXE, infile.getPath());// infile.getAbsolutePath());
 			File outFile = readOutputs(name, outputs);
 			infile.delete();
@@ -151,7 +150,6 @@ public class FileHillFit extends FileFitBase
 		try
 		{
 			File file = new File(dPath, name + "_hill.(d)");
-			// System.out.println(file.getAbsolutePath());
 			PrintWriter out = new PrintWriter(new FileWriter(file, false));
 			out.write(bf.toString());
 			out.close();
@@ -211,7 +209,6 @@ public class FileHillFit extends FileFitBase
 							if (matcher.find())
 							{
 								String intercept = matcher.group(1);
-								// System.out.println("intercept: " + intercept);
 								outputs[SIX] = NumberManager.parseDouble(intercept, minDouble);
 							}
 						}
@@ -222,7 +219,6 @@ public class FileHillFit extends FileFitBase
 							if (matcher.find())
 							{
 								String v = matcher.group(1);
-								// System.out.println("v: " + v);
 								outputs[SIX + 1] = NumberManager.parseDouble(v, minDouble);
 							}
 						}
@@ -233,7 +229,6 @@ public class FileHillFit extends FileFitBase
 							if (matcher.find())
 							{
 								String n = matcher.group(1);
-								// System.out.println("n: " + n);
 								outputs[SIX + 2] = NumberManager.parseDouble(n, minDouble);
 							}
 						}
@@ -244,7 +239,6 @@ public class FileHillFit extends FileFitBase
 							if (matcher.find())
 							{
 								String k = matcher.group(1);
-								// System.out.println("k: " + k);
 								outputs[SIX + 3] = NumberManager.parseDouble(k, minDouble);
 							}
 						}

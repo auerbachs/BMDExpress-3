@@ -10,8 +10,8 @@ import java.util.regex.Pattern;
 
 public abstract class FileFitBase
 {
-	private int			killTime;
-	protected boolean	success;
+	private int killTime;
+	protected boolean success;
 
 	protected FileFitBase(int killTime)
 	{
@@ -21,9 +21,7 @@ public abstract class FileFitBase
 
 	protected void executeModel(String EXE, String fName)
 	{
-		// System.out.println("Path = " + path);absolutePath
 		StringBuilder cmd = new StringBuilder(EXE + " " + fName);
-		// System.out.println(cmd.toString());
 
 		try
 		{
@@ -76,8 +74,6 @@ public abstract class FileFitBase
 			{
 				e.printStackTrace();
 			}
-			// System.out.println(getStringFromInputStream(process.getErrorStream()));
-			// System.out.println("time2runt: " + String.valueOf(System.currentTimeMillis() - startTime));
 		}
 		catch (Exception e)
 		{

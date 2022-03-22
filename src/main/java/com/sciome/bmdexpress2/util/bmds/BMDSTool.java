@@ -163,8 +163,12 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 		}
 
 		notes.add("Models fit: " + modelsToFit);
-		notes.add("Maximum Iterations: " + inputParameters.getIterations());
-		notes.add("Confidence Level: " + inputParameters.getConfidence());
+
+		if (inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
+		{
+			notes.add("Maximum Iterations: " + inputParameters.getIterations());
+			notes.add("Confidence Level: " + inputParameters.getConfidence());
+		}
 
 		notes.add("Constant Variance: " + inputParameters.getConstantVariance());
 		if (inputParameters.getBmrType() == 1)
@@ -198,11 +202,15 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 
 		notes.add("Fit Selected Models with Multiple Threads: " + inputParameters.getNumThreads());
 		notes.add("Number of Available Processors On Machine: " + Runtime.getRuntime().availableProcessors());
-		if (inputParameters.getKillTime() > 0)
-			notes.add("Destory Model Processes If Run More Than: " + inputParameters.getKillTime()
-					+ " milliseconds.");
-		else
-			notes.add("Destory Model Processes If Run More Than: none");
+
+		if (inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
+		{
+			if (inputParameters.getKillTime() > 0)
+				notes.add("Destory Model Processes If Run More Than: " + inputParameters.getKillTime()
+						+ " milliseconds.");
+			else
+				notes.add("Destory Model Processes If Run More Than: none");
+		}
 
 		notes.add("BMDL and BMDU Model Selection: "
 				+ modelSelectionParameters.getBestModelSelectionBMDLandBMDU());
@@ -1547,55 +1555,6 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 		}
 		catch (IOException e)
 		{}
-	}
-
-	private void model2FileOut(BufferedWriter OUT, String id, double[] array)
-	{
-		try
-		{
-			OUT.write(id);
-
-			for (int i = 0; i < array.length; i++)
-			{
-				OUT.write("\t" + array[i]);
-			}
-
-			OUT.write("\n");
-			OUT.flush();
-		}
-		catch (IOException e)
-		{}
-	}
-
-	private void threadedParameters2File(BufferedWriter OUT, int col, double[][] parameters)
-	{
-		// System.out.println("modelParametersToFile(): " + parameters.length);
-
-		// try
-		// {
-		// String[] ids = modelParams.idNames();
-		// System.out.println("IDs(): " + ids.length);
-
-		// for (int i = 0; i < ids.length; i++)
-		// {
-		// model2FileOut(OUT, ids[i], parameters[i]);
-		// OUT.write(ids[i]);
-
-		// for (int j = 0; j < 5; j++) {
-		// OUT.write("\t" + outMatrix[i][col + j]);
-		// }
-
-		// for (int j = 0; j < parameters[i].length; j++) {
-		// OUT.write("\t" + parameters[i][j]);
-		// }
-
-		// OUT.write("\t" + outMatrix[i][col + 5] + "\n"); // direction
-		// }
-
-		// OUT.flush();
-		// }
-		// catch (IOException e)
-		// {}
 	}
 
 	private void closeOutFile(BufferedWriter OUT)

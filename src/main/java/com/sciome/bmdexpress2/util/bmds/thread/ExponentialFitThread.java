@@ -43,14 +43,14 @@ public class ExponentialFitThread extends Thread implements IFitThread
 	private boolean cancel = false;
 	private int expOption = 0;
 	private String tmpFolder;
-	private Map<String,NormalDeviance> deviance;
+	private Map<String, NormalDeviance> deviance;
 
 	public ExponentialFitThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
 			List<StatResult> powerResults, int numThread, int instanceIndex, int option, int killTime,
-			String tmpFolder, IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter, 
-			Map<String,NormalDeviance> deviance)
+			String tmpFolder, IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
+			Map<String, NormalDeviance> deviance)
 	{
-		 this.deviance= deviance;
+		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
 		this.cdLatch = cdLatch;
 		this.probeResponses = probeResponses;
@@ -125,8 +125,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 
 			try
 			{
-				// System.out.println(probeResponses.get(probeIndex).getProbe().getId());
-				NormalDeviance dev = deviance.get( probeResponses.get(probeIndex).getProbe().getId());
+				NormalDeviance dev = deviance.get(probeResponses.get(probeIndex).getProbe().getId());
 				String id = probeResponses.get(probeIndex).getProbe().getId().replaceAll("\\s", "_");
 				id = String.valueOf(randInt) + "_" + BMDExpressProperties.getInstance()
 						.getNextTempFile(this.tmpFolder, String.valueOf(Math.abs(id.hashCode())), ".(d)");
@@ -142,10 +141,10 @@ public class ExponentialFitThread extends Thread implements IFitThread
 					expModel = ToxicRConstants.EXP5;
 				double[] results = BMDSToxicRUtils.calculateToxicR(expModel, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1,dev, inputParameters.isFast());
+						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast());
 
-				//if (expModel == ToxicRConstants.EXP3) // move param d to param c
-				//	results[9] = results[10];
+				// if (expModel == ToxicRConstants.EXP3) // move param d to param c
+				// results[9] = results[10];
 				if (expModel == ToxicRConstants.EXP5) // anti log c
 					results[9] = Math.pow(Math.E, results[9]);
 				if (results != null)

@@ -37,11 +37,12 @@ public class FUNLFitThread extends Thread implements IFitThread
 	private boolean cancel = false;
 	private String tmpFolder;
 
-	private Map<String,NormalDeviance> deviance;
+	private Map<String, NormalDeviance> deviance;
 
 	public FUNLFitThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
 			List<StatResult> funlResults, int numThread, int instanceIndex, int killTime, String tmpFolder,
-			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,Map<String,NormalDeviance> deviance)
+			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
+			Map<String, NormalDeviance> deviance)
 	{
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
@@ -97,7 +98,6 @@ public class FUNLFitThread extends Thread implements IFitThread
 		{
 
 			FunlResult funlResult = (FunlResult) funlResults.get(probeIndex);
-			// System.out.println(probeResponses.get(probeIndex).getProbe().getId());
 
 			if (cancel)
 			{
@@ -106,7 +106,7 @@ public class FUNLFitThread extends Thread implements IFitThread
 
 			try
 			{
-				NormalDeviance dev = deviance.get( probeResponses.get(probeIndex).getProbe().getId());
+				NormalDeviance dev = deviance.get(probeResponses.get(probeIndex).getProbe().getId());
 				String id = probeResponses.get(probeIndex).getProbe().getId().replaceAll("\\s", "_");
 				id = String.valueOf(randInt) + "_" + BMDExpressProperties.getInstance()
 						.getNextTempFile(this.tmpFolder, String.valueOf(Math.abs(id.hashCode())), ".(d)");
@@ -118,7 +118,7 @@ public class FUNLFitThread extends Thread implements IFitThread
 
 				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.FUNL, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1,dev, inputParameters.isFast());
+						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast());
 
 				if (results != null)
 				{

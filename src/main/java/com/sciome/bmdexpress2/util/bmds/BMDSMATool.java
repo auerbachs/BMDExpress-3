@@ -114,8 +114,6 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		}
 
 		notes.add("Models fit: " + modelsToFit);
-		notes.add("Maximum Iterations: " + inputParameters.getIterations());
-		notes.add("Confidence Level: " + inputParameters.getConfidence());
 
 		notes.add("Constant Variance: " + inputParameters.getConstantVariance());
 		if (inputParameters.getBmrType() == 1)
@@ -123,18 +121,11 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		else if (inputParameters.getBmrType() == 2)
 			notes.add("BMR Type: Relative Deviation");
 		notes.add("BMR Factor: " + inputParameters.getBmrLevel());
-		// if (modelsToRun != null && isModelInThere("power", modelsToRun))
-		// notes.add("Restrict Power: " + inputParameters.getRestirctPower());
 		notes.add("Highest Dose: " + maxDose);
 		notes.add("Lowest Positive Dose: " + lowPDose);
 
 		notes.add("Fit Selected Models with Multiple Threads: " + inputParameters.getNumThreads());
 		notes.add("Number of Available Processors On Machine: " + Runtime.getRuntime().availableProcessors());
-		if (inputParameters.getKillTime() > 0)
-			notes.add("Destory Model Processes If Run More Than: " + inputParameters.getKillTime()
-					+ " milliseconds.");
-		else
-			notes.add("Destory Model Processes If Run More Than: none");
 
 		analysisInfo.setNotes(notes);
 

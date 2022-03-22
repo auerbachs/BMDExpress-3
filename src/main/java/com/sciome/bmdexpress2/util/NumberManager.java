@@ -13,17 +13,17 @@ import java.text.DecimalFormat;
 
 public class NumberManager
 {
-	public static final String		LONGPATTERN	= "#.###############################################";
+	public static final String LONGPATTERN = "#.###############################################";
 
-	public static final String[]	PATTERNS	= { "#.", "#.#", "#.##", "#.###", "#.####", "#.#####",
-			"#.######", "#.#######", "#.########", "#.#########", "#.##########", "#.###########",
-			"#.############", "#.#############", "#.##############", "#.###############" };
+	public static final String[] PATTERNS = { "#.", "#.#", "#.##", "#.###", "#.####", "#.#####", "#.######",
+			"#.#######", "#.########", "#.#########", "#.##########", "#.###########", "#.############",
+			"#.#############", "#.##############", "#.###############" };
 
-	private static final double[]	DEFAULTS	= { 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001,
+	private static final double[] DEFAULTS = { 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001,
 			0.00000001, 0.000000001, 0.0000000001, 0.00000000001, 0.000000000001, 0.0000000000001,
 			0.00000000000001, 0.000000000000001, 0.0000000000000001 };
 
-	private static final int		MAX			= 15;
+	private static final int MAX = 15;
 
 	public NumberManager()
 	{
@@ -73,7 +73,6 @@ public class NumberManager
 		}
 		catch (ClassCastException e)
 		{
-			System.out.println("intValue(): " + obj);
 			e.printStackTrace();
 		}
 
@@ -215,12 +214,12 @@ public class NumberManager
 	private static int redicimal(int decimals, double smaller)
 	{
 		double ten = 10;
-		double value = 1 / Math.pow(ten, (double) decimals);
+		double value = 1 / Math.pow(ten, decimals);
 
 		while (smaller < value)
 		{
 			decimals += 1;
-			value = 1 / Math.pow(ten, (double) decimals);
+			value = 1 / Math.pow(ten, decimals);
 		}
 
 		return decimals - 1;

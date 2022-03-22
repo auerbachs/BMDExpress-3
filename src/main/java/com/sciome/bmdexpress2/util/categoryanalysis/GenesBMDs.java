@@ -22,10 +22,10 @@ import java.util.Vector;
  */
 public class GenesBMDs
 {
-	private Vector<String>	vectGenes, bmdSortGenes, bmdlSortGenes;
-	private int[]			counts, bmdIndices, bmdlIndices;
-	private double[]		avgBMDs, avgBMDLs;
-	private int				max;
+	private Vector<String> vectGenes, bmdSortGenes, bmdlSortGenes;
+	private int[] counts, bmdIndices, bmdlIndices;
+	private double[] avgBMDs, avgBMDLs;
+	private int max;
 
 	public GenesBMDs()
 	{
@@ -122,14 +122,6 @@ public class GenesBMDs
 		}
 
 		return orderedGenes;
-	}
-
-	private void printOut(Vector<String> genes, double[] values)
-	{
-		for (int i = 0; i < max; i++)
-		{
-			System.out.println(genes.get(i) + "\t" + values[i]);
-		}
 	}
 
 	public int maxGenes()

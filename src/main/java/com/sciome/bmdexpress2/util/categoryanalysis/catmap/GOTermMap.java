@@ -41,9 +41,9 @@ import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
 public class GOTermMap extends CategoryMapBase
 {
 
-	private int						goTermIdx	= 0;
+	private int goTermIdx = 0;
 
-	public static final String[]	folders		= { "go", "arrays" };
+	public static final String[] folders = { "go", "arrays" };
 
 	/**
 	 * class contructor used for gene's pathways
@@ -73,7 +73,6 @@ public class GOTermMap extends CategoryMapBase
 		Vector<String> allGenes = probeGeneMaps.getAllGenes();
 		Vector<String> dataSetGenes = probeGeneMaps.getDataSetGenes();
 		HashSet<String> allGHashSet = new HashSet<>(allGenes);
-		// System.out.println("allGHashSet = " + allGHashSet.size());
 
 		Vector<String> subGenes = probeGeneMaps.probesGenes();
 		HashSet<String> subGHashSet = new HashSet<>(subGenes);
@@ -156,7 +155,6 @@ public class GOTermMap extends CategoryMapBase
 			String fName = "genes2gos.gz";
 			String http = BMDExpressProperties.getInstance().getUpdateURL() + "/arrays/"
 					+ chipInfo.getProvider() + "/" + chipInfo.getGeoID() + "/" + fName;
-			// System.out.println("URL: " + http);
 			Vector<String> geneIds = new Vector<String>(probeGeneMaps.subTotalGenes());
 			String filePath = BMDExpressConstants.getInstance().ANNOTATION_BASE_PATH + File.separator
 					+ folders[1] + File.separator + chipInfo.getProvider() + File.separator
@@ -247,10 +245,8 @@ public class GOTermMap extends CategoryMapBase
 	private void filedGoAccLevelTerm()
 	{
 		int size = subHash.size();
-		// System.out.println("subHash = " + size);
 		String fName = "gotermlevel.gz";
 		String http = BMDExpressProperties.getInstance().getUpdateURL() + "/go/" + fName;
-		// System.out.println("URL: " + http);
 		categoryHash = new Hashtable<String, String>();
 
 		for (int i = 0; i < BMDExpressConstants.getInstance().GO_CATEGORIES.length; i++)
@@ -302,7 +298,6 @@ public class GOTermMap extends CategoryMapBase
 					}
 
 					categoryIdentifiers = vectGos;
-					// System.out.println(size + " gotermlevel " + goLevelTerms.length);
 				}
 				catch (Exception e)
 				{

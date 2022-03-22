@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.sciome.bmdexpress2.mvp.model.IGeneContainer;
 import com.sciome.bmdexpress2.mvp.model.IMarkable;
@@ -31,7 +32,6 @@ import com.sciome.bmdexpress2.mvp.model.category.ivive.IVIVEResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.util.NumberManager;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = GOAnalysisResult.class, name = "go"),
@@ -44,137 +44,137 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	/**
 	 * 
 	 */
-	private static final long					serialVersionUID				= -3651047352571831492L;
+	private static final long serialVersionUID = -3651047352571831492L;
 
-	private Long								id;
-	protected CategoryIdentifier				categoryIdentifier;
+	private Long id;
+	protected CategoryIdentifier categoryIdentifier;
 
-	private List<ReferenceGeneProbeStatResult>	referenceGeneProbeStatResults;
-	private Integer								geneAllCountFromExperiment;
-	private Integer								geneAllCount;
-	private Integer								geneCountSignificantANOVA;
-	private Double								percentage;
+	private List<ReferenceGeneProbeStatResult> referenceGeneProbeStatResults;
+	private Integer geneAllCountFromExperiment;
+	private Integer geneAllCount;
+	private Integer geneCountSignificantANOVA;
+	private Double percentage;
 
 	// filter count vars
-	private Integer								genesWithBMDLessEqualHighDose;
-	private Integer								genesWithBMDpValueGreaterEqualValue;
-	private Integer								genesWithBMDBMDLRatioBelowValue;
-	private Integer								genesWithBMDUBMDLRatioBelowValue;
-	private Integer								genesWithBMDUBMDRatioBelowValue;
-	private Integer								genesWithNFoldBelowLowPostiveDoseValue;
-	private Integer								genesWithFoldChangeAboveValue;
-	private Integer								genesWithPrefilterPValueAboveValue;
-	private Integer								genesWithPrefilterAdjustedPValueAboveValue;
+	private Integer genesWithBMDLessEqualHighDose;
+	private Integer genesWithBMDpValueGreaterEqualValue;
+	private Integer genesWithBMDBMDLRatioBelowValue;
+	private Integer genesWithBMDUBMDLRatioBelowValue;
+	private Integer genesWithBMDUBMDRatioBelowValue;
+	private Integer genesWithNFoldBelowLowPostiveDoseValue;
+	private Integer genesWithFoldChangeAboveValue;
+	private Integer genesWithPrefilterPValueAboveValue;
+	private Integer genesWithPrefilterAdjustedPValueAboveValue;
 
-	private Integer								genesThatPassedAllFilters;
+	private Integer genesThatPassedAllFilters;
 
-	private Integer								fishersA;
-	private Integer								fishersB;
-	private Integer								fishersC;
-	private Integer								fishersD;
-	private Double								fishersExactLeftPValue;
-	private Double								fishersExactRightPValue;
-	private Double								fishersExactTwoTailPValue;
+	private Integer fishersA;
+	private Integer fishersB;
+	private Integer fishersC;
+	private Integer fishersD;
+	private Double fishersExactLeftPValue;
+	private Double fishersExactRightPValue;
+	private Double fishersExactTwoTailPValue;
 
-	private String								genesWithConflictingProbeSets	= null;
+	private String genesWithConflictingProbeSets = null;
 
 	// bmd/bmdl/bmdu stats
-	private Double								bmdMean;
-	private Double								bmdMedian;
-	private Double								bmdMinimum;
-	private Double								bmdSD;
-	private Double								bmdWMean;
-	private Double								bmdWSD;
+	private Double bmdMean;
+	private Double bmdMedian;
+	private Double bmdMinimum;
+	private Double bmdSD;
+	private Double bmdWMean;
+	private Double bmdWSD;
 
-	private Double								bmdlMean;
-	private Double								bmdlMedian;
-	private Double								bmdlMinimum;
-	private Double								bmdlSD;
-	private Double								bmdlWMean;
-	private Double								bmdlWSD;
+	private Double bmdlMean;
+	private Double bmdlMedian;
+	private Double bmdlMinimum;
+	private Double bmdlSD;
+	private Double bmdlWMean;
+	private Double bmdlWSD;
 
-	private Double								bmduMean;
-	private Double								bmduMedian;
-	private Double								bmduMinimum;
-	private Double								bmduSD;
-	private Double								bmduWMean;
-	private Double								bmduWSD;
+	private Double bmduMean;
+	private Double bmduMedian;
+	private Double bmduMinimum;
+	private Double bmduSD;
+	private Double bmduWMean;
+	private Double bmduWSD;
 
 	// percentile fields
-	private Double								fifthPercentileIndex;
-	private Double								bmdFifthPercentileTotalGenes;
+	private Double fifthPercentileIndex;
+	private Double bmdFifthPercentileTotalGenes;
 
-	private Double								tenthPercentileIndex;
-	private Double								bmdTenthPercentileTotalGenes;
+	private Double tenthPercentileIndex;
+	private Double bmdTenthPercentileTotalGenes;
 
-	private Double								genesUpBMDMean;
-	private Double								genesUpBMDMedian;
-	private Double								genesUpBMDSD;
+	private Double genesUpBMDMean;
+	private Double genesUpBMDMedian;
+	private Double genesUpBMDSD;
 
-	private Double								genesUpBMDLMean;
-	private Double								genesUpBMDLMedian;
-	private Double								genesUpBMDLSD;
+	private Double genesUpBMDLMean;
+	private Double genesUpBMDLMedian;
+	private Double genesUpBMDLSD;
 
-	private Double								genesUpBMDUMean;
-	private Double								genesUpBMDUMedian;
-	private Double								genesUpBMDUSD;
+	private Double genesUpBMDUMean;
+	private Double genesUpBMDUMedian;
+	private Double genesUpBMDUSD;
 
-	private Double								genesDownBMDMean;
-	private Double								genesDownBMDMedian;
-	private Double								genesDownBMDSD;
+	private Double genesDownBMDMean;
+	private Double genesDownBMDMedian;
+	private Double genesDownBMDSD;
 
-	private Double								genesDownBMDLMean;
-	private Double								genesDownBMDLMedian;
-	private Double								genesDownBMDLSD;
+	private Double genesDownBMDLMean;
+	private Double genesDownBMDLMedian;
+	private Double genesDownBMDLSD;
 
-	private Double								genesDownBMDUMean;
-	private Double								genesDownBMDUMedian;
-	private Double								genesDownBMDUSD;
+	private Double genesDownBMDUMean;
+	private Double genesDownBMDUMedian;
+	private Double genesDownBMDUSD;
 
 	// statResult counts
 	// could be computed from probestatresult
-	private Map<StatResult, Integer>			statResultCounts;
+	private Map<StatResult, Integer> statResultCounts;
 
 	// row data for the table view.
-	protected transient List<Object>			row;
+	protected transient List<Object> row;
 
-	private transient String					genes;
-	private transient String					geneSymbols;
+	private transient String genes;
+	private transient String geneSymbols;
 
 	// converting the object data to row data will require lots of string buffers.
 	// let them all use the same object to reduce instantiation
-	private transient StringBuffer				stringBuffer					= new StringBuffer();
+	private transient StringBuffer stringBuffer = new StringBuffer();
 
 	// this is calculated and provides a general direction of the dose response curves
-	private transient AdverseDirectionEnum		overallDirection;
-	private transient Double					percentWithOverallDirectionUP;
-	private transient Double					percentWithOverallDirectionDOWN;
-	private transient Double					percentWithOverallDirectionConflict;
+	private transient AdverseDirectionEnum overallDirection;
+	private transient Double percentWithOverallDirectionUP;
+	private transient Double percentWithOverallDirectionDOWN;
+	private transient Double percentWithOverallDirectionConflict;
 
 	// fold change stats
-	private transient Double					totalFoldChange;
-	private transient Double					meanFoldChange;
-	private transient Double					medianFoldChange;
-	private transient Double					maxFoldChange;
-	private transient Double					minFoldChange;
-	private transient Double					stdDevFoldChange;
+	private transient Double totalFoldChange;
+	private transient Double meanFoldChange;
+	private transient Double medianFoldChange;
+	private transient Double maxFoldChange;
+	private transient Double minFoldChange;
+	private transient Double stdDevFoldChange;
 
 	// 95% confidence interval stats
-	private transient Double					bmdLower95;
-	private transient Double					bmdUpper95;
-	private transient Double					bmdlLower95;
-	private transient Double					bmdlUpper95;
-	private transient Double					bmduUpper95;
-	private transient Double					bmduLower95;
+	private transient Double bmdLower95;
+	private transient Double bmdUpper95;
+	private transient Double bmdlLower95;
+	private transient Double bmdlUpper95;
+	private transient Double bmduUpper95;
+	private transient Double bmduLower95;
 
-	private transient Double					bmdFifthPercentile;
-	private transient Double					bmdlFifthPercentile;
-	private transient Double					bmduFifthPercentile;
-	private transient Double					bmdTenthPercentile;
-	private transient Double					bmdlTenthPercentile;
-	private transient Double					bmduTenthPercentile;
+	private transient Double bmdFifthPercentile;
+	private transient Double bmdlFifthPercentile;
+	private transient Double bmduFifthPercentile;
+	private transient Double bmdTenthPercentile;
+	private transient Double bmdlTenthPercentile;
+	private transient Double bmduTenthPercentile;
 
-	private List<IVIVEResult>					ivive;
+	private List<IVIVEResult> ivive;
 
 	private StringBuffer getStringBuffer()
 	{
@@ -2090,7 +2090,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 				ProbeStatResult prs = ref.getProbeStatResults().get(i);
 				if (prs == null || prs.getProbeResponse() == null
 						|| prs.getProbeResponse().getProbe() == null)
-					System.out.println();
+				{}
 				else
 					stringBuffer
 							.append(ref.getProbeStatResults().get(i).getProbeResponse().getProbe().getId());

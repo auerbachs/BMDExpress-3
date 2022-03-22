@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.sciome.commons.math.httk.calc.calc_analytic_css.Model;
-import com.sciome.commons.math.httk.calc.calc_analytic_css.Units;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.category.ivive.ForwardPKResult;
@@ -23,6 +21,8 @@ import com.sciome.bmdexpress2.util.categoryanalysis.CategoryMapTool;
 import com.sciome.bmdexpress2.util.categoryanalysis.ICategoryMapToolProgress;
 import com.sciome.bmdexpress2.util.categoryanalysis.IVIVEParameters;
 import com.sciome.bmdexpress2.util.categoryanalysis.IVIVEParameters.ConcentrationUnits;
+import com.sciome.commons.math.httk.calc.calc_analytic_css.Model;
+import com.sciome.commons.math.httk.calc.calc_analytic_css.Units;
 import com.sciome.commons.math.httk.calc.calc_mc_oral_equiv;
 import com.sciome.commons.math.httk.calc.get_cmax_bycas;
 
@@ -44,46 +44,79 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 		categoryAnalysisResults.setBmdResult(bmdResult);
 		categoryAnalysisResults.setAnalysisInfo(analysisInfo);
 
-		System.out.println(params.getIviveParameters());
-		if (params.getIviveParameters() != null) {
+		if (params.getIviveParameters() != null)
+		{
 			String species = params.getIviveParameters().getSpecies();
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound Name: " + params.getIviveParameters().getCompound().getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound CASRN: " + params.getIviveParameters().getCompound().getCAS());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound SMILES: " + params.getIviveParameters().getCompound().getSMILES());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound MW: " + params.getIviveParameters().getCompound().getMW());
-			if(params.getIviveParameters().getCompound().getMWSource() != null)
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound MW Source: " + params.getIviveParameters().getCompound().getMWSource().getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound LogP: " + params.getIviveParameters().getCompound().getLogP());
-			if(params.getIviveParameters().getCompound().getLogPSource() != null)
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound LogP Source: " + params.getIviveParameters().getCompound().getLogPSource().getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound pKa Donor: " + params.getIviveParameters().getCompound().getpKaDonors());
-			if(params.getIviveParameters().getCompound().getpKaDonorsSource() != null)
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound pKa Donor Source: " + params.getIviveParameters().getCompound().getpKaDonorsSource().getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound pKa Acceptor: " + params.getIviveParameters().getCompound().getpKaAcceptors());
-			if(params.getIviveParameters().getCompound().getpKaAcceptorsSource() != null)
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound pKa Acceptor Source: " + params.getIviveParameters().getCompound().getpKaAcceptorsSource().getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound CLint: " + params.getIviveParameters().getCompound().getInVitroParam(species, "Clint"));
-//			if(params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species, "Clint") != null)
-//				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound CLint Source: " + params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species, "Clint").getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound Fup: " + params.getIviveParameters().getCompound().getInVitroParam(species, "Funbound.plasma"));
-//			if(params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species, "Funbound.plasma") != null)
-//				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound Fup Source: " + params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species, "Funbound.plasma").getName());
-			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Species: " + params.getIviveParameters().getSpecies());
-			if(params.getIviveParameters().isInvivo()) {
+			categoryAnalysisResults.getAnalysisInfo().getNotes()
+					.add("IVIVE Compound Name: " + params.getIviveParameters().getCompound().getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes()
+					.add("IVIVE Compound CASRN: " + params.getIviveParameters().getCompound().getCAS());
+			categoryAnalysisResults.getAnalysisInfo().getNotes()
+					.add("IVIVE Compound SMILES: " + params.getIviveParameters().getCompound().getSMILES());
+			categoryAnalysisResults.getAnalysisInfo().getNotes()
+					.add("IVIVE Compound MW: " + params.getIviveParameters().getCompound().getMW());
+			if (params.getIviveParameters().getCompound().getMWSource() != null)
+				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound MW Source: "
+						+ params.getIviveParameters().getCompound().getMWSource().getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes()
+					.add("IVIVE Compound LogP: " + params.getIviveParameters().getCompound().getLogP());
+			if (params.getIviveParameters().getCompound().getLogPSource() != null)
+				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound LogP Source: "
+						+ params.getIviveParameters().getCompound().getLogPSource().getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes().add(
+					"IVIVE Compound pKa Donor: " + params.getIviveParameters().getCompound().getpKaDonors());
+			if (params.getIviveParameters().getCompound().getpKaDonorsSource() != null)
+				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound pKa Donor Source: "
+						+ params.getIviveParameters().getCompound().getpKaDonorsSource().getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound pKa Acceptor: "
+					+ params.getIviveParameters().getCompound().getpKaAcceptors());
+			if (params.getIviveParameters().getCompound().getpKaAcceptorsSource() != null)
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Compound pKa Acceptor Source: " + params.getIviveParameters()
+								.getCompound().getpKaAcceptorsSource().getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound CLint: "
+					+ params.getIviveParameters().getCompound().getInVitroParam(species, "Clint"));
+			// if(params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species, "Clint") !=
+			// null)
+			// categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound CLint Source: " +
+			// params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species,
+			// "Clint").getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound Fup: "
+					+ params.getIviveParameters().getCompound().getInVitroParam(species, "Funbound.plasma"));
+			// if(params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species,
+			// "Funbound.plasma") != null)
+			// categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Compound Fup Source: " +
+			// params.getIviveParameters().getCompound().getIVdataSourceForSpecies(species,
+			// "Funbound.plasma").getName());
+			categoryAnalysisResults.getAnalysisInfo().getNotes()
+					.add("IVIVE Species: " + params.getIviveParameters().getSpecies());
+			if (params.getIviveParameters().isInvivo())
+			{
 				calculateInVivoToInVitro(categoryAnalysisResults, bmdResult, params.getIviveParameters());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("Number of Doses: " + params.getIviveParameters().getNumberOfDoses());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Dose Spacing: " + params.getIviveParameters().getDoseSpacing());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Time From Last Dose to Sacrifice: " + params.getIviveParameters().getFinalTime());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Input Units: " + params.getIviveParameters().getConcentrationUnits());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Output Units: " + params.getIviveParameters().getDoseUnits());
-			} else {
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("Number of Doses: " + params.getIviveParameters().getNumberOfDoses());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Dose Spacing: " + params.getIviveParameters().getDoseSpacing());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Time From Last Dose to Sacrifice: "
+								+ params.getIviveParameters().getFinalTime());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Input Units: " + params.getIviveParameters().getConcentrationUnits());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Output Units: " + params.getIviveParameters().getDoseUnits());
+			}
+			else
+			{
 				calculateInVitroToInVivo(categoryAnalysisResults, params.getIviveParameters());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Quantile: " + params.getIviveParameters().getQuantile());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Input Units: " + params.getIviveParameters().getDoseUnits());
-				categoryAnalysisResults.getAnalysisInfo().getNotes().add("IVIVE Output Units: " + params.getIviveParameters().getConcentrationUnits());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Quantile: " + params.getIviveParameters().getQuantile());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Input Units: " + params.getIviveParameters().getDoseUnits());
+				categoryAnalysisResults.getAnalysisInfo().getNotes()
+						.add("IVIVE Output Units: " + params.getIviveParameters().getConcentrationUnits());
 			}
 		}
-		
+
 		if (params.getDeduplicateGeneSets())
 			categoryAnalysisResults.deDuplicateGeneSets();
 
@@ -105,20 +138,38 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 			catResult.calculate5and10Percentiles();
 
 			double multiplicationFactor = 1.0;
-			if(params.getConcentrationUnits().equals(ConcentrationUnits.nM)) {
+			if (params.getConcentrationUnits().equals(ConcentrationUnits.nM))
+			{
 				multiplicationFactor = 1.0 / 1e3;
-			} else if(params.getConcentrationUnits().equals(ConcentrationUnits.pM)) {
+			}
+			else if (params.getConcentrationUnits().equals(ConcentrationUnits.pM))
+			{
 				multiplicationFactor = 1.0 / 1e6;
 			}
-			rowConcentrations.add(catResult.getBmdMean() != null ? catResult.getBmdMean() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmdlMean() != null ? catResult.getBmdlMean() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmduMean() != null ? catResult.getBmduMean() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmdMedian() != null ? catResult.getBmdMedian() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmdlMedian() != null ? catResult.getBmdlMedian() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmduMedian() != null ? catResult.getBmduMedian() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmdMinimum() != null ? catResult.getBmdMinimum() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmdlMinimum() != null ? catResult.getBmdlMinimum() * multiplicationFactor : null);
-			rowConcentrations.add(catResult.getBmduMinimum() != null ? catResult.getBmduMinimum() * multiplicationFactor : null);
+			rowConcentrations.add(
+					catResult.getBmdMean() != null ? catResult.getBmdMean() * multiplicationFactor : null);
+			rowConcentrations.add(
+					catResult.getBmdlMean() != null ? catResult.getBmdlMean() * multiplicationFactor : null);
+			rowConcentrations.add(
+					catResult.getBmduMean() != null ? catResult.getBmduMean() * multiplicationFactor : null);
+			rowConcentrations
+					.add(catResult.getBmdMedian() != null ? catResult.getBmdMedian() * multiplicationFactor
+							: null);
+			rowConcentrations
+					.add(catResult.getBmdlMedian() != null ? catResult.getBmdlMedian() * multiplicationFactor
+							: null);
+			rowConcentrations
+					.add(catResult.getBmduMedian() != null ? catResult.getBmduMedian() * multiplicationFactor
+							: null);
+			rowConcentrations
+					.add(catResult.getBmdMinimum() != null ? catResult.getBmdMinimum() * multiplicationFactor
+							: null);
+			rowConcentrations.add(
+					catResult.getBmdlMinimum() != null ? catResult.getBmdlMinimum() * multiplicationFactor
+							: null);
+			rowConcentrations.add(
+					catResult.getBmduMinimum() != null ? catResult.getBmduMinimum() * multiplicationFactor
+							: null);
 			rowConcentrations.add(catResult.getBmdFifthPercentile() != null
 					? catResult.getBmdFifthPercentile() * multiplicationFactor
 					: null);
@@ -137,12 +188,12 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 			rowConcentrations.add(catResult.getBmduTenthPercentile() != null
 					? catResult.getBmduTenthPercentile() * multiplicationFactor
 					: null);
-			
 
 			concentrations.add(rowConcentrations);
 		}
 		Map<Model, List<List<Double>>> doses = calc_mc_oral_equiv.calcMultiple(concentrations,
-				params.getModels(), params.getCompound(), params.getQuantile(), params.getSpecies(), Units.UM, params.getDoseUnits(), true);
+				params.getModels(), params.getCompound(), params.getQuantile(), params.getSpecies(), Units.UM,
+				params.getDoseUnits(), true);
 
 		for (int i = 0; i < results.getCategoryAnalsyisResults().size(); i++)
 		{
@@ -183,14 +234,16 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 
 	}
 
-	private void calculateInVivoToInVitro(CategoryAnalysisResults results, BMDResult bmdResult, IVIVEParameters params) {
+	private void calculateInVivoToInVitro(CategoryAnalysisResults results, BMDResult bmdResult,
+			IVIVEParameters params)
+	{
 		List<List<Double>> doses = new ArrayList<List<Double>>();
 		for (CategoryAnalysisResult catResult : results.getCategoryAnalsyisResults())
 		{
 			List<Double> rowDoses = new ArrayList<Double>();
 
 			catResult.calculate5and10Percentiles();
-			
+
 			rowDoses.add(catResult.getBmdMean());
 			rowDoses.add(catResult.getBmdlMean());
 			rowDoses.add(catResult.getBmduMean());
@@ -206,20 +259,23 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 			rowDoses.add(catResult.getBmdTenthPercentile());
 			rowDoses.add(catResult.getBmdlTenthPercentile());
 			rowDoses.add(catResult.getBmduTenthPercentile());
-			
+
 			doses.add(rowDoses);
 		}
-
 
 		for (int i = 0; i < results.getCategoryAnalsyisResults().size(); i++)
 		{
 			List<Double> cmax = new ArrayList<Double>();
-			for(int j = 0; j < doses.get(i).size(); j++) {
-				if(doses.get(i).get(j) != null) {
-					cmax.add(get_cmax_bycas.calc(params.getCompound(), doses.get(i).get(j), 
-						params.getNumberOfDoses(), //subtract 1 to ignore the control dose.
-						(int)params.getDoseSpacing(), params.getFinalTime(), params.getSpecies()));
-				} else {
+			for (int j = 0; j < doses.get(i).size(); j++)
+			{
+				if (doses.get(i).get(j) != null)
+				{
+					cmax.add(get_cmax_bycas.calc(params.getCompound(), doses.get(i).get(j),
+							params.getNumberOfDoses(), // subtract 1 to ignore the control dose.
+							(int) params.getDoseSpacing(), params.getFinalTime(), params.getSpecies()));
+				}
+				else
+				{
 					cmax.add(null);
 				}
 			}
@@ -246,5 +302,5 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 			results.getCategoryAnalsyisResults().get(i).setIvive(iviveResults);
 		}
 	}
-	
+
 }

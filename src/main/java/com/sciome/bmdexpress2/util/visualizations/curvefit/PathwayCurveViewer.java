@@ -336,40 +336,40 @@ public class PathwayCurveViewer extends SciomeChartBase<Number, Number>
 			{
 				if (((CategoryAnalysisResult) row.getObject()).getCategoryDescription()
 						.equalsIgnoreCase(pathway))
-					System.out.println();
-				// make sure the pathway matches and that the row passes the filter
-				if (((CategoryAnalysisResult) row.getObject()).getCategoryDescription()
-						.equalsIgnoreCase(pathway) && (filterPack == null || filterPack.passesFilter(row)))
-				{
-
-					// if it is a combined row, make sure that the parent object is in the list
-					// of selected categoryanalysis results
-					if (row instanceof CombinedRow
-							&& !catResults.contains(((CombinedRow) row).getParentObject()))
-						continue;
-
-					CategoryAnalysisResults results = null;
-					if (row instanceof CombinedRow)
-						results = (CategoryAnalysisResults) ((CombinedRow) row).getParentObject();
-					else
-						results = (CategoryAnalysisResults) dataSet;
-
-					// get the category analysis result
-					CategoryAnalysisResult result = (CategoryAnalysisResult) row.getObject();
-
-					if (result.getReferenceGeneProbeStatResults() == null)
-						continue;
-					for (ReferenceGeneProbeStatResult rgps : result.getReferenceGeneProbeStatResults())
+					// make sure the pathway matches and that the row passes the filter
+					if (((CategoryAnalysisResult) row.getObject()).getCategoryDescription().equalsIgnoreCase(
+							pathway) && (filterPack == null || filterPack.passesFilter(row)))
 					{
-						if (rgps.getReferenceGene() != null && rgps.getReferenceGene().getGeneSymbol() != null
-								&& geneSet.contains(rgps.getReferenceGene().getGeneSymbol()))
+
+						// if it is a combined row, make sure that the parent object is in the list
+						// of selected categoryanalysis results
+						if (row instanceof CombinedRow
+								&& !catResults.contains(((CombinedRow) row).getParentObject()))
+							continue;
+
+						CategoryAnalysisResults results = null;
+						if (row instanceof CombinedRow)
+							results = (CategoryAnalysisResults) ((CombinedRow) row).getParentObject();
+						else
+							results = (CategoryAnalysisResults) dataSet;
+
+						// get the category analysis result
+						CategoryAnalysisResult result = (CategoryAnalysisResult) row.getObject();
+
+						if (result.getReferenceGeneProbeStatResults() == null)
+							continue;
+						for (ReferenceGeneProbeStatResult rgps : result.getReferenceGeneProbeStatResults())
 						{
-							if (returnMap.get(results.getBmdResult()) == null)
-								returnMap.put(results.getBmdResult(), new HashSet<>());
-							returnMap.get(results.getBmdResult()).addAll(rgps.getProbeStatResults());
+							if (rgps.getReferenceGene() != null
+									&& rgps.getReferenceGene().getGeneSymbol() != null
+									&& geneSet.contains(rgps.getReferenceGene().getGeneSymbol()))
+							{
+								if (returnMap.get(results.getBmdResult()) == null)
+									returnMap.put(results.getBmdResult(), new HashSet<>());
+								returnMap.get(results.getBmdResult()).addAll(rgps.getProbeStatResults());
+							}
 						}
 					}
-				}
 
 			}
 		}

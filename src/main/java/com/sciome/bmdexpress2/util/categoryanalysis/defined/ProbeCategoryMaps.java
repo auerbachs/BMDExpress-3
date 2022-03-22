@@ -36,15 +36,16 @@ import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
  */
 public class ProbeCategoryMaps extends ProbeGeneMaps
 {
-	private File						probeMapFile;
+	private File probeMapFile;
 	// private CategoryTool categoryTool;
-	public Hashtable<String, Integer>	probesHash;
+	public Hashtable<String, Integer> probesHash;
 
 	public ProbeCategoryMaps(BMDResult bmdResults)
 	{
 		super(bmdResults);
 	}
 
+	@Override
 	public void setProbesHash(Hashtable<String, Integer> hash)
 	{
 		probesHash = hash;
@@ -112,7 +113,6 @@ public class ProbeCategoryMaps extends ProbeGeneMaps
 	private void subGenesAllProbes(int p, int c, MatrixData mData)
 	{
 		int size = subGenes.size();
-		// System.out.println("subGenesAllProbes: " + size);
 		subG2Probes = new String[size][];
 		subAllProbes = new Vector<String>(size);
 		Vector<String>[] vectProbes = new Vector[size];

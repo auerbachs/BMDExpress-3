@@ -46,13 +46,13 @@ import javafx.scene.input.MouseButton;
 public class SciomeBubbleChartJFree extends SciomeBubbleChart
 {
 
-	private List<AbstractXYAnnotation>	chattingAnnotations	= new ArrayList<>();
-	private List<AbstractXYAnnotation>	markedAnnotations	= new ArrayList<>();
-	private JFreeChart					chart;
-	private double						lowX;
-	private double						lowY;
-	private double						highX;
-	private double						highY;
+	private List<AbstractXYAnnotation> chattingAnnotations = new ArrayList<>();
+	private List<AbstractXYAnnotation> markedAnnotations = new ArrayList<>();
+	private JFreeChart chart;
+	private double lowX;
+	private double lowY;
+	private double highX;
+	private double highY;
 
 	public SciomeBubbleChartJFree(String title, List<ChartDataPack> chartDataPacks, ChartKey key1,
 			ChartKey key2, ChartKey key3, SciomeChartListener chartListener)
@@ -199,8 +199,6 @@ public class SciomeBubbleChartJFree extends SciomeBubbleChart
 			@Override
 			public void chartMouseClicked(ChartMouseEventFX e)
 			{
-				System.out.println("X: " + e.getTrigger().getX());
-				System.out.println("Y: " + e.getTrigger().getY());
 				if (e.getEntity() != null && e.getEntity().getToolTipText() != null // Check to see if an
 																					// entity was clicked
 						&& e.getTrigger().getButton().equals(MouseButton.PRIMARY)
@@ -242,7 +240,7 @@ public class SciomeBubbleChartJFree extends SciomeBubbleChart
 	public void reactToChattingCharts()
 	{
 		for (AbstractXYAnnotation annotation : chattingAnnotations)
-			((XYPlot) chart.getXYPlot()).removeAnnotation(annotation, false);
+			chart.getXYPlot().removeAnnotation(annotation, false);
 		Set<String> conversationalSet = new HashSet<>();
 		for (Object obj : getConversationalObjects())
 			conversationalSet.add(obj.toString().toLowerCase());
@@ -262,8 +260,8 @@ public class SciomeBubbleChartJFree extends SciomeBubbleChart
 					// ann2 will give us black outline
 					chattingAnnotations.add(ann2);
 					chattingAnnotations.add(ann);
-					((XYPlot) chart.getXYPlot()).addAnnotation(ann2, false);
-					((XYPlot) chart.getXYPlot()).addAnnotation(ann, false);
+					chart.getXYPlot().addAnnotation(ann2, false);
+					chart.getXYPlot().addAnnotation(ann, false);
 					if (((BubbleChartExtraData) chartData.getExtraValue()).userData instanceof IMarkable)
 					{
 						IMarkable markable = (IMarkable) ((BubbleChartExtraData) chartData
@@ -279,7 +277,7 @@ public class SciomeBubbleChartJFree extends SciomeBubbleChart
 						labelann.setTipRadius(5);
 						labelann.setTextAnchor(TextAnchor.HALF_ASCENT_RIGHT);
 						chattingAnnotations.add(labelann);
-						((XYPlot) chart.getXYPlot()).addAnnotation(labelann, false);
+						chart.getXYPlot().addAnnotation(labelann, false);
 					}
 				}
 			}
@@ -291,7 +289,7 @@ public class SciomeBubbleChartJFree extends SciomeBubbleChart
 	public void markData(Set<String> markings)
 	{
 		for (AbstractXYAnnotation annotation : markedAnnotations)
-			((XYPlot) chart.getXYPlot()).removeAnnotation(annotation, false);
+			chart.getXYPlot().removeAnnotation(annotation, false);
 
 		for (SciomeSeries<Number, Number> series : getSeriesData())
 		{
@@ -325,9 +323,9 @@ public class SciomeBubbleChartJFree extends SciomeBubbleChart
 					markedAnnotations.add(ann2);
 					markedAnnotations.add(ann);
 					markedAnnotations.add(labelann);
-					((XYPlot) chart.getXYPlot()).addAnnotation(ann2, false);
-					((XYPlot) chart.getXYPlot()).addAnnotation(ann, false);
-					((XYPlot) chart.getXYPlot()).addAnnotation(labelann, false);
+					chart.getXYPlot().addAnnotation(ann2, false);
+					chart.getXYPlot().addAnnotation(ann, false);
+					chart.getXYPlot().addAnnotation(labelann, false);
 				}
 			}
 		}

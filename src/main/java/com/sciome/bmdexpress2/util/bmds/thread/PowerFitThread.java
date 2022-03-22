@@ -42,11 +42,12 @@ public class PowerFitThread extends Thread implements IFitThread
 	private IProbeIndexGetter probeIndexGetter;
 	private boolean cancel = false;
 	private String tmpFolder;
-	private Map<String,NormalDeviance> deviance;
+	private Map<String, NormalDeviance> deviance;
 
 	public PowerFitThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
 			List<StatResult> powerResults, int numThread, int instanceIndex, int killTime, String tmpFolder,
-			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter, Map<String,NormalDeviance> deviance)
+			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
+			Map<String, NormalDeviance> deviance)
 	{
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
@@ -115,7 +116,6 @@ public class PowerFitThread extends Thread implements IFitThread
 		{
 
 			PowerResult powerResult = (PowerResult) powerResults.get(probeIndex);
-			// System.out.println(probeResponses.get(probeIndex).getProbe().getId());
 
 			if (cancel)
 			{
@@ -136,7 +136,7 @@ public class PowerFitThread extends Thread implements IFitThread
 
 				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.POWER, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1,dev, inputParameters.isFast());
+						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast());
 
 				if (results != null)
 				{

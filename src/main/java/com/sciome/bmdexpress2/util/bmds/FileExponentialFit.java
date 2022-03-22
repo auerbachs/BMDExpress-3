@@ -26,17 +26,17 @@ import com.sciome.bmdexpress2.util.NumberManager;
  */
 public class FileExponentialFit extends FileFitBase
 {
-	private String			exponentialEXE, dPath;
-	private int[]			intParams;
-	private final int		SIX			= 6;
-	private final int		outMax		= 11;
-	private final double	minDouble	= -9999;
-	private final String	NEGPARAM	= "-9999";
-	private final String	newline		= "\n";
-	private final String	space1		= " ";
-	private int				expOption	= 0;
+	private String exponentialEXE, dPath;
+	private int[] intParams;
+	private final int SIX = 6;
+	private final int outMax = 11;
+	private final double minDouble = -9999;
+	private final String NEGPARAM = "-9999";
+	private final String newline = "\n";
+	private final String space1 = " ";
+	private int expOption = 0;
 
-	private final String[]	FLAGS		= { "Parameter Estimates", "Asymptotic Correlation Matrix",
+	private final String[] FLAGS = { "Parameter Estimates", "Asymptotic Correlation Matrix",
 			"Likelihoods of Interest", "Tests of Interest", " A1 ", " Test 1 ", "BMD = ", "BMDL = ",
 			"BMDU = " };
 
@@ -70,7 +70,6 @@ public class FileExponentialFit extends FileFitBase
 
 		if (infile != null)
 		{
-			// System.out.println("Pathf = " + infile.getPath());
 			executeModel(exponentialEXE, infile.getPath());// infile.getAbsolutePath());
 			File outFile = readOutputs("M" + expOption + name, outputs);
 			infile.delete();
@@ -203,7 +202,6 @@ public class FileExponentialFit extends FileFitBase
 		try
 		{
 			File file = new File(dPath, name + "_exponential.(d)");
-			// System.out.println(file.getAbsolutePath());
 			PrintWriter out = new PrintWriter(new FileWriter(file, false));
 			out.write(bf.toString());
 			out.close();
@@ -285,7 +283,6 @@ public class FileExponentialFit extends FileFitBase
 							if (matcher.find())
 							{
 								String intercept = matcher.group(1);
-								// System.out.println("intercept: " + intercept);
 								outputs[SIX] = NumberManager.parseDouble(intercept, minDouble);
 							}
 						}
@@ -296,7 +293,6 @@ public class FileExponentialFit extends FileFitBase
 							if (matcher.find())
 							{
 								String v = matcher.group(1);
-								// System.out.println("v: " + v);
 								outputs[SIX + afterSix++] = NumberManager.parseDouble(v, minDouble);
 							}
 						}
@@ -307,7 +303,6 @@ public class FileExponentialFit extends FileFitBase
 							if (matcher.find())
 							{
 								String n = matcher.group(1);
-								// System.out.println("n: " + n);
 								outputs[SIX + afterSix++] = NumberManager.parseDouble(n, minDouble);
 							}
 						}
@@ -318,7 +313,6 @@ public class FileExponentialFit extends FileFitBase
 							if (matcher.find())
 							{
 								String k = matcher.group(1);
-								// System.out.println("k: " + k);
 								outputs[SIX + afterSix++] = NumberManager.parseDouble(k, minDouble);
 							}
 						}
@@ -329,7 +323,6 @@ public class FileExponentialFit extends FileFitBase
 							if (matcher.find())
 							{
 								String k = matcher.group(1);
-								// System.out.println("k: " + k);
 								outputs[SIX + afterSix++] = NumberManager.parseDouble(k, minDouble);
 							}
 						}

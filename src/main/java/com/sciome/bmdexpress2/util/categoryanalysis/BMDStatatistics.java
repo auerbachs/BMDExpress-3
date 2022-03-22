@@ -39,22 +39,22 @@ import com.sciome.bmdexpress2.util.stat.SampleStats;
 public class BMDStatatistics
 {
 
-	private BMDResult		bmdResults;
-	private ProbeGeneMaps	probeGeneMaps;
-	private GenesBMDs		genesBMDs;
-	private BestBMDModels	bestBMDModels;
-	private final String	BMD		= "BMD";
-	private final String	BMDL	= "BMDL";
-	private final String	BMDU	= "BMDU";
+	private BMDResult bmdResults;
+	private ProbeGeneMaps probeGeneMaps;
+	private GenesBMDs genesBMDs;
+	private BestBMDModels bestBMDModels;
+	private final String BMD = "BMD";
+	private final String BMDL = "BMDL";
+	private final String BMDU = "BMDU";
 
-	private boolean			removeMax, doRemovePCut, hasData, doneCorrelation, doEnrichment;
-	private double			fitPCutoff, rCutoff, pCutoff = 0.05, maxDose = 0, minDose, minPositiveDose;
-	private Vector<String>	subGenes, bmdProbes;
-	private int[]			proIndices;
-	private double[]		minCorrelations;
-	private double[][]		bmds;
+	private boolean removeMax, doRemovePCut, hasData, doneCorrelation, doEnrichment;
+	private double fitPCutoff, rCutoff, pCutoff = 0.05, maxDose = 0, minDose, minPositiveDose;
+	private Vector<String> subGenes, bmdProbes;
+	private int[] proIndices;
+	private double[] minCorrelations;
+	private double[][] bmds;
 
-	private final String	title	= "BMD Statistics";
+	private final String title = "BMD Statistics";
 
 	/**
 	 * Class constructor
@@ -136,7 +136,6 @@ public class BMDStatatistics
 	public void readExpressionData()
 	{
 		Vector<String> subAllProbes = probeGeneMaps.subAllProbes();
-		// System.out.println("readExpressionData(): " + subAllProbes.size());
 		int size = subAllProbes.size();
 		proIndices = new int[size];
 		DoseResponseExperiment doseResponseExperiment = bmdResults.getDoseResponseExperiment();
@@ -716,7 +715,6 @@ public class BMDStatatistics
 	{
 		String probeString = ((String) output[idx]).replaceAll(",", ";");
 		String[] probes = probeString.split(";");
-		// System.out.println(probes.length + ": " + probeString);
 
 		Vector<String> uniqueModelNames = bestBMDModels.uniqueModelNames();
 		int size = uniqueModelNames.size();
@@ -760,9 +758,7 @@ public class BMDStatatistics
 					output[col + i] = bf.toString();
 				}
 				else
-				{
-					// System.out.println(i + " plus " + col + " < " + output.length);
-				}
+				{}
 			}
 		}
 	}
@@ -1053,7 +1049,6 @@ public class BMDStatatistics
 		}
 
 		genesBMDs.ascendSortBMDandBMDLs();
-		// System.out.println(size + "Sorted BMDs: " + genesBMDs.maxGenes());
 	}
 
 	public Vector<String> checkBMDBMDLRatio(Vector<String> vectGenes, double bmdBmdlRatio,

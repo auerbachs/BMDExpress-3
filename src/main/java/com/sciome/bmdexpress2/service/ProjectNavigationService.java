@@ -250,7 +250,6 @@ public class ProjectNavigationService implements IProjectNavigationService
 		filterInformation.append("Filter information: \n");
 		for (DataFilter filter : pack.getDataFilters())
 		{
-			System.out.println(filter.getKey());
 			if (filter.getDataFilterType().equals(DataFilterType.CONTAINS)
 					|| filter.getDataFilterType().equals(DataFilterType.BETWEEN))
 				filterInformation.append(filter.toString() + "\n");

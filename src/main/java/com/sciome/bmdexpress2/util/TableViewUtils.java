@@ -53,7 +53,6 @@ public class TableViewUtils
 			{
 				tableCM.hide();
 			}
-			System.out.println();
 
 		});
 
@@ -72,6 +71,7 @@ public class TableViewUtils
 		KeyCodeCombination copyKeyCodeCompination = new KeyCodeCombination(KeyCode.C,
 				KeyCombination.CONTROL_ANY);
 
+		@Override
 		public void handle(final KeyEvent keyEvent)
 		{
 
@@ -83,8 +83,6 @@ public class TableViewUtils
 
 					// copy to clipboard
 					copySelectionToClipboard((TableView<?>) keyEvent.getSource(), true);
-
-					System.out.println("Selection copied to clipboard");
 
 					// event is handled, consume it
 					keyEvent.consume();

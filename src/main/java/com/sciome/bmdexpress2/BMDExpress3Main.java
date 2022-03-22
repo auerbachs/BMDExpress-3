@@ -66,8 +66,6 @@ public class BMDExpress3Main extends Application
 				primaryStage.setWidth(BMDExpressProperties.getInstance().getSizeX());
 			}
 
-			System.out.println(Screen.getPrimary().getVisualBounds().getWidth());
-			System.out.println(Screen.getPrimary().getVisualBounds().getHeight());
 			if (BMDExpressProperties.getInstance().getLocX() > 0 && BMDExpressProperties.getInstance()
 					.getLocX() < Screen.getPrimary().getVisualBounds().getWidth() - 200)
 				primaryStage.setX(BMDExpressProperties.getInstance().getLocX());
@@ -84,7 +82,6 @@ public class BMDExpress3Main extends Application
 
 			Thread.currentThread().setUncaughtExceptionHandler((thread, throwable) ->
 			{
-				System.out.println("Handler caught exception: " + throwable.getMessage());
 				throwable.printStackTrace();
 				BMDExpressEventBus.getInstance().post(new ShowErrorEvent(throwable.toString()));
 			});

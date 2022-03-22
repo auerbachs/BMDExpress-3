@@ -155,7 +155,6 @@ public class GenesPathways extends CategoryMapBase
 			}
 			catch (IOException e)
 			{
-				// System.out.println("Read preferences problem: " + e);
 				e.printStackTrace();
 			}
 		}
@@ -236,7 +235,6 @@ public class GenesPathways extends CategoryMapBase
 			}
 			catch (IOException e)
 			{
-				// System.out.println("Read preferences problem: " + e);
 				e.printStackTrace();
 			}
 		}
