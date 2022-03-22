@@ -79,12 +79,10 @@
                                        <children>
                                           <HBox fx:id="methodHBox" layoutX="14.0" layoutY="52.0" spacing="50.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="30.0">
                                              <children>
-                                                <RadioButton fx:id="origMethodRadio" layoutX="14.0" layoutY="52.0" mnemonicParsing="false" onAction="#handle_OrigMethod" selected="true" text="EPA BMDS 2.7.x (MLE)">
+                                                <RadioButton fx:id="toxicRMethodRadio" layoutX="258.0" layoutY="52.0" mnemonicParsing="false" onAction="#handle_ToxicRLaplaceMethod" text="EPA BMDS 3.x (MLE)">
                                                    <toggleGroup>
                                                       <ToggleGroup fx:id="methodGroup" />
-                                                   </toggleGroup>
-                                                </RadioButton>
-                                                <RadioButton fx:id="toxicRMethodRadio" layoutX="258.0" layoutY="52.0" mnemonicParsing="false" onAction="#handle_ToxicRLaplaceMethod" text="EPA BMDS 3.x (MLE)" toggleGroup="$methodGroup" />
+                                                   </toggleGroup></RadioButton>
                                                 <RadioButton fx:id="toxicRMAMethodRadio" layoutX="403.0" layoutY="52.0" mnemonicParsing="false" onAction="#handle_ToxicRLaplaceMAMethod" text="ToxicR MAP/Laplace Bayesian MA" toggleGroup="$methodGroup" />
                                                 <RadioButton fx:id="toxicRMCMCMAMethodRadio" layoutX="734.0" layoutY="52.0" mnemonicParsing="false" onAction="#handle_ToxicRMCMCMAMethod" text="ToxicR MCMC Bayesian MA" toggleGroup="$methodGroup" />
                                              </children>
@@ -121,11 +119,6 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </CheckBox>
-                                                <CheckBox fx:id="exponential2CheckBox" layoutX="36.0" layoutY="18.0" mnemonicParsing="false" selected="true" text="Exp 2" GridPane.columnIndex="4">
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                </CheckBox>
                                                 <CheckBox fx:id="poly3CheckBox" layoutX="324.0" layoutY="71.0" mnemonicParsing="false" selected="true" text="Poly 3" GridPane.columnIndex="2" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
@@ -151,11 +144,6 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </CheckBox>
-                                                <CheckBox fx:id="exponential4CheckBox" mnemonicParsing="false" selected="true" text="Exp 4" GridPane.columnIndex="5">
-                                                   <GridPane.margin>
-                                                      <Insets left="20.0" />
-                                                   </GridPane.margin>
-                                                </CheckBox>
                                                 <CheckBox fx:id="exponential5CheckBox" mnemonicParsing="false" selected="true" text="Exp 5" GridPane.columnIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
@@ -166,7 +154,7 @@
                                                       <Insets left="20.0" />
                                                    </GridPane.margin>
                                                 </CheckBox>
-                                                <CheckBox fx:id="funlCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="75.0" selected="true" text="FUNL" GridPane.columnIndex="6">
+                                                <CheckBox fx:id="funlCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="75.0" selected="true" text="FUNL" GridPane.columnIndex="4">
                                                    <GridPane.margin>
                                                       <Insets left="20.0" />
                                                    </GridPane.margin></CheckBox>
@@ -196,57 +184,32 @@
                                              <rowConstraints>
                                                 <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                                 <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                                                <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label alignment="CENTER_RIGHT" layoutX="425.0" layoutY="21.0" prefHeight="16.0" text="Confidence Level:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
-                                                <Label alignment="CENTER_RIGHT" layoutX="34.0" layoutY="14.0" prefHeight="17.0" text="Maximum Iterations:" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" />
-                                                <Label alignment="CENTER_RIGHT" layoutX="34.0" layoutY="54.0" prefHeight="17.0" text="BMR Factor:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                                <TextField fx:id="maximumIterationsTextField" layoutX="122.0" layoutY="9.0" text="250" GridPane.columnIndex="1" GridPane.halignment="LEFT">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </TextField>
-                                                <HBox alignment="CENTER" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                                <ComboBox fx:id="confidenceLevelComboBox" editable="true" GridPane.columnIndex="3" GridPane.halignment="LEFT">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </ComboBox>
-                                                <ComboBox fx:id="bMRFactorComboBox" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                                <Label alignment="CENTER_RIGHT" layoutX="34.0" layoutY="54.0" prefHeight="17.0" text="BMR Factor:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
+                                                <HBox alignment="CENTER" GridPane.columnIndex="4" />
+                                                <ComboBox fx:id="bMRFactorComboBox" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="3" GridPane.halignment="LEFT">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin></ComboBox>
-                                                <Label alignment="CENTER_RIGHT" prefHeight="16.0" text="BMR Type:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
-                                                <ComboBox fx:id="bMRTypeComboBox" prefHeight="27.0" prefWidth="139.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                                                <Label alignment="CENTER_RIGHT" prefHeight="16.0" text="BMR Type:" GridPane.halignment="RIGHT" />
+                                                <ComboBox fx:id="bMRTypeComboBox" prefHeight="27.0" prefWidth="139.0" GridPane.columnIndex="1" GridPane.halignment="LEFT">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </ComboBox>
-                                                <ComboBox fx:id="restrictPowerComboBox" prefHeight="27.0" prefWidth="124.0" GridPane.columnIndex="5" GridPane.halignment="LEFT">
+                                                <ComboBox fx:id="varianceType" prefHeight="27.0" prefWidth="139.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </ComboBox>
-                                                <ComboBox fx:id="varianceType" prefHeight="27.0" prefWidth="139.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+                                                <ComboBox fx:id="bmdULEstimationMethod" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                                                    <GridPane.margin>
                                                       <Insets left="10.0" />
                                                    </GridPane.margin>
                                                 </ComboBox>
-                                                <ComboBox fx:id="bmdULEstimationMethod" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.rowIndex="2">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </ComboBox>
-                                                <Label alignment="CENTER_RIGHT" prefHeight="16.0" text="Variance:" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                                                <Label alignment="CENTER_RIGHT" prefHeight="17.0" text="BMDU/L Estimation Method:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
-                                                <Label fx:id="restrictPowerLabel" alignment="CENTER_RIGHT" prefHeight="17.0" text="Restrict Power:" GridPane.columnIndex="4" GridPane.halignment="RIGHT" />
-                                                <ComboBox fx:id="restrictHillComboBox" prefHeight="27.0" prefWidth="124.0" GridPane.columnIndex="5" GridPane.rowIndex="1">
-                                                   <GridPane.margin>
-                                                      <Insets left="10.0" />
-                                                   </GridPane.margin>
-                                                </ComboBox>
-                                                <Label fx:id="restrictHillLabel" alignment="CENTER_RIGHT" prefHeight="17.0" text="Restrict Hill:" GridPane.columnIndex="4" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                                <Label alignment="CENTER_RIGHT" prefHeight="16.0" text="Variance:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                                                <Label alignment="CENTER_RIGHT" prefHeight="17.0" text="BMDU/L Estimation Method:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
                                              </children>
                                           </GridPane>
                                        </children>
@@ -385,8 +348,6 @@
                                              <children>
                                                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="157.0" text="Number of Threads: " />
                                                 <ComboBox fx:id="numberOfThreadsComboBox" editable="true" minWidth="-Infinity" prefHeight="27.0" prefWidth="161.0" />
-                                                <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="282.0" text="Model Execution Timeout (secs):" />
-                                                <ComboBox fx:id="killTimeComboBox" editable="true" minWidth="-Infinity" prefHeight="27.0" prefWidth="153.0" />
                                              </children>
                                           </HBox>
                                        </children>

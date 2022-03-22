@@ -30,8 +30,6 @@ import com.sciome.bmdexpress2.util.bmds.shared.FunlModel;
 import com.sciome.bmdexpress2.util.bmds.shared.HillModel;
 import com.sciome.bmdexpress2.util.bmds.shared.PolyModel;
 import com.sciome.bmdexpress2.util.bmds.shared.PowerModel;
-import com.sciome.bmdexpress2.util.bmds.shared.RestrictHillEnum;
-import com.sciome.bmdexpress2.util.bmds.shared.RestrictPowerEnum;
 import com.sciome.bmdexpress2.util.bmds.shared.StatModel;
 
 import javafx.beans.value.ChangeListener;
@@ -61,12 +59,12 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	// FXML injection
 
 	// checkboxes
-	@FXML
-	private CheckBox exponential2CheckBox;
+	// @FXML
+	// private CheckBox exponential2CheckBox;
 	@FXML
 	private CheckBox exponential3CheckBox;
-	@FXML
-	private CheckBox exponential4CheckBox;
+	// @FXML
+	// private CheckBox exponential4CheckBox;
 	@FXML
 	private CheckBox exponential5CheckBox;
 	@FXML
@@ -95,8 +93,8 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private CheckBox setThreadCheckBox;
 
 	// textfields
-	@FXML
-	private TextField maximumIterationsTextField;
+	// @FXML
+	// private TextField maximumIterationsTextField;
 	@FXML
 	private TextField modifyFlaggedHillBMDTextField;
 
@@ -105,13 +103,13 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private ComboBox bMRFactorComboBox;
 	@FXML
 	private ComboBox bMRTypeComboBox;
-	@FXML
-	private ComboBox confidenceLevelComboBox;
-	@FXML
-	private ComboBox restrictPowerComboBox;
+	// @FXML
+	// private ComboBox confidenceLevelComboBox;
+	// @FXML
+	// private ComboBox restrictPowerComboBox;
 
-	@FXML
-	private ComboBox restrictHillComboBox;
+	// @FXML
+	// private ComboBox restrictHillComboBox;
 
 	@FXML
 	private ComboBox bestPolyTestComboBox;
@@ -128,8 +126,8 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 
 	@FXML
 	private ComboBox numberOfThreadsComboBox;
-	@FXML
-	private ComboBox killTimeComboBox;
+	// @FXML
+	// private ComboBox killTimeComboBox;
 
 	// labels
 	@FXML
@@ -142,11 +140,11 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private Label modifyFlaggedHillBMDLabel;
 	@FXML
 	private Label bestModelSeletionWithFlaggedHillLabel;
-	@FXML
-	private Label restrictPowerLabel;
+	// @FXML
+	// private Label restrictPowerLabel;
 
-	@FXML
-	private Label restrictHillLabel;
+	// @FXML
+	// private Label restrictHillLabel;
 
 	@FXML
 	private ProgressBar progressBar;
@@ -180,8 +178,8 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	@FXML
 	private AnchorPane dataOptionsPane;
 
-	@FXML
-	private RadioButton origMethodRadio;
+	// @FXML
+	// private RadioButton origMethodRadio;
 
 	@FXML
 	private RadioButton toxicRMethodRadio;
@@ -230,20 +228,21 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		this.progressBar.setVisible(false);
-		this.exponential2CheckBox.setDisable(false);
-		this.restrictHillComboBox.setVisible(false);
-		restrictHillLabel.setVisible(false);
+		// this.exponential2CheckBox.setDisable(false);
+		// this.restrictHillComboBox.setVisible(false);
+		// restrictHillLabel.setVisible(false);
+		funlCheckBox.setDisable(true);
+		funlCheckBox.setVisible(false);
+		this.toxicRMethodRadio.setSelected(true);
+		// if (this.origMethodRadio.isSelected())
+		// {
 
-		if (this.origMethodRadio.isSelected())
-		{
-			funlCheckBox.setDisable(true);
-			funlCheckBox.setVisible(false);
-			this.bmdULEstimationMethod.setDisable(true);
-		}
-		else
-		{
-			killTimeComboBox.setDisable(true);
-		}
+		// this.bmdULEstimationMethod.setDisable(true);
+		// }
+		// else
+		// {
+		// killTimeComboBox.setDisable(true);
+		// }
 
 	}
 
@@ -335,16 +334,16 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			modelsToRun.add(funlModel);
 		}
 
-		if (!exponential2CheckBox.isDisabled() && exponential2CheckBox.isSelected())
-		{
-			ExponentialModel exponentialModel = new ExponentialModel();
-			if (this.toxicRMethodRadio.isSelected())
-				exponentialModel.setVersion("Exponential 2 EPA BMDS MLE ToxicR");
-			else
-				exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
-			exponentialModel.setOption(2);
-			modelsToRun.add(exponentialModel);
-		}
+		// if (!exponential2CheckBox.isDisabled() && exponential2CheckBox.isSelected())
+		// {
+		// ExponentialModel exponentialModel = new ExponentialModel();
+		// if (this.toxicRMethodRadio.isSelected())
+		// exponentialModel.setVersion("Exponential 2 EPA BMDS MLE ToxicR");
+		// else
+		// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+		// exponentialModel.setOption(2);
+		// modelsToRun.add(exponentialModel);
+		// }
 		if (!exponential3CheckBox.isDisabled() && exponential3CheckBox.isSelected())
 		{
 			ExponentialModel exponentialModel = new ExponentialModel();
@@ -355,16 +354,16 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			modelsToRun.add(exponentialModel);
 			exponentialModel.setOption(3);
 		}
-		if (!exponential4CheckBox.isDisabled() && exponential4CheckBox.isSelected())
-		{
-			ExponentialModel exponentialModel = new ExponentialModel();
-			if (this.toxicRMethodRadio.isSelected())
-				exponentialModel.setVersion("Exponential 4 EPA BMDS MLE ToxicR");
-			else
-				exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
-			exponentialModel.setOption(4);
-			modelsToRun.add(exponentialModel);
-		}
+		// if (!exponential4CheckBox.isDisabled() && exponential4CheckBox.isSelected())
+		// {
+		// ExponentialModel exponentialModel = new ExponentialModel();
+		// if (this.toxicRMethodRadio.isSelected())
+		// exponentialModel.setVersion("Exponential 4 EPA BMDS MLE ToxicR");
+		// else
+		// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+		// exponentialModel.setOption(4);
+		// modelsToRun.add(exponentialModel);
+		// }
 		if (!exponential5CheckBox.isDisabled() && exponential5CheckBox.isSelected())
 		{
 			ExponentialModel exponentialModel = new ExponentialModel();
@@ -410,9 +409,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			return;
 		}
 		// Set check box values
-		input.setExp2(this.exponential2CheckBox.isSelected());
+		// input.setExp2(this.exponential2CheckBox.isSelected());
 		input.setExp3(this.exponential3CheckBox.isSelected());
-		input.setExp4(this.exponential4CheckBox.isSelected());
+		// input.setExp4(this.exponential4CheckBox.isSelected());
 		input.setExp5(this.exponential5CheckBox.isSelected());
 		input.setLinear(this.linearCheckBox.isSelected());
 		input.setPoly2(this.poly2CheckBox.isSelected());
@@ -425,19 +424,19 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		input.setFlagHillModel(this.flagHillkParamCheckBox.isSelected());
 
 		// Set numerical values
-		input.setMaxIterations(Integer.parseInt(this.maximumIterationsTextField.getText()));
+		// input.setMaxIterations(Integer.parseInt(this.maximumIterationsTextField.getText()));
 		input.setNumThreads(Integer.parseInt(this.numberOfThreadsComboBox.getEditor().getText()));
-		input.setKillTime(Integer.parseInt(
-				this.killTimeComboBox.getEditor().getText().replaceAll("\\(default\\)", "").trim()));
-		input.setConfidenceLevel(Double.parseDouble(this.confidenceLevelComboBox.getEditor().getText()));
+		// input.setKillTime(Integer.parseInt(
+		// this.killTimeComboBox.getEditor().getText().replaceAll("\\(default\\)", "").trim()));
+		// input.setConfidenceLevel(Double.parseDouble(this.confidenceLevelComboBox.getEditor().getText()));
 		input.setpValueCutoff(Double.parseDouble(this.pValueCutoffComboBox.getEditor().getText()));
 		input.setModifyBMDFlaggedHill(Double.parseDouble(this.modifyFlaggedHillBMDTextField.getText()));
 
 		// Set String values
 		input.setBmrType(this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString());
 		input.setBMRFactor((BMRFactor) this.bMRFactorComboBox.getValue());
-		input.setRestrictPower((RestrictPowerEnum) this.restrictPowerComboBox.getValue());
-		input.setRestrictHill((RestrictHillEnum) this.restrictHillComboBox.getValue());
+		// input.setRestrictPower((RestrictPowerEnum) this.restrictPowerComboBox.getValue());
+		// input.setRestrictHill((RestrictHillEnum) this.restrictHillComboBox.getValue());
 		input.setBestPolyModelTest((BestPolyModelTestEnum) this.bestPolyTestComboBox.getValue());
 		input.setkParameterLessThan((FlagHillModelDoseEnum) this.flagHillkParamComboBox.getValue());
 		input.setBestModelWithFlaggedHill(
@@ -559,87 +558,87 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		modifyFlaggedHillBMDTextField.setDisable(!hillCheckBox.isSelected());
 		handle_FlagHillCheckBox(event);
 
-		if (!useToxicR && !this.toxicRMethodRadio.isSelected())
-		{
-			restrictHillComboBox.setDisable(!hillCheckBox.isSelected());
-			restrictHillLabel.setDisable(!hillCheckBox.isSelected());
-		}
-		else
-		{
-			restrictHillComboBox.setDisable(true);
-			restrictHillLabel.setDisable(true);
-		}
+		// if (!useToxicR && !this.toxicRMethodRadio.isSelected())
+		// {
+		// restrictHillComboBox.setDisable(!hillCheckBox.isSelected());
+		// restrictHillLabel.setDisable(!hillCheckBox.isSelected());
+		// }
+		// else
+		// {
+		// restrictHillComboBox.setDisable(true);
+		// restrictHillLabel.setDisable(true);
+		// }
 	}
 
 	public void handle_PowerCheckBox(ActionEvent event)
 	{
-		if (!useToxicR && !this.toxicRMethodRadio.isSelected())
-		{
-			restrictPowerComboBox.setDisable(!powerCheckBox.isSelected());
-			restrictPowerLabel.setDisable(!powerCheckBox.isSelected());
-		}
-		else
-		{
-			restrictPowerComboBox.setDisable(true);
-			restrictPowerLabel.setDisable(true);
-		}
+		// if (!useToxicR && !this.toxicRMethodRadio.isSelected())
+		// {
+		// restrictPowerComboBox.setDisable(!powerCheckBox.isSelected());
+		// restrictPowerLabel.setDisable(!powerCheckBox.isSelected());
+		// }
+		// else
+		// {
+		// restrictPowerComboBox.setDisable(true);
+		// restrictPowerLabel.setDisable(true);
+		// }
 	}
 
-	public void handle_OrigMethod(ActionEvent event)
-	{
-		boolean value = origMethodRadio.isSelected();
-		if (value == false)
-			return;
-		// enable all models;
-		exponential2CheckBox.setDisable(false);
-		exponential3CheckBox.setDisable(false);
-		exponential4CheckBox.setDisable(false);
-		exponential5CheckBox.setDisable(false);
-		linearCheckBox.setDisable(false);
-		poly2CheckBox.setDisable(false);
-		poly3CheckBox.setDisable(false);
-		poly4CheckBox.setDisable(false);
-		powerCheckBox.setDisable(false);
-		hillCheckBox.setDisable(false);
-		funlCheckBox.setDisable(true);
-		funlCheckBox.setVisible(false);
+	// public void handle_OrigMethod(ActionEvent event)
+	// {
+	// boolean value = origMethodRadio.isSelected();
+	// if (value == false)
+	// return;
+	// enable all models;
+	// exponential2CheckBox.setDisable(false);
+	// exponential3CheckBox.setDisable(false);
+	// exponential4CheckBox.setDisable(false);
+	// exponential5CheckBox.setDisable(false);
+	// linearCheckBox.setDisable(false);
+	// poly2CheckBox.setDisable(false);
+	// poly3CheckBox.setDisable(false);
+	// poly4CheckBox.setDisable(false);
+	// powerCheckBox.setDisable(false);
+	// hillCheckBox.setDisable(false);
+	// funlCheckBox.setDisable(true);
+	// funlCheckBox.setVisible(false);
 
-		this.varianceType.setDisable(false);
-		this.confidenceLevelComboBox.setDisable(false);
-		this.restrictPowerComboBox.setDisable(false);
-		this.maximumIterationsTextField.setDisable(false);
-		killTimeComboBox.setDisable(false);
-		this.bmdULEstimationMethod.setDisable(true);
+	// this.varianceType.setDisable(false);
+	// this.confidenceLevelComboBox.setDisable(false);
+	// this.restrictPowerComboBox.setDisable(false);
+	// this.maximumIterationsTextField.setDisable(false);
+	// killTimeComboBox.setDisable(false);
+	// this.bmdULEstimationMethod.setDisable(true);
 
-		if (powerCheckBox.isSelected())
-		{
-			restrictPowerComboBox.setDisable(false);
-			restrictPowerLabel.setDisable(false);
+	// if (powerCheckBox.isSelected())
+	// {
+	// restrictPowerComboBox.setDisable(false);
+	// restrictPowerLabel.setDisable(false);
 
-		}
-		else
-		{
-			restrictPowerComboBox.setDisable(true);
-			restrictPowerLabel.setDisable(true);
+	// }
+	// else
+	// {
+	// restrictPowerComboBox.setDisable(true);
+	// restrictPowerLabel.setDisable(true);
 
-		}
+	// }
 
-		if (hillCheckBox.isSelected())
-		{
-			restrictHillComboBox.setDisable(false);
-			restrictHillLabel.setDisable(false);
+	// if (hillCheckBox.isSelected())
+	// {
+	// restrictHillComboBox.setDisable(false);
+	// restrictHillLabel.setDisable(false);
+	//
+	// }
+	// else
+	// {
+	// restrictHillComboBox.setDisable(true);
+	// restrictHillLabel.setDisable(true);
+	//
+	// }
 
-		}
-		else
-		{
-			restrictHillComboBox.setDisable(true);
-			restrictHillLabel.setDisable(true);
+	// enable all parameters
 
-		}
-
-		// enable all parameters
-
-	}
+	// }
 
 	public void handle_ToxicRLaplaceMethod(ActionEvent event)
 	{
@@ -647,9 +646,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		if (value == false)
 			return;
 		// enable some models;
-		exponential2CheckBox.setDisable(true);
+		// exponential2CheckBox.setDisable(true);
 		exponential3CheckBox.setDisable(false);
-		exponential4CheckBox.setDisable(true);
+		// exponential4CheckBox.setDisable(true);
 		exponential5CheckBox.setDisable(false);
 		linearCheckBox.setDisable(false);
 		poly2CheckBox.setDisable(false);
@@ -662,15 +661,15 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		this.bmdULEstimationMethod.setDisable(false);
 
 		this.varianceType.setDisable(false);
-		this.confidenceLevelComboBox.setDisable(true);
-		this.restrictPowerLabel.setDisable(true);
-		this.restrictPowerComboBox.setDisable(true);
-		this.restrictHillLabel.setDisable(true);
-		this.restrictHillComboBox.setDisable(true);
-		this.maximumIterationsTextField.setDisable(true);
-		restrictPowerComboBox.setDisable(true);
-		restrictPowerLabel.setDisable(true);
-		killTimeComboBox.setDisable(true);
+		// this.confidenceLevelComboBox.setDisable(true);
+		// this.restrictPowerLabel.setDisable(true);
+		// this.restrictPowerComboBox.setDisable(true);
+		// this.restrictHillLabel.setDisable(true);
+		// this.restrictHillComboBox.setDisable(true);
+		// this.maximumIterationsTextField.setDisable(true);
+		// restrictPowerComboBox.setDisable(true);
+		// restrictPowerLabel.setDisable(true);
+		// killTimeComboBox.setDisable(true);
 
 		// enable some parameters
 
@@ -682,9 +681,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		if (value == false)
 			return;
 		// enable some models;
-		exponential2CheckBox.setDisable(true);
+		// exponential2CheckBox.setDisable(true);
 		exponential3CheckBox.setDisable(false);
-		exponential4CheckBox.setDisable(true);
+		// exponential4CheckBox.setDisable(true);
 		exponential5CheckBox.setDisable(false);
 		linearCheckBox.setDisable(true);
 		poly2CheckBox.setDisable(true);
@@ -696,22 +695,22 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		funlCheckBox.setVisible(false);
 		bmdULEstimationMethod.setDisable(true);
 
-		exponential2CheckBox.setVisible(false);
-		exponential4CheckBox.setVisible(false);
+		// exponential2CheckBox.setVisible(false);
+		// exponential4CheckBox.setVisible(false);
 		linearCheckBox.setVisible(false);
 		poly2CheckBox.setVisible(false);
 		poly3CheckBox.setVisible(false);
 		poly4CheckBox.setVisible(false);
 
 		this.varianceType.setDisable(false);
-		this.confidenceLevelComboBox.setDisable(true);
-		this.restrictPowerComboBox.setDisable(true);
-		this.maximumIterationsTextField.setDisable(true);
-		restrictPowerComboBox.setDisable(true);
-		restrictPowerLabel.setDisable(true);
-		restrictHillComboBox.setDisable(true);
-		restrictHillLabel.setDisable(true);
-		killTimeComboBox.setDisable(true);
+		// this.confidenceLevelComboBox.setDisable(true);
+		// this.restrictPowerComboBox.setDisable(true);
+		// this.maximumIterationsTextField.setDisable(true);
+		// restrictPowerComboBox.setDisable(true);
+		// restrictPowerLabel.setDisable(true);
+		// restrictHillComboBox.setDisable(true);
+		// restrictHillLabel.setDisable(true);
+		// killTimeComboBox.setDisable(true);
 
 		// disable some parameters
 
@@ -729,15 +728,15 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		powerCheckBox.setDisable(false);
 		hillCheckBox.setDisable(false);
 
-		exponential2CheckBox.setDisable(true);
-		exponential4CheckBox.setDisable(true);
+		// exponential2CheckBox.setDisable(true);
+		// exponential4CheckBox.setDisable(true);
 		linearCheckBox.setDisable(true);
 		poly2CheckBox.setDisable(true);
 		poly3CheckBox.setDisable(true);
 		poly4CheckBox.setDisable(true);
 
-		exponential2CheckBox.setVisible(false);
-		exponential4CheckBox.setVisible(false);
+		// exponential2CheckBox.setVisible(false);
+		// exponential4CheckBox.setVisible(false);
 		linearCheckBox.setVisible(false);
 		poly2CheckBox.setVisible(false);
 		poly3CheckBox.setVisible(false);
@@ -747,14 +746,14 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		funlCheckBox.setVisible(false);
 
 		this.varianceType.setDisable(false);
-		this.confidenceLevelComboBox.setDisable(true);
-		this.restrictPowerComboBox.setDisable(true);
-		this.maximumIterationsTextField.setDisable(true);
-		restrictPowerComboBox.setDisable(true);
-		restrictPowerLabel.setDisable(true);
-		restrictHillComboBox.setDisable(true);
-		restrictHillLabel.setDisable(true);
-		killTimeComboBox.setDisable(true);
+		// this.confidenceLevelComboBox.setDisable(true);
+		// this.restrictPowerComboBox.setDisable(true);
+		// this.maximumIterationsTextField.setDisable(true);
+		// restrictPowerComboBox.setDisable(true);
+		// restrictPowerLabel.setDisable(true);
+		// restrictHillComboBox.setDisable(true);
+		// restrictHillLabel.setDisable(true);
+		// killTimeComboBox.setDisable(true);
 		bmdULEstimationMethod.setDisable(true);
 
 		// disable some parameters
@@ -773,18 +772,18 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			// using model averaging. So no need for model selection parameters
 			mainVBox.getChildren().remove(modelSelectionPane);
 			// mainVBox.getChildren().remove(methodHBox);
-			methodHBox.getChildren().removeAll(origMethodRadio, toxicRMethodRadio);
+			methodHBox.getChildren().removeAll(toxicRMethodRadio);
 			toxicRMAMethodRadio.setSelected(true);
 			handle_ToxicRLaplaceMAMethod(null);
 
 			this.varianceType.setDisable(false);
-			this.confidenceLevelComboBox.setDisable(true);
-			this.restrictPowerComboBox.setDisable(true);
-			restrictPowerComboBox.setDisable(true);
-			restrictPowerLabel.setDisable(true);
-			restrictHillComboBox.setDisable(true);
-			restrictHillLabel.setDisable(true);
-			this.maximumIterationsTextField.setDisable(true);
+			// this.confidenceLevelComboBox.setDisable(true);
+			// this.restrictPowerComboBox.setDisable(true);
+			// restrictPowerComboBox.setDisable(true);
+			// restrictPowerLabel.setDisable(true);
+			// restrictHillComboBox.setDisable(true);
+			// restrictHillLabel.setDisable(true);
+			// this.maximumIterationsTextField.setDisable(true);
 		}
 		else
 		{
@@ -829,11 +828,11 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			bMRTypeComboBox.getItems().add("Relative Deviation");
 		bMRTypeComboBox.getSelectionModel().select(0);
 		// init confidence level
-		confidenceLevelComboBox.getItems().add("0.95");
-		confidenceLevelComboBox.getItems().add("0.99");
+		// confidenceLevelComboBox.getItems().add("0.95");
+		// confidenceLevelComboBox.getItems().add("0.99");
 		// init restrict power
-		restrictPowerComboBox.getItems().addAll(RestrictPowerEnum.values());
-		restrictHillComboBox.getItems().addAll(RestrictHillEnum.values());
+		// restrictPowerComboBox.getItems().addAll(RestrictPowerEnum.values());
+		// restrictHillComboBox.getItems().addAll(RestrictHillEnum.values());
 		// init best poly model test
 		bestPolyTestComboBox.getItems().setAll(BestPolyModelTestEnum.values());
 		// pValue Cut OFF
@@ -855,29 +854,29 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		}
 
 		// Add values to kill time combo box
-		killTimeComboBox.getItems().add("30");
-		killTimeComboBox.getItems().add("60");
-		killTimeComboBox.getItems().add("90");
-		killTimeComboBox.getItems().add("120");
-		killTimeComboBox.getItems().add("150");
-		killTimeComboBox.getItems().add("180");
-		killTimeComboBox.getItems().add("210");
-		killTimeComboBox.getItems().add("240");
-		killTimeComboBox.getItems().add("270");
-		killTimeComboBox.getItems().add("300");
-		killTimeComboBox.getItems().add("330");
-		killTimeComboBox.getItems().add("360");
-		killTimeComboBox.getItems().add("390");
-		killTimeComboBox.getItems().add("600 (default)");
-		killTimeComboBox.getItems().add("none");
-		killTimeComboBox.setValue("600 (default)");
+		// killTimeComboBox.getItems().add("30");
+		// killTimeComboBox.getItems().add("60");
+		// killTimeComboBox.getItems().add("90");
+		// killTimeComboBox.getItems().add("120");
+		// killTimeComboBox.getItems().add("150");
+		// killTimeComboBox.getItems().add("180");
+		// killTimeComboBox.getItems().add("210");
+		// killTimeComboBox.getItems().add("240");
+		// killTimeComboBox.getItems().add("270");
+		// killTimeComboBox.getItems().add("300");
+		// killTimeComboBox.getItems().add("330");
+		// killTimeComboBox.getItems().add("360");
+		// killTimeComboBox.getItems().add("390");
+		// killTimeComboBox.getItems().add("600 (default)");
+		// killTimeComboBox.getItems().add("none");
+		// killTimeComboBox.setValue("600 (default)");
 
 		if (!useToxicR)
 		{
 			// init checkboxes
-			exponential2CheckBox.setSelected(input.isExp2());
+			// exponential2CheckBox.setSelected(input.isExp2());
 			exponential3CheckBox.setSelected(input.isExp3());
-			exponential4CheckBox.setSelected(input.isExp4());
+			// exponential4CheckBox.setSelected(input.isExp4());
 			exponential5CheckBox.setSelected(input.isExp5());
 			linearCheckBox.setSelected(input.isLinear());
 			poly2CheckBox.setSelected(input.isPoly2());
@@ -892,10 +891,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 				varianceType.getSelectionModel().select(NON_CONSTANT_VARIANCE);
 			flagHillkParamCheckBox.setSelected(input.isFlagHillModel());
 
-			confidenceLevelComboBox.getSelectionModel().select(input.getConfidenceLevel());
+			// confidenceLevelComboBox.getSelectionModel().select(input.getConfidenceLevel());
 
-			restrictPowerComboBox.getSelectionModel().select(input.getRestrictPower());
-			restrictHillComboBox.getSelectionModel().select(input.getRestrictHill());
+			// restrictPowerComboBox.getSelectionModel().select(input.getRestrictPower());
+			// restrictHillComboBox.getSelectionModel().select(input.getRestrictHill());
 
 			bestPolyTestComboBox.getSelectionModel().select(input.getBestPolyModelTest());
 			pValueCutoffComboBox.getSelectionModel().select(input.getpValueCutoff());
@@ -923,10 +922,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 
 			numberOfThreadsComboBox.setValue(input.getNumThreads());
 
-			if (input.getKillTime() == 600)
-				killTimeComboBox.setValue(String.valueOf(input.getKillTime()) + " (default)");
-			else
-				killTimeComboBox.setValue(String.valueOf(input.getKillTime()));
+			// if (input.getKillTime() == 600)
+			// killTimeComboBox.setValue(String.valueOf(input.getKillTime()) + " (default)");
+			// else
+			// killTimeComboBox.setValue(String.valueOf(input.getKillTime()));
 			// remove most of the panes.
 			if (selectModelsOnly)
 			{
@@ -1030,15 +1029,15 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			}
 			else
 			{
-				inputParameters.setIterations(Integer.valueOf(maximumIterationsTextField.getText()));
-				inputParameters.setConfidence(Double.valueOf(confidenceLevelComboBox.getEditor().getText()));
+				// inputParameters.setIterations(Integer.valueOf(maximumIterationsTextField.getText()));
+				// inputParameters.setConfidence(Double.valueOf(confidenceLevelComboBox.getEditor().getText()));
 				// Multiply by 1000 to convert seconds to milliseconds
-				if (killTimeComboBox.getEditor().getText().equals("none"))
-					inputParameters.setKillTime(-1);
-				else
-					inputParameters.setKillTime(Integer.valueOf(
-							killTimeComboBox.getEditor().getText().replaceAll("\\(default\\)", "").trim())
-							* 1000);
+				// if (killTimeComboBox.getEditor().getText().equals("none"))
+				// inputParameters.setKillTime(-1);
+				// else
+				// inputParameters.setKillTime(Integer.valueOf(
+				// killTimeComboBox.getEditor().getText().replaceAll("\\(default\\)", "").trim())
+				// * 1000);
 			}
 			inputParameters.setBmrType(1);
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
@@ -1053,7 +1052,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			inputParameters
 					.setConstantVariance((this.varianceType.getValue().equals(CONSTANT_VARIANCE)) ? 1 : 0);
 			// for simulation only?
-			inputParameters.setRestirctPower(restrictPowerComboBox.getSelectionModel().getSelectedIndex());
+			// ßinputParameters.setRestirctPower(restrictPowerComboBox.getSelectionModel().getSelectedIndex());
 
 			// restrict hill has been tried, but to no avail. we will default restrict hill to 1. but we have
 			// code
@@ -1066,13 +1065,14 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 				inputParameters.setRho(inputParameters.getNegative());
 			}
 
-			if (origMethodRadio.isSelected())
-			{
-				inputParameters.setBmdMethod(BMD_METHOD.ORIGINAL);
-				inputParameters.setBestModelMethod(BESTMODEL_METHOD.CALCULATE);
+			// if (origMethodRadio.isSelected())
+			// {
+			// inputParameters.setBmdMethod(BMD_METHOD.ORIGINAL);
+			// inputParameters.setBestModelMethod(BESTMODEL_METHOD.CALCULATE);
 
-			}
-			else if (toxicRMethodRadio.isSelected())
+			// }
+			// else
+			if (toxicRMethodRadio.isSelected())
 			{
 				inputParameters.setBmdMethod(BMD_METHOD.TOXICR);
 				inputParameters.setBestModelMethod(BESTMODEL_METHOD.CALCULATE);
@@ -1087,10 +1087,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 				inputParameters.setBmdMethod(BMD_METHOD.TOXICR_MCMC);
 				inputParameters.setBestModelMethod(BESTMODEL_METHOD.MODEL_AVERAGING);
 			}
-			if (this.origMethodRadio.isSelected())
-				inputParameters.setBMDSMajorVersion("2.x");
-			else
-				inputParameters.setBMDSMajorVersion("3.x with shared library/DLL");
+			// if (this.origMethodRadio.isSelected())
+			// inputParameters.setBMDSMajorVersion("2.x");
+			// else
+			inputParameters.setBMDSMajorVersion("3.x with shared library/DLL");
 
 			if (this.toxicRMAMethodRadio.isSelected())
 				inputParameters.setMAMethod("Laplace Model Averaging");
@@ -1246,19 +1246,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		factors.add(new BMRFactor("100%", "0.95"));
 
 		return factors;
-	}
-
-	private List<Double> initControlDoseAdjustment()
-	{
-		List<Double> adjustments = new ArrayList<>();
-		adjustments.add(0.5);
-		adjustments.add(0.4);
-		adjustments.add(0.3);
-		adjustments.add(0.2);
-		adjustments.add(0.1);
-		adjustments.add(0.05);
-
-		return adjustments;
 	}
 
 }

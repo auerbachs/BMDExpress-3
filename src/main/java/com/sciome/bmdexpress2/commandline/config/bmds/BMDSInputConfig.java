@@ -3,12 +3,12 @@ package com.sciome.bmdexpress2.commandline.config.bmds;
 public class BMDSInputConfig
 {
 
-	private Integer maxIterations = 250;
-	private Double confidenceLevel = 0.95;
+	// private Integer maxIterations = 250;
+	// private Double confidenceLevel = 0.95;
 
 	private Boolean constantVariance = true;
 
-	private Boolean restrictPower = true;
+	// private Boolean restrictPower = true;
 
 	private Double bmrFactor = 1.021;
 
@@ -17,25 +17,25 @@ public class BMDSInputConfig
 	// only relevant for the new version
 	private Integer bmdUBmdLEstimationMethod = 1; // 1 for epa profiling, 2 for Wald/EWald
 
-	public Integer getMaxIterations()
-	{
-		return maxIterations;
-	}
+	// public Integer getMaxIterations()
+	// {
+	// return maxIterations;
+	// }
 
-	public void setMaxIterations(Integer maxIterations)
-	{
-		this.maxIterations = maxIterations;
-	}
+	// public void setMaxIterations(Integer maxIterations)
+	// {
+	// this.maxIterations = maxIterations;
+	// }
 
-	public Double getConfidenceLevel()
-	{
-		return confidenceLevel;
-	}
+	// public Double getConfidenceLevel()
+	// {
+	// return confidenceLevel;
+	// }
 
-	public void setConfidenceLevel(Double confidenceLevel)
-	{
-		this.confidenceLevel = confidenceLevel;
-	}
+	// public void setConfidenceLevel(Double confidenceLevel)
+	// {
+	// this.confidenceLevel = confidenceLevel;
+	// }
 
 	public Boolean getConstantVariance()
 	{
@@ -57,15 +57,15 @@ public class BMDSInputConfig
 		this.bmrFactor = bmrFactor;
 	}
 
-	public Boolean getRestrictPower()
-	{
-		return restrictPower;
-	}
+	// public Boolean getRestrictPower()
+	// {
+	// return restrictPower;
+	// }
 
-	public void setRestrictPower(Boolean restrict)
-	{
-		this.restrictPower = restrict;
-	}
+	// public void setRestrictPower(Boolean restrict)
+	// {
+	// this.restrictPower = restrict;
+	// }
 
 	public Integer getBmrType()
 	{

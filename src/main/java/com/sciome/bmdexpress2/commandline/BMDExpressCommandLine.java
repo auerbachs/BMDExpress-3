@@ -349,10 +349,10 @@ public class BMDExpressCommandLine
 		BMDSInputConfig conf = new BMDSInputConfig();
 
 		conf.setBmrFactor(1.349);
-		conf.setConfidenceLevel(0.95);
+		// conf.setConfidenceLevel(0.95);
 		conf.setConstantVariance(true);
-		conf.setMaxIterations(250);
-		conf.setRestrictPower(true);
+		// conf.setMaxIterations(250);
+		// conf.setRestrictPower(true);
 		return conf;
 	}
 

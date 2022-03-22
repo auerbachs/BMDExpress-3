@@ -6,7 +6,7 @@ import java.util.List;
 public class BMDSConfig
 {
 
-	private Integer method = 2; // 1 for 2.7.x; 2 for 3.x.x. default to 2 which uses the dlls
+	// private Integer method = 2; // 1 for 2.7.x; 2 for 3.x.x. default to 2 which uses the dlls
 	private List<BMDSModelConfig> modelConfigs = new ArrayList<>();
 	private BMDSBestModelSelectionConfig bmdsBestModelSelection;
 	private BMDSInputConfig bmdsInputConfig;
@@ -19,11 +19,11 @@ public class BMDSConfig
 	// name of output for the analysis
 	private String outputName;
 
-	private Integer killTime = 600;
+	// private Integer killTime = 600;
 
 	private Integer numberOfThreads = 1;
 
-	private String tmpFolder;
+	// private String tmpFolder;
 
 	public String getInputCategory()
 	{
@@ -95,34 +95,34 @@ public class BMDSConfig
 		this.numberOfThreads = numberOfThreads;
 	}
 
-	public Integer getKillTime()
-	{
-		return killTime;
-	}
+	// public Integer getKillTime()
+	// {
+	// return killTime;
+	// }
 
-	public void setKillTime(Integer killTime)
-	{
-		this.killTime = killTime;
-	}
+	// public void setKillTime(Integer killTime)
+	// {
+	// this.killTime = killTime;
+	// }
 
-	public String getTmpFolder()
-	{
-		return tmpFolder;
-	}
+	// public String getTmpFolder()
+	// {
+	// return tmpFolder;
+	// }
 
-	public void setTmpFolder(String f)
-	{
-		this.tmpFolder = f;
-	}
+	// public void setTmpFolder(String f)
+	// {
+	// this.tmpFolder = f;
+	// }
 
-	public Integer getMethod()
-	{
-		return method;
-	}
+	// public Integer getMethod()
+	// {
+	// return method;
+	// }
 
-	public void setMethod(Integer method)
-	{
-		this.method = method;
-	}
+	// public void setMethod(Integer method)
+	// {
+	// this.method = method;
+	// }
 
 }

@@ -446,8 +446,8 @@ public class AnalyzeRunner
 	private void doBMDSAnalysis(BMDSConfig bmdsConfig)
 	{
 		String method = "BMDS 3.x.x MLE";
-		if (bmdsConfig.getMethod().equals(1))
-			method = "BMDS 2.7.x MLE";
+		// if (bmdsConfig.getMethod().equals(1))
+		// method = "BMDS 2.7.x MLE";
 
 		if (bmdsConfig.getInputName() != null)
 			System.out.println(method + " analysis on " + bmdsConfig.getInputName() + " from group "
@@ -460,30 +460,30 @@ public class AnalyzeRunner
 
 		inputParameters.setBmdMethod(BMD_METHOD.TOXICR);
 		inputParameters.setBMDSMajorVersion("3.x with shared library/DLL");
-		if (bmdsConfig.getMethod().equals(1))
-		{
-			inputParameters.setBmdMethod(BMD_METHOD.ORIGINAL);
-			inputParameters.setBMDSMajorVersion("2.x");
-		}
+		// if (bmdsConfig.getMethod().equals(1))
+		// {
+		// inputParameters.setBmdMethod(BMD_METHOD.ORIGINAL);
+		// inputParameters.setBMDSMajorVersion("2.x");
+		// }
 
 		inputParameters.setFast(false);
 		if (bmdsConfig.getBmdsInputConfig().getBmdUBmdLEstimationMethod().equals(2))
 			inputParameters.setFast(true);
 
-		inputParameters.setIterations(bmdsConfig.getBmdsInputConfig().getMaxIterations());
-		inputParameters.setConfidence(bmdsConfig.getBmdsInputConfig().getConfidenceLevel());
+		// inputParameters.setIterations(bmdsConfig.getBmdsInputConfig().getMaxIterations());
+		// inputParameters.setConfidence(bmdsConfig.getBmdsInputConfig().getConfidenceLevel());
 		inputParameters.setBmrLevel(bmdsConfig.getBmdsInputConfig().getBmrFactor());
 		inputParameters.setNumThreads(bmdsConfig.getNumberOfThreads());
-		if (bmdsConfig.getKillTime() != null)
-			inputParameters.setKillTime(bmdsConfig.getKillTime().intValue() * 1000);
-		else
-			inputParameters.setKillTime(600000); // default to 10 minute timeout
+		// if (bmdsConfig.getKillTime() != null)
+		// inputParameters.setKillTime(bmdsConfig.getKillTime().intValue() * 1000);
+		// else
+		// inputParameters.setKillTime(600000); // default to 10 minute timeout
 
 		inputParameters.setBmdlCalculation(1);
 		inputParameters.setBmdCalculation(1);
 		inputParameters.setConstantVariance((bmdsConfig.getBmdsInputConfig().getConstantVariance()) ? 1 : 0);
 		// for simulation only?
-		inputParameters.setRestirctPower((bmdsConfig.getBmdsInputConfig().getRestrictPower()) ? 1 : 0);
+		// inputParameters.setRestirctPower((bmdsConfig.getBmdsInputConfig().getRestrictPower()) ? 1 : 0);
 
 		// in practice bmrtype can only be set to relative deviation for non-log normalized data.
 		inputParameters.setBmrType(1);
@@ -560,19 +560,19 @@ public class AnalyzeRunner
 			if (modelConfig instanceof HillConfig)
 			{
 				HillModel hillModel = new HillModel();
-				if (bmdsConfig.getMethod().equals(1))
-					hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
-				else
-					hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
+				//// if (bmdsConfig.getMethod().equals(1))
+				// hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
+				// else
+				hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
 				modelsToRun.add(hillModel);
 			}
 			if (modelConfig instanceof PowerConfig)
 			{
 				PowerModel powerModel = new PowerModel();
-				if (bmdsConfig.getMethod().equals(1))
-					powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
-				else
-					powerModel.setVersion("Power EPA BMDS MLE ToxicR");
+				// if (bmdsConfig.getMethod().equals(1))
+				// powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
+				// else
+				powerModel.setVersion("Power EPA BMDS MLE ToxicR");
 				modelsToRun.add(powerModel);
 			}
 			if (modelConfig instanceof PolyConfig)
@@ -580,9 +580,9 @@ public class AnalyzeRunner
 				PolyModel polymodel = new PolyModel();
 
 				polymodel.setDegree(((PolyConfig) modelConfig).getDegree());
-				if (bmdsConfig.getMethod().equals(1))
-					polymodel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
-				else if (polymodel.getDegree() == 1)
+				// if (bmdsConfig.getMethod().equals(1))
+				// polymodel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+				if (polymodel.getDegree() == 1)
 					polymodel.setVersion("Linear EPA BMDS MLE ToxicR");
 				else
 					polymodel.setVersion("Poly " + polymodel.getDegree() + " EPA BMDS MLE ToxicR");
@@ -595,11 +595,11 @@ public class AnalyzeRunner
 
 				exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
 
-				if (bmdsConfig.getMethod().equals(1))
-					exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
-				else
-					exponentialModel.setVersion(
-							"Exponential " + exponentialModel.getOption() + " EPA BMDS MLE ToxicR");
+				// if (bmdsConfig.getMethod().equals(1))
+				// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+				// else
+				exponentialModel
+						.setVersion("Exponential " + exponentialModel.getOption() + " EPA BMDS MLE ToxicR");
 				modelsToRun.add(exponentialModel);
 			}
 
@@ -651,7 +651,7 @@ public class AnalyzeRunner
 		for (IStatModelProcessable processableData : processables)
 		{
 			BMDResult result = new BMDAnalysisRunner().runBMDAnalysis(processableData,
-					modelSelectionParameters, modelsToRun, inputParameters, bmdsConfig.getTmpFolder());
+					modelSelectionParameters, modelsToRun, inputParameters, null);
 			if (bmdsConfig.getOutputName() != null)
 				result.setName(bmdsConfig.getOutputName());
 			else
@@ -697,7 +697,7 @@ public class AnalyzeRunner
 
 		inputParameters.setConstantVariance((maConfig.getBmdsInputConfig().getConstantVariance()) ? 1 : 0);
 		// for simulation only?
-		inputParameters.setRestirctPower((maConfig.getBmdsInputConfig().getRestrictPower()) ? 1 : 0);
+		// inputParameters.setRestirctPower((maConfig.getBmdsInputConfig().getRestrictPower()) ? 1 : 0);
 
 		// in practice bmrtype can only be set to relative deviation for non-log normalized data.
 		inputParameters.setBmrType(1);
