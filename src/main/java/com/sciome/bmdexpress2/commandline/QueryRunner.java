@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
@@ -66,6 +67,13 @@ public class QueryRunner
 		else if (analysisGroup.equals(BMDExpressCommandLine.WILLIAMS))
 		{
 			for (WilliamsTrendResults experiment : project.getWilliamsTrendResults())
+			{
+				System.out.println(experiment.getName());
+			}
+		}
+		else if (analysisGroup.equals(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
+		{
+			for (CurveFitPrefilterResults experiment : project.getCurveFitPrefilterResults())
 			{
 				System.out.println(experiment.getName());
 			}
