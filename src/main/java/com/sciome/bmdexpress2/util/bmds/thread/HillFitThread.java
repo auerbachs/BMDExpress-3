@@ -15,11 +15,8 @@ import java.util.concurrent.CountDownLatch;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.HillResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
-import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.bmds.BMDSToxicRUtils;
-import com.sciome.bmdexpress2.util.bmds.BMD_METHOD;
-import com.sciome.bmdexpress2.util.bmds.FileHillFit;
 import com.sciome.bmdexpress2.util.bmds.ModelInputParameters;
 import com.toxicR.ToxicRConstants;
 import com.toxicR.model.NormalDeviance;
@@ -27,7 +24,6 @@ import com.toxicR.model.NormalDeviance;
 public class HillFitThread extends Thread implements IFitThread
 {
 	private CountDownLatch cdLatch;
-	private FileHillFit fHillFit = null;
 
 	private ModelInputParameters inputParameters;
 	private boolean flagHill = false;
@@ -65,10 +61,6 @@ public class HillFitThread extends Thread implements IFitThread
 		this.probeIndexGetter = probeIndexGetter;
 		this.tmpFolder = tmpFolder;
 
-		if (tmpFolder == null || tmpFolder.equals(""))
-			this.tmpFolder = BMDExpressConstants.getInstance().TEMP_FOLDER;
-
-		fHillFit = new FileHillFit(killTime, tmpFolder);
 	}
 
 	/*
@@ -88,10 +80,8 @@ public class HillFitThread extends Thread implements IFitThread
 	@Override
 	public void run()
 	{
-		if (inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
-			filedHillFit();
-		else
-			toxicRFit();
+
+		toxicRFit();
 		try
 		{
 			cdLatch.countDown();
@@ -169,63 +159,6 @@ public class HillFitThread extends Thread implements IFitThread
 
 	}
 
-	private void filedHillFit()
-	{
-		inputParameters.setAdversDirection(adversDirections[0]);
-		Random rand = new Random(System.nanoTime());
-		int randInt = Math.abs(rand.nextInt());
-
-		Integer probeIndex = probeIndexGetter.getNextProbeIndex();
-		while (probeIndex != null)
-		{
-
-			HillResult hillResult = (HillResult) hillResults.get(probeIndex);
-
-			if (cancel)
-			{
-				break;
-
-			}
-
-			try
-			{
-				// get the probe id and responses
-
-				String id = probeResponses.get(probeIndex).getProbe().getId().replaceAll("\\s", "_");
-
-				id = String.valueOf(randInt) + "_" + BMDExpressProperties.getInstance().getNextTempFile(
-						this.tmpFolder, String.valueOf(Math.abs(id.hashCode())), "_hill.(d)");
-				float[] responses = probeResponses.get(probeIndex).getResponseArray();
-				double[] results = fHillFit.fitModel(id, inputParameters, doses, responses);
-
-				if (results != null)
-				{
-					fillOutput(results, hillResult);
-
-					if (flagHill)
-					{
-						if (results[9] < flagDose)
-						{
-							hillResult.setkFlag((short) 1);
-						}
-						else
-						{
-							hillResult.setkFlag((short) 0);
-						}
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-
-			// tell the calling entity that a new one is being computed
-			progressUpdater.incrementModelsComputed();
-			probeIndex = probeIndexGetter.getNextProbeIndex();
-		}
-	}
-
 	/*
 	 * given the results double array, we need to fill up the hillResult Object with the results.
 	 */
@@ -246,7 +179,7 @@ public class HillFitThread extends Thread implements IFitThread
 		}
 		hillResult.setCurveParameters(Arrays.copyOfRange(results, 6, results.length));
 		hillResult.setAdverseDirection((short) direction);
-		hillResult.setSuccess("" + fHillFit.isSuccess());
+		hillResult.setSuccess("true");
 	}
 
 	@Override

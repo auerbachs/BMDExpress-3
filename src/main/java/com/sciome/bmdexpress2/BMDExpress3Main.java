@@ -16,7 +16,6 @@ import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -94,41 +93,8 @@ public class BMDExpress3Main extends Application
 		}
 	}
 
-	/*
-	 * when user first installs the app, just run rscript to get all the os level run permissions out of the
-	 * way.
-	 * 
-	 */
-	private void runRScript()
-	{
-		Task<Integer> task = new Task<Integer>() {
-			@Override
-			protected Integer call() throws Exception
-			{
-				try
-				{
-					ProcessBuilder builder = new ProcessBuilder();
-					builder.command(BMDExpressProperties.getInstance().getRscript());
-					Process process = builder.start();
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-
-				}
-
-				return 0;
-			}
-		};
-
-		new Thread(task).start();
-
-	}
-
 	public static void main(String[] args)
 	{
-		Float myflot = Float.MIN_VALUE;
-		Double mydoub = Double.MIN_VALUE;
 		renameTableInformationJSONFields();
 		launch(args);
 	}

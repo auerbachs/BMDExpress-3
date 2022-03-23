@@ -6,20 +6,15 @@
 
 package com.sciome.bmdexpress2.util.bmds.thread;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
-import com.sciome.bmdexpress2.mvp.model.stat.HillResult;
-import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.bmds.BMDSToxicRUtils;
-import com.sciome.bmdexpress2.util.bmds.BMD_METHOD;
-import com.sciome.bmdexpress2.util.bmds.FileHillFit;
 import com.sciome.bmdexpress2.util.bmds.ModelInputParameters;
 import com.toxicR.ToxicRConstants;
 import com.toxicR.model.NormalDeviance;
@@ -39,10 +34,11 @@ public class FitDevianceThread extends Thread implements IFitThread
 	private IProbeIndexGetter probeIndexGetter;
 
 	private String tmpFolder;
-	private Map<String,NormalDeviance> deviance;
+	private Map<String, NormalDeviance> deviance;
 
 	public FitDevianceThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
-			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter, Map<String, NormalDeviance> deviance)
+			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
+			Map<String, NormalDeviance> deviance)
 	{
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
@@ -54,8 +50,6 @@ public class FitDevianceThread extends Thread implements IFitThread
 			this.tmpFolder = BMDExpressConstants.getInstance().TEMP_FOLDER;
 
 	}
-
-	
 
 	public void setDoses(float[] doses)
 	{
@@ -70,8 +64,8 @@ public class FitDevianceThread extends Thread implements IFitThread
 	@Override
 	public void run()
 	{
-		
-			toxicRFit();
+
+		toxicRFit();
 		try
 		{
 			cdLatch.countDown();
@@ -95,7 +89,6 @@ public class FitDevianceThread extends Thread implements IFitThread
 		while (probeIndex != null)
 		{
 
-
 			if (cancel)
 			{
 				break;
@@ -112,12 +105,11 @@ public class FitDevianceThread extends Thread implements IFitThread
 				for (float r : responses)
 					responsesD[ri++] = r;
 
-				NormalDeviance returnDev = BMDSToxicRUtils.calculateNormalDeviance(ToxicRConstants.HILL, responsesD, dosesd,
-						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
+				NormalDeviance returnDev = BMDSToxicRUtils.calculateNormalDeviance(ToxicRConstants.HILL,
+						responsesD, dosesd, inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 						inputParameters.getConstantVariance() != 1);
 				deviance.put(probeResponses.get(probeIndex).getProbe().getId(), returnDev);
 
-				
 			}
 			catch (Exception e)
 			{
@@ -129,14 +121,10 @@ public class FitDevianceThread extends Thread implements IFitThread
 
 	}
 
-	
-	
-
 	@Override
 	public void cancel()
 	{
 		cancel = true;
 	}
 
-	
 }

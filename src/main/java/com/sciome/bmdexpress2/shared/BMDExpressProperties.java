@@ -47,9 +47,7 @@ public class BMDExpressProperties
 	private PropertiesParser propertiesParser;
 	private int locX, locY, sizeX, sizeY, precision;
 	private String user, imgName, logoName, projectName, updateURL, httpKEGG, proxySet, proxyHost, proxyPort,
-			endpoint, sqlservice, timeoutMilliseconds, powerEXE, polyEXE, hillEXE, powerVersion, polyVersion,
-			hillVersion, exponentialEXE, exponentialVersion, Rscript, pathwayFilterScript, projectPath,
-			expressionPath, exportPath, definedPath;
+			endpoint, sqlservice, timeoutMilliseconds, projectPath, expressionPath, exportPath, definedPath;
 	private boolean useWS, usePrecision, useJNI, ctrldown, projectChanged, autoUpdate, isWindows, hideTable,
 			hideFilter, hideCharts, applyFilter;
 
@@ -425,8 +423,6 @@ public class BMDExpressProperties
 		usePrecision = propertiesParser.getPropertyBoolean("use.precision");
 		useJNI = propertiesParser.getPropertyBoolean("JNI.enabled");
 		autoUpdate = propertiesParser.getPropertyBoolean("auto.update");
-		Rscript = propertiesParser.getProperty("Rscript");
-		pathwayFilterScript = propertiesParser.getProperty("pathway.filter");
 
 		projectPath = propertiesParser.getProperty("file.projectpath");
 		expressionPath = propertiesParser.getProperty("file.expressionpath");
@@ -443,10 +439,6 @@ public class BMDExpressProperties
 		String hillEXEName = "hill.exe";
 		String expEXEName = "exponential.exe";
 
-		powerEXE = powerEXEName;
-		polyEXE = polyEXEName;
-		hillEXE = hillEXEName;
-		exponentialEXE = expEXEName;
 		checkOperatingSystem();
 
 		if (projectPath == null || projectPath.equals(""))
@@ -521,35 +513,14 @@ public class BMDExpressProperties
 		isWindows = false;
 		// if (os.startsWith("Linux")) { // for linux OS
 		if (os.toLowerCase().contains("mac"))
-		{ // for linux or Unix OS
-			powerEXE = powerEXE.replace(".exe", "_mac");
-			polyEXE = polyEXE.replace(".exe", "_mac");
-			hillEXE = hillEXE.replace(".exe", "_mac");
-			exponentialEXE = exponentialEXE.replace(".exe", "_mac");
-		}
+		{}
 		else if (!os.toLowerCase().startsWith("windows"))
-		{ // for linux or Unix OS
-			powerEXE = truncateExecutable(powerEXE);
-			polyEXE = truncateExecutable(polyEXE);
-			hillEXE = truncateExecutable(hillEXE);
-			exponentialEXE = truncateExecutable(exponentialEXE);
-		}
+		{}
 		else
 		{
-			// RScript is part of installation
-			if (Rscript.equals(""))
-			{
-				File file = new File(".");
-				Rscript = file.getAbsolutePath() + File.separator + "R-3.2.1" + File.separator + "bin"
-						+ File.separator + "Rscript.exe";
-			}
 			this.isWindows = true;
 		}
 
-		polyVersion = getModelVersion(getPolyEXE());
-		powerVersion = getModelVersion(getPowerEXE());
-		hillVersion = getModelVersion(getHillEXE());
-		exponentialVersion = getModelVersion(getExponentialEXE());
 	}
 
 	public boolean isWindows()
@@ -756,58 +727,6 @@ public class BMDExpressProperties
 		this.timeoutMilliseconds = timeoutMilliseconds;
 	}
 
-	public String getPowerEXE()
-	{
-		return BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib" + File.separator
-				+ powerEXE;
-	}
-
-	public String getPolyEXE()
-	{
-		return BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib" + File.separator
-				+ polyEXE;
-	}
-
-	public String getHillEXE()
-	{
-		return BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib" + File.separator
-				+ hillEXE;
-	}
-
-	public String getExponentialEXE()
-	{
-		return BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib" + File.separator
-				+ exponentialEXE;
-	}
-
-	public String getPowerEXE(String basePath)
-	{
-		if (basePath == null || basePath.equals(""))
-			basePath = BMDExpressConstants.getInstance().BMDBASEPATH;
-		return basePath + File.separator + "lib" + File.separator + powerEXE;
-	}
-
-	public String getPolyEXE(String basePath)
-	{
-		if (basePath == null || basePath.equals(""))
-			basePath = BMDExpressConstants.getInstance().BMDBASEPATH;
-		return basePath + File.separator + "lib" + File.separator + polyEXE;
-	}
-
-	public String getHillEXE(String basePath)
-	{
-		if (basePath == null || basePath.equals(""))
-			basePath = BMDExpressConstants.getInstance().BMDBASEPATH;
-		return basePath + File.separator + "lib" + File.separator + hillEXE;
-	}
-
-	public String getExponentialEXE(String basePath)
-	{
-		if (basePath == null || basePath.equals(""))
-			basePath = BMDExpressConstants.getInstance().BMDBASEPATH;
-		return basePath + File.separator + "lib" + File.separator + exponentialEXE;
-	}
-
 	public boolean isUseWS()
 	{
 		return useWS;
@@ -868,18 +787,6 @@ public class BMDExpressProperties
 		this.autoUpdate = autoUpdate;
 	}
 
-	public String getRscript()
-	{
-		return Rscript;
-	}
-
-	public void setRscript(String rscript)
-	{
-		Rscript = rscript;
-		propertiesParser.setProperty("Rscript", Rscript);
-		propertiesParser.writeFile();
-	}
-
 	public String getProjectPath()
 	{
 		return projectPath;
@@ -922,46 +829,6 @@ public class BMDExpressProperties
 	{
 		this.definedPath = definedPath;
 		propertiesParser.setProperty("file.definedpath", definedPath);
-	}
-
-	public String getPathwayFilterScript()
-	{
-		return pathwayFilterScript;
-	}
-
-	public void setPathwayFilterScript(String pathwayFilterScript)
-	{
-		this.pathwayFilterScript = pathwayFilterScript;
-	}
-
-	public String getPowerVersion()
-	{
-		return powerVersion;
-	}
-
-	public void setPowerVersion(String powerVersion)
-	{
-		this.powerVersion = powerVersion;
-	}
-
-	public String getPolyVersion()
-	{
-		return polyVersion;
-	}
-
-	public void setPolyVersion(String polyVersion)
-	{
-		this.polyVersion = polyVersion;
-	}
-
-	public String getHillVersion()
-	{
-		return hillVersion;
-	}
-
-	public void setHillVersion(String hillVersion)
-	{
-		this.hillVersion = hillVersion;
 	}
 
 	public boolean isHideTable()
@@ -1095,11 +962,6 @@ public class BMDExpressProperties
 			e.printStackTrace();
 		}
 		return "";
-	}
-
-	public String getExponentialVersion()
-	{
-		return exponentialVersion;
 	}
 
 	public WilliamsTrendInput getWilliamsInput()

@@ -18,8 +18,6 @@ import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.bmds.BMDSToxicRUtils;
-import com.sciome.bmdexpress2.util.bmds.BMD_METHOD;
-import com.sciome.bmdexpress2.util.bmds.FileExponentialFit;
 import com.sciome.bmdexpress2.util.bmds.ModelInputParameters;
 import com.toxicR.ToxicRConstants;
 import com.toxicR.model.NormalDeviance;
@@ -27,7 +25,6 @@ import com.toxicR.model.NormalDeviance;
 public class ExponentialFitThread extends Thread implements IFitThread
 {
 	private CountDownLatch cdLatch;
-	private FileExponentialFit fExponentialFit = null;
 
 	private ModelInputParameters inputParameters;
 
@@ -63,13 +60,6 @@ public class ExponentialFitThread extends Thread implements IFitThread
 		if (tmpFolder == null || tmpFolder.equals(""))
 			this.tmpFolder = BMDExpressConstants.getInstance().TEMP_FOLDER;
 
-		fExponentialFit = new FileExponentialFit(option, killTime, tmpFolder);
-
-	}
-
-	public void setFilePowerFit(FileExponentialFit eFit)
-	{
-		this.fExponentialFit = eFit;
 	}
 
 	public void setDoses(float[] doses)
@@ -85,13 +75,8 @@ public class ExponentialFitThread extends Thread implements IFitThread
 	@Override
 	public void run()
 	{
-		if (inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
-		{
-			if (fExponentialFit != null)
-				filedExponential();
-		}
-		else
-			toxicRFit();
+
+		toxicRFit();
 
 		try
 		{
@@ -162,46 +147,6 @@ public class ExponentialFitThread extends Thread implements IFitThread
 
 	}
 
-	private void filedExponential()
-	{
-		inputParameters.setAdversDirection(adversDirections[0]);
-
-		Random rand = new Random(System.nanoTime());
-		int randInt = Math.abs(rand.nextInt());
-
-		Integer probeIndex = probeIndexGetter.getNextProbeIndex();
-		while (probeIndex != null)
-		{
-
-			ExponentialResult expResult = (ExponentialResult) powerResults.get(probeIndex);
-
-			if (cancel)
-			{
-				break;
-			}
-
-			try
-			{
-				String id = probeResponses.get(probeIndex).getProbe().getId().replaceAll("\\s", "_");
-				id = String.valueOf(randInt) + "_" + BMDExpressProperties.getInstance().getNextTempFile(
-						this.tmpFolder, String.valueOf(Math.abs(id.hashCode())), "_exponential.(d)");
-				float[] responses = probeResponses.get(probeIndex).getResponseArray();
-				double[] results = fExponentialFit.fitModel(id, inputParameters, doses, responses);
-
-				if (results != null)
-				{
-					fillOutput(results, expResult);
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			this.progressUpdater.incrementModelsComputed();
-			probeIndex = probeIndexGetter.getNextProbeIndex();
-		}
-	}
-
 	private void fillOutput(double[] results, ExponentialResult expResult)
 	{
 		expResult.setBMD(results[0]);
@@ -220,7 +165,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 		}
 		expResult.setCurveParameters(Arrays.copyOfRange(results, 6, results.length));
 		expResult.setAdverseDirection((short) direction);
-		expResult.setSuccess("" + fExponentialFit.isSuccess());
+		expResult.setSuccess("true");
 	}
 
 	@Override

@@ -15,11 +15,8 @@ import java.util.concurrent.CountDownLatch;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.PowerResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
-import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.bmds.BMDSToxicRUtils;
-import com.sciome.bmdexpress2.util.bmds.BMD_METHOD;
-import com.sciome.bmdexpress2.util.bmds.FilePowerFit;
 import com.sciome.bmdexpress2.util.bmds.ModelInputParameters;
 import com.toxicR.ToxicRConstants;
 import com.toxicR.model.NormalDeviance;
@@ -27,7 +24,6 @@ import com.toxicR.model.NormalDeviance;
 public class PowerFitThread extends Thread implements IFitThread
 {
 	private CountDownLatch cdLatch;
-	private FilePowerFit fPowerFit = null;
 
 	private ModelInputParameters inputParameters;
 
@@ -59,16 +55,6 @@ public class PowerFitThread extends Thread implements IFitThread
 		this.probeIndexGetter = probeIndexGetter;
 		this.tmpFolder = tmpFolder;
 
-		if (tmpFolder == null || tmpFolder.equals(""))
-			this.tmpFolder = BMDExpressConstants.getInstance().TEMP_FOLDER;
-
-		fPowerFit = new FilePowerFit(killTime, tmpFolder);
-
-	}
-
-	public void setFilePowerFit(FilePowerFit fPowerFit)
-	{
-		this.fPowerFit = fPowerFit;
 	}
 
 	public void setDoses(float[] doses)
@@ -84,13 +70,8 @@ public class PowerFitThread extends Thread implements IFitThread
 	@Override
 	public void run()
 	{
-		if (inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
-		{
-			if (fPowerFit != null)
-				filedPowerFit();
-		}
-		else
-			toxicRFit();
+
+		toxicRFit();
 
 		try
 		{
@@ -153,46 +134,6 @@ public class PowerFitThread extends Thread implements IFitThread
 
 	}
 
-	private void filedPowerFit()
-	{
-		inputParameters.setAdversDirection(adversDirections[0]);
-
-		Random rand = new Random(System.nanoTime());
-		int randInt = Math.abs(rand.nextInt());
-
-		Integer probeIndex = probeIndexGetter.getNextProbeIndex();
-		while (probeIndex != null)
-		{
-
-			PowerResult powerResult = (PowerResult) powerResults.get(probeIndex);
-
-			if (cancel)
-			{
-				break;
-			}
-
-			try
-			{
-				String id = probeResponses.get(probeIndex).getProbe().getId().replaceAll("\\s", "_");
-				id = String.valueOf(randInt) + "_" + BMDExpressProperties.getInstance()
-						.getNextTempFile(this.tmpFolder, String.valueOf(Math.abs(id.hashCode())), ".(d)");
-				float[] responses = probeResponses.get(probeIndex).getResponseArray();
-				double[] results = fPowerFit.fitModel(id, inputParameters, doses, responses);
-
-				if (results != null)
-				{
-					fillOutput(results, powerResult);
-				}
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-			this.progressUpdater.incrementModelsComputed();
-			probeIndex = probeIndexGetter.getNextProbeIndex();
-		}
-	}
-
 	private void fillOutput(double[] results, PowerResult powerResult)
 	{
 		powerResult.setBMD(results[0]);
@@ -210,7 +151,7 @@ public class PowerFitThread extends Thread implements IFitThread
 		}
 		powerResult.setCurveParameters(Arrays.copyOfRange(results, 6, results.length));
 		powerResult.setAdverseDirection((short) direction);
-		powerResult.setSuccess("" + fPowerFit.isSuccess());
+		powerResult.setSuccess("true");
 	}
 
 	@Override
