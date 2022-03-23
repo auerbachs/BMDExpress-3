@@ -945,28 +945,30 @@ public class AnalyzeRunner
 				if (modelConfig instanceof HillConfig)
 				{
 					HillModel hillModel = new HillModel();
-					hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
+					hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
 					modelsToRun.add(hillModel);
 				}
 				if (modelConfig instanceof PowerConfig)
 				{
 					PowerModel powerModel = new PowerModel();
-					powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
+					powerModel.setVersion("Power EPA BMDS MLE ToxicR");
 					modelsToRun.add(powerModel);
 				}
 				if (modelConfig instanceof PolyConfig)
 				{
 					PolyModel polymodel = new PolyModel();
-					polymodel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
 					polymodel.setDegree(((PolyConfig) modelConfig).getDegree());
+					polymodel.setVersion("Poly " + polymodel.getDegree() + " EPA BMDS MLE ToxicR");
 					modelsToRun.add(polymodel);
 				}
 
 				if (modelConfig instanceof ExponentialConfig)
 				{
 					ExponentialModel exponentialModel = new ExponentialModel();
-					exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+
 					exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
+					exponentialModel.setVersion(
+							"Exponential " + exponentialModel.getOption() + " EPA BMDS MLE ToxicR");
 					modelsToRun.add(exponentialModel);
 				}
 

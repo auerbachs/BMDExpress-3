@@ -270,28 +270,28 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		if (!hillCheckBox.isDisabled() && hillCheckBox.isSelected())
 		{
 			HillModel hillModel = new HillModel();
-			if (this.toxicRMethodRadio.isSelected())
-				hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
-			else
-				hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
+			// else
+			// hillModel.setVersion(BMDExpressProperties.getInstance().getHillVersion());
 			modelsToRun.add(hillModel);
 		}
 		if (!powerCheckBox.isDisabled() && powerCheckBox.isSelected())
 		{
 			PowerModel powerModel = new PowerModel();
-			if (this.toxicRMethodRadio.isSelected())
-				powerModel.setVersion("Power EPA BMDS MLE ToxicR");
-			else
-				powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			powerModel.setVersion("Power EPA BMDS MLE ToxicR");
+			// else
+			// powerModel.setVersion(BMDExpressProperties.getInstance().getPowerVersion());
 			modelsToRun.add(powerModel);
 		}
 		if (!linearCheckBox.isDisabled() && linearCheckBox.isSelected())
 		{
 			PolyModel linearModel = new PolyModel();
-			if (this.toxicRMethodRadio.isSelected())
-				linearModel.setVersion("Linear EPA BMDS MLE ToxicR");
-			else
-				linearModel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			linearModel.setVersion("Linear EPA BMDS MLE ToxicR");
+			// else
+			// linearModel.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
 			linearModel.setDegree(1);
 			modelsToRun.add(linearModel);
 		}
@@ -300,30 +300,30 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		{
 			PolyModel poly2Model = new PolyModel();
 			poly2Model.setDegree(2);
-			if (this.toxicRMethodRadio.isSelected())
-				poly2Model.setVersion("Poly 2 EPA BMDS MLE ToxicR");
-			else
-				poly2Model.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			poly2Model.setVersion("Poly 2 EPA BMDS MLE ToxicR");
+			// else
+			// poly2Model.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
 			modelsToRun.add(poly2Model);
 		}
 		if (!poly3CheckBox.isDisabled() && poly3CheckBox.isSelected())
 		{
 			PolyModel poly3Model = new PolyModel();
 			poly3Model.setDegree(3);
-			if (this.toxicRMethodRadio.isSelected())
-				poly3Model.setVersion("Poly 3 EPA BMDS MLE ToxicR");
-			else
-				poly3Model.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			poly3Model.setVersion("Poly 3 EPA BMDS MLE ToxicR");
+			// else
+			// poly3Model.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
 			modelsToRun.add(poly3Model);
 		}
 		if (!poly4CheckBox.isDisabled() && poly4CheckBox.isSelected())
 		{
 			PolyModel poly4Model = new PolyModel();
 			poly4Model.setDegree(4);
-			if (this.toxicRMethodRadio.isSelected())
-				poly4Model.setVersion("Poly 4 EPA BMDS MLE ToxicR");
-			else
-				poly4Model.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			poly4Model.setVersion("Poly 4 EPA BMDS MLE ToxicR");
+			// else
+			// poly4Model.setVersion(BMDExpressProperties.getInstance().getPolyVersion());
 			modelsToRun.add(poly4Model);
 		}
 
@@ -347,10 +347,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		if (!exponential3CheckBox.isDisabled() && exponential3CheckBox.isSelected())
 		{
 			ExponentialModel exponentialModel = new ExponentialModel();
-			if (this.toxicRMethodRadio.isSelected())
-				exponentialModel.setVersion("Exponential 3 EPA BMDS MLE ToxicR");
-			else
-				exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			exponentialModel.setVersion("Exponential 3 EPA BMDS MLE ToxicR");
+			// else
+			// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
 			modelsToRun.add(exponentialModel);
 			exponentialModel.setOption(3);
 		}
@@ -367,10 +367,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		if (!exponential5CheckBox.isDisabled() && exponential5CheckBox.isSelected())
 		{
 			ExponentialModel exponentialModel = new ExponentialModel();
-			if (this.toxicRMethodRadio.isSelected())
-				exponentialModel.setVersion("Exponential 5 EPA BMDS MLE ToxicR");
-			else
-				exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
+			// if (this.toxicRMethodRadio.isSelected())
+			exponentialModel.setVersion("Exponential 5 EPA BMDS MLE ToxicR");
+			// else
+			// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
 			exponentialModel.setOption(5);
 			modelsToRun.add(exponentialModel);
 		}
@@ -788,6 +788,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		else
 		{
 			methodHBox.getChildren().removeAll(toxicRMAMethodRadio, toxicRMCMCMAMethodRadio);
+			mainVBox.getChildren().remove(methodsPane);
 		}
 
 		presenter.initData(processableData);
