@@ -139,7 +139,7 @@ public class MainPresenter extends PresenterBase<IMainView>
 	}
 
 	/*
-	 * listen for loading curve fit prefilter  results so we can add it to the project
+	 * listen for loading curve fit prefilter results so we can add it to the project
 	 */
 	@Subscribe
 	public void onSelectCurveFitPrefilter(CurveFitPrefilterDataCombinedSelectedEvent event)
@@ -297,6 +297,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadOneWayANOVAAnalysis(OneWayANOVADataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel("loaded one-way anova: " + event.GetPayload().getName());
 	}
 
@@ -306,6 +308,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadWilliamsTrendAnalysis(WilliamsTrendDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel("loaded williams trend test: " + event.GetPayload().getName());
 	}
 
@@ -315,6 +319,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadCurveFitPrefilterAnalysis(CurveFitPrefilterDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel(
 				"loaded curve fit prefilter results: " + event.GetPayload().getName());
 	}
@@ -325,6 +331,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadOriogenAnalysis(OriogenDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel("loaded oriogen: " + event.GetPayload().getName());
 	}
 
@@ -334,6 +342,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadBMDAnalysis(BMDAnalysisDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel("loaded bmd analysis: " + event.GetPayload().getName());
 	}
 
@@ -343,6 +353,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadCategoryAnalysis(CategoryAnalysisDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel("loaded category analysis: " + event.GetPayload().getName());
 	}
 
@@ -352,6 +364,8 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onLoadCategoryAnalysis(ExpressionDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		getView().updateActionStatusLabel("loaded expression data: " + event.GetPayload().toString());
 	}
 }

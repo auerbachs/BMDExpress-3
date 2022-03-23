@@ -222,6 +222,8 @@ public class ProjectNavigationPresenter
 	@Subscribe
 	public void onLoadOneWayANOVAAnalysis(OneWayANOVADataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		// first make sure the name is unique
 		currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
 		getView().addOneWayANOVAAnalysis(event.GetPayload(), true);
@@ -234,6 +236,8 @@ public class ProjectNavigationPresenter
 	@Subscribe
 	public void onLoadWilliamsTrendAnalysis(WilliamsTrendDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		// first make sure the name is unique
 		currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
 		getView().addWilliamsTrendAnalysis(event.GetPayload(), true);
@@ -246,17 +250,20 @@ public class ProjectNavigationPresenter
 	@Subscribe
 	public void onLoadCurveFitPrefilterAnalysis(CurveFitPrefilterDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		// first make sure the name is unique
 		try
 		{
 			currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
+			getView().addCurveFitPrefilterAnalysis(event.GetPayload(), true);
+			currentProject.getCurveFitPrefilterResults().add(event.GetPayload());
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		getView().addCurveFitPrefilterAnalysis(event.GetPayload(), true);
-		currentProject.getCurveFitPrefilterResults().add(event.GetPayload());
+
 	}
 
 	/*
@@ -265,6 +272,8 @@ public class ProjectNavigationPresenter
 	@Subscribe
 	public void onLoadOriogenAnalysis(OriogenDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		// first make sure the name is unique
 		currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
 		getView().addOriogenAnalysis(event.GetPayload(), true);
@@ -277,6 +286,8 @@ public class ProjectNavigationPresenter
 	@Subscribe
 	public void onLoadBMDAnalysis(BMDAnalysisDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		// first make sure the name is unique
 		currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
 		getView().addBMDAnalysis(event.GetPayload(), true);
@@ -289,6 +300,8 @@ public class ProjectNavigationPresenter
 	@Subscribe
 	public void onLoadCategoryAnalysis(CategoryAnalysisDataLoadedEvent event)
 	{
+		if (event.GetPayload() == null)
+			return;
 		// first make sure the name is unique
 		currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
 		getView().addCategoryAnalysis(event.GetPayload(), true);
