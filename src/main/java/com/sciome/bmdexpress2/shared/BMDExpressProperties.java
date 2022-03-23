@@ -405,45 +405,6 @@ public class BMDExpressProperties
 	private void readPreferences()
 	{
 
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "PathwayFilter.R", "/PathwayFilter.R", false, false);
-
-		// copy all the bmds model files.
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "hill", "/hill", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "hill.exe", "/hill.exe", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "hill_mac", "/hill_mac", true, true);
-
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "poly", "/poly", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "poly.exe", "/poly.exe", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "poly_mac", "/poly_mac", true, true);
-
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "power", "/power", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "power.exe", "/power.exe", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "power_mac", "/power_mac", true, true);
-
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "exponential", "/exponential", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "exponential.exe", "/exponential.exe", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "exponential_mac", "/exponential_mac", true, true);
-
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "libgcc_s_dw2-1.dll", "/libgcc_s_dw2-1.dll", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "libgfortran-3.dll", "/libgfortran-3.dll", true, true);
-		checkLocalFiles(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "lib"
-				+ File.separator + "libquadmath-0.dll", "/libquadmath-0.dll", true, true);
-
 		locX = propertiesParser.getPropertyInt("location.x");
 		locY = propertiesParser.getPropertyInt("location.y");
 		sizeX = propertiesParser.getPropertyInt("size.x");
