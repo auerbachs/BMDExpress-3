@@ -13,7 +13,7 @@ New Features
 </h3>
 <ul>
 <li>Curve fit-based prefilter to identify dose responsive features more effectively</li>
-<li>New maximum likelihood estimate models currently employed EPA’s BMDS software for best model-based approaches</li>
+<li>New maximum likelihood estimate models currently employed EPA's BMDS software for best model-based approaches</li>
 <li>Alternative confidence interval estimate method (Wald) that allows for more rapid curve fitting</li>
 <li>Laplace and MCMC Bayesian model averaging (based the approach used in ToxicR package – https://github.com/NIEHS/ToxicR)</li>
 <li>Forward toxicokinetic modeling to estimate internal dose levels based upon external dose BMD value</li>
