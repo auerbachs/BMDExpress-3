@@ -1,6 +1,6 @@
 # BMDExpress-3
 
-Software uses the dose-response models from the EPA BMDS software and ToxicR to analyze high dimensional dose-response data, in particular gene expression data. The outputs of the software are gene and gene set level benchmark dose values.
+Software uses the dose-response models from the EPA BMDS software and ToxicR (developed by Matt Wheeler (matt.wheeler@nih.gov) to analyze high dimensional dose-response data, in particular gene expression data. The outputs of the software are gene and gene set level benchmark dose values.
 
 Jason Phillips (jason.phillips@sciome.com) was the software engineer on BMDExpress 3 and Dan Svoboda (daniel.svoboda@sciome.com) was the primary design engineer. Scott Auerbach (auerbachs@niehs.nih.gov) led the project team.
 
@@ -57,11 +57,12 @@ Contributors
 
 -   Scott S Auerbach, National Toxicology Program (Project Lead)
 -   Jason Phillips, Sciome (Lead Software Engineer)
+-   Matt Wheeler, NIEHS (Developer of ToxicR and statistical modelling consultant)
+-   Fred Parham, National Toxicology Program (Statistical and Modeling Consultant)
 -   Dan Svoboda, Sciome (Lead Designer)
 -   Shyam Patel, Sciome (Software Developer)
 -   Louis Olszyk, CSRA via USEPA (Updated BMD models)
 -   Arpit Tandon, Sciome (Platform Annotations)
--   Fred Parham, National Toxicology Program (Statistical and Modeling Consultant)
 -   Trey Saddler, National Toxicology Program (Documentation)
 -   Deepak Mav, Sciome (Statistical and Modelling Consultant)
 -   Carole Yauk, Health Canada (Design Consultant)
