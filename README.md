@@ -25,7 +25,7 @@ Updates in BMDExpress-3
 - Alternative confidence interval estimate method (Wald) that allows for more rapid curve fitting
 
 - Laplace and MCMC Bayesian model averaging (based the approach used in ToxicR package -- https://github.com/NIEHS/ToxicR)
--
+
 - Forward toxicokinetic modeling to estimate internal dose levels based upon external dose BMD value
 
 
