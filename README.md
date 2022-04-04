@@ -4,7 +4,7 @@ Software uses the dose-response models from the EPA BMDS software and ToxicR (de
 
 Jason Phillips (jason.phillips@sciome.com) was the software engineer on BMDExpress 3 and Dan Svoboda (daniel.svoboda@sciome.com) was the primary design engineer. Scott Auerbach (auerbachs@niehs.nih.gov) led the project team.
 
-The software is derivation of efforts by Longlong Yang (longlong.yang@nih.gov) that was originally released in 2007. (https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-8-387).
+The software is derivation of efforts by Longlong Yang (longlong.yang@nih.gov) that was originally released in 2007. (https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-8-387). It was updated in 2018 through a collaboration involving NTP, Sciome, Health Canada and the US EPA (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6513160/). 
 
 [BMDExpress 1.0 is available here.](https://sourceforge.net/projects/bmdexpress/)
 
@@ -18,33 +18,15 @@ The software is derivation of efforts by Longlong Yang (longlong.yang@nih.gov) t
 
 Updates in BMDExpress-3
 =========================
+- Curve fit-based prefilter to identify dose responsive features more effectively
 
-**Modeling**
+- New maximum likelihood estimate models currently employed EPA's BMDS software for best model-based approaches
 
-- Added exponential models
-- Updated model versions
-- BMDU determinations
-- Homo/heteroscedasticity option
+- Alternative confidence interval estimate method (Wald) that allows for more rapid curve fitting
 
-**Data Visualization**
-
-- Variety of plots in 3 analysis levels
-- On the fly data filtering
-- Data set comparison
-
-**Gene Set Analysis**
-
-- Increased options for removing poorly fit data
-- Updated GO annotations
-- Statistical enrichment of gene sets
-- Reactome pathways integration
-
-**Analysis Efficiency**
-
-- Batch processing and export
-- Updated platform number and annotations
-- More detailed parameter capture
-- More detailed file naming
+- Laplace and MCMC Bayesian model averaging (based the approach used in ToxicR package -- https://github.com/NIEHS/ToxicR)
+-
+- Forward toxicokinetic modeling to estimate internal dose levels based upon external dose BMD value
 
 
 Questions and Contact Information
