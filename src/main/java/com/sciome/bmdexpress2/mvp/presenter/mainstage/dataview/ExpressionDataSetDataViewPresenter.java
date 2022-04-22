@@ -10,5 +10,7 @@ public class ExpressionDataSetDataViewPresenter extends BMDExpressDataViewPresen
 	public ExpressionDataSetDataViewPresenter(IBMDExpressDataView view, BMDExpressEventBus eventBus)
 	{
 		super(view, new ProjectNavigationService(), eventBus);
+
 	}
+
 }

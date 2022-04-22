@@ -7,9 +7,11 @@ package com.sciome.bmdexpress2.util;
 
 import java.awt.Component;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -199,6 +201,45 @@ public class FileIO
 		}
 
 		return null;
+	}
+
+	public static void writeFileMatrix(MatrixData matrix, File outfile)
+	{
+
+		try
+		{
+			FileWriter fw = new FileWriter(outfile);
+			BufferedWriter br = new BufferedWriter(fw);
+
+			br.write(String.join("\t", matrix.getColumnNames()));
+			br.write("\n");
+
+			for (Object[] row : matrix.getData())
+			{
+				StringBuilder sb = new StringBuilder();
+				for (Object o : row)
+				{
+					sb.append(o.toString());
+					sb.append("\t");
+				}
+				br.write(sb.toString());
+				br.write("\n");
+			}
+
+			br.flush();
+
+			br.close();
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+
+		}
+
 	}
 
 }

@@ -1,12 +1,15 @@
 package com.sciome.bmdexpress2.mvp.view.mainstage;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.presenter.mainstage.MatrixSwingNodePresenter;
 import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.IMatrixSwingNodeView;
+import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
+import com.sciome.bmdexpress2.util.FileIO;
 import com.sciome.bmdexpress2.util.MatrixData;
 import com.sciome.bmdexpress2.util.categoryanalysis.defined.MatrixDataPreviewer;
 
@@ -15,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class MatrixSwingNodeView extends BMDExpressViewBase implements IMatrixSwingNodeView, Initializable
@@ -31,6 +35,8 @@ public class MatrixSwingNodeView extends BMDExpressViewBase implements IMatrixSw
 	VBox vBox;
 
 	MatrixSwingNodePresenter presenter;
+
+	MatrixData matrix;
 
 	public MatrixSwingNodeView()
 	{
@@ -64,13 +70,33 @@ public class MatrixSwingNodeView extends BMDExpressViewBase implements IMatrixSw
 		stage.close();
 	}
 
+	public void handle_Export()
+	{
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Export Gene Mapping");
+		File initialDirectory = new File(BMDExpressProperties.getInstance().getExportPath());
+		if (initialDirectory.exists())
+			fileChooser.setInitialDirectory(initialDirectory);
+		fileChooser.setInitialFileName("genemapping.txt");
+		File selectedFile = fileChooser.showSaveDialog(doneButton.getScene().getWindow());
+
+		if (selectedFile != null)
+		{
+			BMDExpressProperties.getInstance().setExportPath(selectedFile.getParent());
+			FileIO.writeFileMatrix(matrix, selectedFile);
+		}
+
+	}
+
 	public void initData(String headerText, MatrixData matrixData)
 	{
+		this.matrix = matrixData;
 		headerLabel.setText(headerText + ", " + matrixData.rows() + " rows.");
 		swingNode.getChildren().clear();
 		MatrixDataPreviewer pane = new MatrixDataPreviewer(matrixData);
 		swingNode.getChildren().add(pane);
-		
+
 	}
 
 	@Override
