@@ -25,6 +25,7 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.charts.jfree.SciomeChartViewer;
 
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -45,7 +46,7 @@ public class ExpressionQCBarChartComponent extends VBox
 
 	final static String DOSE_LEVEL = "Dose Level ";
 
-	String[] pValues = { P05, P01, P1 };
+	String[] pValues = { P01, P05, P1 };
 
 	String[] absValues = { A2, A15, A12 };
 
@@ -81,7 +82,13 @@ public class ExpressionQCBarChartComponent extends VBox
 		});
 
 		HBox comboHLayout = new HBox();
-		comboHLayout.getChildren().addAll(new HBox(pLabel, pValueBox), new HBox(absLabel, foldChangeBox));
+		HBox pLayout = new HBox(pLabel, pValueBox);
+		HBox fcLayout = new HBox(absLabel, foldChangeBox);
+		pLayout.setAlignment(Pos.CENTER);
+		pLayout.setSpacing(10.0);
+		fcLayout.setAlignment(Pos.CENTER);
+		fcLayout.setSpacing(10.0);
+		comboHLayout.getChildren().addAll(pLayout, fcLayout);
 		comboHLayout.setSpacing(50.0);
 		this.getChildren().add(comboHLayout);
 		updateChart();
@@ -113,43 +120,43 @@ public class ExpressionQCBarChartComponent extends VBox
 
 		// now we have the cuttoff values, loop and fill up map for bar chartting
 
-		Map<String, Integer> upMap = new HashMap<>();
-		Map<String, Integer> downMap = new HashMap<>();
+		Map<Integer, Integer> upMap = new HashMap<>();
+		Map<Integer, Integer> downMap = new HashMap<>();
 
 		for (OneWayANOVAResult result : onewayResults.getOneWayANOVAResults())
 		{
 			for (int i = 0; i < result.getNoelLoelPValues().size(); i++)
 			{
-				if (!upMap.containsKey(DOSE_LEVEL + i))
-					upMap.put(DOSE_LEVEL + i, 0);
+				if (!upMap.containsKey(i + 1))
+					upMap.put(i + 1, 0);
 
-				if (!downMap.containsKey(DOSE_LEVEL + i))
-					downMap.put(DOSE_LEVEL + i, 0);
+				if (!downMap.containsKey(i + 1))
+					downMap.put(i + 1, 0);
 
 				if (result.getNoelLoelPValues().get(i) < pvalueCut
-						&& foldChangeCut >= Math.abs(result.getFoldChanges().get(i)))
+						&& foldChangeCut <= Math.abs(result.getFoldChanges().get(i)))
 				{
 					if (result.getFoldChanges().get(i) > 0)
-						upMap.put(DOSE_LEVEL + i, upMap.get(DOSE_LEVEL + i) + 1);
+						upMap.put(i + 1, upMap.get(i + 1) + 1);
 					else
-						downMap.put(DOSE_LEVEL + i, downMap.get(DOSE_LEVEL + i) + 1);
+						downMap.put(i + 1, downMap.get(i + 1) + 1);
 				}
 
 			}
 
 		}
 
-		List<String> labels = new ArrayList<>();
+		List<Integer> labels = new ArrayList<>();
 		labels.addAll(upMap.keySet());
 
 		Collections.sort(labels);
 
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		for (String key : labels)
+		for (Integer key : labels)
 		{
 
-			dataset.addValue(upMap.get(key), "Up", key);
-			dataset.addValue(downMap.get(key), "Down", key);
+			dataset.addValue(upMap.get(key), "Up", DOSE_LEVEL + " " + key);
+			dataset.addValue(downMap.get(key), "Down", DOSE_LEVEL + " " + key);
 
 		}
 
@@ -188,7 +195,6 @@ public class ExpressionQCBarChartComponent extends VBox
 		AttributedString yLabel = new AttributedString("Count");
 		yLabel.addAttribute(TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD);
 		yLabel.addAttribute(TextAttribute.SIZE, 14);
-		yLabel.addAttribute(TextAttribute.SUPERSCRIPT, TextAttribute.SUPERSCRIPT_SUPER, 1, 2);
 		plot.getRangeAxis().setAttributedLabel(yLabel);
 		StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
 		renderer.setDrawBarOutline(false);
