@@ -425,6 +425,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		input.setPower(this.powerCheckBox.isSelected());
 		input.setConstantVariance(this.varianceType.getValue().equals(CONSTANT_VARIANCE));
 		input.setFlagHillModel(this.flagHillkParamCheckBox.isSelected());
+		input.setPolyMonotonic(this.monotonicPolyCheckBox.isSelected());
 
 		// Set numerical values
 		// input.setMaxIterations(Integer.parseInt(this.maximumIterationsTextField.getText()));
@@ -661,6 +662,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		hillCheckBox.setDisable(false);
 		funlCheckBox.setDisable(true);
 		funlCheckBox.setVisible(false);
+		this.monotonicPolyCheckBox.setVisible(false);
 		this.bmdULEstimationMethod.setDisable(false);
 
 		this.varianceType.setDisable(false);
@@ -697,6 +699,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		funlCheckBox.setDisable(true);
 		funlCheckBox.setVisible(false);
 		bmdULEstimationMethod.setDisable(true);
+		this.monotonicPolyCheckBox.setVisible(false);
 
 		// exponential2CheckBox.setVisible(false);
 		// exponential4CheckBox.setVisible(false);
@@ -889,6 +892,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			funlCheckBox.setSelected(input.isFunl());
 			hillCheckBox.setSelected(input.isHill());
 			powerCheckBox.setSelected(input.isPower());
+			this.monotonicPolyCheckBox.setSelected(input.isPolyMonotonic());
 			if (input.isConstantVariance())
 				varianceType.getSelectionModel().select(CONSTANT_VARIANCE);
 			else
@@ -899,6 +903,15 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 
 			// restrictPowerComboBox.getSelectionModel().select(input.getRestrictPower());
 			// restrictHillComboBox.getSelectionModel().select(input.getRestrictHill());
+
+			if (input.isUseWald())
+			{
+				this.bmdULEstimationMethod.setValue(WALD_METHOD_BMDUL_ESTIMATION);
+			}
+			else
+			{
+				this.bmdULEstimationMethod.setValue(EPA_METHOD_BMDUL_ESTIMATION);
+			}
 
 			bestPolyTestComboBox.getSelectionModel().select(input.getBestPolyModelTest());
 			pValueCutoffComboBox.getSelectionModel().select(input.getpValueCutoff());

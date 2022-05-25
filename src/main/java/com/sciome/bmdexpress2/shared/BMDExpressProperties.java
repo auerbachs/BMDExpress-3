@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sciome.bmdexpress2.mvp.model.TableInformation;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryInput;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterInput;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAInput;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenInput;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendInput;
@@ -65,6 +66,8 @@ public class BMDExpressProperties
 	private Properties versionProperties = new Properties();
 
 	private WilliamsTrendInput williamsInput;
+
+	private CurveFitPrefilterInput curveFitPrefilterInput;
 
 	private OriogenInput oriogenInput;
 
@@ -144,6 +147,19 @@ public class BMDExpressProperties
 		File gCurvePInputFile = new File(
 				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "gCurveP.json");
 
+		File curveFitPrefilterInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "curveFitPrefilter.json");
+
+		if (curveFitPrefilterInputFile.exists())
+		{
+			curveFitPrefilterInput = mapper.readValue(curveFitPrefilterInputFile,
+					CurveFitPrefilterInput.class);
+		}
+		else
+		{
+			curveFitPrefilterInput = new CurveFitPrefilterInput();
+		}
+
 		if (williamsInputFile.exists())
 		{
 			williamsInput = mapper.readValue(williamsInputFile, WilliamsTrendInput.class);
@@ -219,6 +235,23 @@ public class BMDExpressProperties
 		try
 		{
 			mapper.writerWithDefaultPrettyPrinter().writeValue(williamsInputFile, williamsInput);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void saveCurveFitPrefilterInput(CurveFitPrefilterInput input)
+	{
+		File curveFitPrefilterInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "curveFitPrefilter.json");
+		ObjectMapper mapper = new ObjectMapper();
+		this.curveFitPrefilterInput = input;
+		try
+		{
+			mapper.writerWithDefaultPrettyPrinter().writeValue(curveFitPrefilterInputFile,
+					curveFitPrefilterInput);
 		}
 		catch (IOException e)
 		{
@@ -967,6 +1000,11 @@ public class BMDExpressProperties
 	public WilliamsTrendInput getWilliamsInput()
 	{
 		return williamsInput;
+	}
+
+	public CurveFitPrefilterInput getCurveFitPrefilterInput()
+	{
+		return this.curveFitPrefilterInput;
 	}
 
 	public OriogenInput getOriogenInput()

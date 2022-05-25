@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
-import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendInput;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterInput;
 import com.sciome.bmdexpress2.mvp.presenter.prefilter.CurveFitPrefilterPresenter;
 import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.prefilter.IPrefilterView;
@@ -94,7 +94,7 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 	private List<IStatModelProcessable> processableData = null;
 	private List<IStatModelProcessable> processableDatas = null;
 
-	private WilliamsTrendInput input;
+	private CurveFitPrefilterInput input;
 
 	CurveFitPrefilterPresenter presenter;
 
@@ -111,7 +111,7 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		super();
 		PrefilterService service = new PrefilterService();
 		presenter = new CurveFitPrefilterPresenter(this, service, eventBus);
-		input = BMDExpressProperties.getInstance().getWilliamsInput();
+		input = BMDExpressProperties.getInstance().getCurveFitPrefilterInput();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -122,6 +122,18 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 
 		this.processableData = processableData;
 		this.processableDatas = processableDatas;
+
+		bmrFCombo.getItems().addAll(initBMRFactorsStandardDeviation());
+
+		List<String> varianceValues = new ArrayList<>();
+		varianceValues.add(CONSTANT_VARIANCE);
+		varianceValues.add(NON_CONSTANT_VARIANCE);
+
+		this.varianceCombo.getItems().setAll(varianceValues);
+
+		this.varianceCombo.setValue(CONSTANT_VARIANCE);
+
+		bmrFCombo.getSelectionModel().select(bmrFCombo.getItems().get(bmrFCombo.getItems().size() - 1));
 
 		for (IStatModelProcessable experiment : processableDatas)
 		{
@@ -145,22 +157,36 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		else
 			dunnettsRadioButton.setSelected(true);
 
+		if (input.getBMRFactor() != null)
+		{
+			this.bmrFCombo.setValue(input.getBMRFactor());
+		}
+
+		if (input.isConstantVariance() != null)
+		{
+			if (!input.isConstantVariance())
+			{
+				this.varianceCombo.setValue(NON_CONSTANT_VARIANCE);
+			}
+			else
+			{
+				this.varianceCombo.setValue(CONSTANT_VARIANCE);
+			}
+		}
+
+		this.hillCB.setSelected(input.getIsHill());
+		this.exp3CB.setSelected(input.getIsExp3());
+		this.exp5CB.setSelected(input.getIsExp5());
+		this.powerCB.setSelected(input.getIsPower());
+		this.linearCB.setSelected(input.getIsLinear());
+		this.poly2CB.setSelected(input.getIsPoly2());
+
 		useFoldChangeCheckBox.setSelected(input.isUseFoldChange());
 		tRadioButton.setSelected(input.istTest());
 		foldChangeValueTextField.setText("" + input.getFoldChangeValue());
 		pValueLoelTextField.setText("" + input.getLoelPValue());
 		foldChangeLoelTextField.setText("" + input.getLoelFoldChangeValue());
 		numberOfThreadsTextField.setText("" + input.getNumThreads());
-
-		List<String> varianceValues = new ArrayList<>();
-		varianceValues.add(CONSTANT_VARIANCE);
-		varianceValues.add(NON_CONSTANT_VARIANCE);
-
-		this.varianceCombo.getItems().setAll(varianceValues);
-		this.varianceCombo.setValue(CONSTANT_VARIANCE);
-
-		bmrFCombo.getItems().addAll(initBMRFactorsStandardDeviation());
-		bmrFCombo.getSelectionModel().select(bmrFCombo.getItems().get(bmrFCombo.getItems().size() - 1));
 	}
 
 	public void handle_startButtonPressed(ActionEvent event)
@@ -262,7 +288,17 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		input.setLoelPValue(Double.parseDouble(this.pValueLoelTextField.getText()));
 		input.setNumThreads(Integer.parseInt(this.numberOfThreadsTextField.getText()));
 
-		BMDExpressProperties.getInstance().saveWilliamsInput(input);
+		input.setIsHill(this.hillCB.isSelected());
+		input.setIsPower(this.powerCB.isSelected());
+		input.setIsExp3(this.exp3CB.isSelected());
+		input.setIsExp5(this.exp5CB.isSelected());
+		input.setIsLinear(this.linearCB.isSelected());
+		input.setIsPoly2(this.poly2CB.isSelected());
+
+		input.setBMRFactor(this.bmrFCombo.getValue());
+		input.setConstantVariance(this.varianceCombo.getValue().equals(CONSTANT_VARIANCE));
+
+		BMDExpressProperties.getInstance().saveCurveFitPrefilterInput(input);
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Saved Settings");
