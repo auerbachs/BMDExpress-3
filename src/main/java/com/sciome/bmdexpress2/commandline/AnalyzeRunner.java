@@ -490,6 +490,11 @@ public class AnalyzeRunner
 		if (bmdsConfig.getBmdsInputConfig().getBmrType() != null)
 			inputParameters.setBmrType(bmdsConfig.getBmdsInputConfig().getBmrType().intValue());
 
+		inputParameters.setPolyMonotonic(false);
+		if (bmdsConfig.getBmdsInputConfig().getRestrictPolyToMonotonic() != null)
+			inputParameters.setPolyMonotonic(
+					bmdsConfig.getBmdsInputConfig().getRestrictPolyToMonotonic().booleanValue());
+
 		if (inputParameters.getConstantVariance() == 0)
 			inputParameters.setRho(inputParameters.getNegative());
 

@@ -32,6 +32,8 @@ public class ModelInputParameters
 	private int riskType = 0;
 	private int initialParams = 0;
 
+	private boolean polyMonotonic = false;
+
 	private double relFuncConvergence = 1.0e-8;
 	private double bmrLevel = 1.349;
 	private double paramConvergence = 1.0e-8;
@@ -513,6 +515,16 @@ public class ModelInputParameters
 	public String getMAMethod()
 	{
 		return MAMethod;
+	}
+
+	public boolean isPolyMonotonic()
+	{
+		return polyMonotonic;
+	}
+
+	public void setPolyMonotonic(boolean polyMonotonic)
+	{
+		this.polyMonotonic = polyMonotonic;
 	}
 
 }

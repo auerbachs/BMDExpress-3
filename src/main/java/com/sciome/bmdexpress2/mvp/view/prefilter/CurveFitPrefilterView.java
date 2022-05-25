@@ -15,7 +15,6 @@ import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.bmds.shared.BMRFactor;
 import com.sciome.bmdexpress2.util.bmds.shared.ExponentialModel;
-import com.sciome.bmdexpress2.util.bmds.shared.FunlModel;
 import com.sciome.bmdexpress2.util.bmds.shared.HillModel;
 import com.sciome.bmdexpress2.util.bmds.shared.PolyModel;
 import com.sciome.bmdexpress2.util.bmds.shared.PowerModel;
@@ -53,8 +52,9 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 	private CheckBox exp5CB;
 	@FXML
 	private CheckBox linearCB;
+
 	@FXML
-	private CheckBox funlCB;
+	private CheckBox poly2CB;
 
 	@FXML
 	private ComboBox<BMRFactor> bmrFCombo;
@@ -190,11 +190,12 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 				modelsToRun.add(linearModel);
 			}
 
-			if (!funlCB.isDisabled() && funlCB.isSelected())
+			if (!poly2CB.isDisabled() && poly2CB.isSelected())
 			{
-				FunlModel funlModel = new FunlModel();
-				funlModel.setVersion("Funl EPA BMDS MLE ToxicR");
-				modelsToRun.add(funlModel);
+				PolyModel poly2Model = new PolyModel();
+				poly2Model.setVersion("Poly 2 EPA BMDS MLE ToxicR");
+				poly2Model.setDegree(2);
+				modelsToRun.add(poly2Model);
 			}
 
 			if (!exp3CB.isDisabled() && exp3CB.isSelected())

@@ -135,16 +135,19 @@ public class PolyFitThread extends Thread implements IFitThread
 				if (inputParameters.getPolyDegree() == 1)
 					results = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-							inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast());
+							inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(),
+							inputParameters.isPolyMonotonic());
 				else
 				{
 					// run it in both directions.
 					double[] results1 = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-							inputParameters.getConstantVariance() != 1, true, dev, inputParameters.isFast());
+							inputParameters.getConstantVariance() != 1, true, dev, inputParameters.isFast(),
+							inputParameters.isPolyMonotonic());
 					double[] results2 = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-							inputParameters.getConstantVariance() != 1, false, dev, inputParameters.isFast());
+							inputParameters.getConstantVariance() != 1, false, dev, inputParameters.isFast(),
+							inputParameters.isPolyMonotonic());
 
 					if ((results1[0] > results2[0] && results2[0] != DEFAULTDOUBLE)
 							|| results1[0] == DEFAULTDOUBLE)

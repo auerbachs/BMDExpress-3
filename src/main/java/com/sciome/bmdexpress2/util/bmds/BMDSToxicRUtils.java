@@ -39,16 +39,17 @@ public class BMDSToxicRUtils
 	}
 
 	public static double[] calculateToxicR(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isNCV, NormalDeviance deviance, boolean isFast)
+			boolean isNCV, NormalDeviance deviance, boolean isFast, boolean isPolyMonotonic)
 			throws JsonMappingException, JsonProcessingException
 	{
 		boolean isIncreasing = ToxicRUtils.calculateDirection(doses, Y) > 0;
-		return calculateToxicR(model, Y, doses, bmdType, BMR, isNCV, isIncreasing, deviance, isFast);
+		return calculateToxicR(model, Y, doses, bmdType, BMR, isNCV, isIncreasing, deviance, isFast,
+				isPolyMonotonic);
 	}
 
 	public static double[] calculateToxicR(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast)
-			throws JsonMappingException, JsonProcessingException
+			boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast,
+			boolean isPolyMonotonic) throws JsonMappingException, JsonProcessingException
 	{
 
 		if (bmdType == 1)
@@ -58,7 +59,7 @@ public class BMDSToxicRUtils
 
 		ToxicRJNI tRJNI = new ToxicRJNI();
 		ContinuousResult continousResult = tRJNI.runContinuous(model, Y, doses, bmdType, BMR, true, isNCV,
-				isIncreasing, isFast);
+				isIncreasing, isFast, isPolyMonotonic);
 
 		Double maxconstant = doses.length * Math.log((1 / Math.sqrt(2 * Math.PI)));
 		Double logMax = -1 * continousResult.getMax() - maxconstant;

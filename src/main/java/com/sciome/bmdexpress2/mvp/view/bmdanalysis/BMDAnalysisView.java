@@ -83,6 +83,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private CheckBox funlCheckBox;
 
 	@FXML
+	private CheckBox monotonicPolyCheckBox;
+
+	@FXML
 	private ComboBox varianceType;
 
 	@FXML
@@ -1016,6 +1019,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private ModelInputParameters assignParameters()
 	{
 		ModelInputParameters inputParameters = new ModelInputParameters();
+		inputParameters.setPolyMonotonic(this.monotonicPolyCheckBox.isSelected());
 		boolean isModelAveraging = false;
 		if (this.toxicRMCMCMAMethodRadio.isSelected() || this.toxicRMAMethodRadio.isSelected())
 			isModelAveraging = true;

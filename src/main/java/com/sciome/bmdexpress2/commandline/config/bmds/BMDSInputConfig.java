@@ -14,6 +14,8 @@ public class BMDSInputConfig
 
 	private Integer bmrType = 1;
 
+	private Boolean restrictPolyToMonotonic;
+
 	// only relevant for the new version
 	private Integer bmdUBmdLEstimationMethod = 1; // 1 for epa profiling, 2 for Wald/EWald
 
@@ -85,6 +87,16 @@ public class BMDSInputConfig
 	public void setBmdUBmdLEstimationMethod(Integer bmdUBmdLEstimationMethod)
 	{
 		this.bmdUBmdLEstimationMethod = bmdUBmdLEstimationMethod;
+	}
+
+	public Boolean getRestrictPolyToMonotonic()
+	{
+		return restrictPolyToMonotonic;
+	}
+
+	public void setRestrictPolyToMonotonic(Boolean restrictPolyToMonotonic)
+	{
+		this.restrictPolyToMonotonic = restrictPolyToMonotonic;
 	}
 
 }
