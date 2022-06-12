@@ -156,7 +156,7 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		if (probeResponses != null)
 		{
 
-			// set the values and initialize for the new bmdResults.
+			// set the values and initialize for the new doseResponseExperiement.
 			bmdResults.setProbeStatResults(new ArrayList<ProbeStatResult>());
 			for (ProbeResponse probeResponse : probeResponses)
 			{

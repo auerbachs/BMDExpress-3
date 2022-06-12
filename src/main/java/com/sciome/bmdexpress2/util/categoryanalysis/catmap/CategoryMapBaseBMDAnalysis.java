@@ -25,7 +25,7 @@ import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.annotation.FileInfo;
 import com.sciome.bmdexpress2.util.annotation.URLUtils;
-import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
+import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMapsBMDAnalysis;
 
 /**
  * The class of GenesGOTerms
@@ -35,9 +35,9 @@ import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
  * @version 1.0 4/7/2008
  * @author Longlong Yang
  */
-public abstract class CategoryMapBase
+public abstract class CategoryMapBaseBMDAnalysis
 {
-	protected ProbeGeneMaps probeGeneMaps;
+	protected ProbeGeneMapsBMDAnalysis probeGeneMaps;
 	protected String organismCode;
 	protected Hashtable<String, String> titleHash;
 	protected Hashtable<String, Vector> subHash, allHash, dataSetGeneHash;
@@ -52,11 +52,11 @@ public abstract class CategoryMapBase
 	 * class contructor used for gene's pathways
 	 *
 	 */
-	public CategoryMapBase()
+	public CategoryMapBaseBMDAnalysis()
 	{
 	}
 
-	public CategoryMapBase(ProbeGeneMaps probeGeneMaps, ChipInfo chipInfo)
+	public CategoryMapBaseBMDAnalysis(ProbeGeneMapsBMDAnalysis probeGeneMaps, ChipInfo chipInfo)
 	{
 
 		this.probeGeneMaps = probeGeneMaps;

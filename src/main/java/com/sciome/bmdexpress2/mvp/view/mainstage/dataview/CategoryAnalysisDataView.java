@@ -24,7 +24,7 @@ import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.dataview.IBMDExpressDa
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.PathwayToGeneSymbolUtility;
+import com.sciome.bmdexpress2.util.annotation.pathway.PathwayToGeneSymbolUtility;
 
 import javafx.event.EventHandler;
 import javafx.scene.control.TableCell;

@@ -42,11 +42,11 @@ import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
 import com.sciome.bmdexpress2.util.MatrixData;
 import com.sciome.bmdexpress2.util.NumberManager;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.CategoryMap;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.CategoryMapBase;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GOTermMap;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GeneLevelCategoryMap;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GenesPathways;
+import com.sciome.bmdexpress2.util.annotation.pathway.GeneLevelCategoryMap;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.CategoryMapBMDAnalysis;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.CategoryMapBaseBMDAnalysis;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GOTermMapBMDAnalysis;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GenesPathwaysBMDAnalysis;
 import com.sciome.bmdexpress2.util.categoryanalysis.defined.ProbeCategoryMaps;
 import com.sciome.bmdexpress2.util.stat.DosesStat;
 import com.sciome.bmdexpress2.util.stat.FishersExact;
@@ -61,9 +61,9 @@ public class CategoryMapTool
 {
 
 	private BMDResult bmdResults;
-	private ProbeGeneMaps probeGeneMaps;
+	private ProbeGeneMapsBMDAnalysis probeGeneMaps;
 	private BMDStatatistics bmdStats;
-	private CategoryMapBase categoryGeneMap;
+	private CategoryMapBaseBMDAnalysis categoryGeneMap;
 
 	private String rstName;
 	private ICategoryMapToolProgress categoryMapProgress;
@@ -130,12 +130,12 @@ public class CategoryMapTool
 		for (ProbeResponse probeResponse : doseResponseExperiment.getProbeResponses())
 			probeHash.put(probeResponse.getProbe().getId(), 1);
 
-		ProbeGeneMaps probeGeneMaps = new ProbeGeneMaps(bmdResults);
+		ProbeGeneMapsBMDAnalysis probeGeneMaps = new ProbeGeneMapsBMDAnalysis(bmdResults);
 		probeGeneMaps.readProbes(false);
 		// probeGeneMaps.readArraysInfo();
 		probeGeneMaps.setProbesHash(probeHash);
 
-		CategoryMapBase catMap = null;
+		CategoryMapBaseBMDAnalysis catMap = null;
 
 		// which type of analysis are we doing here?
 		if (catAnalysisEnum == CategoryAnalysisEnum.GO)
@@ -143,7 +143,7 @@ public class CategoryMapTool
 			if (params.getRemovePromiscuousProbes())
 				removePromiscuousProbes(doseResponseExperiment.getReferenceGeneAnnotations(), probeHash);
 			probeGeneMaps.probeGeneMaping(chip, true);
-			catMap = new GOTermMap(probeGeneMaps, bmdResults.getDoseResponseExperiment().getChip(),
+			catMap = new GOTermMapBMDAnalysis(probeGeneMaps, bmdResults.getDoseResponseExperiment().getChip(),
 					params.getGoTermIdx());
 			rstName += "_GO_" + BMDExpressConstants.getInstance().GO_SHORTS[params.getGoTermIdx()];
 			analysisInfo.getNotes().add("Gene Ontology Analyses");
@@ -159,7 +159,7 @@ public class CategoryMapTool
 			if (params.getRemovePromiscuousProbes())
 				removePromiscuousProbes(doseResponseExperiment.getReferenceGeneAnnotations(), probeHash);
 			probeGeneMaps.probeGeneMaping(chip, true);
-			catMap = new GenesPathways(probeGeneMaps, params.getPathwayDB());
+			catMap = new GenesPathwaysBMDAnalysis(probeGeneMaps, params.getPathwayDB());
 			rstName += "_" + params.getPathwayDB();
 			analysisInfo.getNotes().add("Signaling Pathway Analyses");
 			analysisInfo.getNotes().add("Organism Code: " + catMap.getOrganismCode());
@@ -184,7 +184,7 @@ public class CategoryMapTool
 			probeCategoryGeneMaps.probeGeneMaping(params.getProbeFileParameters().getUsedColumns()[0],
 					params.getProbeFileParameters().getUsedColumns()[1],
 					params.getProbeFileParameters().getMatrixData());
-			catMap = new CategoryMap(params.getCategoryFileParameters().getUsedColumns()[0],
+			catMap = new CategoryMapBMDAnalysis(params.getCategoryFileParameters().getUsedColumns()[0],
 					params.getCategoryFileParameters().getUsedColumns()[1],
 					params.getCategoryFileParameters().getUsedColumns()[2],
 					params.getCategoryFileParameters().getMatrixData().getData(), probeCategoryGeneMaps);
@@ -433,7 +433,7 @@ public class CategoryMapTool
 		{
 			// TODO: turn this into a factory
 			CategoryAnalysisResult categoryAnalysisResult = null;
-			if (categoryGeneMap instanceof GenesPathways)
+			if (categoryGeneMap instanceof GenesPathwaysBMDAnalysis)
 			{
 				categoryAnalysisResult = new PathwayAnalysisResult();
 				((PathwayAnalysisResult) categoryAnalysisResult)
@@ -450,7 +450,7 @@ public class CategoryMapTool
 			{
 				categoryAnalysisResult = new GeneLevelAnalysisResult();
 			}
-			else if (categoryGeneMap instanceof CategoryMap)
+			else if (categoryGeneMap instanceof CategoryMapBMDAnalysis)
 			{
 				categoryAnalysisResult = new DefinedCategoryAnalysisResult();
 			}

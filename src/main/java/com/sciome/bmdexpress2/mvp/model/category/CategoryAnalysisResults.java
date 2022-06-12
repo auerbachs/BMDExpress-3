@@ -190,7 +190,7 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 	 */
 	private void fillColumnHeader()
 	{
-		// refresh the bmdResults so that any transient values are populated
+		// refresh the doseResponseExperiement so that any transient values are populated
 		// the category results are using fold change values that are
 		// gotten from the bmdresults. So they need to be avaiable here.
 		if (bmdResult != null)

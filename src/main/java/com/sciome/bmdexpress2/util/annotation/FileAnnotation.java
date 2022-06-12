@@ -5,7 +5,7 @@
  * 6 Davis Drive, P.O. Box 12137, Research Triangle Park, NC USA 27709-2137
  * All rights reserved.
  *
- * Modified based on ProbeGeneMaps.java
+ * Modified based on ProbeGeneMapsBMDAnalysis.java
  *
  * This program is created for Bench Mark Dose project
  * It is used for match probes to genes using local files

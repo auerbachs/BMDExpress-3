@@ -28,7 +28,7 @@ import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.NumberManager;
-import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
+import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMapsBMDAnalysis;
 
 /**
  * The class of GenesGOTerms
@@ -38,7 +38,7 @@ import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
  * @version 1.0 4/7/2008
  * @author Longlong Yang
  */
-public class GOTermMap extends CategoryMapBase
+public class GOTermMapBMDAnalysis extends CategoryMapBaseBMDAnalysis
 {
 
 	private int goTermIdx = 0;
@@ -49,11 +49,11 @@ public class GOTermMap extends CategoryMapBase
 	 * class contructor used for gene's pathways
 	 *
 	 */
-	public GOTermMap()
+	public GOTermMapBMDAnalysis()
 	{
 	}
 
-	public GOTermMap(ProbeGeneMaps probeGeneMaps, ChipInfo chipInfo, int goTermIdx)
+	public GOTermMapBMDAnalysis(ProbeGeneMapsBMDAnalysis probeGeneMaps, ChipInfo chipInfo, int goTermIdx)
 	{
 		super(probeGeneMaps, chipInfo);
 		this.goTermIdx = goTermIdx;

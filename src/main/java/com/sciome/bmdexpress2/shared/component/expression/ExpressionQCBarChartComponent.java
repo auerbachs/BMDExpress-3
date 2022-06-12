@@ -6,9 +6,14 @@ import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
+import org.controlsfx.control.CheckComboBox;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -20,11 +25,18 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
+import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
+import com.sciome.bmdexpress2.util.annotation.pathway.CategoryMapBase;
+import com.sciome.bmdexpress2.util.annotation.pathway.GenesPathways;
+import com.sciome.bmdexpress2.util.annotation.pathway.ProbeGeneMaps;
 import com.sciome.charts.jfree.SciomeChartViewer;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -35,6 +47,7 @@ public class ExpressionQCBarChartComponent extends VBox
 {
 
 	OneWayANOVAResults onewayResults;
+	DoseResponseExperiment doseResponseExperiment;
 
 	final static String P05 = "0.05";
 	final static String P01 = "0.01";
@@ -54,12 +67,19 @@ public class ExpressionQCBarChartComponent extends VBox
 
 	private ComboBox<String> foldChangeBox;
 
-	SciomeChartViewer barChartViewer;
+	private ComboBox<String> pathwayDBBox;
+	private CheckComboBox<String> pathwayBox;
 
-	public ExpressionQCBarChartComponent(OneWayANOVAResults onewayResults)
+	SciomeChartViewer barChartViewer;
+	private Map<String, Set<String>> bioPlanetToProbeMap;
+	private Map<String, Set<String>> reactomeToProbeMap;
+
+	public ExpressionQCBarChartComponent(OneWayANOVAResults onewayResults,
+			DoseResponseExperiment doseResponseExperiment)
 	{
 		super();
 		this.onewayResults = onewayResults;
+		this.doseResponseExperiment = doseResponseExperiment;
 
 		Label pLabel = new Label("T-Test p-value <");
 		Label absLabel = new Label("Abs fold change >=");
@@ -80,17 +100,60 @@ public class ExpressionQCBarChartComponent extends VBox
 		{
 			updateChart();
 		});
+		setUpPathwayFilter();
+
+		pathwayDBBox = new ComboBox<>();
+		pathwayDBBox.getItems().addAll(new String[] { "NONE", "REACTOME", "BioPlanet" });
+		pathwayDBBox.setValue("NONE");
+		pathwayDBBox.setOnAction((event) ->
+		{
+			Platform.runLater(() ->
+			{
+				List<String> pathways = new ArrayList<>();
+				if (pathwayDBBox.getValue().equals("REACTOME"))
+					pathways.addAll(reactomeToProbeMap.keySet());
+				else if (pathwayDBBox.getValue().equals("BioPlanet"))
+					pathways.addAll(bioPlanetToProbeMap.keySet());
+
+				Collections.sort(pathways);
+				pathwayBox.getItems().clear();
+				pathwayBox.getItems().setAll(FXCollections.observableArrayList(pathways));
+
+			});
+			updateChart();
+
+		});
+		pathwayBox = new CheckComboBox<>();
+		pathwayBox.setMaxWidth(200);
+		pathwayBox.getItems().addAll(new String[] {});
+
+		pathwayBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
+
+			@Override
+			public void onChanged(Change<? extends String> c)
+			{
+				updateChart();
+			}
+
+		});
 
 		HBox comboHLayout = new HBox();
 		HBox pLayout = new HBox(pLabel, pValueBox);
 		HBox fcLayout = new HBox(absLabel, foldChangeBox);
+		HBox pathwayLayout = new HBox(new Label("Pathway DB"), pathwayDBBox, new Label("Pathways"),
+				pathwayBox);
 		pLayout.setAlignment(Pos.CENTER);
 		pLayout.setSpacing(10.0);
 		fcLayout.setAlignment(Pos.CENTER);
 		fcLayout.setSpacing(10.0);
-		comboHLayout.getChildren().addAll(pLayout, fcLayout);
+
+		pathwayLayout.setAlignment(Pos.CENTER);
+		pathwayLayout.setSpacing(10.0);
+
+		comboHLayout.getChildren().addAll(pLayout, fcLayout, pathwayLayout);
 		comboHLayout.setSpacing(50.0);
 		this.getChildren().add(comboHLayout);
+
 		updateChart();
 
 	}
@@ -125,6 +188,8 @@ public class ExpressionQCBarChartComponent extends VBox
 
 		for (OneWayANOVAResult result : onewayResults.getOneWayANOVAResults())
 		{
+			if (!isInPathway(result.getProbeID()))
+				continue;
 			for (int i = 0; i < result.getNoelLoelPValues().size(); i++)
 			{
 				if (!upMap.containsKey(i + 1))
@@ -170,6 +235,81 @@ public class ExpressionQCBarChartComponent extends VBox
 			this.getChildren().add(barChartViewer);
 		});
 
+	}
+
+	private boolean isInPathway(String probe)
+	{
+		if (pathwayDBBox.getValue().equals("NONE"))
+			return true;
+		Map<String, Set<String>> map = reactomeToProbeMap;
+		if (pathwayDBBox.getValue().equals("BioPlanet"))
+			map = bioPlanetToProbeMap;
+
+		if (pathwayBox.getCheckModel().getItemCount() == 0)
+			return true;
+		for (String pathway : pathwayBox.getCheckModel().getCheckedItems())
+			if (map.get(pathway).contains(probe))
+				return true;
+		return false;
+	}
+
+	private void setUpPathwayFilter()
+	{
+		// create a hashtable of probes.
+		Hashtable<String, Integer> probeHash = new Hashtable<>();
+		for (ProbeResponse probeResponse : doseResponseExperiment.getProbeResponses())
+			probeHash.put(probeResponse.getProbe().getId(), 1);
+
+		ProbeGeneMaps probeGeneMaps = new ProbeGeneMaps(doseResponseExperiment);
+		probeGeneMaps.readProbes(false);
+		// probeGeneMaps.readArraysInfo();
+		probeGeneMaps.setProbesHash(probeHash);
+		String chip = "Generic";
+		if (doseResponseExperiment.getChip() != null)
+			chip = doseResponseExperiment.getChip().getGeoID();
+		probeGeneMaps.probeGeneMaping(chip, true);
+
+		Set<String> probeSet = new HashSet<>();
+		for (OneWayANOVAResult oneway : onewayResults.getOneWayANOVAResults())
+			probeSet.add(oneway.getProbeID());
+
+		GenesPathways reactomePathways = new GenesPathways(probeGeneMaps, "REACTOME");
+		GenesPathways bioPlanetPathways = new GenesPathways(probeGeneMaps, "BioPlanet");
+
+		reactomeToProbeMap = calculatePathwayStructure(probeGeneMaps, reactomePathways, probeSet);
+		bioPlanetToProbeMap = calculatePathwayStructure(probeGeneMaps, bioPlanetPathways, probeSet);
+
+	}
+
+	private Map<String, Set<String>> calculatePathwayStructure(ProbeGeneMaps probeGeneMaps,
+			CategoryMapBase reactomePathways, Set<String> probeSet)
+	{
+		Map<String, Set<String>> pathwayToProbeMap = new HashMap<>();
+
+		Hashtable<String, String> titleHash = reactomePathways.getTitleHash();
+		Hashtable<String, Vector<String>> subHash = reactomePathways.subHash();
+		Hashtable<String, Vector<String>> subHashG2Ids = probeGeneMaps.subHashG2Ids();
+
+		for (String pathway : titleHash.values())
+			pathwayToProbeMap.put(pathway, new HashSet<>());
+
+		for (String pathwayCode : subHash.keySet())
+			for (String entrez : subHash.get(pathwayCode))
+				for (String p : subHashG2Ids.get(entrez))
+					if (titleHash.get(pathwayCode) != null
+							&& pathwayToProbeMap.get(titleHash.get(pathwayCode)) != null
+							&& probeSet.contains(p))
+						pathwayToProbeMap.get(titleHash.get(pathwayCode)).add(p);
+
+		List<String> remove = new ArrayList<>();
+		for (String key : pathwayToProbeMap.keySet())
+			if (pathwayToProbeMap.get(key).size() == 0)
+				remove.add(key);
+
+		for (String key : remove)
+			pathwayToProbeMap.remove(key);
+
+		return pathwayToProbeMap;
 	}
 
 	/**

@@ -1231,7 +1231,7 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 	}
 
 	/**
-	 * get a list of model names that are used in the bmdResults anlaysis
+	 * get a list of model names that are used in the doseResponseExperiement anlaysis
 	 */
 	private String[] getModelNames()
 	{

@@ -50,10 +50,10 @@ import com.sciome.bmdexpress2.mvp.model.stat.PowerResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.util.annotation.FileAnnotation;
-import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.CategoryMapBase;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GOTermMap;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GenesPathways;
+import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMapsBMDAnalysis;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.CategoryMapBaseBMDAnalysis;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GOTermMapBMDAnalysis;
+import com.sciome.bmdexpress2.util.categoryanalysis.catmap.GenesPathwaysBMDAnalysis;
 import com.sciome.bmdexpress2.util.prefilter.FoldChange;
 import com.sciome.bmdexpress2.util.stat.FishersExact;
 
@@ -745,24 +745,24 @@ public class ConversionUtil
 
 		// probeGeneMaps.readArraysInfo();
 
-		CategoryMapBase catMap = null;
+		CategoryMapBaseBMDAnalysis catMap = null;
 
 		if (catType == 2)
 		{
 			BMDResult bmdResult = bmdResultMap.get(source + "__" + workSource);
-			ProbeGeneMaps probeGeneMaps = new ProbeGeneMaps(bmdResult);
+			ProbeGeneMapsBMDAnalysis probeGeneMaps = new ProbeGeneMapsBMDAnalysis(bmdResult);
 			probeGeneMaps.readProbes(false);
 			Hashtable<String, Integer> probeHash = new Hashtable<>();
 			for (ProbeResponse probeResponse : bmdResult.getDoseResponseExperiment().getProbeResponses())
 				probeHash.put(probeResponse.getProbe().getId(), 1);
 			probeGeneMaps.setProbesHash(probeHash);
 			probeGeneMaps.probeGeneMaping(bmdResult.getDoseResponseExperiment().getChip().getName(), true);
-			catMap = new GenesPathways(probeGeneMaps, "KEGG");
+			catMap = new GenesPathwaysBMDAnalysis(probeGeneMaps, "KEGG");
 		}
 		else if (catType == 1)
 		{
 			BMDResult bmdResult = bmdResultMap.get(source + "__" + workSource);
-			ProbeGeneMaps probeGeneMaps = new ProbeGeneMaps(bmdResult);
+			ProbeGeneMapsBMDAnalysis probeGeneMaps = new ProbeGeneMapsBMDAnalysis(bmdResult);
 			probeGeneMaps.readProbes(false);
 			Hashtable<String, Integer> probeHash = new Hashtable<>();
 			for (ProbeResponse probeResponse : bmdResult.getDoseResponseExperiment().getProbeResponses())
@@ -783,7 +783,7 @@ public class ConversionUtil
 			{
 				goID = 3;
 			}
-			catMap = new GOTermMap(probeGeneMaps, bmdResult.getDoseResponseExperiment().getChip(), goID);
+			catMap = new GOTermMapBMDAnalysis(probeGeneMaps, bmdResult.getDoseResponseExperiment().getChip(), goID);
 		}
 
 		// get total number of genes

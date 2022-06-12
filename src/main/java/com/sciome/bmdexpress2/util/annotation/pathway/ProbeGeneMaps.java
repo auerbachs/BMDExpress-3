@@ -1,5 +1,5 @@
 /*
- * ProbeGeneMaps     1.0    7/25/2008
+ * ProbeGeneMapsBMDAnalysis     1.0    7/25/2008
  *
  * Copyright (c) 2005 CIIT Centers for Health Research
  * 6 Davis Drive, P.O. Box 12137, Research Triangle Park, NC USA 27709-2137
@@ -9,7 +9,7 @@
  * It is used for match probes to genes
  */
 
-package com.sciome.bmdexpress2.util.categoryanalysis;
+package com.sciome.bmdexpress2.util.annotation.pathway;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,10 +28,10 @@ import java.util.zip.GZIPInputStream;
 
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
+import com.sciome.bmdexpress2.mvp.model.probe.Probe;
+import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
-import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
-import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.NumberManager;
@@ -40,7 +40,7 @@ import com.sciome.bmdexpress2.util.annotation.FileInfo;
 import com.sciome.bmdexpress2.util.annotation.URLUtils;
 
 /**
- * The class of ProbeGeneMaps
+ * The class of ProbeGeneMapsBMDAnalysis
  *
  * Input unique probes as Vector of Strings - uniqueProbes matched to unique genes as Vector of Strings -
  * subGenes
@@ -53,27 +53,27 @@ import com.sciome.bmdexpress2.util.annotation.URLUtils;
 public class ProbeGeneMaps
 {
 
-	public String							httpURL, basePath, provider, chip, chipId, species;
-	public String[]							probesChips;
-	public String[][]						subG2Probes, arrayInfo = null;
-	public Vector<String>					uniqueProbes, subGenes, allGenes, subAllProbes;
-	public Hashtable<String, Integer>		probesHash;
-	public Hashtable<String, Vector>		subHashG2Ids;
+	public String httpURL, basePath, provider, chip, chipId, species;
+	public String[] probesChips;
+	public String[][] subG2Probes, arrayInfo = null;
+	public Vector<String> uniqueProbes, subGenes, allGenes, subAllProbes;
+	public Hashtable<String, Integer> probesHash;
+	public Hashtable<String, Vector<String>> subHashG2Ids;
 
-	private Map<String, ProbeStatResult>	statResultMap		= new HashMap<>();
-	private Map<String, ReferenceGene>		referenceGeneMap	= new HashMap<>();
-	private ChipInfo						chipInfo;
+	private Map<String, Probe> statResultMap = new HashMap<>();
+	private Map<String, ReferenceGene> referenceGeneMap = new HashMap<>();
+	private ChipInfo chipInfo;
 
-	private final int						BATCHMAX			= 2000;
-	protected BMDResult						bmdResults;
-	protected Set<String>					geneSet				= new HashSet<>();
-	protected Vector<String>				dataSetGenes		= null;
+	private final int BATCHMAX = 2000;
+	protected DoseResponseExperiment doseResponseExperiement;
+	protected Set<String> geneSet = new HashSet<>();
+	protected Vector<String> dataSetGenes = null;
 
-	public ProbeGeneMaps(BMDResult bmdResults)
+	public ProbeGeneMaps(DoseResponseExperiment doseResponseExperiement)
 	{
-		this.chipInfo = bmdResults.getDoseResponseExperiment().getChip();
-		this.bmdResults = bmdResults;
-		getAnnotationToCategoryCounts(bmdResults.getDoseResponseExperiment());
+		this.chipInfo = doseResponseExperiement.getChip();
+		this.doseResponseExperiement = doseResponseExperiement;
+		getAnnotationToCategoryCounts(doseResponseExperiement);
 
 	}
 
@@ -94,22 +94,22 @@ public class ProbeGeneMaps
 	public void readProbes(boolean custom)
 	{
 
-		uniqueProbes = new Vector<String>(bmdResults.getProbeStatResults().size());
+		uniqueProbes = new Vector<String>(doseResponseExperiement.getProbeResponses().size());
 
-		for (ProbeStatResult probeStatResult : bmdResults.getProbeStatResults())
+		for (ProbeResponse probeResponse : doseResponseExperiement.getProbeResponses())
 		{
-			String probe = probeStatResult.getProbeResponse().getProbe().getId();
+			String probe = probeResponse.getProbe().getId();
 			uniqueProbes.add(probe);
-			statResultMap.put(probe, probeStatResult);
+			statResultMap.put(probe, probeResponse.getProbe());
 		}
 
 		// if there are not any custom probe2gene mappings,
 		// use that which is asociated with the probe ids in the dose response experiment
 		if (!custom)
 		{
-			if (bmdResults.getDoseResponseExperiment().getReferenceGeneAnnotations() != null)
+			if (doseResponseExperiement.getReferenceGeneAnnotations() != null)
 			{
-				for (ReferenceGeneAnnotation referenceAnnotation : bmdResults.getDoseResponseExperiment()
+				for (ReferenceGeneAnnotation referenceAnnotation : doseResponseExperiement
 						.getReferenceGeneAnnotations())
 				{
 					for (ReferenceGene referenceGene : referenceAnnotation.getReferenceGenes())
@@ -126,7 +126,7 @@ public class ProbeGeneMaps
 		return referenceGeneMap;
 	}
 
-	public Map<String, ProbeStatResult> getStatResultMap()
+	public Map<String, Probe> getStatResultMap()
 	{
 		return statResultMap;
 	}
@@ -134,11 +134,11 @@ public class ProbeGeneMaps
 	public void readUniqueProbes()
 	{
 
-		uniqueProbes = new Vector<String>(bmdResults.getProbeStatResults().size());
+		uniqueProbes = new Vector<String>(doseResponseExperiement.getProbeResponses().size());
 
-		for (ProbeStatResult probeStatResult : bmdResults.getProbeStatResults())
+		for (ProbeResponse probeResponse : doseResponseExperiement.getProbeResponses())
 		{
-			String probe = probeStatResult.getProbeResponse().getProbe().getId();
+			String probe = probeResponse.getProbe().getId();
 
 			if (probe != null && !uniqueProbes.contains(probe))
 			{
@@ -166,7 +166,7 @@ public class ProbeGeneMaps
 		this.chip = chip;
 		subGenes = new Vector<String>();
 		allGenes = new Vector<String>();
-		subHashG2Ids = new Hashtable<String, Vector>();
+		subHashG2Ids = new Hashtable<String, Vector<String>>();
 		probes2GeneIds(uniqueProbes, toAll);
 
 	}
@@ -238,11 +238,11 @@ public class ProbeGeneMaps
 		return bf.toString();
 	}
 
-	public Map<String, List<ProbeStatResult>> genesProbes2ProbeStatList(Vector<String> genes)
+	public Map<String, List<Probe>> genesProbes2ProbeStatList(Vector<String> genes)
 	{
 		StringBuffer bf = new StringBuffer();
 
-		Map<String, List<ProbeStatResult>> returnMap = new HashMap<>();
+		Map<String, List<Probe>> returnMap = new HashMap<>();
 
 		for (int i = 0; i < genes.size(); i++)
 		{
@@ -254,7 +254,7 @@ public class ProbeGeneMaps
 				bf.append(BMDExpressConstants.getInstance().SEMICOLON);
 			}
 
-			List<ProbeStatResult> probeStatList = new ArrayList<>();
+			List<Probe> probeStatList = new ArrayList<>();
 			for (int j = 0; j < probes.size(); j++)
 			{
 				probeStatList.add(this.statResultMap.get(probes.get(j)));
@@ -579,7 +579,7 @@ public class ProbeGeneMaps
 		return subAllProbes;
 	}
 
-	public Hashtable<String, Vector> subHashG2Ids()
+	public Hashtable<String, Vector<String>> subHashG2Ids()
 	{
 		return subHashG2Ids;
 	}
@@ -615,9 +615,9 @@ public class ProbeGeneMaps
 	private void probes2GeneIds(Vector<String> probes, boolean toAll)
 	{
 
-		if (bmdResults.getDoseResponseExperiment().getReferenceGeneAnnotations() != null)
+		if (doseResponseExperiement.getReferenceGeneAnnotations() != null)
 		{
-			for (ReferenceGeneAnnotation referenceGeneAnnotation : bmdResults.getDoseResponseExperiment()
+			for (ReferenceGeneAnnotation referenceGeneAnnotation : doseResponseExperiement
 					.getReferenceGeneAnnotations())
 			{
 
@@ -671,9 +671,9 @@ public class ProbeGeneMaps
 			vectProbes[i] = new Vector<String>();
 		}
 
-		if (bmdResults.getDoseResponseExperiment().getReferenceGeneAnnotations() != null)
+		if (doseResponseExperiement.getReferenceGeneAnnotations() != null)
 		{
-			for (ReferenceGeneAnnotation referenceGeneAnnotation : bmdResults.getDoseResponseExperiment()
+			for (ReferenceGeneAnnotation referenceGeneAnnotation : doseResponseExperiement
 					.getReferenceGeneAnnotations())
 			{
 				if (probesHash.containsKey(referenceGeneAnnotation.getProbe().getId()))

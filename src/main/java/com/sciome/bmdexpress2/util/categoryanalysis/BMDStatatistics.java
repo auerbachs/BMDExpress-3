@@ -40,7 +40,7 @@ public class BMDStatatistics
 {
 
 	private BMDResult bmdResults;
-	private ProbeGeneMaps probeGeneMaps;
+	private ProbeGeneMapsBMDAnalysis probeGeneMaps;
 	private GenesBMDs genesBMDs;
 	private BestBMDModels bestBMDModels;
 	private final String BMD = "BMD";
@@ -68,7 +68,7 @@ public class BMDStatatistics
 	{
 	}
 
-	public BMDStatatistics(ProbeGeneMaps pgMaps, BMDResult bmdResults)
+	public BMDStatatistics(ProbeGeneMapsBMDAnalysis pgMaps, BMDResult bmdResults)
 	{
 
 		this.bmdResults = bmdResults;

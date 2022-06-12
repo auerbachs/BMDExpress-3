@@ -85,7 +85,8 @@ public class ExpressionDataVisualizationView extends DataVisualizationView imple
 
 			List<BMDExpressAnalysisDataSet> resultList = new ArrayList<>();
 			resultList.add(oneways);
-			ExpressionQCBarChartComponent qcBar = new ExpressionQCBarChartComponent(oneways);
+			ExpressionQCBarChartComponent qcBar = new ExpressionQCBarChartComponent(oneways,
+					(DoseResponseExperiment) results.get(0));
 			chartsList.add(qcBar);
 
 			showCharts(null);
