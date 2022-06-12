@@ -52,16 +52,19 @@ public class ExpressionQCBarChartComponent extends VBox
 	final static String P05 = "0.05";
 	final static String P01 = "0.01";
 	final static String P1 = "0.1";
+	final static String P5 = "0.5";
+	final static String P11 = "1";
 
 	final static String A2 = "2";
 	final static String A15 = "1.5";
 	final static String A12 = "1.2";
+	final static String A1 = "1";
 
 	final static String DOSE_LEVEL = "Dose Level ";
 
-	String[] pValues = { P01, P05, P1 };
+	String[] pValues = { P01, P05, P1, P5, P11 };
 
-	String[] absValues = { A2, A15, A12 };
+	String[] absValues = { A2, A15, A12, A1 };
 
 	private ComboBox<String> pValueBox;
 
@@ -69,6 +72,7 @@ public class ExpressionQCBarChartComponent extends VBox
 
 	private ComboBox<String> pathwayDBBox;
 	private CheckComboBox<String> pathwayBox;
+	boolean isChangingPathway = false;
 
 	SciomeChartViewer barChartViewer;
 	private Map<String, Set<String>> bioPlanetToProbeMap;
@@ -107,20 +111,35 @@ public class ExpressionQCBarChartComponent extends VBox
 		pathwayDBBox.setValue("NONE");
 		pathwayDBBox.setOnAction((event) ->
 		{
+
 			Platform.runLater(() ->
 			{
-				List<String> pathways = new ArrayList<>();
-				if (pathwayDBBox.getValue().equals("REACTOME"))
-					pathways.addAll(reactomeToProbeMap.keySet());
-				else if (pathwayDBBox.getValue().equals("BioPlanet"))
-					pathways.addAll(bioPlanetToProbeMap.keySet());
+				isChangingPathway = true;
+				try
+				{
+					List<String> pathways = new ArrayList<>();
+					if (pathwayDBBox.getValue().equals("REACTOME"))
+						pathways.addAll(reactomeToProbeMap.keySet());
+					else if (pathwayDBBox.getValue().equals("BioPlanet"))
+						pathways.addAll(bioPlanetToProbeMap.keySet());
 
-				Collections.sort(pathways);
-				pathwayBox.getItems().clear();
-				pathwayBox.getItems().setAll(FXCollections.observableArrayList(pathways));
+					Collections.sort(pathways);
 
+					pathwayBox.getCheckModel().clearChecks();
+					pathwayBox.getItems().clear();
+					pathwayBox.getItems().setAll(FXCollections.observableArrayList(pathways));
+
+					updateChart();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				finally
+				{
+					isChangingPathway = false;
+				}
 			});
-			updateChart();
 
 		});
 		pathwayBox = new CheckComboBox<>();
@@ -132,7 +151,8 @@ public class ExpressionQCBarChartComponent extends VBox
 			@Override
 			public void onChanged(Change<? extends String> c)
 			{
-				updateChart();
+				if (!isChangingPathway)
+					updateChart();
 			}
 
 		});
@@ -173,6 +193,10 @@ public class ExpressionQCBarChartComponent extends VBox
 			pvalueCut = 0.01;
 		else if (pValueBox.getValue().equals(P1))
 			pvalueCut = 0.1;
+		else if (pValueBox.getValue().equals(P5))
+			pvalueCut = 0.5;
+		else if (pValueBox.getValue().equals(P11))
+			pvalueCut = 1;
 
 		if (foldChangeBox.getValue().equals(A2))
 			foldChangeCut = 2.0;
@@ -180,6 +204,8 @@ public class ExpressionQCBarChartComponent extends VBox
 			foldChangeCut = 1.5;
 		else if (foldChangeBox.getValue().equals(A12))
 			foldChangeCut = 1.2;
+		else if (foldChangeBox.getValue().equals(A1))
+			foldChangeCut = 1;
 
 		// now we have the cuttoff values, loop and fill up map for bar chartting
 
@@ -244,8 +270,7 @@ public class ExpressionQCBarChartComponent extends VBox
 		Map<String, Set<String>> map = reactomeToProbeMap;
 		if (pathwayDBBox.getValue().equals("BioPlanet"))
 			map = bioPlanetToProbeMap;
-
-		if (pathwayBox.getCheckModel().getItemCount() == 0)
+		if (pathwayBox.getCheckModel().getCheckedItems().size() == 0)
 			return true;
 		for (String pathway : pathwayBox.getCheckModel().getCheckedItems())
 			if (map.get(pathway).contains(probe))
