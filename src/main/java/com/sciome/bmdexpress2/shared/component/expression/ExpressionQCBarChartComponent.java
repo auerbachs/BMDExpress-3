@@ -38,6 +38,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -77,6 +78,7 @@ public class ExpressionQCBarChartComponent extends VBox
 	SciomeChartViewer barChartViewer;
 	private Map<String, Set<String>> bioPlanetToProbeMap;
 	private Map<String, Set<String>> reactomeToProbeMap;
+	private HBox pathwayLayout;
 
 	public ExpressionQCBarChartComponent(OneWayANOVAResults onewayResults,
 			DoseResponseExperiment doseResponseExperiment)
@@ -117,17 +119,45 @@ public class ExpressionQCBarChartComponent extends VBox
 				isChangingPathway = true;
 				try
 				{
+					pathwayLayout.getChildren().clear();
 					List<String> pathways = new ArrayList<>();
 					if (pathwayDBBox.getValue().equals("REACTOME"))
 						pathways.addAll(reactomeToProbeMap.keySet());
 					else if (pathwayDBBox.getValue().equals("BioPlanet"))
 						pathways.addAll(bioPlanetToProbeMap.keySet());
 
-					Collections.sort(pathways);
+					if (!pathwayDBBox.getValue().equalsIgnoreCase("none"))
 
-					pathwayBox.getCheckModel().clearChecks();
-					pathwayBox.getItems().clear();
-					pathwayBox.getItems().setAll(FXCollections.observableArrayList(pathways));
+					{
+						pathwayBox = new CheckComboBox<>();
+						pathwayBox.setMaxWidth(200);
+						pathwayBox.getItems().addAll(new String[] {});
+
+						pathwayBox.getCheckModel().getCheckedItems()
+								.addListener(new ListChangeListener<String>() {
+
+									@Override
+									public void onChanged(Change<? extends String> c)
+									{
+										if (!isChangingPathway)
+											updateChart();
+									}
+
+								});
+						Collections.sort(pathways);
+						pathwayBox.getItems().clear();
+						pathwayBox.getItems().setAll(FXCollections.observableArrayList(pathways));
+						Button clearAll = new Button("Clear All Selected Pathways");
+
+						clearAll.setOnAction((value) ->
+						{
+							isChangingPathway = true;
+							pathwayBox.getCheckModel().clearChecks();
+							updateChart();
+							isChangingPathway = false;
+						});
+						pathwayLayout.getChildren().addAll(new Label("Pathways"), pathwayBox, clearAll);
+					}
 
 					updateChart();
 				}
@@ -142,35 +172,26 @@ public class ExpressionQCBarChartComponent extends VBox
 			});
 
 		});
-		pathwayBox = new CheckComboBox<>();
-		pathwayBox.setMaxWidth(200);
-		pathwayBox.getItems().addAll(new String[] {});
-
-		pathwayBox.getCheckModel().getCheckedItems().addListener(new ListChangeListener<String>() {
-
-			@Override
-			public void onChanged(Change<? extends String> c)
-			{
-				if (!isChangingPathway)
-					updateChart();
-			}
-
-		});
 
 		HBox comboHLayout = new HBox();
 		HBox pLayout = new HBox(pLabel, pValueBox);
 		HBox fcLayout = new HBox(absLabel, foldChangeBox);
-		HBox pathwayLayout = new HBox(new Label("Pathway DB"), pathwayDBBox, new Label("Pathways"),
-				pathwayBox);
+		HBox pathwayDBLayout = new HBox(new Label("Pathway DB"), pathwayDBBox);
+
+		pathwayLayout = new HBox();
+
+		pathwayLayout.setAlignment(Pos.CENTER);
+		pathwayLayout.setSpacing(10.0);
+
 		pLayout.setAlignment(Pos.CENTER);
 		pLayout.setSpacing(10.0);
 		fcLayout.setAlignment(Pos.CENTER);
 		fcLayout.setSpacing(10.0);
 
-		pathwayLayout.setAlignment(Pos.CENTER);
-		pathwayLayout.setSpacing(10.0);
+		pathwayDBLayout.setAlignment(Pos.CENTER);
+		pathwayDBLayout.setSpacing(10.0);
 
-		comboHLayout.getChildren().addAll(pLayout, fcLayout, pathwayLayout);
+		comboHLayout.getChildren().addAll(pLayout, fcLayout, pathwayDBLayout, pathwayLayout);
 		comboHLayout.setSpacing(50.0);
 		this.getChildren().add(comboHLayout);
 
