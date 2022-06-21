@@ -685,12 +685,14 @@ public class CategoryMapTool
 
 			if (!genes2Probe.containsKey(probe))
 				genes2Probe.put(probe, new HashSet<>());
-			else if (genes2Probe.get(probe).size() > 1)
-				probeHash.remove(probe);
 
 			genes2Probe.get(probe).add(gene);
 
 		}
+
+		for (String probe : genes2Probe.keySet())
+			if (genes2Probe.get(probe).size() > 1)
+				probeHash.remove(probe);
 
 	}
 
