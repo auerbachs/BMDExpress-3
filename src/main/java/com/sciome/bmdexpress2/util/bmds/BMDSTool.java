@@ -180,7 +180,7 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 				&& inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
 			notes.add("Restrict Power: " + inputParameters.getRestirctPower());
 
-		notes.add("Polynomial monotonic restriction: " + inputParameters.isPolyMonotonic());
+		notes.add("Polynomial 2 monotonic restriction: " + inputParameters.isPolyMonotonic());
 
 		// restrict power param for hill is automatically 1 by default.
 		// if we ever allow user to customize this parameter, we can
