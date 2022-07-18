@@ -11,8 +11,6 @@
 
 package com.sciome.bmdexpress2.util.categoryanalysis.defined;
 
-
-
 import com.sciome.bmdexpress2.util.MatrixData;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -24,9 +22,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -37,20 +34,20 @@ import javafx.util.Callback;
  * @version 0.5, 06/24/2005
  * @author Longlong Yang
  */
-public class MatrixDataPreviewer extends VBox 
+public class MatrixDataPreviewer extends VBox
 {
 
-	private String				name;
-	private String[]			columnNames;
-	private Object[]			longValues;
-	private Object[][]			data;
-	private CheckBox			yesBox;
-	private Button				setButton;
+	private String name;
+	private String[] columnNames;
+	private Object[] longValues;
+	private Object[][] data;
+	private CheckBox yesBox;
+	private Button setButton;
 
-	private MatrixData			matrixData;
+	private MatrixData matrixData;
 	private ObservableList<Object[]> tableObservableData;
 
-	private boolean				ok;
+	private boolean ok;
 
 	/**
 	 * Class constructor
@@ -96,34 +93,42 @@ public class MatrixDataPreviewer extends VBox
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private VBox createPane()
 	{
-	//	tModel = new NumeralTableModel(data, columnNames);
+		// tModel = new NumeralTableModel(data, columnNames);
 
-		
 		TableView tableView = new TableView<>();
 		VBox pan = new VBox();
-		int i=0;
-		for(String column: this.getMatrix().getColumnNames())
+		int i = 0;
+		for (String column : this.getMatrix().getColumnNames())
 		{
 			// Name column
 			final int columnIndex = i;
 			TableColumn tcID = new TableColumn(column);
 			tcID.setEditable(false);
-			tcID.setCellValueFactory(new Callback<CellDataFeatures<Object[], String>, ObservableValue<String>>() {
-				@Override
-				public ObservableValue<String> call(CellDataFeatures<Object[], String> p)
-				{
-					return new SimpleStringProperty((String) p.getValue()[columnIndex]);
-				}
-			});
-	
+			tcID.setCellValueFactory(
+					new Callback<CellDataFeatures<Object[], String>, ObservableValue<String>>() {
+						@Override
+						public ObservableValue<String> call(CellDataFeatures<Object[], String> p)
+						{
+							return new SimpleStringProperty((String) p.getValue()[columnIndex]);
+						}
+					});
+
 			tcID.setMinWidth(90);
 			tcID.setPrefWidth(90);
 			tableView.getColumns().add(tcID);
 			i++;
 		}
-		
-		
-		tableObservableData = FXCollections.observableArrayList(this.getMatrix().getData());
+
+		// only show first 100 rows
+		Object[][] previewData = new Object[100][];
+		for (int ii = 0; ii < 100; ii++)
+		{
+			if (this.getMatrix().getData().length == ii)
+				break;
+			previewData[ii] = this.getMatrix().getData()[ii];
+		}
+
+		tableObservableData = FXCollections.observableArrayList(previewData);
 		tableView.setItems(tableObservableData);
 
 		pan.getChildren().add(tableView);
@@ -131,40 +136,40 @@ public class MatrixDataPreviewer extends VBox
 		if (matrixData != null && matrixData.hasHeaders())
 		{
 			yesBox = new CheckBox("Yes");
-			yesBox.setOnAction(value->
+			yesBox.setOnAction(value ->
 			{
-				if(yesBox.isSelected())
+				if (yesBox.isSelected())
 					setButton.setDisable(false);
 				else
 					setButton.setDisable(true);
 			});
-			//yesBox.addActionListener(this);
+			// yesBox.addActionListener(this);
 			setButton = new Button("Use");
-			setButton.setOnAction(value->
+			setButton.setOnAction(value ->
 			{
-				//redo the table
-				yesBox.setSelected(false);	
+				// redo the table
+				yesBox.setSelected(false);
 				setButton.setDisable(true);
-				for(int c=0; c< tableView.getColumns().size(); c++)
+				for (int c = 0; c < tableView.getColumns().size(); c++)
 				{
-					TableColumn tcID = (TableColumn)tableView.getColumns().get(c);
+					TableColumn tcID = (TableColumn) tableView.getColumns().get(c);
 					tcID.setText(tableObservableData.get(0)[c].toString());
 				}
 				tableObservableData.remove(0);
 				removeHeaders();
 			});
 			setButton.setDisable(true);
-			//setButton.addActionListener(this);
+			// setButton.addActionListener(this);
 			HBox setPane = new HBox();
 			setPane.getChildren().add(new Label("Does the data contain column headers?"));
 			setPane.getChildren().add(yesBox);
 			setPane.getChildren().add(setButton);
 			pan.getChildren().add(setPane);
-			
+
 			setPane.setSpacing(15.0);
 			setPane.setAlignment(Pos.CENTER_LEFT);
 		}
-		
+
 		pan.setSpacing(15.0);
 
 		return pan;
@@ -173,8 +178,8 @@ public class MatrixDataPreviewer extends VBox
 	private void removeHeaders()
 	{
 		matrixData.removeHeaders();
-		//tModel.removeRow(0);
-		//tModel.setColumnIdentifiers(matrixData.getColumnNames());
+		// tModel.removeRow(0);
+		// tModel.setColumnIdentifiers(matrixData.getColumnNames());
 		setButton.setDisable(true);
 		yesBox.setSelected(false);
 	}
@@ -185,41 +190,41 @@ public class MatrixDataPreviewer extends VBox
 	}
 
 	/*
-	public void actionPerformed(ActionEvent e)
-	{
-		String cmd = e.getActionCommand();
-
-		if ("OK".equals(cmd))
-		{
-			ok = true;
-			//getTopLevelAncestor().setVisible(false);
-		}
-		else if ("Cancel".equals(cmd))
-		{
-			matrixData = null;
-			ok = true;
-			//getTopLevelAncestor().setVisible(false);
-		}
-		else if (cmd.equals("Yes"))
-		{
-			if (yesBox.isSelected())
-			{
-				//setButton.setEnabled(true);
-			}
-			else
-			{
-				//setButton.setEnabled(false);
-			}
-		}
-		else if (cmd.equals("Use"))
-		{
-			removeHeaders();
-		}
-		else
-		{
-			//JOptionPane.showMessageDialog(this, "Ask your program provider for help.");
-		}
-	}
-	*/
+	 * public void actionPerformed(ActionEvent e)
+	 * {
+	 * String cmd = e.getActionCommand();
+	 * 
+	 * if ("OK".equals(cmd))
+	 * {
+	 * ok = true;
+	 * //getTopLevelAncestor().setVisible(false);
+	 * }
+	 * else if ("Cancel".equals(cmd))
+	 * {
+	 * matrixData = null;
+	 * ok = true;
+	 * //getTopLevelAncestor().setVisible(false);
+	 * }
+	 * else if (cmd.equals("Yes"))
+	 * {
+	 * if (yesBox.isSelected())
+	 * {
+	 * //setButton.setEnabled(true);
+	 * }
+	 * else
+	 * {
+	 * //setButton.setEnabled(false);
+	 * }
+	 * }
+	 * else if (cmd.equals("Use"))
+	 * {
+	 * removeHeaders();
+	 * }
+	 * else
+	 * {
+	 * //JOptionPane.showMessageDialog(this, "Ask your program provider for help.");
+	 * }
+	 * }
+	 */
 
 }
