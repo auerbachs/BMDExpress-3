@@ -56,6 +56,11 @@ public class BMDSToxicRUtils
 			bmdType = ToxicRConstants.BMD_TYPE_SD;
 		else if (bmdType == 2)
 			bmdType = ToxicRConstants.BMD_TYPE_REL;
+		else if (bmdType == 0)
+		{
+			bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			BMR = Math.log(1 + BMR);
+		}
 
 		ToxicRJNI tRJNI = new ToxicRJNI();
 		ContinuousResult continousResult = tRJNI.runContinuous(model, Y, doses, bmdType, BMR, true, isNCV,
@@ -139,6 +144,11 @@ public class BMDSToxicRUtils
 			bmdType = ToxicRConstants.BMD_TYPE_SD;
 		else if (bmdType == 2)
 			bmdType = ToxicRConstants.BMD_TYPE_REL;
+		else if (bmdType == 0)
+		{
+			bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			BMR = Math.log(1 + BMR);
+		}
 
 		ToxicRJNI tRJNI = new ToxicRJNI();
 		ContinuousResultMA continousResultMA = null;

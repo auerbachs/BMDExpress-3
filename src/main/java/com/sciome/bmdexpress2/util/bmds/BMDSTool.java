@@ -175,6 +175,8 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 			notes.add("BMR Type: Standard Deviation");
 		else if (inputParameters.getBmrType() == 2)
 			notes.add("BMR Type: Relative Deviation");
+		else if (inputParameters.getBmrType() == 0)
+			notes.add("BMR Type: Absolute Deviation");
 		notes.add("BMR Factor: " + inputParameters.getBmrLevel());
 		if (modelsToRun != null && isModelInThere("power", modelsToRun)
 				&& inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))

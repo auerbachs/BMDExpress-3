@@ -833,6 +833,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		bMRTypeComboBox.getItems().add("Standard Deviation");
 		if (allIsNotLogScaled())
 			bMRTypeComboBox.getItems().add("Relative Deviation");
+		bMRTypeComboBox.getItems().add("Absolute Deviation");
 		bMRTypeComboBox.getSelectionModel().select(0);
 		// init confidence level
 		// confidenceLevelComboBox.getItems().add("0.95");
@@ -961,6 +962,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("standard deviation"))
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsStandardDeviation());
+			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
+					.equalsIgnoreCase("absolute deviation"))
+				bMRFactorComboBox.getItems().addAll(initBMRFactorsAbsoluteDeviation());
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 			bMRFactorComboBox.getSelectionModel().select(input.getBMRFactor());
@@ -991,6 +995,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("standard deviation"))
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsStandardDeviation());
+			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
+					.equalsIgnoreCase("absolute deviation"))
+				bMRFactorComboBox.getItems().addAll(initBMRFactorsAbsoluteDeviation());
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 			bMRFactorComboBox.getSelectionModel().select(maInput.getBMRFactor());
@@ -1003,6 +1010,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("standard deviation"))
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsStandardDeviation());
+			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
+					.equalsIgnoreCase("absolute deviation"))
+				bMRFactorComboBox.getItems().addAll(initBMRFactorsAbsoluteDeviation());
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 
@@ -1061,6 +1071,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("relative deviation"))
 				inputParameters.setBmrType(2);
+			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
+					.equalsIgnoreCase("absolute deviation"))
+				inputParameters.setBmrType(0);
 			inputParameters.setBmrLevel(Double.valueOf(
 					((BMRFactor) bMRFactorComboBox.getSelectionModel().getSelectedItem()).getValue()));
 			inputParameters.setNumThreads(Integer.valueOf(numberOfThreadsComboBox.getEditor().getText()));
@@ -1261,9 +1274,37 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		factors.add(new BMRFactor("85%", "0.85"));
 		factors.add(new BMRFactor("90%", "0.9"));
 		factors.add(new BMRFactor("95%", "0.95"));
-		factors.add(new BMRFactor("100%", "0.95"));
+		factors.add(new BMRFactor("100%", "1.00"));
 
 		return factors;
+	}
+
+	private List<BMRFactor> initBMRFactorsAbsoluteDeviation()
+	{
+		List<BMRFactor> factors = new ArrayList<>();
+		factors.add(new BMRFactor("5%", "0.05"));
+		factors.add(new BMRFactor("10%", "0.10"));
+		factors.add(new BMRFactor("15%", "0.15"));
+		factors.add(new BMRFactor("20%", "0.2"));
+		factors.add(new BMRFactor("25%", "0.25"));
+		factors.add(new BMRFactor("30%", "0.3"));
+		factors.add(new BMRFactor("35%", "0.35"));
+		factors.add(new BMRFactor("40%", "0.4"));
+		factors.add(new BMRFactor("45%", "0.45"));
+		factors.add(new BMRFactor("50%", "0.5"));
+		factors.add(new BMRFactor("55%", "0.55"));
+		factors.add(new BMRFactor("60%", "0.6"));
+		factors.add(new BMRFactor("65%", "0.65"));
+		factors.add(new BMRFactor("70%", "0.7"));
+		factors.add(new BMRFactor("75%", "0.75"));
+		factors.add(new BMRFactor("80%", "0.8"));
+		factors.add(new BMRFactor("85%", "0.85"));
+		factors.add(new BMRFactor("90%", "0.9"));
+		factors.add(new BMRFactor("95%", "0.95"));
+		factors.add(new BMRFactor("100%", "1.00"));
+
+		return factors;
+
 	}
 
 }

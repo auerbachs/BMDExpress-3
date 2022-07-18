@@ -13,6 +13,7 @@ public class ToxicRConstants
 	public final static int POLY = 666;
 	public final static int FUNL = 10;
 
+	public static final int BMD_TYPE_ABS = 1;
 	public static final int BMD_TYPE_SD = 2;
 	public static final int BMD_TYPE_REL = 3;
 

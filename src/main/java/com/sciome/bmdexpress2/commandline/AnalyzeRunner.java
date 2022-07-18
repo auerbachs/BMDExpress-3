@@ -1046,7 +1046,7 @@ public class AnalyzeRunner
 				project.getDoseResponseExperiments()
 						.add((new ExpressionImportRunner()).runExpressionImport(fileEntry,
 								expressionConfig.getPlatform(), outname,
-								expressionConfig.getLogTransformation()));
+								expressionConfig.getLogTransformation(), expressionConfig.getHasHeaders()));
 			}
 
 		}
@@ -1060,8 +1060,8 @@ public class AnalyzeRunner
 				outname = expressionConfig.getOutputName();
 			project.getDoseResponseExperiments()
 					.add(new ExpressionImportRunner().runExpressionImport(inputFile,
-							expressionConfig.getPlatform(), outname,
-							expressionConfig.getLogTransformation()));
+							expressionConfig.getPlatform(), outname, expressionConfig.getLogTransformation(),
+							expressionConfig.getHasHeaders()));
 		}
 
 	}
