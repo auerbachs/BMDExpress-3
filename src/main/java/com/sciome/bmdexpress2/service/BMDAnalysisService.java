@@ -50,9 +50,12 @@ public class BMDAnalysisService implements IBMDAnalysisService
 	{
 		inputParameters.setObservations(
 				processableData.getProcessableDoseResponseExperiment().getTreatments().size());
+		DoseResponseExperiment doseResponseExperiment = processableData
+				.getProcessableDoseResponseExperiment();
 		bMDSTool = new BMDSTool(processableData.getProcessableProbeResponses(),
 				processableData.getProcessableDoseResponseExperiment().getTreatments(), inputParameters,
-				modelSelectionParameters, modelsToRun, progressUpdater, processableData, tmpFolder);
+				modelSelectionParameters, modelsToRun, progressUpdater, processableData, tmpFolder,
+				doseResponseExperiment.getLogTransformation());
 		BMDResult bMDResults = bMDSTool.bmdAnalyses();
 
 		// someone canceled this. so just uncancel it before returning.
@@ -61,8 +64,6 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		if (bMDResults == null)
 			return null;
 
-		DoseResponseExperiment doseResponseExperiment = processableData
-				.getProcessableDoseResponseExperiment();
 		bMDResults.setDoseResponseExperiment(doseResponseExperiment);
 		if (processableData instanceof PrefilterResults)
 			bMDResults.setPrefilterResults((PrefilterResults) processableData);
@@ -418,18 +419,20 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			ModelInputParameters inputParameters, List<StatModel> modelsToRun,
 			IBMDSToolProgress progressUpdater, boolean useMCMC)
 	{
+		DoseResponseExperiment doseResponseExperiment = processableData
+				.getProcessableDoseResponseExperiment();
 		inputParameters.setObservations(
 				processableData.getProcessableDoseResponseExperiment().getTreatments().size());
 		bMDSMATool = new BMDSMATool(processableData.getProcessableProbeResponses(),
 				processableData.getProcessableDoseResponseExperiment().getTreatments(), inputParameters,
-				modelsToRun, useMCMC, progressUpdater, processableData);
+				modelsToRun, useMCMC, progressUpdater, processableData,
+				doseResponseExperiment.getLogTransformation());
 		BMDResult bMDResults = bMDSMATool.bmdAnalyses();
 		if (cancel)
 			cancel = false;
 		if (bMDResults == null)
 			return null;
-		DoseResponseExperiment doseResponseExperiment = processableData
-				.getProcessableDoseResponseExperiment();
+
 		bMDResults.setDoseResponseExperiment(doseResponseExperiment);
 		if (processableData instanceof PrefilterResults)
 			bMDResults.setPrefilterResults((PrefilterResults) processableData);

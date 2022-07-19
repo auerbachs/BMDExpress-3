@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
-import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDInput;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDMAInput;
 import com.sciome.bmdexpress2.mvp.presenter.bmdanalysis.BMDAnalysisPresenter;
@@ -831,9 +830,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		this.varianceType.setValue(CONSTANT_VARIANCE);
 
 		bMRTypeComboBox.getItems().add("Standard Deviation");
-		if (allIsNotLogScaled())
-			bMRTypeComboBox.getItems().add("Relative Deviation");
-		bMRTypeComboBox.getItems().add("Absolute Deviation");
+		bMRTypeComboBox.getItems().add("Relative Deviation");
 		bMRTypeComboBox.getSelectionModel().select(0);
 		// init confidence level
 		// confidenceLevelComboBox.getItems().add("0.95");
@@ -962,9 +959,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("standard deviation"))
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsStandardDeviation());
-			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
-					.equalsIgnoreCase("absolute deviation"))
-				bMRFactorComboBox.getItems().addAll(initBMRFactorsAbsoluteDeviation());
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 			bMRFactorComboBox.getSelectionModel().select(input.getBMRFactor());
@@ -995,9 +989,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("standard deviation"))
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsStandardDeviation());
-			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
-					.equalsIgnoreCase("absolute deviation"))
-				bMRFactorComboBox.getItems().addAll(initBMRFactorsAbsoluteDeviation());
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 			bMRFactorComboBox.getSelectionModel().select(maInput.getBMRFactor());
@@ -1010,9 +1001,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("standard deviation"))
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsStandardDeviation());
-			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
-					.equalsIgnoreCase("absolute deviation"))
-				bMRFactorComboBox.getItems().addAll(initBMRFactorsAbsoluteDeviation());
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 
@@ -1023,20 +1011,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		ActionEvent event = new ActionEvent();
 		handle_HillCheckBox(event);
 		handle_PowerCheckBox(event);
-	}
-
-	/*
-	 * This method looks at all the processable results and checks to see whethere they are all log
-	 * transformed or not. returns true if all are log transformed. This method was created to help decide
-	 * whether or not to allow relative deviation.
-	 */
-	private boolean allIsNotLogScaled()
-	{
-		for (IStatModelProcessable processables : this.processableData)
-			if (!processables.getProcessableDoseResponseExperiment().getLogTransformation()
-					.equals(LogTransformationEnum.NONE))
-				return false;
-		return true;
 	}
 
 	private ModelInputParameters assignParameters()
@@ -1277,34 +1251,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		factors.add(new BMRFactor("100%", "1.00"));
 
 		return factors;
-	}
-
-	private List<BMRFactor> initBMRFactorsAbsoluteDeviation()
-	{
-		List<BMRFactor> factors = new ArrayList<>();
-		factors.add(new BMRFactor("5%", "0.05"));
-		factors.add(new BMRFactor("10%", "0.10"));
-		factors.add(new BMRFactor("15%", "0.15"));
-		factors.add(new BMRFactor("20%", "0.2"));
-		factors.add(new BMRFactor("25%", "0.25"));
-		factors.add(new BMRFactor("30%", "0.3"));
-		factors.add(new BMRFactor("35%", "0.35"));
-		factors.add(new BMRFactor("40%", "0.4"));
-		factors.add(new BMRFactor("45%", "0.45"));
-		factors.add(new BMRFactor("50%", "0.5"));
-		factors.add(new BMRFactor("55%", "0.55"));
-		factors.add(new BMRFactor("60%", "0.6"));
-		factors.add(new BMRFactor("65%", "0.65"));
-		factors.add(new BMRFactor("70%", "0.7"));
-		factors.add(new BMRFactor("75%", "0.75"));
-		factors.add(new BMRFactor("80%", "0.8"));
-		factors.add(new BMRFactor("85%", "0.85"));
-		factors.add(new BMRFactor("90%", "0.9"));
-		factors.add(new BMRFactor("95%", "0.95"));
-		factors.add(new BMRFactor("100%", "1.00"));
-
-		return factors;
-
 	}
 
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.PolyResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
@@ -45,12 +46,14 @@ public class PolyFitThread extends Thread implements IFitThread
 
 	private String tmpFolder;
 	private Map<String, NormalDeviance> deviance;
+	LogTransformationEnum transform;
 
 	public PolyFitThread(CountDownLatch cDownLatch, int degree, List<ProbeResponse> probeResponses,
 			List<StatResult> polyResults, int numThreads, int instanceIndex, int killTime, String tmpFolder,
 			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
-			Map<String, NormalDeviance> deviance)
+			Map<String, NormalDeviance> deviance, LogTransformationEnum transform)
 	{
+		this.transform = transform;
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
 		this.cdLatch = cDownLatch;
@@ -136,7 +139,7 @@ public class PolyFitThread extends Thread implements IFitThread
 					results = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 							inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(),
-							inputParameters.isPolyMonotonic());
+							inputParameters.isPolyMonotonic(), transform);
 				else
 				{
 					boolean mono = inputParameters.isPolyMonotonic();
@@ -146,11 +149,11 @@ public class PolyFitThread extends Thread implements IFitThread
 					double[] results1 = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 							inputParameters.getConstantVariance() != 1, true, dev, inputParameters.isFast(),
-							mono);
+							mono, transform);
 					double[] results2 = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 							inputParameters.getConstantVariance() != 1, false, dev, inputParameters.isFast(),
-							mono);
+							mono, transform);
 
 					if ((results1[0] > results2[0] && results2[0] != DEFAULTDOUBLE)
 							|| results1[0] == DEFAULTDOUBLE)

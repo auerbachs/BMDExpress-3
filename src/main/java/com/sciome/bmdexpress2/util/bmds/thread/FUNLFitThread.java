@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.FunlResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
@@ -38,12 +39,14 @@ public class FUNLFitThread extends Thread implements IFitThread
 	private String tmpFolder;
 
 	private Map<String, NormalDeviance> deviance;
+	LogTransformationEnum transform;
 
 	public FUNLFitThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
 			List<StatResult> funlResults, int numThread, int instanceIndex, int killTime, String tmpFolder,
 			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
-			Map<String, NormalDeviance> deviance)
+			Map<String, NormalDeviance> deviance, LogTransformationEnum transform)
 	{
+		this.transform = transform;
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
 		this.cdLatch = cdLatch;
@@ -118,7 +121,8 @@ public class FUNLFitThread extends Thread implements IFitThread
 
 				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.FUNL, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false);
+						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
+						transform);
 
 				if (results != null)
 				{

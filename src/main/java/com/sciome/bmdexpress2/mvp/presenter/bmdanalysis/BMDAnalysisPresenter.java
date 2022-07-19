@@ -159,7 +159,8 @@ public class BMDAnalysisPresenter extends ServicePresenterBase<IBMDAnalysisView,
 			}
 			bMDSTool = new BMDSTool(processableData.getProcessableProbeResponses(),
 					processableData.getProcessableDoseResponseExperiment().getTreatments(), inputParameters,
-					modelSelectionParameters, modelsToRun, this, processableData, null);
+					modelSelectionParameters, modelsToRun, this, processableData, null,
+					bmdResult.getLogTransformation());
 			((BMDResult) processableData).getAnalysisInfo().getNotes().add("Parameter Reselect");
 			// create a shallow clone of the bmdresult
 

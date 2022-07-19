@@ -9,6 +9,7 @@ import org.apache.commons.math3.distribution.ChiSquaredDistribution;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.stat.ExponentialResult;
 import com.sciome.bmdexpress2.mvp.model.stat.FunlResult;
 import com.sciome.bmdexpress2.mvp.model.stat.HillResult;
@@ -39,27 +40,41 @@ public class BMDSToxicRUtils
 	}
 
 	public static double[] calculateToxicR(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isNCV, NormalDeviance deviance, boolean isFast, boolean isPolyMonotonic)
-			throws JsonMappingException, JsonProcessingException
+			boolean isNCV, NormalDeviance deviance, boolean isFast, boolean isPolyMonotonic,
+			LogTransformationEnum transform) throws JsonMappingException, JsonProcessingException
 	{
 		boolean isIncreasing = ToxicRUtils.calculateDirection(doses, Y) > 0;
 		return calculateToxicR(model, Y, doses, bmdType, BMR, isNCV, isIncreasing, deviance, isFast,
-				isPolyMonotonic);
+				isPolyMonotonic, transform);
 	}
 
 	public static double[] calculateToxicR(int model, double[] Y, double[] doses, int bmdType, double BMR,
 			boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast,
-			boolean isPolyMonotonic) throws JsonMappingException, JsonProcessingException
+			boolean isPolyMonotonic, LogTransformationEnum transform)
+			throws JsonMappingException, JsonProcessingException
 	{
 
 		if (bmdType == 1)
 			bmdType = ToxicRConstants.BMD_TYPE_SD;
 		else if (bmdType == 2)
-			bmdType = ToxicRConstants.BMD_TYPE_REL;
-		else if (bmdType == 0)
 		{
-			bmdType = ToxicRConstants.BMD_TYPE_ABS;
-			BMR = Math.log(1 + BMR);
+			bmdType = ToxicRConstants.BMD_TYPE_REL;
+			if (transform.equals(LogTransformationEnum.BASE10))
+			{
+				BMR = Math.log10(1 + BMR);
+				bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			}
+			else if (transform.equals(LogTransformationEnum.BASE2))
+			{
+				BMR = Math.log(1 + BMR) / Math.log(2);
+				bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			}
+			else if (transform.equals(LogTransformationEnum.NATURAL))
+			{
+				BMR = Math.log(1 + BMR);
+				bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			}
+
 		}
 
 		ToxicRJNI tRJNI = new ToxicRJNI();
@@ -126,15 +141,15 @@ public class BMDSToxicRUtils
 	}
 
 	public static ModelAveragingResult calculateToxicRMA(int[] models, double[] Y, double[] doses,
-			int bmdType, double BMR, boolean isNCV, boolean useMCMC)
+			int bmdType, double BMR, boolean isNCV, boolean useMCMC, LogTransformationEnum transform)
 			throws JsonMappingException, JsonProcessingException
 	{
-		return calculateToxicRMA(models, Y, doses, bmdType, BMR, isNCV, useMCMC, false);
+		return calculateToxicRMA(models, Y, doses, bmdType, BMR, isNCV, useMCMC, false, transform);
 	}
 
 	public static ModelAveragingResult calculateToxicRMA(int[] models, double[] Y, double[] doses,
-			int bmdType, double BMR, boolean isNCV, boolean useMCMC, boolean isFast)
-			throws JsonMappingException, JsonProcessingException
+			int bmdType, double BMR, boolean isNCV, boolean useMCMC, boolean isFast,
+			LogTransformationEnum transform) throws JsonMappingException, JsonProcessingException
 	{
 		boolean isIncreasing = ToxicRUtils.calculateDirection(doses, Y) > 0;
 		ModelAveragingResult maResult = new ModelAveragingResult();
@@ -143,11 +158,23 @@ public class BMDSToxicRUtils
 		if (bmdType == 1)
 			bmdType = ToxicRConstants.BMD_TYPE_SD;
 		else if (bmdType == 2)
-			bmdType = ToxicRConstants.BMD_TYPE_REL;
-		else if (bmdType == 0)
 		{
-			bmdType = ToxicRConstants.BMD_TYPE_ABS;
-			BMR = Math.log(1 + BMR);
+			bmdType = ToxicRConstants.BMD_TYPE_REL;
+			if (transform.equals(LogTransformationEnum.BASE10))
+			{
+				BMR = Math.log10(1 + BMR);
+				bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			}
+			else if (transform.equals(LogTransformationEnum.BASE2))
+			{
+				BMR = Math.log(1 + BMR) / Math.log(2);
+				bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			}
+			else if (transform.equals(LogTransformationEnum.NATURAL))
+			{
+				BMR = Math.log(1 + BMR);
+				bmdType = ToxicRConstants.BMD_TYPE_ABS;
+			}
 		}
 
 		ToxicRJNI tRJNI = new ToxicRJNI();

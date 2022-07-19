@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.ModelAveragingResult;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
@@ -41,11 +42,14 @@ public class MAFitThread extends Thread implements IFitThread
 	int[] models;
 
 	private String tmpFolder;
+	LogTransformationEnum transform;
 
 	public MAFitThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
 			List<ModelAveragingResult> maResults, boolean useMCMC, List<StatModel> modelsToRun,
-			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter)
+			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
+			LogTransformationEnum transform)
 	{
+		this.transform = transform;
 		this.progressUpdater = progressUpdater;
 		this.cdLatch = cdLatch;
 		this.probeResponses = probeResponses;
@@ -132,7 +136,7 @@ public class MAFitThread extends Thread implements IFitThread
 
 				ModelAveragingResult statResult = BMDSToxicRUtils.calculateToxicRMA(models, responsesD,
 						dosesd, inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1, useMCMC);
+						inputParameters.getConstantVariance() != 1, useMCMC, transform);
 
 				maResults.set(probeIndex, statResult);
 
