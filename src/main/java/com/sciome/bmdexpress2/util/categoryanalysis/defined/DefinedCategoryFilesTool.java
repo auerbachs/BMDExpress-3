@@ -51,7 +51,7 @@ public class DefinedCategoryFilesTool
 
 		// View the data and figure out if there column headers.
 		Dialog<String> dialog = ViewUtilities.getInstance().matrixPreviewDialog("", "Probe Data", idsMatrix,
-				owner);
+				owner, true);
 		Optional<String> result = dialog.showAndWait();
 		if (!result.isPresent())
 		{
@@ -91,7 +91,7 @@ public class DefinedCategoryFilesTool
 
 		// View the data and figure out if there column headers.
 		Dialog<String> dialog = ViewUtilities.getInstance().matrixPreviewDialog("", "Category Data",
-				mapsMatrix, owner);
+				mapsMatrix, owner, true);
 		dialog.setResizable(false);
 		Optional<String> result = dialog.showAndWait();
 		if (!result.isPresent())

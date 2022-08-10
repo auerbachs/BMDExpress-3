@@ -449,8 +449,10 @@ public class BMDStatatistics
 			col = enrichmentBMDL(col, sub, subTotal, vectSub, categoryAnalysisResult);
 		}
 
-		col = percentBMD(col, all, 0.05, sortBmds[0], categoryAnalysisResult, true);
-		col = percentBMD(col, all, 0.1, sortBmds[0], categoryAnalysisResult, false);
+		col = percentBMD(col, all, 0.05, sortBmds[0], sortBmdls[0], sortBmdus[0], categoryAnalysisResult,
+				true);
+		col = percentBMD(col, all, 0.1, sortBmds[0], sortBmdls[0], sortBmdus[0], categoryAnalysisResult,
+				false);
 
 		col = addDirectionalGeneStats(col, perGBMDs, categoryAnalysisResult, refGeneProbeStatResults);
 
@@ -639,8 +641,8 @@ public class BMDStatatistics
 		}
 	}
 
-	private int percentBMD(int col, int all, double percent, double[] sortBmds,
-			CategoryAnalysisResult categoryAnalysisResult, boolean isFifthPercentile)
+	private int percentBMD(int col, int all, double percent, double[] sortBmds, double[] sortBmdls,
+			double[] sortBmdus, CategoryAnalysisResult categoryAnalysisResult, boolean isFifthPercentile)
 	{
 		int n = sortBmds.length;
 		double one = 1.0;
@@ -657,11 +659,15 @@ public class BMDStatatistics
 					{
 						categoryAnalysisResult.setFifthPercentileIndex((double) i);
 						categoryAnalysisResult.setBmdFifthPercentileTotalGenes(sortBmds[i]);
+						categoryAnalysisResult.setBmdlFifthPercentileTotalGenes(sortBmdls[i]);
+						categoryAnalysisResult.setBmduFifthPercentileTotalGenes(sortBmdus[i]);
 					}
 					else
 					{
 						categoryAnalysisResult.setTenthPercentileIndex((double) i);
 						categoryAnalysisResult.setBmdTenthPercentileTotalGenes(sortBmds[i]);
+						categoryAnalysisResult.setBmdlTenthPercentileTotalGenes(sortBmdls[i]);
+						categoryAnalysisResult.setBmduTenthPercentileTotalGenes(sortBmdus[i]);
 
 					}
 					// output[col] = new Double((double) i);
@@ -670,17 +676,23 @@ public class BMDStatatistics
 				else
 				{
 					double avg = (sortBmds[i] + sortBmds[i - 1]) / 2;
+					double avgl = (sortBmdls[i] + sortBmdls[i - 1]) / 2;
+					double avgu = (sortBmdus[i] + sortBmdus[i - 1]) / 2;
 
 					if (isFifthPercentile)
 					{
 						categoryAnalysisResult.setFifthPercentileIndex(new Double(i - one / 2));
 						categoryAnalysisResult.setBmdFifthPercentileTotalGenes(avg);
+						categoryAnalysisResult.setBmdlFifthPercentileTotalGenes(avgl);
+						categoryAnalysisResult.setBmduFifthPercentileTotalGenes(avgu);
 
 					}
 					else
 					{
 						categoryAnalysisResult.setTenthPercentileIndex(new Double(i - one / 2));
 						categoryAnalysisResult.setBmdTenthPercentileTotalGenes(avg);
+						categoryAnalysisResult.setBmdlFifthPercentileTotalGenes(avgl);
+						categoryAnalysisResult.setBmduFifthPercentileTotalGenes(avgu);
 					}
 					// output[col] = new Double(i - one / 2);
 					// output[col + 1] = new Double(avg);
@@ -689,7 +701,7 @@ public class BMDStatatistics
 			}
 		}
 
-		return col + 2;
+		return col + 4;
 	}
 
 	private String doubleArray2String(double[] dbs)

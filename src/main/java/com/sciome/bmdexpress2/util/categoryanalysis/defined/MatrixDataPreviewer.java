@@ -46,6 +46,7 @@ public class MatrixDataPreviewer extends VBox
 
 	private MatrixData matrixData;
 	private ObservableList<Object[]> tableObservableData;
+	boolean showLimited = false;
 
 	private boolean ok;
 
@@ -59,7 +60,13 @@ public class MatrixDataPreviewer extends VBox
 	 */
 	public MatrixDataPreviewer(MatrixData matrix)
 	{
+		this(matrix, false);
+	}
+
+	public MatrixDataPreviewer(MatrixData matrix, boolean showLimited)
+	{
 		super();
+		this.showLimited = showLimited;
 		matrixData = matrix;
 		name = matrix.getName();
 		columnNames = matrix.getColumnNames();
@@ -120,8 +127,11 @@ public class MatrixDataPreviewer extends VBox
 		}
 
 		// only show first 100 rows
-		Object[][] previewData = new Object[100][];
-		for (int ii = 0; ii < 100; ii++)
+		int howmanyrows = 100;
+		if (!showLimited)
+			howmanyrows = this.getMatrix().getData().length;
+		Object[][] previewData = new Object[howmanyrows][];
+		for (int ii = 0; ii < howmanyrows; ii++)
 		{
 			if (this.getMatrix().getData().length == ii)
 				break;

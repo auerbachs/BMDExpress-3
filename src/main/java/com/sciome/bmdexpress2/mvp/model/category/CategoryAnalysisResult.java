@@ -106,6 +106,10 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 	private Double tenthPercentileIndex;
 	private Double bmdTenthPercentileTotalGenes;
+	private Double bmdlFifthPercentileTotalGenes;
+	private Double bmdlTenthPercentileTotalGenes;
+	private Double bmduFifthPercentileTotalGenes;
+	private Double bmduTenthPercentileTotalGenes;
 
 	private Double genesUpBMDMean;
 	private Double genesUpBMDMedian;
@@ -654,16 +658,6 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		this.bmdFifthPercentileTotalGenes = bmdFifthPercentileTotalGenes;
 	}
 
-	public Double getTenthPercentileIndex()
-	{
-		return tenthPercentileIndex;
-	}
-
-	public void setTenthPercentileIndex(Double tenthPercentileIndex)
-	{
-		this.tenthPercentileIndex = tenthPercentileIndex;
-	}
-
 	public Double getBmdTenthPercentileTotalGenes()
 	{
 		return bmdTenthPercentileTotalGenes;
@@ -672,6 +666,56 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	public void setBmdTenthPercentileTotalGenes(Double bmdTenthPercentileTotalGenes)
 	{
 		this.bmdTenthPercentileTotalGenes = bmdTenthPercentileTotalGenes;
+	}
+
+	public Double getBmdlFifthPercentileTotalGenes()
+	{
+		return bmdlFifthPercentileTotalGenes;
+	}
+
+	public void setBmdlFifthPercentileTotalGenes(Double bmdlFifthPercentileTotalGenes)
+	{
+		this.bmdlFifthPercentileTotalGenes = bmdlFifthPercentileTotalGenes;
+	}
+
+	public Double getBmdlTenthPercentileTotalGenes()
+	{
+		return bmdlTenthPercentileTotalGenes;
+	}
+
+	public void setBmdlTenthPercentileTotalGenes(Double bmdlTenthPercentileTotalGenes)
+	{
+		this.bmdlTenthPercentileTotalGenes = bmdlTenthPercentileTotalGenes;
+	}
+
+	public Double getBmduFifthPercentileTotalGenes()
+	{
+		return bmduFifthPercentileTotalGenes;
+	}
+
+	public void setBmduFifthPercentileTotalGenes(Double bmduFifthPercentileTotalGenes)
+	{
+		this.bmduFifthPercentileTotalGenes = bmduFifthPercentileTotalGenes;
+	}
+
+	public Double getBmduTenthPercentileTotalGenes()
+	{
+		return bmduTenthPercentileTotalGenes;
+	}
+
+	public void setBmduTenthPercentileTotalGenes(Double bmduTenthPercentileTotalGenes)
+	{
+		this.bmduTenthPercentileTotalGenes = bmduTenthPercentileTotalGenes;
+	}
+
+	public Double getTenthPercentileIndex()
+	{
+		return tenthPercentileIndex;
+	}
+
+	public void setTenthPercentileIndex(Double tenthPercentileIndex)
+	{
+		this.tenthPercentileIndex = tenthPercentileIndex;
 	}
 
 	public Double getGenesUpBMDMean()
@@ -1159,6 +1203,12 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		headers.add("10th Percentile Index");
 		headers.add("BMD at 10th Percentile of Total Genes");
 
+		headers.add("BMDL at 5th Percentile of Total Genes");
+		headers.add("BMDL at 10th Percentile of Total Genes");
+
+		headers.add("BMDU at 5th Percentile of Total Genes");
+		headers.add("BMDU at 10th Percentile of Total Genes");
+
 		headers.add("BMD List");
 		headers.add("BMDL List");
 		headers.add("BMDU List");
@@ -1306,10 +1356,17 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		row.add(this.bmduWMean);
 		row.add(this.getBmduWSD());
 
+		calculate5and10Percentiles();
+
 		row.add(this.fifthPercentileIndex);
 		row.add(this.bmdFifthPercentileTotalGenes);
 		row.add(this.tenthPercentileIndex);
 		row.add(this.bmdTenthPercentileTotalGenes);
+
+		row.add(this.bmdlFifthPercentileTotalGenes);
+		row.add(this.bmdlTenthPercentileTotalGenes);
+		row.add(this.bmduFifthPercentileTotalGenes);
+		row.add(this.bmduTenthPercentileTotalGenes);
 
 		row.add(getBMDList());
 		row.add(getBMDLList());
@@ -1415,7 +1472,6 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		row.add(this.percentWithOverallDirectionDOWN);
 		row.add(this.percentWithOverallDirectionConflict);
 
-		calculate5and10Percentiles();
 	}
 
 	public void setGenesThatPassedAllFilters(Integer number)

@@ -91,10 +91,15 @@ public class MatrixSwingNodeView extends BMDExpressViewBase implements IMatrixSw
 
 	public void initData(String headerText, MatrixData matrixData)
 	{
+		initData(headerText, matrixData, false);
+	}
+
+	public void initData(String headerText, MatrixData matrixData, boolean showLimited)
+	{
 		this.matrix = matrixData;
 		headerLabel.setText(headerText + ", " + matrixData.rows() + " rows.");
 		swingNode.getChildren().clear();
-		MatrixDataPreviewer pane = new MatrixDataPreviewer(matrixData);
+		MatrixDataPreviewer pane = new MatrixDataPreviewer(matrixData, showLimited);
 		swingNode.getChildren().add(pane);
 
 	}

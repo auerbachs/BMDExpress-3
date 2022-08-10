@@ -13,10 +13,10 @@ import com.sciome.bmdexpress2.mvp.model.ChartKey;
  */
 public class ChartDataPack
 {
-	private List<ChartData>					chartData;
-	private List<ChartKey>					charttableKeys;
-	private Map<ChartKey, ChartStatistics>	chartStatMap	= new HashMap<>();
-	private String							name;
+	private List<ChartData> chartData;
+	private List<ChartKey> charttableKeys;
+	private Map<ChartKey, ChartStatistics> chartStatMap = new HashMap<>();
+	private String name;
 
 	public ChartDataPack(List<ChartData> cData, List<ChartKey> cKeys)
 	{
@@ -52,7 +52,14 @@ public class ChartDataPack
 		if (values.size() == 0)
 			return;
 
-		chartStats.setMax(values.get(values.size() - 1));
+		for (int i = values.size() - 1; i >= 0; i--)
+		{
+			if (!values.get(i).equals(Double.NaN))
+			{
+				chartStats.setMax(values.get(i));
+				break;
+			}
+		}
 		chartStats.setMin(values.get(0));
 		chartStats.setMedian(values.get(values.size() / 2));
 		double sum = 0.0;
@@ -60,7 +67,7 @@ public class ChartDataPack
 		{
 			sum += value;
 		}
-		chartStats.setMean(sum / (double) values.size());
+		chartStats.setMean(sum / values.size());
 
 	}
 
