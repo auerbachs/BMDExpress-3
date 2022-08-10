@@ -36,6 +36,17 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.view.categorization to javafx.fxml;
 	opens com.sciome.bmdexpress2.util.bmds.shared to com.fasterxml.jackson.databind;
 	opens com.toxicR.model to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.prefilter to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.probe to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.category to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.category.identifier to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.category.ivive to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.chip to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.info to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.pca to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.refgene to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.stat to com.fasterxml.jackson.databind;
 
 	opens com.sciome.bmdexpress2.mvp.presenter to guava;
 	opens com.sciome.bmdexpress2.mvp.presenter.annotation to guava;
