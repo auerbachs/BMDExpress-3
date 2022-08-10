@@ -236,6 +236,10 @@ public class GenesPathways extends CategoryMapBase
 			{
 				e.printStackTrace();
 			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
