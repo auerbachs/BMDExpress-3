@@ -407,7 +407,7 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 					if (str.getCurveParameters() == null)
 						continue;
 					for (double param : str.getCurveParameters())
-						if (zerocount++ > 0 && param != 0.0)
+						if (zerocount++ > 0 && param != 0.0 && param != -9999)
 						{
 							zerod = false;
 							break;
