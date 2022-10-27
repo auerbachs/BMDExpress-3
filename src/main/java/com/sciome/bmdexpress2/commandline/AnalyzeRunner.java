@@ -490,6 +490,11 @@ public class AnalyzeRunner
 		if (bmdsConfig.getBmdsInputConfig().getBmrType() != null)
 			inputParameters.setBmrType(bmdsConfig.getBmdsInputConfig().getBmrType().intValue());
 
+		inputParameters.setPolyMonotonic(false);
+		if (bmdsConfig.getBmdsInputConfig().getRestrictPolyToMonotonic() != null)
+			inputParameters.setPolyMonotonic(
+					bmdsConfig.getBmdsInputConfig().getRestrictPolyToMonotonic().booleanValue());
+
 		if (inputParameters.getConstantVariance() == 0)
 			inputParameters.setRho(inputParameters.getNegative());
 
@@ -1041,7 +1046,7 @@ public class AnalyzeRunner
 				project.getDoseResponseExperiments()
 						.add((new ExpressionImportRunner()).runExpressionImport(fileEntry,
 								expressionConfig.getPlatform(), outname,
-								expressionConfig.getLogTransformation()));
+								expressionConfig.getLogTransformation(), expressionConfig.getHasHeaders()));
 			}
 
 		}
@@ -1055,8 +1060,8 @@ public class AnalyzeRunner
 				outname = expressionConfig.getOutputName();
 			project.getDoseResponseExperiments()
 					.add(new ExpressionImportRunner().runExpressionImport(inputFile,
-							expressionConfig.getPlatform(), outname,
-							expressionConfig.getLogTransformation()));
+							expressionConfig.getPlatform(), outname, expressionConfig.getLogTransformation(),
+							expressionConfig.getHasHeaders()));
 		}
 
 	}

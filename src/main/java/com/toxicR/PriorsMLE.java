@@ -17,21 +17,25 @@ public class PriorsMLE
 	int distType = 1;
 	private final int MLE = 0;
 
+	boolean isPolyMonotonic = false;
+
 	// intialialize priors
 	public PriorsMLE(boolean ln)
 	{
-		this(ln, 1, null);
+		this(ln, 1, null, false);
 
 	}
 
-	public PriorsMLE(boolean ln, Boolean isIncreasing)
+	public PriorsMLE(boolean ln, Boolean isIncreasing, boolean ispolymonotonic)
 	{
-		this(ln, 1, isIncreasing);
+		this(ln, 1, isIncreasing, ispolymonotonic);
 
 	}
 
-	public PriorsMLE(boolean ln, double powerrestrict, Boolean isIncreasing)
+	public PriorsMLE(boolean ln, double powerrestrict, Boolean isIncreasing, boolean ispolymonotonic)
 	{
+
+		this.isPolyMonotonic = ispolymonotonic;
 
 		isNCV = ln;
 		if (isNCV)
@@ -51,7 +55,7 @@ public class PriorsMLE
 					(MLE), 0, .5, 0, 100, // 2
 					(MLE), 0, .5, -20, 20, // 3
 					(MLE), 0, 0.3, 1, 18, // 4
-					(MLE), 0, 0.5, 0, 18, // 5
+					(MLE), 0, 0, 0, 18, // 5
 					(MLE), 0, 1, -18, 18// 6
 			}, 6, 5);
 			power = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
@@ -153,28 +157,39 @@ public class PriorsMLE
 
 			linear = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, -1000, 1000, // 1
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 2
 					(MLE), 0, 1, -18, 18 // 3
 			}, 3, 5);
 			poly2 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, -1000, 1000, // 1
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 2
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 3
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 3
 					(MLE), 0, 1, -18, 18// 4
 			}, 4, 5);
 			poly3 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, -1000, 1000, // 1
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 2
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 3
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 4
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.0001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 3
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 4
+
 					(MLE), 0, 1, -18, 18// 5
 			}, 5, 5);
 			poly4 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, -1000, 1000, // 1
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 2
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 3
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 4
-					(MLE), 0, 5, (isIncreasing ? 0 : -18), (isIncreasing ? 18 : 0), // 5
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 3
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 4
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -18),
+					(isIncreasing || !isPolyMonotonic ? 18 : -0.00001), // 5
 					(MLE), 0, 1, -18, 18// 6
 			}, 6, 5);
 

@@ -53,7 +53,7 @@
                                     <CheckBox fx:id="exp3CB" mnemonicParsing="false" selected="true" text="Exp 3" />
                                     <CheckBox fx:id="exp5CB" mnemonicParsing="false" selected="true" text="Exp 5" />
                                     <CheckBox fx:id="linearCB" mnemonicParsing="false" selected="true" text="Linear" />
-                                    <CheckBox fx:id="funlCB" disable="true" mnemonicParsing="false" text="FUNL" />
+                                    <CheckBox fx:id="poly2CB" mnemonicParsing="false" selected="true" text="Poly 2" />
                                  </children>
                                  <GridPane.margin>
                                     <Insets left="10.0" />

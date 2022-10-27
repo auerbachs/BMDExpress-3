@@ -43,6 +43,14 @@ public class ViewUtilities
 			Window owner)
 	{
 
+		return matrixPreviewDialog(titleTxt, headerText, matrixData, owner, false);
+
+	}
+
+	public Dialog<String> matrixPreviewDialog(String titleTxt, String headerText, MatrixData matrixData,
+			Window owner, boolean showLimited)
+	{
+
 		Dialog<String> dialog = new Dialog<>();
 		dialog.setTitle(titleTxt);
 		dialog.setHeaderText(headerText);
@@ -50,7 +58,7 @@ public class ViewUtilities
 		dialog.initOwner(owner);
 		dialog.initModality(Modality.WINDOW_MODAL);
 		dialog.setResizable(false);
-		MatrixDataPreviewer pane = new MatrixDataPreviewer(matrixData);
+		MatrixDataPreviewer pane = new MatrixDataPreviewer(matrixData, showLimited);
 		dialog.getDialogPane().setContent(pane);
 		ButtonType buttonTypeOk = new ButtonType("Okay", ButtonData.OK_DONE);
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
@@ -84,6 +92,14 @@ public class ViewUtilities
 	public void matrixPreviewStage(String titleTxt, String headerText, MatrixData matrixData)
 	{
 
+		matrixPreviewStage(titleTxt, headerText, matrixData, false);
+
+	}
+
+	public void matrixPreviewStage(String titleTxt, String headerText, MatrixData matrixData,
+			boolean showLimited)
+	{
+
 		try
 		{
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/matrixswingnode.fxml"));
@@ -93,7 +109,7 @@ public class ViewUtilities
 			stage.setTitle(titleTxt);
 
 			MatrixSwingNodeView controller = loader.<MatrixSwingNodeView> getController();
-			controller.initData(headerText, matrixData);
+			controller.initData(headerText, matrixData, showLimited);
 
 			stage.sizeToScene();
 			stage.show();

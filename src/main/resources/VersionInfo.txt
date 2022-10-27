@@ -7,7 +7,23 @@
 </h1>
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on March 24, 2022</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on May 24, 2022</h2>
+<h3>
+New Features
+</h3>
+<ul>
+<li>Add option to allow poly models to be non-monotonic</li>
+<li>Add option to use poly 2 model in curve fit prefilter</li>
+<li>Add ability to save curve fit prefilter settings</li>
+
+
+</ul>
+
+
+
+
+
+<h2>Released on March 24, 2022</h2>
 <h3>
 New Features
 </h3>

@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
-import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDInput;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDMAInput;
 import com.sciome.bmdexpress2.mvp.presenter.bmdanalysis.BMDAnalysisPresenter;
@@ -81,6 +80,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private CheckBox poly4CheckBox;
 	@FXML
 	private CheckBox funlCheckBox;
+
+	@FXML
+	private CheckBox monotonicPolyCheckBox;
 
 	@FXML
 	private ComboBox varianceType;
@@ -422,6 +424,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		input.setPower(this.powerCheckBox.isSelected());
 		input.setConstantVariance(this.varianceType.getValue().equals(CONSTANT_VARIANCE));
 		input.setFlagHillModel(this.flagHillkParamCheckBox.isSelected());
+		input.setPolyMonotonic(this.monotonicPolyCheckBox.isSelected());
 
 		// Set numerical values
 		// input.setMaxIterations(Integer.parseInt(this.maximumIterationsTextField.getText()));
@@ -658,6 +661,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		hillCheckBox.setDisable(false);
 		funlCheckBox.setDisable(true);
 		funlCheckBox.setVisible(false);
+		this.monotonicPolyCheckBox.setVisible(false);
 		this.bmdULEstimationMethod.setDisable(false);
 
 		this.varianceType.setDisable(false);
@@ -694,6 +698,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		funlCheckBox.setDisable(true);
 		funlCheckBox.setVisible(false);
 		bmdULEstimationMethod.setDisable(true);
+		this.monotonicPolyCheckBox.setVisible(false);
 
 		// exponential2CheckBox.setVisible(false);
 		// exponential4CheckBox.setVisible(false);
@@ -825,8 +830,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		this.varianceType.setValue(CONSTANT_VARIANCE);
 
 		bMRTypeComboBox.getItems().add("Standard Deviation");
-		if (allIsNotLogScaled())
-			bMRTypeComboBox.getItems().add("Relative Deviation");
+		bMRTypeComboBox.getItems().add("Relative Deviation");
 		bMRTypeComboBox.getSelectionModel().select(0);
 		// init confidence level
 		// confidenceLevelComboBox.getItems().add("0.95");
@@ -886,6 +890,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			funlCheckBox.setSelected(input.isFunl());
 			hillCheckBox.setSelected(input.isHill());
 			powerCheckBox.setSelected(input.isPower());
+			this.monotonicPolyCheckBox.setSelected(input.isPolyMonotonic());
 			if (input.isConstantVariance())
 				varianceType.getSelectionModel().select(CONSTANT_VARIANCE);
 			else
@@ -896,6 +901,15 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 
 			// restrictPowerComboBox.getSelectionModel().select(input.getRestrictPower());
 			// restrictHillComboBox.getSelectionModel().select(input.getRestrictHill());
+
+			if (input.isUseWald())
+			{
+				this.bmdULEstimationMethod.setValue(WALD_METHOD_BMDUL_ESTIMATION);
+			}
+			else
+			{
+				this.bmdULEstimationMethod.setValue(EPA_METHOD_BMDUL_ESTIMATION);
+			}
 
 			bestPolyTestComboBox.getSelectionModel().select(input.getBestPolyModelTest());
 			pValueCutoffComboBox.getSelectionModel().select(input.getpValueCutoff());
@@ -999,23 +1013,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		handle_PowerCheckBox(event);
 	}
 
-	/*
-	 * This method looks at all the processable results and checks to see whethere they are all log
-	 * transformed or not. returns true if all are log transformed. This method was created to help decide
-	 * whether or not to allow relative deviation.
-	 */
-	private boolean allIsNotLogScaled()
-	{
-		for (IStatModelProcessable processables : this.processableData)
-			if (!processables.getProcessableDoseResponseExperiment().getLogTransformation()
-					.equals(LogTransformationEnum.NONE))
-				return false;
-		return true;
-	}
-
 	private ModelInputParameters assignParameters()
 	{
 		ModelInputParameters inputParameters = new ModelInputParameters();
+		inputParameters.setPolyMonotonic(this.monotonicPolyCheckBox.isSelected());
 		boolean isModelAveraging = false;
 		if (this.toxicRMCMCMAMethodRadio.isSelected() || this.toxicRMAMethodRadio.isSelected())
 			isModelAveraging = true;
@@ -1044,6 +1045,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
 					.equalsIgnoreCase("relative deviation"))
 				inputParameters.setBmrType(2);
+			else if (this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString()
+					.equalsIgnoreCase("absolute deviation"))
+				inputParameters.setBmrType(0);
 			inputParameters.setBmrLevel(Double.valueOf(
 					((BMRFactor) bMRFactorComboBox.getSelectionModel().getSelectedItem()).getValue()));
 			inputParameters.setNumThreads(Integer.valueOf(numberOfThreadsComboBox.getEditor().getText()));
@@ -1244,7 +1248,7 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		factors.add(new BMRFactor("85%", "0.85"));
 		factors.add(new BMRFactor("90%", "0.9"));
 		factors.add(new BMRFactor("95%", "0.95"));
-		factors.add(new BMRFactor("100%", "0.95"));
+		factors.add(new BMRFactor("100%", "1.00"));
 
 		return factors;
 	}

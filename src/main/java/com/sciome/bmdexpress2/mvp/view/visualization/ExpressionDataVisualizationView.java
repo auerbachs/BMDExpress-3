@@ -8,10 +8,12 @@ import com.sciome.bmdexpress2.mvp.model.ChartKey;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.pca.IntensityResults;
 import com.sciome.bmdexpress2.mvp.model.pca.PCAResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.presenter.visualization.ExpressionDataVisualizationPresenter;
 import com.sciome.bmdexpress2.mvp.viewinterface.visualization.IDataVisualizationView;
 import com.sciome.bmdexpress2.service.VisualizationService;
 import com.sciome.bmdexpress2.serviceInterface.IVisualizationService;
+import com.sciome.bmdexpress2.shared.component.expression.ExpressionQCBarChartComponent;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.charts.SciomeChartBase;
 import com.sciome.charts.data.ChartDataPack;
@@ -21,8 +23,9 @@ import com.sciome.filter.DataFilterPack;
 
 public class ExpressionDataVisualizationView extends DataVisualizationView implements IDataVisualizationView
 {
-	private static final String	INTENSITY	= "Density Chart";
-	private static final String	DEFAULT		= "DEFAULT";
+	private static final String INTENSITY = "Density Chart";
+	private static final String QC_BAR = "QC Bar";
+	private static final String DEFAULT = "DEFAULT";
 
 	public ExpressionDataVisualizationView()
 	{
@@ -75,6 +78,19 @@ public class ExpressionDataVisualizationView extends DataVisualizationView imple
 					new ChartKey(IntensityResults.RESPONSE, null));
 			showCharts(chartDataPacks);
 		}
+		else if (chartKey.equals(QC_BAR))
+		{
+			OneWayANOVAResults oneways = ((ExpressionDataVisualizationPresenter) presenter)
+					.getOneWayResult((DoseResponseExperiment) results.get(0));
+
+			List<BMDExpressAnalysisDataSet> resultList = new ArrayList<>();
+			resultList.add(oneways);
+			ExpressionQCBarChartComponent qcBar = new ExpressionQCBarChartComponent(oneways,
+					(DoseResponseExperiment) results.get(0));
+			chartsList.add(qcBar);
+
+			showCharts(null);
+		}
 		else
 		{
 			List<BMDExpressAnalysisDataSet> pcaResults = new ArrayList<BMDExpressAnalysisDataSet>();
@@ -106,6 +122,7 @@ public class ExpressionDataVisualizationView extends DataVisualizationView imple
 	{
 		List<String> resultList = new ArrayList<>();
 		resultList.add(DEFAULT_CHARTS);
+		resultList.add(QC_BAR);
 		resultList.add(INTENSITY);
 
 		return resultList;

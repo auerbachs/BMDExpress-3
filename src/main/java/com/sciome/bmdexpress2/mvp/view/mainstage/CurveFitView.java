@@ -398,6 +398,28 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 				setBestModel();
 				updateCurveOverLayControl();
 				updateGraphs();
+				Probe probe = (Probe) idComboBox.getSelectionModel().getSelectedItem();
+				ProbeStatResult probeStatResult = probeStatResultMap.get(probe);
+				for (StatResult str : probeStatResult.getStatResults())
+				{
+					boolean zerod = true;
+					int zerocount = 0;
+					if (str.getCurveParameters() == null)
+						continue;
+					for (double param : str.getCurveParameters())
+						if (zerocount++ > 0 && param != 0.0 && param != -9999)
+						{
+							zerod = false;
+							break;
+						}
+
+					if (zerod)
+					{
+						for (CheckBox cb : overlayCheckBoxes)
+							if (cb.getText().equals(str.getModel()))
+								cb.setSelected(false);
+					}
+				}
 			}
 		});
 
@@ -1231,7 +1253,7 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 	}
 
 	/**
-	 * get a list of model names that are used in the bmdResults anlaysis
+	 * get a list of model names that are used in the doseResponseExperiement anlaysis
 	 */
 	private String[] getModelNames()
 	{
@@ -1530,6 +1552,7 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 
 				}
 			});
+
 			overlayCheckBoxes.add(cb);
 
 		}

@@ -668,6 +668,7 @@ public class PrefilterService implements IPrefilterService
 		inputParams.setBmdlCalculation(1);
 		inputParams.setBmrLevel(bmrFactor);
 		inputParams.setBmdMethod(BMD_METHOD.TOXICR);
+		inputParams.setPolyMonotonic(false);
 
 		// inc
 		inputParams.setConstantVariance(constantVariance);

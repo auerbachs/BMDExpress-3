@@ -15,7 +15,7 @@ import com.sciome.bmdexpress2.mvp.view.visualization.WilliamsTrendDataVisualizat
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.dataview.IBMDExpressDataView;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.PathwayToGeneSymbolUtility;
+import com.sciome.bmdexpress2.util.annotation.pathway.PathwayToGeneSymbolUtility;
 
 public class WilliamsTrendDataView extends BMDExpressDataView<WilliamsTrendResults>
 		implements IBMDExpressDataView

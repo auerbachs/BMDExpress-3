@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.HillResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
@@ -45,12 +46,14 @@ public class HillFitThread extends Thread implements IFitThread
 
 	private String tmpFolder;
 	private Map<String, NormalDeviance> deviance;
+	LogTransformationEnum transform;
 
 	public HillFitThread(CountDownLatch cdLatch, List<ProbeResponse> probeResponses,
 			List<StatResult> hillResults, int numThreads, int instanceIndex, int killTime, String tmpFolder,
 			IModelProgressUpdater progressUpdater, IProbeIndexGetter probeIndexGetter,
-			Map<String, NormalDeviance> deviance)
+			Map<String, NormalDeviance> deviance, LogTransformationEnum transform)
 	{
+		this.transform = transform;
 		this.deviance = deviance;
 		this.progressUpdater = progressUpdater;
 		this.cdLatch = cdLatch;
@@ -127,7 +130,8 @@ public class HillFitThread extends Thread implements IFitThread
 				// System.out.print(probeResponses.get(probeIndex).getProbe().getId() + "\n");
 				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.HILL, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast());
+						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
+						transform);
 
 				double tmpr = results[8];
 				results[8] = results[9];

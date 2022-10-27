@@ -1,4 +1,4 @@
-package com.sciome.bmdexpress2.util.categoryanalysis.catmap;
+package com.sciome.bmdexpress2.util.annotation.pathway;
 
 import java.io.BufferedReader;
 import java.io.File;

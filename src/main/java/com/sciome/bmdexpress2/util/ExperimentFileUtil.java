@@ -19,12 +19,10 @@ import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
 
-import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
-import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 
@@ -49,12 +47,17 @@ public class ExperimentFileUtil
 	/*
 	 * read an dose response experiement file and return an instance.
 	 */
-	public DoseResponseExperiment readFile(File infile)
+	public DoseResponseExperiment readFile(File infile, boolean isFirstLineHeader)
 	{
-		return readFile(infile, null);
+		return readFile(infile, null, isFirstLineHeader);
 	}
 
 	public DoseResponseExperiment readFile(File infile, Window owner)
+	{
+		return readFile(infile, owner, false);
+	}
+
+	public DoseResponseExperiment readFile(File infile, Window owner, boolean isFirstLineHeader)
 	{
 		try
 		{
@@ -103,12 +106,12 @@ public class ExperimentFileUtil
 					String[] experiementHeaders = vecData.get(0);
 
 					int starti = 0;
-					if (owner != null && isFirstVecHeader(experiementHeaders, owner))
+					if (isFirstLineHeader || (owner != null && isFirstVecHeader(experiementHeaders, owner)))
 					{
 						starti = 1;
 					}
-					else if (owner == null)
-						starti = 1;
+					// else if (owner == null)
+					// starti = 1;
 					List<Treatment> treatments = new ArrayList<>();
 					for (int i = 1; i < experiementHeaders.length; i++)
 					{
@@ -183,10 +186,9 @@ public class ExperimentFileUtil
 						}
 						if (responseRow.size() != treatments.size())
 						{
-							BMDExpressEventBus.getInstance()
-									.post(new ShowErrorEvent(
-											"Number of dose reponses does not match number of values for line: "
-													+ (i + 1) + " of file \"" + infile.getName() + "\""));
+							BMDExpressEventBus.getInstance().post(new ShowErrorEvent(
+									"Number of dose reponses does not match number of values for line: "
+											+ (i + 1) + " of file \"" + infile.getName() + "\""));
 							return null;
 						}
 
@@ -251,7 +253,7 @@ public class ExperimentFileUtil
 	 */
 	private boolean isFirstVecHeader(String[] headers, Window owner)
 	{
-		
+
 		for (int i = 1; i < headers.length; i++)
 		{
 			if (!isNumeric(headers[i]))
@@ -272,16 +274,16 @@ public class ExperimentFileUtil
 		alert.getDialogPane().setPrefSize(500, 300);
 		alert.initOwner(owner);
 		alert.initModality(Modality.WINDOW_MODAL);
-		
+
 		final String finalHeaderPreview = headerPreview;
-	
-		//WebView webView = new WebView();
-		//webView.getEngine().loadContent(
-		//		"<html><b>First line looks like this:</b><p><pre> " + finalHeaderPreview + "</pre></html>");
-		//webView.setPrefSize(150, 60);
-		
+
+		// WebView webView = new WebView();
+		// webView.getEngine().loadContent(
+		// "<html><b>First line looks like this:</b><p><pre> " + finalHeaderPreview + "</pre></html>");
+		// webView.setPrefSize(150, 60);
+
 		Label headerLabel = new Label();
-		headerLabel.setText("First line looks like this: " + finalHeaderPreview );
+		headerLabel.setText("First line looks like this: " + finalHeaderPreview);
 		alert.getDialogPane().setContent(headerLabel);
 		// alert.setContentText("<b> First line looks like this: </b><p>" + headerPreview);
 

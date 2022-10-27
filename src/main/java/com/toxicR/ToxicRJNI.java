@@ -48,11 +48,11 @@ public class ToxicRJNI
 
 	// entry point to run continuous
 	public ContinuousResult runContinuous(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isMLE, boolean isLogNormal, boolean isIncreasing, boolean isFast)
+			boolean isMLE, boolean isLogNormal, boolean isIncreasing, boolean isFast, boolean isPolyMonotonic)
 			throws JsonMappingException, JsonProcessingException
 	{
 
-		PriorsMLE pr = new PriorsMLE(isLogNormal, isIncreasing);
+		PriorsMLE pr = new PriorsMLE(isLogNormal, isIncreasing, isPolyMonotonic);
 		double[] sd = new double[10];
 		double[] n_group = new double[10];
 		int modelToRun = getModelToRun(model);
@@ -79,7 +79,7 @@ public class ToxicRJNI
 			throws JsonMappingException, JsonProcessingException
 	{
 
-		PriorsMLE pr = new PriorsMLE(isLogNormal, isIncreasing);
+		PriorsMLE pr = new PriorsMLE(isLogNormal, isIncreasing, false);
 		double[] sd = new double[10];
 		double[] n_group = new double[10];
 		int modelToRun = getModelToRun(model);

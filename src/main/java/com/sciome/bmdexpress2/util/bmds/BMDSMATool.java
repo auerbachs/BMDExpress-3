@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
@@ -60,14 +61,17 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 	private DosesStat dosesStat;
 	private List<Integer> doseResponseQueue = new ArrayList<>();
 	private boolean useMCMC = false;
+	LogTransformationEnum transform;
 
 	/**
 	 * Class constructor
 	 */
 	public BMDSMATool(List<ProbeResponse> probeResponses, List<Treatment> treatments,
 			ModelInputParameters inputParameters, List<StatModel> modelsToRun, boolean useMCMC,
-			IBMDSToolProgress progressReciever, IStatModelProcessable processableData)
+			IBMDSToolProgress progressReciever, IStatModelProcessable processableData,
+			LogTransformationEnum transform)
 	{
+		this.transform = transform;
 		this.progressReciever = progressReciever;
 		this.probeResponses = probeResponses;
 		this.inputParameters = inputParameters;
@@ -156,7 +160,7 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		if (probeResponses != null)
 		{
 
-			// set the values and initialize for the new bmdResults.
+			// set the values and initialize for the new doseResponseExperiement.
 			bmdResults.setProbeStatResults(new ArrayList<ProbeStatResult>());
 			for (ProbeResponse probeResponse : probeResponses)
 			{
@@ -280,7 +284,7 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		for (int i = 0; i < inputParameters.getNumThreads(); i++)
 		{
 			MAFitThread maThread = new MAFitThread(cDownLatch, probeResponses, statResults, useMCMC,
-					modelsToRun, this, this);
+					modelsToRun, this, this, transform);
 			maThread.setDoses(doses);
 			maThread.setObjects(inputParameters);
 			maThread.start();

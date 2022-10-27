@@ -21,7 +21,7 @@ import com.sciome.bmdexpress2.mvp.model.refgene.CustomGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.util.MatrixData;
-import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
+import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMapsBMDAnalysis;
 
 /**
  * The class of ProbeCategoryMaps
@@ -34,7 +34,7 @@ import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
  * @version 1.0 4/7/2008
  * @author Longlong Yang
  */
-public class ProbeCategoryMaps extends ProbeGeneMaps
+public class ProbeCategoryMaps extends ProbeGeneMapsBMDAnalysis
 {
 	private File probeMapFile;
 	// private CategoryTool categoryTool;

@@ -1,5 +1,5 @@
 /*
- * CategoryMap.java     1.0    7/25/2008
+ * CategoryMapBMDAnalysis.java     1.0    7/25/2008
  *
  * Copyright (c) 2005 CIIT Centers for Health Research
  * 6 Davis Drive, P.O. Box 12137, Research Triangle Park, NC USA 27709-2137
@@ -9,7 +9,7 @@
  * It is used for match genes to pathways
  */
 
-package com.sciome.bmdexpress2.util.categoryanalysis.catmap;
+package com.sciome.bmdexpress2.util.annotation.pathway;
 
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -17,10 +17,9 @@ import java.util.Vector;
 
 import com.sciome.bmdexpress2.mvp.model.category.identifier.CategoryIdentifier;
 import com.sciome.bmdexpress2.mvp.model.category.identifier.GenericCategoryIdentifier;
-import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
 
 /**
- * The class of CategoryMap
+ * The class of CategoryMapBMDAnalysis
  *
  * match genes to pathways
  *
@@ -50,9 +49,9 @@ public class CategoryMap extends CategoryMapBase
 	{
 		int rows = mData.length;
 		HashSet<String> allGHashSet = new HashSet(allGenes);
-		subHash = new Hashtable<String, Vector>(); // key = map, Vecotor = genes
-		allHash = new Hashtable<String, Vector>(); // key = map, Vecotor = genes
-		dataSetGeneHash = new Hashtable<String, Vector>();
+		subHash = new Hashtable<String, Vector<String>>(); // key = map, Vecotor = genes
+		allHash = new Hashtable<String, Vector<String>>(); // key = map, Vecotor = genes
+		dataSetGeneHash = new Hashtable<String, Vector<String>>();
 		titleHash = new Hashtable<String, String>();
 
 		Vector<CategoryIdentifier> vectGos = new Vector<CategoryIdentifier>(subHash.size());

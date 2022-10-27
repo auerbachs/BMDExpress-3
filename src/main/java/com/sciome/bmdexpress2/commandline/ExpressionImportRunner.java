@@ -12,16 +12,16 @@ import com.sciome.bmdexpress2.service.ProjectNavigationService;
 import com.sciome.bmdexpress2.util.ExperimentFileUtil;
 import com.sciome.bmdexpress2.util.annotation.FileAnnotation;
 
-
 public class ExpressionImportRunner
 {
 
 	public DoseResponseExperiment runExpressionImport(File file, String chipID, String outputName,
-			LogTransformationEnum logtransformation)
+			LogTransformationEnum logtransformation, boolean isFirstLineHeader)
 	{
 		ProjectNavigationService service = new ProjectNavigationService();
 
-		DoseResponseExperiment doseResponseExperiment = ExperimentFileUtil.getInstance().readFile(file);
+		DoseResponseExperiment doseResponseExperiment = ExperimentFileUtil.getInstance().readFile(file,
+				isFirstLineHeader);
 		doseResponseExperiment.setLogTransformation(logtransformation);
 
 		Hashtable<String, Integer> probeHash = new Hashtable<>();

@@ -769,7 +769,7 @@ public class ProjectNavigationPresenter
 	public void showProbeToGeneMatrix(DoseResponseExperiment doseResponseExperiment)
 	{
 
-		Object[][] matrixData = getService().showGenesToProbeMatrix(doseResponseExperiment);
+		Object[][] matrixData = getService().showProbeToGeneMatrix(doseResponseExperiment);
 
 		String[] columnNames = { "Probe Set ID", "Entrez Genes", "Gene Symbols" };
 

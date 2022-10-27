@@ -1,5 +1,5 @@
 /*
- * GenesPathways.java     1.0    7/25/2008
+ * GenesPathwaysBMDAnalysis.java     1.0    7/25/2008
  *
  * Copyright (c) 2005 CIIT Centers for Health Research
  * 6 Davis Drive, P.O. Box 12137, Research Triangle Park, NC USA 27709-2137
@@ -27,28 +27,28 @@ import com.sciome.bmdexpress2.mvp.model.category.identifier.GenericCategoryIdent
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.FileIO;
-import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMaps;
+import com.sciome.bmdexpress2.util.categoryanalysis.ProbeGeneMapsBMDAnalysis;
 
 /**
- * The class of GenesPathways
+ * The class of GenesPathwaysBMDAnalysis
  *
  * match genes to pathways
  *
  * @version 1.0 4/7/2008
  * @author Longlong Yang
  */
-public class GenesPathways extends CategoryMapBase
+public class GenesPathwaysBMDAnalysis extends CategoryMapBaseBMDAnalysis
 {
 
 	/**
 	 * class contructor used for gene's pathways
 	 *
 	 */
-	public GenesPathways()
+	public GenesPathwaysBMDAnalysis()
 	{
 	}
 
-	public GenesPathways(ProbeGeneMaps probeGeneMaps, String pathwayDb)
+	public GenesPathwaysBMDAnalysis(ProbeGeneMapsBMDAnalysis probeGeneMaps, String pathwayDb)
 	{
 		this.probeGeneMaps = probeGeneMaps;
 		fileGenes2Maps(pathwayDb);

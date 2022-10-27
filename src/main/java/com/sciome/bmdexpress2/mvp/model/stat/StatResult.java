@@ -9,8 +9,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 
 /*
  * base class for the statistical curve fitting/bmd models being ran on the data.
@@ -20,7 +20,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 		@Type(value = PolyResult.class, name = "poly"),
 		@Type(value = ExponentialResult.class, name = "exponential"),
 		@Type(value = PowerResult.class, name = "power"),
-		@Type(value = GCurvePResult.class, name = "gcurvep") })
+		@Type(value = GCurvePResult.class, name = "gcurvep"),
+		@Type(value = ModelAveragingResult.class, name = "modelaveraging") })
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
 public abstract class StatResult extends BMDExpressAnalysisRow implements Serializable
 {

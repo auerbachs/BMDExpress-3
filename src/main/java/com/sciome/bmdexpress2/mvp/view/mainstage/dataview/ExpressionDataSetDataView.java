@@ -14,7 +14,7 @@ import com.sciome.bmdexpress2.mvp.view.visualization.DataVisualizationView;
 import com.sciome.bmdexpress2.mvp.view.visualization.ExpressionDataVisualizationView;
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.dataview.IBMDExpressDataView;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
-import com.sciome.bmdexpress2.util.categoryanalysis.catmap.PathwayToGeneSymbolUtility;
+import com.sciome.bmdexpress2.util.annotation.pathway.PathwayToGeneSymbolUtility;
 
 /*
  * Show the Expression Data.  currently this implementation
@@ -23,15 +23,20 @@ import com.sciome.bmdexpress2.util.categoryanalysis.catmap.PathwayToGeneSymbolUt
 public class ExpressionDataSetDataView extends BMDExpressDataView<ProbeResponse>
 		implements IBMDExpressDataView
 {
+
+	ExpressionDataSetDataViewPresenter expressionPresenter;
+
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ExpressionDataSetDataView(BMDExpressAnalysisDataSet doseResponseExperiement, String viewTypeKey)
 	{
 		super(ProbeResponse.class, doseResponseExperiement, viewTypeKey);
 
-		presenter = new ExpressionDataSetDataViewPresenter(this, BMDExpressEventBus.getInstance());
+		presenter = expressionPresenter = new ExpressionDataSetDataViewPresenter(this,
+				BMDExpressEventBus.getInstance());
+
 		columnMap = new HashMap<String, Boolean>();
 		columnOrder = new LinkedList<String>();
-		for(String header : bmdAnalysisDataSet.getColumnHeader())
+		for (String header : bmdAnalysisDataSet.getColumnHeader())
 		{
 			columnMap.put(header, true);
 			columnOrder.add(header);
@@ -43,7 +48,7 @@ public class ExpressionDataSetDataView extends BMDExpressDataView<ProbeResponse>
 		setUpTableView(doseResponseExperiement);
 
 		presenter.showVisualizations(doseResponseExperiement);
-		
+
 		// Disable filtering options for now
 		splitPane.getItems().remove(filtrationNode);
 		hideFilter.setDisable(true);
@@ -51,10 +56,11 @@ public class ExpressionDataSetDataView extends BMDExpressDataView<ProbeResponse>
 	}
 
 	@Override
-	protected void setCellFactory() {
-		//Do nothing for now
+	protected void setCellFactory()
+	{
+		// Do nothing for now
 	}
-	
+
 	@Override
 	protected DataVisualizationView getDataVisualizationView()
 	{

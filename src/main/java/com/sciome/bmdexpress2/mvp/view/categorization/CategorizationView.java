@@ -65,6 +65,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+
 public class CategorizationView extends BMDExpressViewBase implements ICategorizationView, Initializable
 {
 
