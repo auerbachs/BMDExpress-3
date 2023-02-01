@@ -130,6 +130,10 @@ public class MatrixDataPreviewer extends VBox
 		int howmanyrows = 100;
 		if (!showLimited)
 			howmanyrows = this.getMatrix().getData().length;
+
+		if (this.getMatrix().getData().length < howmanyrows)
+			howmanyrows = this.getMatrix().getData().length;
+
 		Object[][] previewData = new Object[howmanyrows][];
 		for (int ii = 0; ii < howmanyrows; ii++)
 		{
