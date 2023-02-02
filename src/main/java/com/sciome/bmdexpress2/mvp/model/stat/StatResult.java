@@ -40,6 +40,9 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	private short adverseDirection;
 	private String success;
 
+	private double[] residuals;
+	private double rSquared;
+
 	public double[] curveParameters;
 
 	private Long id;
@@ -199,6 +202,26 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		if (Double.isInfinite(BMD) || Double.isInfinite(BMDU))
 			return Double.NaN;
 		return BMDU / BMD;
+	}
+
+	public double[] getResiduals()
+	{
+		return residuals;
+	}
+
+	public void setResiduals(double[] residuals)
+	{
+		this.residuals = residuals;
+	}
+
+	public double getrSquared()
+	{
+		return rSquared;
+	}
+
+	public void setrSquared(double rSquared)
+	{
+		this.rSquared = rSquared;
 	}
 
 	public abstract double getResponseAt(double d);

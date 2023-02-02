@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.Precision;
 
@@ -168,6 +169,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 
 		// clean up any leftovers from this process
 		bMDSTool.cleanUp();
+		calculateExtraStatistics(bMDResults);
 		return bMDResults;
 	}
 
@@ -441,7 +443,79 @@ public class BMDAnalysisService implements IBMDAnalysisService
 
 		// clean up any leftovers from this process
 		bMDSMATool.cleanUp();
+		calculateExtraStatistics(bMDResults);
 		return bMDResults;
+	}
+
+	private void calculateExtraStatistics(BMDResult bmdResults)
+	{
+		BMDStatisticsService statServ = new BMDStatisticsService();
+		List<DoseGroup> doseGroups = new ArrayList<>();
+		Float prevDose = null;
+		DoseGroup currDg = null;
+		// create the dosegroups list so we can use it to store corresponding dose response values.
+		for (Treatment t : bmdResults.getDoseResponseExperiment().getTreatments())
+		{
+			if (!t.getDose().equals(prevDose))
+			{
+				DoseGroup dg = new DoseGroup();
+				dg.dose = t.getDose().doubleValue();
+				doseGroups.add(dg);
+				dg.count++;
+				currDg = dg;
+			}
+			else
+				currDg.count++;
+
+			prevDose = t.getDose();
+		}
+
+		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
+		{
+			// build the dosegroup array.
+			List<Float> responses = psr.getProbeResponse().getResponses();
+			int j = 0;
+			for (DoseGroup dg : doseGroups)
+			{
+				double sum = 0;
+				for (int i = 0; i < dg.count; i++)
+				{
+					sum += responses.get(j).doubleValue();
+					j++;
+
+				}
+				dg.mean = sum / dg.count;
+			}
+
+			for (StatResult statResult : psr.getStatResults())
+			{
+				try
+				{
+					double[] residuals = statServ.calculateResiduals(statResult,
+							doseGroups.stream().map(dg -> dg.mean).collect(Collectors.toList()),
+							doseGroups.stream().map(dg -> dg.dose).collect(Collectors.toList()));
+					double rSquared = statServ.calculateRSquared(residuals,
+							doseGroups.stream().map(dg -> dg.mean).collect(Collectors.toList()));
+					statResult.setResiduals(residuals);
+					statResult.setrSquared(rSquared);
+
+				}
+				catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+	}
+
+	private class DoseGroup
+	{
+		Double dose;
+		int count = 0;
+		Double mean;
 	}
 
 }
