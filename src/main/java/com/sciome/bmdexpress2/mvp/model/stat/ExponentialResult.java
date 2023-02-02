@@ -33,6 +33,7 @@ public class ExponentialResult extends StatResult
 	public List<String> getColumnNames()
 	{
 		String expName = "Exp " + option;
+		List<String> residualHeader = getResidualHeader(expName + " Residual ");
 		List<String> returnList = new ArrayList<String>(Arrays.asList(expName + " BMD", expName + " BMDL",
 				expName + " BMDU", "Exp " + option + " fitPValue", expName + " fitLogLikelihood",
 				expName + " AIC", expName + " adverseDirection", expName + " BMD/BMDL",
@@ -41,7 +42,8 @@ public class ExponentialResult extends StatResult
 		List<String> parameters = this.getParametersNames();
 		for (String parameter : parameters)
 			returnList.add(expName + " Parameter " + parameter);
-
+		returnList.add(expName + " RSquared");
+		returnList.addAll(residualHeader);
 		return returnList;
 
 	}
@@ -72,6 +74,8 @@ public class ExponentialResult extends StatResult
 				returnList.add(null);
 		}
 
+		returnList.add(getrSquared());
+		returnList.addAll(getResidualList());
 		return returnList;
 	}
 

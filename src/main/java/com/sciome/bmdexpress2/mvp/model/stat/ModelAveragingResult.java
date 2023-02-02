@@ -29,6 +29,10 @@ public class ModelAveragingResult extends StatResult
 				"MA adverseDirection", "MA BMD/BMDL", "MA Execution Complete"));
 		for (StatResult sr : modelResults)
 			returnList.add("MA " + sr.getModel() + " Posterior Probability");
+
+		returnList.add("MA RSquared");
+		List<String> residualHeader = getResidualHeader("MA Residual ");
+		returnList.addAll(residualHeader);
 		return returnList;
 
 	}
@@ -42,6 +46,8 @@ public class ModelAveragingResult extends StatResult
 						(this.getBMDdiffBMDL()), this.getSuccess()));
 
 		returnList.addAll(posteriorProbabilities);
+		returnList.add(getrSquared());
+		returnList.addAll(getResidualList());
 		return returnList;
 
 	}

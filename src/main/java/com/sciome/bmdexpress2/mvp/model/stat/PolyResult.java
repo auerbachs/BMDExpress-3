@@ -38,6 +38,9 @@ public class PolyResult extends StatResult
 		{
 			polyname = "Poly " + String.valueOf(degree);
 		}
+
+		List<String> residualHeader = getResidualHeader(polyname + " Residual ");
+
 		List<String> returnList = new ArrayList<String>(Arrays.asList(polyname + " BMD", polyname + " BMDL",
 				polyname + " BMDU", polyname + " fitPValue", polyname + " fitLogLikelihood",
 				polyname + " AIC", polyname + " adverseDirection", polyname + " BMD/BMDL",
@@ -46,6 +49,8 @@ public class PolyResult extends StatResult
 		for (int i = 0; i < this.curveParameters.length; i++)
 			returnList.add(polyname + " Parameter beta_" + i);
 
+		returnList.add(polyname + " RSquared");
+		returnList.addAll(residualHeader);
 		return returnList;
 
 	}
@@ -64,7 +69,8 @@ public class PolyResult extends StatResult
 			else
 				returnList.add(null);
 		}
-
+		returnList.add(getrSquared());
+		returnList.addAll(getResidualList());
 		return returnList;
 	}
 

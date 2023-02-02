@@ -22,10 +22,14 @@ public class FunlResult extends StatResult
 	public List<String> getColumnNames()
 	{
 
-		return new ArrayList<String>(Arrays.asList("Funl BMD", "Funl BMDL", "Funl BMDU", "Funl fitPValue",
-				"Funl fitLogLikelihood", "Funl AIC", "Funl adverseDirection", "Funl BMD/BMDL",
-				"Funl Parameter 1", "Funl Parameter 2", "Funl Parameter 3", "Funl Parameter 4",
-				"Funl Parameter 5", "Funl Parameter 6", "Funl Execution Complete"));
+		List<String> residualHeader = getResidualHeader("Funl Residual ");
+		List<String> header = new ArrayList<String>(
+				Arrays.asList("Funl BMD", "Funl BMDL", "Funl BMDU", "Funl fitPValue", "Funl fitLogLikelihood",
+						"Funl AIC", "Funl adverseDirection", "Funl BMD/BMDL", "Funl Parameter 1",
+						"Funl Parameter 2", "Funl Parameter 3", "Funl Parameter 4", "Funl Parameter 5",
+						"Funl Parameter 6", "Funl Execution Complete", "Funl RSquared"));
+		header.addAll(residualHeader);
+		return header;
 
 	}
 
@@ -48,10 +52,13 @@ public class FunlResult extends StatResult
 			param6 = curveParameters[5];
 		}
 
-		return new ArrayList<Object>(Arrays.asList((this.getBMD()), (this.getBMDL()), (this.getBMDU()),
-				(this.getFitPValue()), (this.getFitLogLikelihood()), (this.getAIC()),
+		List<Object> returnList = new ArrayList<Object>(Arrays.asList((this.getBMD()), (this.getBMDL()),
+				(this.getBMDU()), (this.getFitPValue()), (this.getFitLogLikelihood()), (this.getAIC()),
 				(this.getAdverseDirection()), (this.getBMDdiffBMDL()), param1, param2, param3, param4, param5,
 				param6, this.getSuccess()));
+		returnList.add(getrSquared());
+		returnList.addAll(getResidualList());
+		return returnList;
 
 	}
 
@@ -78,9 +85,9 @@ public class FunlResult extends StatResult
 		Double param5 = curveParameters[4];
 		Double param6 = curveParameters[5];
 
-		return param1 + param2 * Math.exp(-(Math.exp(param6)) * Math.pow(param5-dose, 2))
+		return param1 + param2 * Math.exp(-(Math.exp(param6)) * Math.pow(param5 - dose, 2))
 				* (1 / (1 + Math.exp(-(dose - param3) / param4)));
-//      a1 + a2 *exp(- exp(a6) * (a5-dose)^2) * (1/(1+exp(-(dose-a3)/a4).  
+		// a1 + a2 *exp(- exp(a6) * (a5-dose)^2) * (1/(1+exp(-(dose-a3)/a4).
 
 	}
 
@@ -88,7 +95,7 @@ public class FunlResult extends StatResult
 	public String getFormulaText()
 	{
 		return "A[1] + A[2]*exp(- exp(A[6]) * (A[5]-doses)^2)*(1/(1+exp(-(doses-A[3])/A[4])))";
-		
+
 	}
 
 	@Override

@@ -21,10 +21,14 @@ public class PowerResult extends StatResult
 	@Override
 	public List<String> getColumnNames()
 	{
-		return new ArrayList<String>(Arrays.asList("Power BMD", "Power BMDL", "Power BMDU", "Power fitPValue",
-				"Power fitLogLikelihood", "Power AIC", "Power adverseDirection", "Power BMD/BMDL",
-				"Power Parameter control", "Power Parameter slope", "Power Parameter power",
-				"Power Execution Complete"));
+		List<String> residualHeader = getResidualHeader("Power Residual ");
+		List<String> header = new ArrayList<String>(Arrays.asList("Power BMD", "Power BMDL", "Power BMDU",
+				"Power fitPValue", "Power fitLogLikelihood", "Power AIC", "Power adverseDirection",
+				"Power BMD/BMDL", "Power Parameter control", "Power Parameter slope", "Power Parameter power",
+				"Power Execution Complete", "Power RSquared"));
+		header.addAll(residualHeader);
+
+		return header;
 
 	}
 
@@ -40,10 +44,13 @@ public class PowerResult extends StatResult
 			param2 = curveParameters[1];
 			param3 = curveParameters[2];
 		}
-		return new ArrayList<Object>(
+		List<Object> returnList = new ArrayList<Object>(
 				Arrays.asList((this.getBMD()), (this.getBMDL()), (this.getBMDU()), (this.getFitPValue()),
 						(this.getFitLogLikelihood()), (this.getAIC()), (this.getAdverseDirection()),
 						(this.getBMDdiffBMDL()), param1, param2, param3, this.getSuccess()));
+		returnList.add(getrSquared());
+		returnList.addAll(getResidualList());
+		return returnList;
 	}
 
 	@Override

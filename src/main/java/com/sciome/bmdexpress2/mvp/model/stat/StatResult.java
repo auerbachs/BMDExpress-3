@@ -1,6 +1,7 @@
 package com.sciome.bmdexpress2.mvp.model.stat;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -246,6 +247,33 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public Object getObject()
 	{
 		return this;
+	}
+
+	protected List<String> getResidualHeader(String prefix)
+	{
+		if (residuals == null)
+			return new ArrayList<>();
+		List<String> header = new ArrayList<>();
+		for (int i = 0; i < residuals.length; i++)
+			header.add(prefix + " " + (i + 1));
+
+		return header;
+	}
+
+	protected Double getRSquared()
+	{
+		return rSquared;
+	}
+
+	protected List<Double> getResidualList()
+	{
+		List<Double> res = new ArrayList<>();
+		if (residuals == null)
+			return res;
+		for (double r : residuals)
+			res.add(r);
+
+		return res;
 	}
 
 }

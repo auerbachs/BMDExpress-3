@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
@@ -21,7 +22,6 @@ import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.util.bmds.BMD_METHOD;
 import com.sciome.bmdexpress2.util.prefilter.FoldChange;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
@@ -74,6 +74,7 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String BEST_BMD_BMDL_RATIO = "Best BMD/BMDL";
 	public static final String BEST_BMDU_BMDL_RATIO = "Best BMDU/BMDL";
 	public static final String BEST_BMDU_BMD_RATIO = "Best BMDU/BMD";
+	public static final String BEST_RSQUARED = "Best RSquared";
 	public static final String BEST_POLY = "Best Poly";
 	public static final String WAUC = "wAUC";
 	public static final String LOG_WAUC = "Log 2 wAUC";

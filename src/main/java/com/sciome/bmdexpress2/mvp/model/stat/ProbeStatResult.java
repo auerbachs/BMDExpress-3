@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.sciome.bmdexpress2.mvp.model.IGeneContainer;
 import com.sciome.bmdexpress2.mvp.model.IMarkable;
@@ -19,7 +20,6 @@ import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.util.NumberManager;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
@@ -207,6 +207,7 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(Double.NaN);
 			row.add(Double.NaN);
 			row.add(Double.NaN);
+			row.add(Double.NaN);
 		}
 		else
 		{
@@ -226,6 +227,9 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(bestStatResult.getBMDUdiffBMDL());
 
 			row.add(bestStatResult.getBMDUdiffBMD());
+
+			row.add(bestStatResult.getRSquared());
+			row.add(bestStatResult.getResidualList());
 		}
 
 		if (wAUC != null)
@@ -328,6 +332,7 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		columnHeader.add(BMDResult.BEST_BMD_BMDL_RATIO);
 		columnHeader.add(BMDResult.BEST_BMDU_BMDL_RATIO);
 		columnHeader.add(BMDResult.BEST_BMDU_BMD_RATIO);
+		columnHeader.add(BMDResult.BEST_RSQUARED);
 
 		return columnHeader;
 	}
