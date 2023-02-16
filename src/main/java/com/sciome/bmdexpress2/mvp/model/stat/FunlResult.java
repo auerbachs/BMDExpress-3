@@ -27,7 +27,7 @@ public class FunlResult extends StatResult
 				Arrays.asList("Funl BMD", "Funl BMDL", "Funl BMDU", "Funl fitPValue", "Funl fitLogLikelihood",
 						"Funl AIC", "Funl adverseDirection", "Funl BMD/BMDL", "Funl Parameter 1",
 						"Funl Parameter 2", "Funl Parameter 3", "Funl Parameter 4", "Funl Parameter 5",
-						"Funl Parameter 6", "Funl Execution Complete", "Funl RSquared"));
+						"Funl Parameter 6", "Funl Execution Complete", "Funl ZScore", "Funl RSquared"));
 		header.addAll(residualHeader);
 		return header;
 
@@ -56,6 +56,7 @@ public class FunlResult extends StatResult
 				(this.getBMDU()), (this.getFitPValue()), (this.getFitLogLikelihood()), (this.getAIC()),
 				(this.getAdverseDirection()), (this.getBMDdiffBMDL()), param1, param2, param3, param4, param5,
 				param6, this.getSuccess()));
+		returnList.add(getzScore());
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		return returnList;

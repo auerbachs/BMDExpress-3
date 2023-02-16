@@ -48,6 +48,8 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 
 	private double[] variances;
 
+	private double zScore;
+
 	private Long id;
 
 	@JsonIgnore
@@ -65,6 +67,16 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public void setID(Long id)
 	{
 		this.id = id;
+	}
+
+	public double getzScore()
+	{
+		return zScore;
+	}
+
+	public void setzScore(double zScore)
+	{
+		this.zScore = zScore;
 	}
 
 	public double[] getVariances()

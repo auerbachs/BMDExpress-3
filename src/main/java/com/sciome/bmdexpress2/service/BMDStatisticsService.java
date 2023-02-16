@@ -50,7 +50,18 @@ public class BMDStatisticsService implements IBMDStatisticsService
 	@Override
 	public double calculateZScore(StatResult result, List<Double> doses) throws Exception
 	{
-		// TODO Auto-generated method stub
+		double[] variances = result.getVariances();
+		if (variances == null)
+			return 0;
+
+		double low = result.getResponseAt(doses.get(0));
+		double high = result.getResponseAt(doses.get(doses.size() - 1));
+		if (variances.length == 1)
+			return (low - high) / Math.exp(0.5 * variances[0]);
+
+		if (variances.length == 2)
+			return (low - high) / Math.sqrt(Math.exp(variances[1]) * Math.pow(low, variances[0]));
+
 		return 0;
 	}
 

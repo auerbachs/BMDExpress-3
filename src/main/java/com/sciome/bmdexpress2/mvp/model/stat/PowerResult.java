@@ -25,7 +25,7 @@ public class PowerResult extends StatResult
 		List<String> header = new ArrayList<String>(Arrays.asList("Power BMD", "Power BMDL", "Power BMDU",
 				"Power fitPValue", "Power fitLogLikelihood", "Power AIC", "Power adverseDirection",
 				"Power BMD/BMDL", "Power Parameter control", "Power Parameter slope", "Power Parameter power",
-				"Power Execution Complete", "Power RSquared"));
+				"Power Execution Complete", "Power ZScore", "Power RSquared"));
 		header.addAll(residualHeader);
 
 		return header;
@@ -48,6 +48,7 @@ public class PowerResult extends StatResult
 				Arrays.asList((this.getBMD()), (this.getBMDL()), (this.getBMDU()), (this.getFitPValue()),
 						(this.getFitLogLikelihood()), (this.getAIC()), (this.getAdverseDirection()),
 						(this.getBMDdiffBMDL()), param1, param2, param3, this.getSuccess()));
+		returnList.add(getzScore());
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		return returnList;

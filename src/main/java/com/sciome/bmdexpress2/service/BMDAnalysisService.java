@@ -505,6 +505,19 @@ public class BMDAnalysisService implements IBMDAnalysisService
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
+				try
+				{
+					double zscore = statServ.calculateZScore(statResult,
+							doseGroups.stream().map(dg -> dg.mean).collect(Collectors.toList()));
+					statResult.setzScore(zscore);
+
+				}
+				catch (Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 		}

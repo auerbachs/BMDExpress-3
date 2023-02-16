@@ -42,6 +42,9 @@ public class ExponentialResult extends StatResult
 		List<String> parameters = this.getParametersNames();
 		for (String parameter : parameters)
 			returnList.add(expName + " Parameter " + parameter);
+
+		returnList.add(expName + "ZScore");
+
 		returnList.add(expName + " RSquared");
 		returnList.addAll(residualHeader);
 		return returnList;
@@ -74,6 +77,7 @@ public class ExponentialResult extends StatResult
 				returnList.add(null);
 		}
 
+		returnList.add(getzScore());
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		return returnList;
