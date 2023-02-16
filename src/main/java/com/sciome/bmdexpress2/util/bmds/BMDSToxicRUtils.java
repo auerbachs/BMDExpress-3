@@ -39,8 +39,8 @@ public class BMDSToxicRUtils
 		return tRJNI.calculateDeviance(model, Y, doses, bmdType, BMR, true, isNCV, isIncreasing);
 	}
 
-	public static double[] calculateToxicR(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isNCV, NormalDeviance deviance, boolean isFast, boolean isPolyMonotonic,
+	public static List<double[]> calculateToxicR(int model, double[] Y, double[] doses, int bmdType,
+			double BMR, boolean isNCV, NormalDeviance deviance, boolean isFast, boolean isPolyMonotonic,
 			LogTransformationEnum transform) throws JsonMappingException, JsonProcessingException
 	{
 		boolean isIncreasing = ToxicRUtils.calculateDirection(doses, Y) > 0;
@@ -48,8 +48,8 @@ public class BMDSToxicRUtils
 				isPolyMonotonic, transform);
 	}
 
-	public static double[] calculateToxicR(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast,
+	public static List<double[]> calculateToxicR(int model, double[] Y, double[] doses, int bmdType,
+			double BMR, boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast,
 			boolean isPolyMonotonic, LogTransformationEnum transform)
 			throws JsonMappingException, JsonProcessingException
 	{
@@ -102,6 +102,7 @@ public class BMDSToxicRUtils
 		double[] results = new double[6 + continousResult.getNparms() - extraparms
 				+ (extraoption != 0 ? 1 : 0) + (model == ToxicRConstants.EXP3 ? 1 : 0)];
 
+		double[] results2 = new double[isNCV ? 2 : 1];
 		// throw away instance. just using this to get the bmd values
 		StatResult statResult = new HillResult();
 
@@ -137,7 +138,23 @@ public class BMDSToxicRUtils
 		for (int i = start; i < results.length; i++)
 			results[i] = continousResult.getParms().get(i - start);
 
-		return results;
+		List<double[]> returnList = new ArrayList<>();
+
+		int parmsize = continousResult.getParms().size();
+		if (isNCV)
+		{
+			results2[0] = continousResult.getParms().get(parmsize - 2);
+			results2[1] = continousResult.getParms().get(parmsize - 1);
+		}
+		else
+		{
+			results2[0] = continousResult.getParms().get(parmsize - 1);
+		}
+
+		returnList.add(results);
+		returnList.add(results2);
+
+		return returnList;
 	}
 
 	public static ModelAveragingResult calculateToxicRMA(int[] models, double[] Y, double[] doses,
@@ -261,6 +278,19 @@ public class BMDSToxicRUtils
 			if (theStatResult != null)
 			{
 
+				double[] results2 = new double[isNCV ? 2 : 1];
+				int parmsize = continousResult.getParms().size();
+				if (isNCV)
+				{
+					results2[0] = continousResult.getParms().get(parmsize - 2);
+					results2[1] = continousResult.getParms().get(parmsize - 1);
+				}
+				else
+				{
+					results2[0] = continousResult.getParms().get(parmsize - 1);
+				}
+
+				theStatResult.setCovariates(results2);
 				theStatResult.setAIC(aic);
 
 				calculateAndAssignBMDValues(continousResult.getBmdDist(), theStatResult);

@@ -46,6 +46,8 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 
 	public double[] curveParameters;
 
+	private double[] covariates;
+
 	private Long id;
 
 	@JsonIgnore
@@ -63,6 +65,16 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public void setID(Long id)
 	{
 		this.id = id;
+	}
+
+	public double[] getCovariates()
+	{
+		return covariates;
+	}
+
+	public void setCovariates(double[] covariates)
+	{
+		this.covariates = covariates;
 	}
 
 	public double getBMD()

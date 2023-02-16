@@ -127,11 +127,12 @@ public class HillFitThread extends Thread implements IFitThread
 				for (float r : responses)
 					responsesD[ri++] = r;
 
-				// System.out.print(probeResponses.get(probeIndex).getProbe().getId() + "\n");
-				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.HILL, responsesD, dosesd,
-						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
+				List<double[]> resultsList = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.HILL, responsesD,
+						dosesd, inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
 						transform);
+				double[] results = resultsList.get(0);
+				double[] results1 = resultsList.get(1);
 
 				double tmpr = results[8];
 				results[8] = results[9];
@@ -139,7 +140,7 @@ public class HillFitThread extends Thread implements IFitThread
 
 				if (results != null)
 				{
-					fillOutput(results, hillResult);
+					fillOutput(results, results1, hillResult);
 					if (flagHill)
 					{
 						if (results[9] < flagDose)
@@ -166,7 +167,7 @@ public class HillFitThread extends Thread implements IFitThread
 	/*
 	 * given the results double array, we need to fill up the hillResult Object with the results.
 	 */
-	private void fillOutput(double[] results, HillResult hillResult)
+	private void fillOutput(double[] results, double[] covariates, HillResult hillResult)
 	{
 		hillResult.setBMD(results[0]);
 		hillResult.setBMDL(results[1]);
@@ -174,7 +175,7 @@ public class HillFitThread extends Thread implements IFitThread
 		hillResult.setFitPValue(results[3]);
 		hillResult.setFitLogLikelihood(results[4]);
 		hillResult.setAIC(results[5]);
-
+		hillResult.setCovariates(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

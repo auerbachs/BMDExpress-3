@@ -118,14 +118,16 @@ public class PowerFitThread extends Thread implements IFitThread
 				for (float r : responses)
 					responsesD[ri++] = r;
 
-				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.POWER, responsesD, dosesd,
-						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
+				List<double[]> resultsList = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.POWER,
+						responsesD, dosesd, inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
 						transform);
+				double[] results = resultsList.get(0);
+				double[] results1 = resultsList.get(1);
 
 				if (results != null)
 				{
-					fillOutput(results, powerResult);
+					fillOutput(results, results1, powerResult);
 				}
 			}
 			catch (Exception e)
@@ -138,7 +140,7 @@ public class PowerFitThread extends Thread implements IFitThread
 
 	}
 
-	private void fillOutput(double[] results, PowerResult powerResult)
+	private void fillOutput(double[] results, double[] covariates, PowerResult powerResult)
 	{
 		powerResult.setBMD(results[0]);
 		powerResult.setBMDL(results[1]);
@@ -146,6 +148,7 @@ public class PowerFitThread extends Thread implements IFitThread
 		powerResult.setFitPValue(results[3]);
 		powerResult.setFitLogLikelihood(results[4]);
 		powerResult.setAIC(results[5]);
+		powerResult.setCovariates(covariates);
 
 		int direction = 1;
 

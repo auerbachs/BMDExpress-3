@@ -119,14 +119,16 @@ public class FUNLFitThread extends Thread implements IFitThread
 				for (float r : responses)
 					responsesD[ri++] = r;
 
-				double[] results = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.FUNL, responsesD, dosesd,
-						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
+				List<double[]> resultsList = BMDSToxicRUtils.calculateToxicR(ToxicRConstants.FUNL, responsesD,
+						dosesd, inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
 						transform);
+				double[] results = resultsList.get(0);
+				double[] results1 = resultsList.get(1);
 
 				if (results != null)
 				{
-					fillOutput(results, funlResult);
+					fillOutput(results, results1, funlResult);
 				}
 			}
 			catch (Exception e)
@@ -139,7 +141,7 @@ public class FUNLFitThread extends Thread implements IFitThread
 
 	}
 
-	private void fillOutput(double[] results, FunlResult funlResult)
+	private void fillOutput(double[] results, double[] covariates, FunlResult funlResult)
 	{
 		funlResult.setBMD(results[0]);
 		funlResult.setBMDL(results[1]);
@@ -147,7 +149,7 @@ public class FUNLFitThread extends Thread implements IFitThread
 		funlResult.setFitPValue(results[3]);
 		funlResult.setFitLogLikelihood(results[4]);
 		funlResult.setAIC(results[5]);
-
+		funlResult.setCovariates(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

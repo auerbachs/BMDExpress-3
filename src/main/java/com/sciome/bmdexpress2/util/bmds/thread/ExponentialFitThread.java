@@ -127,10 +127,13 @@ public class ExponentialFitThread extends Thread implements IFitThread
 
 				if (expOption == 5)
 					expModel = ToxicRConstants.EXP5;
-				double[] results = BMDSToxicRUtils.calculateToxicR(expModel, responsesD, dosesd,
+
+				List<double[]> resultsList = BMDSToxicRUtils.calculateToxicR(expModel, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
 						transform);
+				double[] results = resultsList.get(0);
+				double[] results1 = resultsList.get(1);
 
 				// if (expModel == ToxicRConstants.EXP3) // move param d to param c
 				// results[9] = results[10];
@@ -138,7 +141,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 					results[9] = Math.pow(Math.E, results[9]);
 				if (results != null)
 				{
-					fillOutput(results, expResult);
+					fillOutput(results, results1, expResult);
 				}
 			}
 			catch (Exception e)
@@ -151,7 +154,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 
 	}
 
-	private void fillOutput(double[] results, ExponentialResult expResult)
+	private void fillOutput(double[] results, double[] covariates, ExponentialResult expResult)
 	{
 		expResult.setBMD(results[0]);
 		expResult.setBMDL(results[1]);
@@ -160,7 +163,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 		expResult.setFitLogLikelihood(results[4]);
 		expResult.setAIC(results[5]);
 		expResult.setOption(expOption);
-
+		expResult.setCovariates(covariates);
 		int direction = 1;
 
 		if (results[6] < 0)
