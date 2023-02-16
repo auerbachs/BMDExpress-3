@@ -206,7 +206,7 @@ public class PolyFitThread extends Thread implements IFitThread
 		polyResult.setFitPValue(results[3]);
 		polyResult.setFitLogLikelihood(results[4]);
 		polyResult.setAIC(results[5]);
-		polyResult.setCovariates(covariates);
+		polyResult.setVariances(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

@@ -163,7 +163,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 		expResult.setFitLogLikelihood(results[4]);
 		expResult.setAIC(results[5]);
 		expResult.setOption(expOption);
-		expResult.setCovariates(covariates);
+		expResult.setVariances(covariates);
 		int direction = 1;
 
 		if (results[6] < 0)

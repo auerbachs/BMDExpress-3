@@ -175,7 +175,7 @@ public class HillFitThread extends Thread implements IFitThread
 		hillResult.setFitPValue(results[3]);
 		hillResult.setFitLogLikelihood(results[4]);
 		hillResult.setAIC(results[5]);
-		hillResult.setCovariates(covariates);
+		hillResult.setVariances(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

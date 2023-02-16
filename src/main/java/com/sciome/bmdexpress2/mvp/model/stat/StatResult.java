@@ -46,7 +46,7 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 
 	public double[] curveParameters;
 
-	private double[] covariates;
+	private double[] variances;
 
 	private Long id;
 
@@ -67,14 +67,14 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.id = id;
 	}
 
-	public double[] getCovariates()
+	public double[] getVariances()
 	{
-		return covariates;
+		return variances;
 	}
 
-	public void setCovariates(double[] covariates)
+	public void setVariances(double[] vs)
 	{
-		this.covariates = covariates;
+		this.variances = vs;
 	}
 
 	public double getBMD()

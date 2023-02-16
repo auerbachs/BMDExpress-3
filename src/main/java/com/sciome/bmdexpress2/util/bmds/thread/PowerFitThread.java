@@ -148,7 +148,7 @@ public class PowerFitThread extends Thread implements IFitThread
 		powerResult.setFitPValue(results[3]);
 		powerResult.setFitLogLikelihood(results[4]);
 		powerResult.setAIC(results[5]);
-		powerResult.setCovariates(covariates);
+		powerResult.setVariances(covariates);
 
 		int direction = 1;
 

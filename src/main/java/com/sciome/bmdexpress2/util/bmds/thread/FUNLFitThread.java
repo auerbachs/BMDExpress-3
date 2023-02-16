@@ -149,7 +149,7 @@ public class FUNLFitThread extends Thread implements IFitThread
 		funlResult.setFitPValue(results[3]);
 		funlResult.setFitLogLikelihood(results[4]);
 		funlResult.setAIC(results[5]);
-		funlResult.setCovariates(covariates);
+		funlResult.setVariances(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)
