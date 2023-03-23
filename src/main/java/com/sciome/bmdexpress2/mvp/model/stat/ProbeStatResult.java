@@ -213,23 +213,16 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		{
 			row.add(bestStatResult.toString());
 			row.add(bestStatResult.getBMD());
-
 			row.add(bestStatResult.getBMDL());
-
 			row.add(bestStatResult.getBMDU());
 			row.add(bestStatResult.getFitPValue());
 			row.add(bestStatResult.getFitLogLikelihood());
 			row.add(bestStatResult.getAIC());
 			row.add(bestStatResult.getAdverseDirection());
-
 			row.add(bestStatResult.getBMDdiffBMDL());
-
 			row.add(bestStatResult.getBMDUdiffBMDL());
-
 			row.add(bestStatResult.getBMDUdiffBMD());
-
 			row.add(bestStatResult.getRSquared());
-			row.add(bestStatResult.getResidualList());
 		}
 
 		if (wAUC != null)

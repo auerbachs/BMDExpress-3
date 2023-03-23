@@ -46,9 +46,7 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 
 	public double[] curveParameters;
 
-	private double[] variances;
-
-	private double zScore;
+	// private double[] variances;
 
 	private Long id;
 
@@ -69,25 +67,15 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.id = id;
 	}
 
-	public double getzScore()
-	{
-		return zScore;
-	}
+	// public double[] getVariances()
+	// {
+	// return variances;
+	// }
 
-	public void setzScore(double zScore)
-	{
-		this.zScore = zScore;
-	}
-
-	public double[] getVariances()
-	{
-		return variances;
-	}
-
-	public void setVariances(double[] vs)
-	{
-		this.variances = vs;
-	}
+	// public void setVariances(double[] vs)
+	// {
+	// this.variances = vs;
+	// }
 
 	public double getBMD()
 	{

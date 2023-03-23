@@ -290,7 +290,7 @@ public class BMDSToxicRUtils
 					results2[0] = continousResult.getParms().get(parmsize - 1);
 				}
 
-				theStatResult.setVariances(results2);
+				// theStatResult.setVariances(results2);
 				theStatResult.setAIC(aic);
 
 				calculateAndAssignBMDValues(continousResult.getBmdDist(), theStatResult);

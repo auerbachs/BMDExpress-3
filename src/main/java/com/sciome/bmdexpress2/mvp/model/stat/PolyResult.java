@@ -49,7 +49,6 @@ public class PolyResult extends StatResult
 		for (int i = 0; i < this.curveParameters.length; i++)
 			returnList.add(polyname + " Parameter beta_" + i);
 
-		returnList.add(polyname + " ZScore");
 		returnList.add(polyname + " RSquared");
 		returnList.addAll(residualHeader);
 		return returnList;
@@ -70,7 +69,6 @@ public class PolyResult extends StatResult
 			else
 				returnList.add(null);
 		}
-		returnList.add(getzScore());
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		return returnList;

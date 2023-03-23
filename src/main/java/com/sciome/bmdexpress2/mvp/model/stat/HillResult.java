@@ -35,11 +35,10 @@ public class HillResult extends StatResult
 
 		List<String> residualHeader = getResidualHeader("Hill Residual ");
 
-		List<String> header = new ArrayList<String>(
-				Arrays.asList("Hill BMD", "Hill BMDL", "Hill BMDU", "Hill fitPValue", "Hill fitLogLikelihood",
-						"Hill AIC", "Hill adverseDirection", "Hill BMD/BMDL", "Flagged Hill",
-						"Hill Parameter Intercept", "Hill Parameter v", "Hill Parameter n",
-						"Hill Parameter k", "Hill Execution Complete", "Hill ZScore", "Hill RSquared"));
+		List<String> header = new ArrayList<String>(Arrays.asList("Hill BMD", "Hill BMDL", "Hill BMDU",
+				"Hill fitPValue", "Hill fitLogLikelihood", "Hill AIC", "Hill adverseDirection",
+				"Hill BMD/BMDL", "Flagged Hill", "Hill Parameter Intercept", "Hill Parameter v",
+				"Hill Parameter n", "Hill Parameter k", "Hill Execution Complete", "Hill RSquared"));
 		header.addAll(residualHeader);
 		return header;
 
@@ -64,7 +63,7 @@ public class HillResult extends StatResult
 				(this.getBMDU()), (this.getFitPValue()), (this.getFitLogLikelihood()), (this.getAIC()),
 				(this.getAdverseDirection()), (this.getBMDdiffBMDL()), (this.getkFlag()), param1, param2,
 				param3, param4, this.getSuccess()));
-		returnList.add(getzScore());
+
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		return returnList;
