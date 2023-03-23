@@ -310,7 +310,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 	}
 
 	/*
-	 * curve fit prefilter  analysis
+	 * curve fit prefilter analysis
 	 */
 	public void handle_curveFitPrefilter(ActionEvent event)
 	{
@@ -470,6 +470,9 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
 
+		// allow curvefit prefilter on oneway anova
+		this.curveFitPrefilterMenuItem.setDisable(false);
+
 	}
 
 	@Override
@@ -480,6 +483,9 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+
+		// allow curvefit prefilter on williams
+		this.curveFitPrefilterMenuItem.setDisable(false);
 	}
 
 	@Override
@@ -501,6 +507,9 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+
+		// allow curvefit prefilter on oriogen
+		this.curveFitPrefilterMenuItem.setDisable(false);
 	}
 
 	@Override
