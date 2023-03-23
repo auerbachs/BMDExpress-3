@@ -36,6 +36,7 @@ public class ModelInputParameters
 
 	private double relFuncConvergence = 1.0e-8;
 	private double bmrLevel = 1.349;
+	private Double poly2BmrLevel = null;
 	private double paramConvergence = 1.0e-8;
 	private double confidence = 0.95;
 	private double alpha = -9999;
@@ -74,6 +75,16 @@ public class ModelInputParameters
 	private String MAMethod;
 
 	private boolean isFast = false;
+
+	public Double getPoly2BmrLevel()
+	{
+		return poly2BmrLevel;
+	}
+
+	public void setPoly2BmrLevel(Double poly2BmrLevel)
+	{
+		this.poly2BmrLevel = poly2BmrLevel;
+	}
 
 	public boolean isFast()
 	{

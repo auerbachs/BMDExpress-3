@@ -11,6 +11,7 @@ public class CurveFitPrefilterConfig extends PrefilterConfig
 	private Boolean constantVariance = true;
 
 	private Double bmrFactor = 1.021;
+	private Double poly2BmrFactor = 1.021;
 
 	public List<BMDSModelConfig> getModelConfigs()
 	{
@@ -40,6 +41,16 @@ public class CurveFitPrefilterConfig extends PrefilterConfig
 	public void setBmrFactor(Double bmrFactor)
 	{
 		this.bmrFactor = bmrFactor;
+	}
+
+	public Double getPoly2BmrFactor()
+	{
+		return poly2BmrFactor;
+	}
+
+	public void setPoly2BmrFactor(Double poly2BmrFactor)
+	{
+		this.poly2BmrFactor = poly2BmrFactor;
 	}
 
 }

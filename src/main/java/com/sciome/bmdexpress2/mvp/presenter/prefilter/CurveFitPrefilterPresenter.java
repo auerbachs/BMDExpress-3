@@ -35,7 +35,8 @@ public class CurveFitPrefilterPresenter extends ServicePresenterBase<IPrefilterV
 	 */
 	public void performCurveFitPrefilter(List<IStatModelProcessable> processableData, boolean useFoldFilter,
 			String foldFilterValue, String loelPValue, String loelFoldChange, String numThreads,
-			boolean tTest, List<StatModel> modelsToRun, Double bmrFactor, int constantVariance)
+			boolean tTest, List<StatModel> modelsToRun, Double bmrFactor, Double poly2BmrFactor,
+			int constantVariance)
 	{
 
 		Task<Integer> task = new Task<Integer>() {
@@ -57,7 +58,7 @@ public class CurveFitPrefilterPresenter extends ServicePresenterBase<IPrefilterV
 									processableData.get(i), useFoldFilter, Double.valueOf(foldFilterValue),
 									Double.valueOf(loelPValue), Double.valueOf(loelFoldChange),
 									Integer.valueOf(numThreads), CurveFitPrefilterPresenter.this, tTest,
-									modelsToRun, bmrFactor, constantVariance);
+									modelsToRun, bmrFactor, poly2BmrFactor, constantVariance);
 							// Once the method is finished, set progress to 1
 							CurveFitPrefilterPresenter.this.updateProgress("Curve Fit Prefilter", 1.0);
 							// post the results as they are completed
@@ -96,7 +97,8 @@ public class CurveFitPrefilterPresenter extends ServicePresenterBase<IPrefilterV
 	 */
 	public void performCurveFitPrefilter(IStatModelProcessable processableData, boolean useFoldFilter,
 			String foldFilterValue, String loelPValue, String loelFoldChange, String numThreads,
-			boolean tTest, List<StatModel> modelsToRun, Double bmrFactor, int constantVariance)
+			boolean tTest, List<StatModel> modelsToRun, Double bmrFactor, Double poly2BmrFactor,
+			int constantVariance)
 	{
 		Task<Integer> task = new Task<Integer>() {
 			@Override
@@ -110,7 +112,7 @@ public class CurveFitPrefilterPresenter extends ServicePresenterBase<IPrefilterV
 							processableData, useFoldFilter, Double.valueOf(foldFilterValue),
 							Double.valueOf(loelPValue), Double.valueOf(loelFoldChange),
 							Integer.valueOf(numThreads), CurveFitPrefilterPresenter.this, tTest, modelsToRun,
-							bmrFactor, constantVariance);
+							bmrFactor, poly2BmrFactor, constantVariance);
 
 					// post the new williams object to the event bus so folks can do the right thing.
 					if (curveFitResults != null && running)

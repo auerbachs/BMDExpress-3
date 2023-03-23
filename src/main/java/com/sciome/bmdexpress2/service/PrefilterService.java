@@ -605,7 +605,7 @@ public class PrefilterService implements IPrefilterService
 	public CurveFitPrefilterResults curveFitPrefilterAnalysis(IStatModelProcessable processableData,
 			boolean useFoldFilter, double foldFilterValue, double loelPValue, double loelFoldChange,
 			int numThreads, IBMDSToolProgress updater, boolean tTest, List<StatModel> modelsToRun,
-			Double bmrFactor, int constantVariance)
+			Double bmrFactor, Double poly2BmrFactor, int constantVariance)
 	{
 
 		BMDAnalysisService bmdAnalysisService = new BMDAnalysisService();
@@ -623,6 +623,8 @@ public class PrefilterService implements IPrefilterService
 		notes.add("Timestamp (Start Time): " + BMDExpressProperties.getInstance().getTimeStamp());
 		notes.add("Constant Variance: " + constantVariance);
 		notes.add("BMR Factor: " + bmrFactor);
+		if (poly2BmrFactor != null)
+			notes.add("Poly 2 BMR Factor: " + poly2BmrFactor);
 
 		String modelsUsed = "";
 		for (StatModel mod : modelsToRun)
@@ -667,6 +669,8 @@ public class PrefilterService implements IPrefilterService
 		inputParams.setBmdCalculation(1);
 		inputParams.setBmdlCalculation(1);
 		inputParams.setBmrLevel(bmrFactor);
+		inputParams.setPoly2BmrLevel(poly2BmrFactor);
+
 		inputParams.setBmdMethod(BMD_METHOD.TOXICR);
 		inputParams.setPolyMonotonic(false);
 

@@ -996,7 +996,7 @@ public class AnalyzeRunner
 								preFilterConfig.getpValueLotel(), preFilterConfig.getFoldChangeLotel(),
 								preFilterConfig.getOutputName(), preFilterConfig.getNumberOfThreads(),
 								preFilterConfig.getlotelTest().equals(2), modelsToRun,
-								cfpreCfg.getBmrFactor(), constV, project));
+								cfpreCfg.getBmrFactor(), cfpreCfg.getPoly2BmrFactor(), constV, project));
 			}
 		}
 		else if (preFilterConfig instanceof OriogenConfig)

@@ -31,7 +31,7 @@ public interface IPrefilterService
 	public CurveFitPrefilterResults curveFitPrefilterAnalysis(IStatModelProcessable processableData,
 			boolean useFoldFilter, double foldFilterValue, double loelPValue, double loelFoldChange,
 			int numThreads, IBMDSToolProgress updater, boolean tTest, List<StatModel> modelsToRun,
-			Double bmrFactor, int constantVariance);
+			Double bmrFactor, Double pol2BmrFactor, int constantVariance);
 
 	public void cancel();
 

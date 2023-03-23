@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="700.0" maxWidth="600.0" minHeight="250.0" minWidth="600.0" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.prefilter.CurveFitPrefilterView">
+<BorderPane maxHeight="700.0" maxWidth="600.0" minHeight="250.0" minWidth="600.0" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.prefilter.CurveFitPrefilterView">
    <center>
       <VBox maxHeight="699.0" prefHeight="699.0" prefWidth="600.0">
          <children>
@@ -35,6 +35,7 @@
                               <RowConstraints maxHeight="35.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
                               <RowConstraints maxHeight="66.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
                             <RowConstraints maxHeight="52.0" minHeight="4.0" prefHeight="52.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="52.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label alignment="CENTER_RIGHT" prefHeight="16.0" prefWidth="298.0" text="Expression Data:" GridPane.rowIndex="1" />
@@ -71,6 +72,16 @@
                                        <children>
                                           <Label text="Variance:" />
                                           <ComboBox fx:id="varianceCombo" prefHeight="27.0" prefWidth="185.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="91.0" spacing="35.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="598.0" spacing="7.0">
+                                       <children>
+                                          <Label text="Poly 2 BMR Factor:" />
+                                          <ComboBox fx:id="poly2BmrFCombo" prefHeight="27.0" prefWidth="181.0" />
                                        </children>
                                     </HBox>
                                  </children>

@@ -14,12 +14,12 @@ public class CurveFitPrefilterRunner implements IBMDSToolProgress
 	public CurveFitPrefilterResults runCurveFitPrefilter(IStatModelProcessable processableData,
 			boolean useFoldFilter, double foldFilterValue, double pValueLoel, double foldChangeLoel,
 			String outputName, int numThreads, boolean tTest, List<StatModel> modelsToRun, Double bmrFactor,
-			int constantVariance, BMDProject project)
+			Double poly2BmrFactor, int constantVariance, BMDProject project)
 	{
 		PrefilterService service = new PrefilterService();
 		CurveFitPrefilterResults results = service.curveFitPrefilterAnalysis(processableData, useFoldFilter,
 				foldFilterValue, pValueLoel, foldChangeLoel, numThreads, this, tTest, modelsToRun, bmrFactor,
-				constantVariance);
+				poly2BmrFactor, constantVariance);
 
 		if (outputName != null)
 			results.setName(outputName);

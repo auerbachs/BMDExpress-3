@@ -14,10 +14,21 @@ public class CurveFitPrefilterInput extends PrefilterInput
 
 	private Boolean constantVariance;
 	private BMRFactor BMRFactor;
+	private BMRFactor poly2BMRFactor;
 
 	public CurveFitPrefilterInput()
 	{
 		super();
+	}
+
+	public BMRFactor getPoly2BMRFactor()
+	{
+		return poly2BMRFactor;
+	}
+
+	public void setPoly2BMRFactor(BMRFactor poly2bmrFactor)
+	{
+		poly2BMRFactor = poly2bmrFactor;
 	}
 
 	public Boolean getIsHill()

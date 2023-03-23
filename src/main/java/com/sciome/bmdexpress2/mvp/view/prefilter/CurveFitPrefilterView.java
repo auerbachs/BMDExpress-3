@@ -58,6 +58,9 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 
 	@FXML
 	private ComboBox<BMRFactor> bmrFCombo;
+
+	@FXML
+	private ComboBox<BMRFactor> poly2BmrFCombo;
 	@FXML
 	private ComboBox<String> varianceCombo;
 
@@ -124,6 +127,7 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		this.processableDatas = processableDatas;
 
 		bmrFCombo.getItems().addAll(initBMRFactorsStandardDeviation());
+		poly2BmrFCombo.getItems().addAll(initBMRFactorsStandardDeviation());
 
 		List<String> varianceValues = new ArrayList<>();
 		varianceValues.add(CONSTANT_VARIANCE);
@@ -134,6 +138,9 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		this.varianceCombo.setValue(CONSTANT_VARIANCE);
 
 		bmrFCombo.getSelectionModel().select(bmrFCombo.getItems().get(bmrFCombo.getItems().size() - 1));
+
+		poly2BmrFCombo.getSelectionModel()
+				.select(poly2BmrFCombo.getItems().get(poly2BmrFCombo.getItems().size() - 1));
 
 		for (IStatModelProcessable experiment : processableDatas)
 		{
@@ -160,6 +167,11 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		if (input.getBMRFactor() != null)
 		{
 			this.bmrFCombo.setValue(input.getBMRFactor());
+		}
+
+		if (input.getPoly2BMRFactor() != null)
+		{
+			this.poly2BmrFCombo.setValue(input.getPoly2BMRFactor());
 		}
 
 		if (input.isConstantVariance() != null)
@@ -249,6 +261,7 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 						foldChangeLoelTextField.getText(), numberOfThreadsTextField.getText(),
 						tRadioButton.isSelected(), modelsToRun,
 						Double.valueOf(bmrFCombo.getValue().getValue()),
+						Double.valueOf(poly2BmrFCombo.getValue().getValue()),
 						this.varianceCombo.getValue().equalsIgnoreCase(CONSTANT_VARIANCE) ? 1 : 0);
 			}
 			else
@@ -259,6 +272,7 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 						pValueLoelTextField.getText(), foldChangeLoelTextField.getText(),
 						numberOfThreadsTextField.getText(), tRadioButton.isSelected(), modelsToRun,
 						Double.valueOf(bmrFCombo.getValue().getValue()),
+						Double.valueOf(poly2BmrFCombo.getValue().getValue()),
 						this.varianceCombo.getValue().equalsIgnoreCase(CONSTANT_VARIANCE) ? 1 : 0);
 			}
 			startButton.setDisable(true);
