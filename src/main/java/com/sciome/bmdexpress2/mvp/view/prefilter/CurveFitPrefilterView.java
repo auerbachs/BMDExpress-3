@@ -387,9 +387,16 @@ public class CurveFitPrefilterView extends BMDExpressViewBase implements IPrefil
 		factors.add(new BMRFactor("1.581 (15%)", "1.581"));
 		factors.add(new BMRFactor("1.932484 (25%)", "1.932484"));
 		factors.add(new BMRFactor("2 SD", "2.0"));
+		factors.add(new BMRFactor("2.5 SD", "2.5"));
 		factors.add(new BMRFactor("2.600898 (50%)", "2.600898"));
 		factors.add(new BMRFactor("2.855148 (60%)", "2.855148"));
+		factors.add(new BMRFactor("3.282 (75%)", "3.282"));
 		factors.add(new BMRFactor("3 SD", "3.0"));
+		factors.add(new BMRFactor("3.5 SD", "3.5"));
+		factors.add(new BMRFactor("4 SD", "4.0"));
+		factors.add(new BMRFactor("4.327 (95%)", "4.327"));
+		factors.add(new BMRFactor("5 SD", "5.0"));
+
 		return factors;
 	}
 

@@ -36,38 +36,38 @@ public class BMDAnalysisGCurvePView extends BMDExpressViewBase
 {
 
 	@FXML
-	private TextField					bootStrapsTextField;
+	private TextField bootStrapsTextField;
 
 	// ComboBoxes
 	@FXML
-	private ComboBox					bMRFactorComboBox;
+	private ComboBox bMRFactorComboBox;
 	@FXML
-	private ComboBox					pValueConfidenceInterval;
+	private ComboBox pValueConfidenceInterval;
 
 	@FXML
-	private ProgressBar					progressBar;
+	private ProgressBar progressBar;
 	@FXML
-	private Label						progressLabel;
+	private Label progressLabel;
 
 	@FXML
-	private Button						startButton;
+	private Button startButton;
 	@FXML
-	private Button						saveSettingsButton;
+	private Button saveSettingsButton;
 	@FXML
-	private Button						cancelButton;
+	private Button cancelButton;
 
 	@FXML
-	private Label						expressionDataLabel;
+	private Label expressionDataLabel;
 	@FXML
-	private Label						oneWayANOVADataLabel;
+	private Label oneWayANOVADataLabel;
 	@FXML
-	private Label						oneWayANOVADataLabelLabel;
+	private Label oneWayANOVADataLabelLabel;
 
-	BMDAnalysisGCurvePPresenter			presenter;
+	BMDAnalysisGCurvePPresenter presenter;
 
-	private List<IStatModelProcessable>	processableData;
+	private List<IStatModelProcessable> processableData;
 
-	private GCurvePInput				input;
+	private GCurvePInput input;
 
 	public BMDAnalysisGCurvePView()
 	{
@@ -273,9 +273,15 @@ public class BMDAnalysisGCurvePView extends BMDExpressViewBase
 		factors.add(new BMRFactor("1.581 (15%)", "1.581"));
 		factors.add(new BMRFactor("1.932484 (25%)", "1.932484"));
 		factors.add(new BMRFactor("2 SD", "2.0"));
+		factors.add(new BMRFactor("2.5 SD", "2.5"));
 		factors.add(new BMRFactor("2.600898 (50%)", "2.600898"));
 		factors.add(new BMRFactor("2.855148 (60%)", "2.855148"));
+		factors.add(new BMRFactor("3.282 (75%)", "3.282"));
 		factors.add(new BMRFactor("3 SD", "3.0"));
+		factors.add(new BMRFactor("3.5 SD", "3.5"));
+		factors.add(new BMRFactor("4 SD", "4.0"));
+		factors.add(new BMRFactor("4.327 (95%)", "4.327"));
+		factors.add(new BMRFactor("5 SD", "5.0"));
 		return factors;
 	}
 
