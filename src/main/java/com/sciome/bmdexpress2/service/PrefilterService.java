@@ -29,6 +29,7 @@ import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
+import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.serviceInterface.IPrefilterService;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.util.bmds.BESTMODEL_METHOD;
@@ -738,28 +739,41 @@ public class PrefilterService implements IPrefilterService
 				modelsToRun, null, updater);
 
 		List<CurveFitPrefilterResult> nextcurveFitResultList = new ArrayList<>();
+
 		for (ProbeStatResult result : bmdResult.getProbeStatResults())
 		{
 			if (!cancel)
 			{
-				if (result.getBestStatResult() != null)
-					if (result.getBestBMD() != null)
-						if (result.getBestBMD() < maxDose)
-						{
-							CurveFitPrefilterResult singleResult = probesThatPassedSet
-									.get(result.getProbeResponse().getProbe().getId());
-							singleResult.setpValue(result.getBestFitPValue());
-							singleResult.setProbeResponse(result.getProbeResponse());
-							singleResult.setBestModel(result.getBestStatResult().getModel());
-							singleResult.setBmd(result.getBestBMD());
-							singleResult.setBmdl(result.getBestBMDL());
-							nextcurveFitResultList.add(singleResult);
-						}
+				List<StatResult> statResults = new ArrayList<>();
+				// only add items with convergent bmd and bmdl
+				for (StatResult r : result.getStatResults())
+				{
+					if (r.getBMD() > -9999 && r.getBMDL() > -9999 && r.getBMD() <= maxDose
+							&& r.getAIC() > -9999 && r.getBMD() != Double.NaN && r.getBMDL() != Double.NaN
+							&& r.getAIC() != Double.NaN)
+						statResults.add(r);
+				}
+
+				statResults.sort((r1, r2) ->
+				{
+					return (Double.valueOf(r1.getAIC()).compareTo(Double.valueOf(r2.getAIC())));
+				});
+
+				if (statResults.size() > 0)
+				{
+					CurveFitPrefilterResult singleResult = probesThatPassedSet
+							.get(result.getProbeResponse().getProbe().getId());
+					singleResult.setpValue(statResults.get(0).getFitPValue());
+					singleResult.setProbeResponse(result.getProbeResponse());
+					singleResult.setBestModel(statResults.get(0).getModel());
+					singleResult.setBmd(statResults.get(0).getBMD());
+					singleResult.setBmdl(statResults.get(0).getBMDL());
+					nextcurveFitResultList.add(singleResult);
+				}
 			}
 			else
-			{
 				return null;
-			}
+
 		}
 
 		curveFitPrefilterResults.setCurveFitPrefilterResults(nextcurveFitResultList);
