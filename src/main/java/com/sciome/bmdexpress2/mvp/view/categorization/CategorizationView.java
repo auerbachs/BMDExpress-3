@@ -65,7 +65,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
 public class CategorizationView extends BMDExpressViewBase implements ICategorizationView, Initializable
 {
 
@@ -89,6 +88,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private CheckBox BMDUBMDLCheckBox;
 
 	@FXML
+	private CheckBox bmdFilterMaxRSquaredCheckBox;
+
+	@FXML
 	private CheckBox bmdFilter4CheckBox;
 	@FXML
 	private CheckBox bmdFilter3CheckBox;
@@ -109,6 +111,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	// textfields
 	@FXML
 	private TextField correlationCutoffProbeSetsValue;
+	@FXML
+	private TextField rSquaredFilterValue;
 	@FXML
 	private TextField bmdFilter2Value;
 	@FXML
@@ -328,9 +332,14 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		input.setRemoveGenesWithBMDValuesGreaterThanNFold(this.bmdFilter4CheckBox.isSelected());
 		input.setRemoveGenesWithMaxFoldChangeLessThan(this.bmdFilterMaxFoldChangeCheckBox.isSelected());
 		input.setRemoveGenesWithPrefilterPValue(this.bmdFilterMaxPValueCheckBox.isSelected());
+
+		input.setRemoveBMDLessThanRSquared(this.bmdFilterMaxRSquaredCheckBox.isSelected());
+
 		input.setRemoveGenesWithPrefilterAdjustedPValue(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
 		input.setEliminateGeneSetRedundancy(this.deduplicateGeneSetsCheckBox.isSelected());
 		input.setIdentifyConflictingProbeSets(this.conflictingProbeSetsCheckBox.isSelected());
+
+		input.setRemoveBMDLessThanRSquaredNumber(Double.parseDouble(this.rSquaredFilterValue.getText()));
 
 		input.setRemoveBMDLessThanPValueNumber(Double.parseDouble(this.bmdFilter2Value.getText()));
 		input.setRemoveGenesWithBMD_BMDLNumber(Double.parseDouble(this.bmdFilter3Value.getText()));
@@ -559,8 +568,12 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		this.removePromiscuousProbesCheckBox.setSelected(input.isRemovePromiscuousProbes());
 		this.bmdFilter1CheckBox.setSelected(input.isRemoveBMDGreaterThanHighestDose());
 		this.bmdFilter2CheckBox.setSelected(input.isRemoveBMDLessThanPValue());
+
+		this.bmdFilterMaxRSquaredCheckBox.setSelected(input.isRemoveBMDLessThanRSquared());
+
 		this.bmdFilter3CheckBox.setSelected(input.isRemoveGenesWithBMD_BMDL());
 		this.bmdFilter4CheckBox.setSelected(input.isRemoveGenesWithBMDValuesGreaterThanNFold());
+
 		this.bmdFilterMaxAdjustedPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterAdjustedPValue());
 		this.bmdFilterMaxFoldChangeCheckBox.setSelected(input.isRemoveGenesWithMaxFoldChangeLessThan());
 		this.bmdFilterMaxPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterPValue());
@@ -568,6 +581,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		this.BMDUBMDLCheckBox.setSelected(input.isRemoveGenesWithBMDU_BMDL());
 		this.conflictingProbeSetsCheckBox.setSelected(input.isIdentifyConflictingProbeSets());
 		this.deduplicateGeneSetsCheckBox.setSelected(input.isEliminateGeneSetRedundancy());
+
+		this.rSquaredFilterValue.setText("" + input.getRemoveBMDLessThanRSquaredNumber());
 
 		this.bmdFilter2Value.setText("" + input.getRemoveBMDLessThanPValueNumber());
 		this.bmdFilter3Value.setText("" + input.getRemoveGenesWithBMD_BMDLNumber());
@@ -726,6 +741,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 		params.setRemoveNFoldBelowLowestDose(this.bmdFilter4CheckBox.isSelected());
 		params.setnFoldbelowLowestDoseValue(Double.valueOf(this.bmdFilter4Value.getText()));
+
+		params.setRemoveRSquared(this.bmdFilterMaxRSquaredCheckBox.isSelected());
+		params.setrSquared(Double.valueOf(this.rSquaredFilterValue.getText()));
 
 		params.setRemoveBMDUBMDLRatio(this.BMDUBMDLCheckBox.isSelected());
 		params.setBmduBmdlRatio(Double.valueOf(this.BMDUBMDLTextbox.getText()));

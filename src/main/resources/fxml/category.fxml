@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="751.0" prefWidth="767.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="751.0" prefWidth="767.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
 	<center>
 		<AnchorPane minHeight="700.0" prefHeight="900.0" BorderPane.alignment="CENTER">
 			<children>
@@ -73,6 +73,12 @@
 																		<CheckBox fx:id="bmdFilter1CheckBox" mnemonicParsing="false" prefHeight="-1.0" prefWidth="396.0" selected="true" text="Remove BMD &gt; Highest Dose from Category Descriptive Statistics" />
 																	</children>
 																</HBox>
+                                                <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
+                                                   <children>
+                                                      <CheckBox fx:id="bmdFilterMaxRSquaredCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Remove BMD with R^2 &lt; Cutoff:" wrapText="true" />
+                                                      <TextField fx:id="rSquaredFilterValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text=".5" />
+                                                   </children>
+                                                </HBox>
 																<HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="650.0" VBox.vgrow="NEVER">
 																	<children>
 																		<CheckBox fx:id="bmdFilter2CheckBox" mnemonicParsing="false" prefHeight="-1.0" prefWidth="300.0" selected="false" text="Remove BMD with p-Value &lt; Cutoff:" />

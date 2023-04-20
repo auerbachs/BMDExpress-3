@@ -47,8 +47,9 @@ public class BMDStatatistics
 	private final String BMDL = "BMDL";
 	private final String BMDU = "BMDU";
 
-	private boolean removeMax, doRemovePCut, hasData, doneCorrelation, doEnrichment;
-	private double fitPCutoff, rCutoff, pCutoff = 0.05, maxDose = 0, minDose, minPositiveDose;
+	private boolean removeMax, doRemovePCut, hasData, doneCorrelation, doEnrichment, doRemoveRSquared;
+
+	private double fitPCutoff, rCutoff, pCutoff = 0.05, maxDose = 0, minDose, minPositiveDose, rSquaredCoff;
 	private Vector<String> subGenes, bmdProbes;
 	private int[] proIndices;
 	private double[] minCorrelations;
@@ -108,6 +109,12 @@ public class BMDStatatistics
 	{
 		doRemovePCut = bool;
 		fitPCutoff = p;
+	}
+
+	public void setFitRSquaredCutoff(boolean bool, double p)
+	{
+		doRemoveRSquared = bool;
+		rSquaredCoff = p;
 	}
 
 	public double getMinDose()

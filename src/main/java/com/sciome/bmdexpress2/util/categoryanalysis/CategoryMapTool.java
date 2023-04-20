@@ -262,6 +262,12 @@ public class CategoryMapTool
 			rstName += "_pval" + df1.format(params.getpValueCutoff());
 		}
 
+		if (params.isRemoveRSquared())
+		{
+			analysisInfo.getNotes().add("Remove BMD with R^2 < Cutoff: " + params.getrSquared());
+			rstName += "_rsquared" + df1.format(params.getrSquared());
+		}
+
 		if (params.isRemoveBMDBMDLRatio())
 		{
 			analysisInfo.getNotes().add("Remove genes with BMD/BMDL >: " + params.getBmdBmdlRatio());
@@ -345,6 +351,9 @@ public class CategoryMapTool
 		bmdStats.setMinPositiveDose(params.getMinPositiveDose());
 
 		bmdStats.setFitPvalueCutoff(params.isRemoveBMDPValueLessCuttoff(), params.getpValueCutoff());
+
+		bmdStats.setFitRSquaredCutoff(params.isRemoveRSquared(), params.getrSquared());
+
 		bmdStats.readBMDValues();
 
 		if (params.isIdentifyConflictingProbeSets())

@@ -1,61 +1,80 @@
 package com.sciome.bmdexpress2.util.categoryanalysis;
 
-import java.util.List;
-
 import com.sciome.bmdexpress2.util.categoryanalysis.defined.DefinedCategoryFileParameters;
-import com.sciome.commons.math.httk.calc.calc_analytic_css.Model;
-import com.sciome.commons.math.httk.model.Compound;
 
 public class CategoryAnalysisParameters
 {
 
-	private DefinedCategoryFileParameters	probeFileParameters;
-	private DefinedCategoryFileParameters	categoryFileParameters;
+	private DefinedCategoryFileParameters probeFileParameters;
+	private DefinedCategoryFileParameters categoryFileParameters;
 
-	private String							goCat;
-	private int								goTermIdx;
+	private String goCat;
+	private int goTermIdx;
 
-	private String							pathwayDB;
+	private String pathwayDB;
 
-	private boolean							removeBMDGreaterHighDose		= false;
-	private boolean							removePromiscuousProbes			= false;
-	private boolean							removeBMDPValueLessCuttoff		= false;
-	private boolean							removeBMDBMDLRatio				= false;
-	private boolean							removeNFoldBelowLowestDose		= false;
-	private double							bmdBmdlRatio;
-	private double							nFoldbelowLowestDoseValue;
-	private double							pValueCutoff;
+	private boolean removeBMDGreaterHighDose = false;
+	private boolean removePromiscuousProbes = false;
+	private boolean removeBMDPValueLessCuttoff = false;
+	private boolean removeBMDBMDLRatio = false;
+	private boolean removeNFoldBelowLowestDose = false;
+	private double bmdBmdlRatio;
+	private double nFoldbelowLowestDoseValue;
+	private double pValueCutoff;
 
-	private boolean							removeBMDUBMDLRatio				= false;
-	private double							bmduBmdlRatio;
+	private boolean removeBMDUBMDLRatio = false;
+	private double bmduBmdlRatio;
 
-	private boolean							removeBMDUBMDRatio				= false;
-	private double							bmduBmdRatio;
+	private boolean removeBMDUBMDRatio = false;
+	private double bmduBmdRatio;
 
-	private boolean							identifyConflictingProbeSets	= false;
-	private double							correlationCutoffConflictingProbeSets;
+	private boolean identifyConflictingProbeSets = false;
+	private double correlationCutoffConflictingProbeSets;
 
-	private boolean							userFoldChangeFilter			= false;
-	private double							maxFoldChange;
+	private boolean userFoldChangeFilter = false;
+	private double maxFoldChange;
 
-	private boolean							userPValueFilter				= false;
-	private double							pValue;
+	private boolean userPValueFilter = false;
+	private double pValue;
 
-	private boolean							userAdjustedPValueFilter		= false;
-	private double							adjustedPValue;
+	private boolean userAdjustedPValueFilter = false;
+	private double adjustedPValue;
 
-	private double							minDose;
-	private double							maxDose;
-	private double							minPositiveDose;
+	private double minDose;
+	private double maxDose;
+	private double minPositiveDose;
 
-	private boolean							deduplicateGeneSets				= false;
-	
-	//IVIVE calculation
-	private IVIVEParameters					iviveParameters;
+	private boolean deduplicateGeneSets = false;
+
+	private boolean removeRSquared = false;
+	private double rSquared;
+
+	// IVIVE calculation
+	private IVIVEParameters iviveParameters;
 
 	public DefinedCategoryFileParameters getProbeFileParameters()
 	{
 		return probeFileParameters;
+	}
+
+	public boolean isRemoveRSquared()
+	{
+		return removeRSquared;
+	}
+
+	public void setRemoveRSquared(boolean removeRSquared)
+	{
+		this.removeRSquared = removeRSquared;
+	}
+
+	public double getrSquared()
+	{
+		return rSquared;
+	}
+
+	public void setrSquared(double rSquared)
+	{
+		this.rSquared = rSquared;
 	}
 
 	public void setProbeFileParameters(DefinedCategoryFileParameters probeFileParameters)
@@ -347,11 +366,13 @@ public class CategoryAnalysisParameters
 
 	}
 
-	public IVIVEParameters getIviveParameters() {
+	public IVIVEParameters getIviveParameters()
+	{
 		return iviveParameters;
 	}
 
-	public void setIviveParameters(IVIVEParameters iviveParameters) {
+	public void setIviveParameters(IVIVEParameters iviveParameters)
+	{
 		this.iviveParameters = iviveParameters;
 	}
 }
