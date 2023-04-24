@@ -31,7 +31,7 @@ import com.sciome.bmdexpress2.util.stat.LinearCorrelation;
 import com.sciome.bmdexpress2.util.stat.SampleStats;
 
 /**
- * The class for BMDStatatistics
+ * The class for BMDStatatistics BMDExpress-3
  *
  * @version 0.5, 10/12/2005
  * @author Longlong Yang

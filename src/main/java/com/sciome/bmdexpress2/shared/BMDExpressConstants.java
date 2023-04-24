@@ -63,7 +63,7 @@ public class BMDExpressConstants
 	public final String NTP_WWW = "http://ntp.niehs.nih.gov/";
 	public final String SCIOM_WWW = "http://www.sciome.com";
 	public final String EPA_WWW = "https://www.epa.gov/";
-	public final String TUTORIAL_URL = "https://github.com/auerbachs/BMDExpress-2.0/wiki/";
+	public final String TUTORIAL_URL = "https://github.com/auerbachs/BMDExpress-3/wiki/";
 
 	public final String HC_WWW = "http://www.hc-sc.gc.ca/index-eng.php";
 
