@@ -26,13 +26,13 @@ public class BestBMDModels
 {
 	private int MAXROWS = 0;
 	private String[] probeModel;
-	private double maxDose = 0, pCutoff = 0;
+	private double maxDose = 0, pCutoff = 0, rSquaredCuttoff = 0;
 	private double[][] bmds;
-	private boolean fitPvalue;
-	private Vector<String> bmdProbes, highDoseProbes, pCuttoffProbes, uniModelNames;
+	private boolean fitPvalue, rSquared;
+	private Vector<String> bmdProbes, highDoseProbes, pCuttoffProbes, rSquaredCuttoffProbes, uniModelNames;
 
 	/* fields for bmds 2-D array */
-	private final String[] bmdColNames = { "BMD", "BMDL", "BMDU", "pValue", "Adverse Direction" };
+	private final String[] bmdColNames = { "BMD", "BMDL", "BMDU", "pValue", "Adverse Direction", "RSquared" };
 
 	public BestBMDModels()
 	{
@@ -44,6 +44,12 @@ public class BestBMDModels
 		pCutoff = p;
 	}
 
+	public void setRSquareedvalueCutoff(boolean bool, double p)
+	{
+		rSquared = bool;
+		rSquaredCuttoff = p;
+	}
+
 	public void setMaximumDose(double dose)
 	{
 		maxDose = dose;
@@ -51,13 +57,14 @@ public class BestBMDModels
 
 	public void readBMDValues(boolean removeMax, BMDResult bmdResults, Vector<String> bmdProbes)
 	{
-		int MAXCOL = bmdColNames.length; // "BMD", "BMDL", "pValue", "Adverse Direction"
+		int MAXCOL = bmdColNames.length; // "BMD", "BMDL", "pValue", "Adverse Direction", "RSquared"
 		int MAXROW = bmdResults.getProbeStatResults().size();
 		// int last = bmdMatrix.columns() - 1;
 		this.bmdProbes = bmdProbes;
 		probeModel = new String[MAXROW];
 		highDoseProbes = new Vector<String>();
 		pCuttoffProbes = new Vector<String>();
+		rSquaredCuttoffProbes = new Vector<String>();
 		uniModelNames = new Vector<String>();
 		bmds = new double[MAXROW][MAXCOL];
 
@@ -73,6 +80,7 @@ public class BestBMDModels
 				if (bmdResults.getProbeStatResults().get(i).getBestStatResult() == null)
 				{
 					pCuttoffProbes.add(probe);
+					rSquaredCuttoffProbes.add(probe);
 					highDoseProbes.add(probe);
 					continue;
 				}
@@ -92,6 +100,8 @@ public class BestBMDModels
 							bmdResults.getProbeStatResults().get(i).getBestStatResult().getFitPValue());
 					bmds[idx][4] = NumberManager.doubleValue((int) bmdResults.getProbeStatResults().get(i)
 							.getBestStatResult().getAdverseDirection());
+					bmds[idx][5] = NumberManager.doubleValue(
+							bmdResults.getProbeStatResults().get(i).getBestStatResult().getrSquared());
 
 					// compare the values to filter parameters
 					if (removeMax && maxDose > 0 && bmds[idx][0] > maxDose)
@@ -102,6 +112,11 @@ public class BestBMDModels
 					if (fitPvalue && bmds[idx][3] < pCutoff)
 					{
 						pCuttoffProbes.add(probe);
+					}
+
+					if (rSquared && bmds[idx][5] < rSquaredCuttoff)
+					{
+						rSquaredCuttoffProbes.add(probe);
 					}
 
 					if (value instanceof String)
@@ -166,6 +181,11 @@ public class BestBMDModels
 	public Vector<String> removedPCutoffProbes()
 	{
 		return pCuttoffProbes;
+	}
+
+	public Vector<String> removedRSquaredCutoffProbes()
+	{
+		return rSquaredCuttoffProbes;
 	}
 
 	public double bmdsAt(int r, int c)

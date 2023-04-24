@@ -58,6 +58,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	// filter count vars
 	private Integer genesWithBMDLessEqualHighDose;
 	private Integer genesWithBMDpValueGreaterEqualValue;
+	private Integer genesWithBMDRSquaredValueGreaterEqualValue;
 	private Integer genesWithBMDBMDLRatioBelowValue;
 	private Integer genesWithBMDUBMDLRatioBelowValue;
 	private Integer genesWithBMDUBMDRatioBelowValue;
@@ -951,6 +952,17 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		this.genesWithBMDpValueGreaterEqualValue = genesWithBMDpValueGreaterEqualValue;
 	}
 
+	public Integer getGenesWithBMDRSquaredValueGreaterEqualValue()
+	{
+		return genesWithBMDRSquaredValueGreaterEqualValue;
+	}
+
+	public void setGenesWithBMDRSquaredValueGreaterEqualValue(
+			Integer genesWithBMDRSquaredValueGreaterEqualValue)
+	{
+		this.genesWithBMDRSquaredValueGreaterEqualValue = genesWithBMDRSquaredValueGreaterEqualValue;
+	}
+
 	public Double getFishersExactLeftPValue()
 	{
 		return fishersExactLeftPValue;
@@ -1127,6 +1139,10 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		{
 			headers.add("Genes with BMD p-Value >= ");
 		}
+		if (genesWithBMDRSquaredValueGreaterEqualValue != null)
+		{
+			headers.add("Genes with BMD RSquared >= ");
+		}
 
 		if (genesWithBMDBMDLRatioBelowValue != null)
 		{
@@ -1299,6 +1315,8 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 			row.add(this.genesWithBMDLessEqualHighDose);
 		if (genesWithBMDpValueGreaterEqualValue != null)
 			row.add(this.genesWithBMDpValueGreaterEqualValue);
+		if (genesWithBMDRSquaredValueGreaterEqualValue != null)
+			row.add(genesWithBMDRSquaredValueGreaterEqualValue);
 		if (genesWithBMDBMDLRatioBelowValue != null)
 			row.add(this.genesWithBMDBMDLRatioBelowValue);
 		if (genesWithBMDUBMDRatioBelowValue != null)

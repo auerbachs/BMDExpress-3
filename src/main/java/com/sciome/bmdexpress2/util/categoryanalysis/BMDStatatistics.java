@@ -137,6 +137,9 @@ public class BMDStatatistics
 			bestBMDModels.setFitPvalueCutoff(doRemovePCut, fitPCutoff);
 		}
 
+		if (doRemoveRSquared)
+			bestBMDModels.setRSquareedvalueCutoff(doRemoveRSquared, rSquaredCoff);
+
 		bestBMDModels.readBMDValues(removeMax, bmdResults, bmdProbes);
 	}
 
@@ -321,6 +324,46 @@ public class BMDStatatistics
 						String st = probes.get(j);
 
 						if (bestBMDModels.removedPCutoffProbes().contains(st))
+						{
+							probes.remove(st);
+							removedProbes.add(st);
+						}
+					}
+				}
+
+				if (probes == null || probes.isEmpty())
+				{
+					// vectGenes.remove(geneId);
+				}
+				else
+				{
+					pcGenes.add(geneId);
+				}
+			}
+		}
+
+		return pcGenes;
+	}
+
+	public Vector<String> checkFitRSquaredCutoff(Vector<String> vectGenes,
+			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes)
+	{
+		Vector<String> pcGenes = new Vector<String>();
+
+		if (vectGenes != null && vectGenes.size() > 0)
+		{
+			for (int i = vectGenes.size() - 1; i >= 0; i--)
+			{
+				String geneId = vectGenes.get(i);
+				Vector<String> probes = new Vector<>(subHashG2Ids.get(geneId));
+
+				if (probes != null && probes.size() > 0)
+				{
+					for (int j = probes.size() - 1; j >= 0; j--)
+					{
+						String st = probes.get(j);
+
+						if (bestBMDModels.removedRSquaredCutoffProbes().contains(st))
 						{
 							probes.remove(st);
 							removedProbes.add(st);

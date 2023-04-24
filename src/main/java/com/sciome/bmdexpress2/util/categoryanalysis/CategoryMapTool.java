@@ -520,6 +520,13 @@ public class CategoryMapTool
 				categoryAnalysisResult.setGenesWithBMDpValueGreaterEqualValue(sub);
 			}
 
+			if (params.isRemoveRSquared())
+			{
+				sub = bmdStats.checkFitRSquaredCutoff(subList, subHashG2Ids, removedProbes).size();
+
+				categoryAnalysisResult.setGenesWithBMDRSquaredValueGreaterEqualValue(sub);
+			}
+
 			if (params.isRemoveBMDBMDLRatio())
 			{
 				sub = bmdStats
