@@ -326,8 +326,20 @@ public class CategoryMapTool
 			analysisInfo.getNotes().add("Category File: " + params.getCategoryFileParameters().getFileName());
 		}
 
+		if (params.isRemoveMinGenesInSet())
+		{
+			analysisInfo.getNotes().add("Min # of Genes in Gene Set: " + params.getMinGenesInSet());
+		}
+		if (params.isRemoveMaxGenesInSet())
+		{
+			analysisInfo.getNotes().add("Max # of Genes in Gene Set: " + params.getMaxGenesInSet());
+		}
+
 		if (params.getDeduplicateGeneSets())
+		{
 			rstName += "_deduplicate";
+			analysisInfo.getNotes().add("Eliminate Gene Set Redundancy: " + params.getDeduplicateGeneSets());
+		}
 		this.probeGeneMaps = probeGeneMaps;
 		this.categoryGeneMap = catMap;
 		this.rstName = rstName;
@@ -469,7 +481,6 @@ public class CategoryMapTool
 				categoryAnalysisResult = new GOAnalysisResult();
 			}
 
-			categoryAnalysisResults.getCategoryAnalsyisResults().add(categoryAnalysisResult);
 			categoryAnalysisResult.setCategoryIdentifier(categoryGeneMap.getCategoryIdentifier(i));
 
 			int sub = 0, all = 0, dataSetCount = 0;
@@ -583,6 +594,26 @@ public class CategoryMapTool
 
 			sub = subList.size();
 
+			if (i % 10 == 0)
+			{
+				if (categoryMapProgress != null)
+				{
+					categoryMapProgress.updateProgress(
+							"Processing record: " + String.valueOf(i) + "/" + String.valueOf(rows),
+							(double) i / (double) rows);
+				}
+			}
+
+			// do not include this category if number of genes is less than min
+			if (params.isRemoveMinGenesInSet())
+				if (sub < params.getMinGenesInSet())
+					continue;
+
+			// do not include this category if number genes is greater than max
+			if (params.isRemoveMaxGenesInSet())
+				if (sub > params.getMaxGenesInSet())
+					continue;
+
 			// keep list of genecount per category for fisher's exact test calculation
 			geneCountPerCategoryThatPassed.add(sub);
 			geneCountPerCategory.add(all);
@@ -604,15 +635,7 @@ public class CategoryMapTool
 				}
 			}
 
-			if (i % 10 == 0)
-			{
-				if (categoryMapProgress != null)
-				{
-					categoryMapProgress.updateProgress(
-							"Processing record: " + String.valueOf(i) + "/" + String.valueOf(rows),
-							(double) i / (double) rows);
-				}
-			}
+			categoryAnalysisResults.getCategoryAnalsyisResults().add(categoryAnalysisResult);
 
 		}
 

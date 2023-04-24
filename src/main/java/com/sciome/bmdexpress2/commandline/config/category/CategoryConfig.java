@@ -12,30 +12,34 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 public abstract class CategoryConfig
 {
 	// name of bmdanalysis to cateogorize
-	private String		inputName;
+	private String inputName;
 
 	// name of output for the analysis
-	private String		outputName;
+	private String outputName;
 
-	private Boolean		removePromiscuousProbes		= true;
-	private Boolean		removeBMDGreaterHighDose	= true;
+	private Boolean removePromiscuousProbes = true;
+	private Boolean removeBMDGreaterHighDose = true;
 
-	private Double		bmdPValueCutoff;
-	private Double		bmdBMDLRatioMin;
-	private Double		bmduBMDRatioMin;
-	private Double		bmduBMDLRatioMin;
-	private Double		nFoldBelowLowestDose;
-	private Double		maxFoldChange;
-	private Double		prefilterPValueMin;
-	private Double		prefilterAdjustedPValueMin;
+	private Double bmdPValueCutoff;
+	private Double bmdRSquaredCutoff;
+	private Double bmdBMDLRatioMin;
+	private Double bmduBMDRatioMin;
+	private Double bmduBMDLRatioMin;
+	private Double nFoldBelowLowestDose;
+	private Double maxFoldChange;
+	private Double prefilterPValueMin;
+	private Double prefilterAdjustedPValueMin;
 
-	private Boolean		identifyConflictingProbeSets;
-	private Double		correlationCutoffForConflictingProbeSets;
+	private Boolean identifyConflictingProbeSets;
+	private Double correlationCutoffForConflictingProbeSets;
 
-	private Boolean		deduplicateGeneSets			= false;
+	private Integer minGenesInSet;
+	private Integer maxGenesInSet;
 
-	private Boolean		computeIVIVE				= false;
-	private IVIVEConfig	iviveConfig;
+	private Boolean deduplicateGeneSets = false;
+
+	private Boolean computeIVIVE = false;
+	private IVIVEConfig iviveConfig;
 
 	public String getInputName()
 	{
@@ -85,6 +89,16 @@ public abstract class CategoryConfig
 	public void setBmdPValueCutoff(Double bmdPValueCutoff)
 	{
 		this.bmdPValueCutoff = bmdPValueCutoff;
+	}
+
+	public Double getBmdRSquaredCutoff()
+	{
+		return bmdRSquaredCutoff;
+	}
+
+	public void setBmdRSquaredCutoff(Double bmdRSquaredCutoff)
+	{
+		this.bmdRSquaredCutoff = bmdRSquaredCutoff;
 	}
 
 	public Double getBmdBMDLRatioMin()
@@ -185,6 +199,26 @@ public abstract class CategoryConfig
 	public void setDeduplicateGeneSets(Boolean deduplicateGeneSets)
 	{
 		this.deduplicateGeneSets = deduplicateGeneSets;
+	}
+
+	public Integer getMinGenesInSet()
+	{
+		return minGenesInSet;
+	}
+
+	public void setMinGenesInSet(Integer minGenesInSet)
+	{
+		this.minGenesInSet = minGenesInSet;
+	}
+
+	public Integer getMaxGenesInSet()
+	{
+		return maxGenesInSet;
+	}
+
+	public void setMaxGenesInSet(Integer maxGenesInSet)
+	{
+		this.maxGenesInSet = maxGenesInSet;
 	}
 
 	public Boolean getComputeIVIVE()

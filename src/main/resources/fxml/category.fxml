@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="751.0" prefWidth="767.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="815.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
 	<center>
 		<AnchorPane minHeight="700.0" prefHeight="900.0" BorderPane.alignment="CENTER">
 			<children>
@@ -127,6 +127,18 @@
 																		<TextField fx:id="bmdFilterMaxAdjustedPValueChangeValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text=".5" />
 																	</children>
 																</HBox>
+                                                <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
+                                                   <children>
+                                                      <CheckBox fx:id="filterMinGenesInSetCheckbox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Min # of Genes in Gene Set" wrapText="true" />
+                                                      <TextField fx:id="minGenesInSetTextBox" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="20" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
+                                                   <children>
+                                                      <CheckBox fx:id="filterMaxGenesInSetCheckbox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Max # of Genes in Gene Set" wrapText="true" />
+                                                      <TextField fx:id="maxGenesInSetTextBox" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="500" />
+                                                   </children>
+                                                </HBox>
 																<HBox alignment="CENTER" layoutX="10.0" layoutY="503.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
 																	<children>
 																		<CheckBox fx:id="deduplicateGeneSetsCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="396.0" selected="false" text="Eliminate Gene Set Redundancy" wrapText="true" />
@@ -322,7 +334,7 @@
 								</TabPane>
 							</children>
 						</AnchorPane>
-                  <AnchorPane maxHeight="50.0" minHeight="50.0" prefHeight="50.0" prefWidth="769.0">
+                  <AnchorPane maxHeight="50.0" minHeight="11.0" prefHeight="11.0" prefWidth="766.0">
                      <children>
                         <HBox fx:id="progressHBox" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="100.0" prefWidth="650.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>

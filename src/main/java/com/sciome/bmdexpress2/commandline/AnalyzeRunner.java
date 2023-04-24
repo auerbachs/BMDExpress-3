@@ -266,6 +266,30 @@ public class AnalyzeRunner
 			params.setRemoveBMDPValueLessCuttoff(true);
 		}
 
+		if (catConfig.getBmdRSquaredCutoff() == null)
+			params.setRemoveRSquared(false);
+		else
+		{
+			params.setrSquared(catConfig.getBmdRSquaredCutoff());
+			params.setRemoveRSquared(true);
+		}
+
+		if (catConfig.getMinGenesInSet() == null)
+			params.setRemoveMinGenesInSet(false);
+		else
+		{
+			params.setMinGenesInSet(catConfig.getMinGenesInSet());
+			params.setRemoveMinGenesInSet(true);
+		}
+
+		if (catConfig.getMaxGenesInSet() == null)
+			params.setRemoveMaxGenesInSet(false);
+		else
+		{
+			params.setMaxGenesInSet(catConfig.getMaxGenesInSet());
+			params.setRemoveMaxGenesInSet(true);
+		}
+
 		if (catConfig.getMaxFoldChange() == null)
 			params.setUserFoldChangeFilter(false);
 		else

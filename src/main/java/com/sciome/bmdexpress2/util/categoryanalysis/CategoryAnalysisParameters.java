@@ -49,12 +49,58 @@ public class CategoryAnalysisParameters
 	private boolean removeRSquared = false;
 	private double rSquared;
 
+	private boolean removeMinGenesInSet = false;
+	private int minGenesInSet;
+
+	private boolean removeMaxGenesInSet = false;
+	private int maxGenesInSet;
+
 	// IVIVE calculation
 	private IVIVEParameters iviveParameters;
 
 	public DefinedCategoryFileParameters getProbeFileParameters()
 	{
 		return probeFileParameters;
+	}
+
+	public boolean isRemoveMinGenesInSet()
+	{
+		return removeMinGenesInSet;
+	}
+
+	public void setRemoveMinGenesInSet(boolean removeMinGenesInSet)
+	{
+		this.removeMinGenesInSet = removeMinGenesInSet;
+	}
+
+	public int getMinGenesInSet()
+	{
+		return minGenesInSet;
+	}
+
+	public void setMinGenesInSet(int minGenesInSet)
+	{
+		this.minGenesInSet = minGenesInSet;
+	}
+
+	public boolean isRemoveMaxGenesInSet()
+	{
+		return removeMaxGenesInSet;
+	}
+
+	public void setRemoveMaxGenesInSet(boolean removeMaxGenesInSet)
+	{
+		this.removeMaxGenesInSet = removeMaxGenesInSet;
+	}
+
+	public int getMaxGenesInSet()
+	{
+		return maxGenesInSet;
+	}
+
+	public void setMaxGenesInSet(int maxGenesInSet)
+	{
+		this.maxGenesInSet = maxGenesInSet;
 	}
 
 	public boolean isRemoveRSquared()
