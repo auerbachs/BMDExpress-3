@@ -606,12 +606,12 @@ public class CategoryMapTool
 
 			// do not include this category if number of genes is less than min
 			if (params.isRemoveMinGenesInSet())
-				if (sub < params.getMinGenesInSet())
+				if (categoryAnalysisResult.getGeneAllCount() < params.getMinGenesInSet())
 					continue;
 
 			// do not include this category if number genes is greater than max
 			if (params.isRemoveMaxGenesInSet())
-				if (sub > params.getMaxGenesInSet())
+				if (categoryAnalysisResult.getGeneAllCount() > params.getMaxGenesInSet())
 					continue;
 
 			// keep list of genecount per category for fisher's exact test calculation
