@@ -47,6 +47,7 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.model.pca to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.refgene to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.stat to com.fasterxml.jackson.databind;
+	opens com.sciome.filter to com.fasterxml.jackson.databind;
 
 	opens com.sciome.bmdexpress2.mvp.presenter to guava;
 	opens com.sciome.bmdexpress2.mvp.presenter.annotation to guava;
@@ -57,6 +58,7 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to guava;
 
 	exports com.sciome.bmdexpress2;
+	exports com.sciome.filter;
 	exports com.sciome.bmdexpress2.mvp.view.mainstage;
 	exports com.sciome.bmdexpress2.mvp.view;
 	exports com.sciome.bmdexpress2.mvp.presenter.presenterbases;

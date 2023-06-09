@@ -7,8 +7,8 @@ import java.util.Set;
 
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResult;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
-import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview.CurveFitPrefilterDataViewPresenter;
 import com.sciome.bmdexpress2.mvp.view.visualization.CurveFitPrefilterDataVisualizationView;
 import com.sciome.bmdexpress2.mvp.view.visualization.DataVisualizationView;
@@ -17,7 +17,7 @@ import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.annotation.pathway.PathwayToGeneSymbolUtility;
 
-public class CurveFitPrefilterDataView extends BMDExpressDataView<WilliamsTrendResults>
+public class CurveFitPrefilterDataView extends BMDExpressDataView<CurveFitPrefilterResults>
 		implements IBMDExpressDataView
 {
 
@@ -28,8 +28,8 @@ public class CurveFitPrefilterDataView extends BMDExpressDataView<WilliamsTrendR
 		presenter = new CurveFitPrefilterDataViewPresenter(this, BMDExpressEventBus.getInstance());
 
 		// Add any new columns to the map and list
-		columnMap = BMDExpressProperties.getInstance().getTableInformation().getWilliamsTrendMap();
-		columnOrder = BMDExpressProperties.getInstance().getTableInformation().getWilliamsTrendOrder();
+		columnMap = BMDExpressProperties.getInstance().getTableInformation().getCurveFitMap();
+		columnOrder = BMDExpressProperties.getInstance().getTableInformation().getCurveFitOrder();
 		for (String header : curveFitPrefilterResults.getColumnHeader())
 		{
 			if (!columnMap.containsKey(header))
