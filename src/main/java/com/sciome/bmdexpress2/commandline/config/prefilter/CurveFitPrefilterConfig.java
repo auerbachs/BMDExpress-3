@@ -13,6 +13,9 @@ public class CurveFitPrefilterConfig extends PrefilterConfig
 	private Double bmrFactor = 1.021;
 	private Double poly2BmrFactor = 1.021;
 
+	// this could be dose response data or prefiltered data.
+	private String inputCategory;
+
 	public List<BMDSModelConfig> getModelConfigs()
 	{
 		return modelConfigs;
@@ -51,6 +54,16 @@ public class CurveFitPrefilterConfig extends PrefilterConfig
 	public void setPoly2BmrFactor(Double poly2BmrFactor)
 	{
 		this.poly2BmrFactor = poly2BmrFactor;
+	}
+
+	public String getInputCategory()
+	{
+		return inputCategory;
+	}
+
+	public void setInputCategory(String inputCategory)
+	{
+		this.inputCategory = inputCategory;
 	}
 
 }

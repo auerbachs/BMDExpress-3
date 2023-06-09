@@ -912,11 +912,59 @@ public class AnalyzeRunner
 		// if the inputname is null, then add all dose response experiments
 		// to receive the pre filter.
 		List<IStatModelProcessable> processables = new ArrayList<>();
-		for (DoseResponseExperiment exp : project.getDoseResponseExperiments())
-			if (preFilterConfig.getInputName() == null)
-				processables.add(exp);
-			else if (exp.getName().equalsIgnoreCase(preFilterConfig.getInputName()))
-				processables.add(exp);
+		boolean doOnlyDoseResponseExperimentInput = true;
+		if (preFilterConfig instanceof CurveFitPrefilterConfig)
+		{
+			CurveFitPrefilterConfig cfpreCfg = (CurveFitPrefilterConfig) preFilterConfig;
+
+			if (cfpreCfg.getInputCategory() == null || cfpreCfg.getInputCategory().equals("")
+					|| cfpreCfg.getInputCategory().equals(BMDExpressCommandLine.EXPRESSION))
+				doOnlyDoseResponseExperimentInput = true;
+			else
+			{
+				// we found out that we are running curve fit prefilter on
+				// another prefilter set.
+				if (BMDExpressCommandLine.WILLIAMS.equalsIgnoreCase(cfpreCfg.getInputCategory()))
+				{
+					for (WilliamsTrendResults exp : project.getWilliamsTrendResults())
+						if (preFilterConfig.getInputName() == null
+								|| preFilterConfig.getInputName().equals(""))
+							processables.add(exp);
+						else if (exp.getName().equalsIgnoreCase(preFilterConfig.getInputName()))
+							processables.add(exp);
+				}
+				else if (BMDExpressCommandLine.ONE_WAY_ANOVA.equalsIgnoreCase(cfpreCfg.getInputCategory()))
+				{
+					for (OneWayANOVAResults exp : project.getOneWayANOVAResults())
+						if (preFilterConfig.getInputName() == null
+								|| preFilterConfig.getInputName().equals(""))
+							processables.add(exp);
+						else if (exp.getName().equalsIgnoreCase(preFilterConfig.getInputName()))
+							processables.add(exp);
+				}
+				else if (BMDExpressCommandLine.ORIOGEN.equalsIgnoreCase(cfpreCfg.getInputCategory()))
+				{
+					for (OriogenResults exp : project.getOriogenResults())
+						if (preFilterConfig.getInputName() == null
+								|| preFilterConfig.getInputName().equals(""))
+							processables.add(exp);
+						else if (exp.getName().equalsIgnoreCase(preFilterConfig.getInputName()))
+							processables.add(exp);
+				}
+
+				doOnlyDoseResponseExperimentInput = false;
+
+			}
+		}
+
+		if (doOnlyDoseResponseExperimentInput)
+		{
+			for (DoseResponseExperiment exp : project.getDoseResponseExperiments())
+				if (preFilterConfig.getInputName() == null || preFilterConfig.getInputName().equals(""))
+					processables.add(exp);
+				else if (exp.getName().equalsIgnoreCase(preFilterConfig.getInputName()))
+					processables.add(exp);
+		}
 
 		String stdoutInfo = "";
 		if (preFilterConfig instanceof ANOVAConfig)
