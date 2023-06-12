@@ -1,6 +1,9 @@
 package com.sciome.bmdexpress2.service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
 import org.apache.commons.math3.analysis.differentiation.FiniteDifferencesDifferentiator;
@@ -8,11 +11,85 @@ import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiabl
 import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.linear.RealMatrix;
 
+import com.sciome.bmdexpress2.mvp.model.DoseGroup;
+import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
+import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
+import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponseValues;
+import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.serviceInterface.IBMDStatisticsService;
 
 public class BMDStatisticsService implements IBMDStatisticsService
 {
+
+	@Override
+	public List<ModeledResponseValues> generateResponsesBetweenDoseGroups(BMDResult bmdResults,
+			int betweenDoses)
+	{
+		List<ModeledResponseValues> matrix = new ArrayList<>();
+		DoseResponseExperiment dre = bmdResults.getDoseResponseExperiment();
+		List<DoseGroup> doseGroups = dre.getDoseGroups();
+		// for probes that have no best model or are not in the result set, they will need zeros output
+		// for the sake of consistency for the entire dose response experiment.
+
+		// add modelled responses to matrix for each responsive probe.
+		// keep track of the responseive probes so we can
+		// loop through and add entries for non-reponsonders fitPTextField
+		Set<String> responsiveProbes = new HashSet<>();
+		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
+		{
+			StatResult bestie = psr.getBestStatResult();
+			if (bestie == null)
+				continue;
+
+			String probeid = psr.getProbeResponse().getProbe().getId();
+			ModeledResponseValues mrv = new ModeledResponseValues();
+			mrv.setProbeId(probeid);
+			mrv.setModeledResponses(new ArrayList<>());
+			for (int i = 0; i < doseGroups.size() - 1; i++)
+			{
+				DoseGroup dg = doseGroups.get(i);
+				DoseGroup nextDg = doseGroups.get(i + 1);
+
+				double diff = nextDg.getDose() - dg.getDose();
+				// calculate the steps between.
+				double step = diff / betweenDoses;
+				for (double j = dg.getDose(); j < nextDg.getDose(); j += step)
+				{
+					mrv.getModeledResponses().add(bestie.getResponseAt(j));
+				}
+
+			}
+
+			responsiveProbes.add(probeid);
+
+		}
+
+		// for nonresponsive probes, add 0's to the matrix
+		for (ProbeResponse pr : dre.getProbeResponses())
+		{
+			if (responsiveProbes.contains(pr.getProbe().getId()))
+				continue;
+
+			ModeledResponseValues mrv = new ModeledResponseValues();
+			mrv.setProbeId(pr.getProbe().getId());
+			mrv.setModeledResponses(new ArrayList<>());
+
+			for (int i = 0; i < doseGroups.size() - 1; i++)
+			{
+				DoseGroup dg = doseGroups.get(i);
+				DoseGroup nextDg = doseGroups.get(i + 1);
+				double diff = nextDg.getDose() - dg.getDose();
+				// calculate the steps between.
+				double step = diff / betweenDoses;
+				for (double j = dg.getDose(); j < nextDg.getDose(); j += step)
+					mrv.getModeledResponses().add(0.0);
+			}
+		}
+
+		return matrix;
+	}
 
 	@Override
 	public double[] calculateResiduals(StatResult result, List<Double> means, List<Double> doses)

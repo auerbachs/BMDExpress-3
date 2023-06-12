@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.math3.util.Precision;
 
+import com.sciome.bmdexpress2.mvp.model.DoseGroup;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
@@ -450,52 +451,22 @@ public class BMDAnalysisService implements IBMDAnalysisService
 	private void calculateExtraStatistics(BMDResult bmdResults)
 	{
 		BMDStatisticsService statServ = new BMDStatisticsService();
-		List<DoseGroup> doseGroups = new ArrayList<>();
-		Float prevDose = null;
-		DoseGroup currDg = null;
-		// create the dosegroups list so we can use it to store corresponding dose response values.
-		for (Treatment t : bmdResults.getDoseResponseExperiment().getTreatments())
-		{
-			if (!t.getDose().equals(prevDose))
-			{
-				DoseGroup dg = new DoseGroup();
-				dg.dose = t.getDose().doubleValue();
-				doseGroups.add(dg);
-				dg.count++;
-				currDg = dg;
-			}
-			else
-				currDg.count++;
-
-			prevDose = t.getDose();
-		}
 
 		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
 		{
 			// build the dosegroup array.
-			List<Float> responses = psr.getProbeResponse().getResponses();
-			int j = 0;
-			for (DoseGroup dg : doseGroups)
-			{
-				double sum = 0;
-				for (int i = 0; i < dg.count; i++)
-				{
-					sum += responses.get(j).doubleValue();
-					j++;
-
-				}
-				dg.mean = sum / dg.count;
-			}
+			List<DoseGroup> doseGroups = bmdResults.getDoseResponseExperiment()
+					.getDoseGroups(psr.getProbeResponse().getResponses());
 
 			for (StatResult statResult : psr.getStatResults())
 			{
 				try
 				{
 					double[] residuals = statServ.calculateResiduals(statResult,
-							doseGroups.stream().map(dg -> dg.mean).collect(Collectors.toList()),
-							doseGroups.stream().map(dg -> dg.dose).collect(Collectors.toList()));
+							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()),
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
 					double rSquared = statServ.calculateRSquared(residuals,
-							doseGroups.stream().map(dg -> dg.mean).collect(Collectors.toList()));
+							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
 					statResult.setResiduals(residuals);
 					statResult.setrSquared(rSquared);
 
@@ -510,13 +481,6 @@ public class BMDAnalysisService implements IBMDAnalysisService
 
 		}
 
-	}
-
-	private class DoseGroup
-	{
-		Double dose;
-		int count = 0;
-		Double mean;
 	}
 
 }

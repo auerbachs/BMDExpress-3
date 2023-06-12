@@ -19,8 +19,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -93,6 +91,10 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 	private TextField bmduTextField;
 	@FXML
 	private TextField fitPTextField;
+
+	@FXML
+	private TextField rSquaredTextField;
+
 	@FXML
 	private TextField aicTextField;
 	@FXML
@@ -891,134 +893,13 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 		// DecimalFormat mF = new DecimalFormat("#####0.000000");
 		// DecimalFormat bmdF = new DecimalFormat("#####0.000000");
 		chart.setTitle(model);
-		StringBuilder formula = new StringBuilder("RESPONSE = " + parameters[4]);
-
-		// if(model == POWER){
-		if (model.equals("Power"))
-		{
-			// displaying a power model
-			// chart.setTitle("Power");
-
-			if (parameters[5] >= 0)
-			{
-				// the parameter is positive, so set display with a +
-				formula.append(" + " + parameters[5] + " * DOSE^");
-			}
-			else
-			{
-				// the parameter is negative, set display with a -
-				formula.append(" " + parameters[5] + " * DOSE^");
-			}
-
-			if (parameters[6] >= 0)
-			{
-				formula.append(parameters[6]);
-			}
-			else
-			{
-				formula.append("(" + parameters[6] + ")");
-			}
-		}
-		else if (model.equals("Hill"))
-		{
-			// Y[dose] = intercept + v*dose^n/(k^n + dose^n)
-			if (parameters[5] >= 0)
-			{
-				formula.append(" + " + parameters[5] + " * DOSE^");
-			}
-			else
-			{
-				formula.append(" " + parameters[5] + " * DOSE^");
-			}
-
-			String param5 = Double.toString(parameters[6]);
-
-			if (parameters[6] < 0)
-			{
-				param5 = "(" + parameters[6] + ")";
-			}
-
-			formula.append(param5 + "/(");
-
-			if (parameters[7] >= 0)
-			{
-				formula.append(parameters[7] + "^" + param5 + " + DOSE^" + param5 + ")");
-			}
-			else
-			{
-				formula.append("(" + parameters[7] + ")^" + param5 + " + DOSE^" + param5 + ")");
-			}
-		}
-		else if (model.equals("Exp 2"))
-		{
-			formula = new StringBuilder("RESPONSE = ");
-			double a = parameters[6];
-			double b = parameters[7];
-			formula.append(a + " * EXP(" + b + " * DOSE)");
-		}
-		else if (model.equals("Exp 3"))
-		{
-			formula = new StringBuilder("RESPONSE = ");
-			double a = parameters[6];
-			double b = parameters[7];
-			double d = parameters[8];
-			formula.append(a + " * EXP((" + b + " * DOSE)^" + d + ")");
-		}
-		else if (model.equals("Exp 4"))
-		{
-			formula = new StringBuilder("RESPONSE = ");
-			double a = parameters[6];
-			double b = parameters[7];
-			double c = parameters[8];
-			formula.append(a + " * (" + c + " - (" + c + " - 1) * EXP(-" + b + " * DOSE)");
-		}
-		else if (model.equals("Exp 5"))
-		{
-			formula = new StringBuilder("RESPONSE = ");
-			double a = parameters[6];
-			double b = parameters[7];
-			double c = parameters[8];
-			double d = parameters[9];
-			formula.append(a + " * (" + c + " - (" + c + " - 1) * EXP((-" + b + " * DOSE)^" + d + ")");
-		}
-		else
-		{ // Linear (1�) and Polinominal d�
-			Pattern pattern = Pattern.compile("(\\d+)");
-			Matcher matcher = pattern.matcher(model);
-
-			if (matcher.find())
-			{
-				String st = matcher.group(1);
-				int degree = Integer.parseInt(st); // degree = 1, 2, 3...
-				int index = 5;
-
-				for (int i = 1; i <= degree; i++)
-				{
-					if (parameters[index] >= 0)
-					{ // positive
-						formula.append(" + " + parameters[index] + " * DOSE");
-					}
-					else
-					{ // negative
-						formula.append(" " + parameters[index] + " * DOSE");
-					}
-
-					if (i > 1)
-					{
-						formula.append("^" + i);
-					}
-
-					index += 1;
-				}
-			}
-		}
-
 		modelTextField.setText(this.theStatResult.getEquation());// formula.toString());
 		bmdTextField.setText(Double.toString(parameters[0]));
 		bmdlTextField.setText(Double.toString(parameters[1]));
 		bmduTextField.setText(Double.toString(parameters[2]));
 		fitPTextField.setText(Double.toString(parameters[3]));// getDisplayedPValue()
 		aicTextField.setText(Double.toString(parameters[4]));
+		rSquaredTextField.setText(Double.toString(parameters[6]));
 	}
 
 	private double maskDose(double dose)
@@ -1049,28 +930,30 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 
 		if (theStatResult.getCurveParameters() != null)
 		{
-			double parameters[] = new double[theStatResult.getCurveParameters().length + 6];
+			double parameters[] = new double[theStatResult.getCurveParameters().length + 7];
 			parameters[0] = theStatResult.getBMD();
 			parameters[1] = theStatResult.getBMDL();
 			parameters[2] = theStatResult.getBMDU();
 			parameters[3] = theStatResult.getFitPValue();
 			parameters[4] = theStatResult.getAIC();
 			parameters[5] = theStatResult.getFitLogLikelihood();
+			parameters[6] = theStatResult.getrSquared();
 
 			for (int i = 0; i < theStatResult.getCurveParameters().length; i++)
-				parameters[i + 6] = theStatResult.getCurveParameters()[i];
+				parameters[i + 7] = theStatResult.getCurveParameters()[i];
 
 			this.parameters = truncateDecimal(parameters);
 		}
 		else
 		{
-			double parameters[] = new double[6];
+			double parameters[] = new double[7];
 			parameters[0] = theStatResult.getBMD();
 			parameters[1] = theStatResult.getBMDL();
 			parameters[2] = theStatResult.getBMDU();
 			parameters[3] = theStatResult.getFitPValue();
 			parameters[4] = theStatResult.getAIC();
 			parameters[5] = theStatResult.getFitLogLikelihood();
+			parameters[6] = theStatResult.getrSquared();
 			this.parameters = truncateDecimal(parameters);
 		}
 

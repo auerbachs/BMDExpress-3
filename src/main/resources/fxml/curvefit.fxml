@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.mainstage.CurveFitView">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" minWidth="600.0" prefHeight="500.0" prefWidth="1050.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.mainstage.CurveFitView">
    <children>
       <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -15,11 +23,12 @@
                <children>
                   <GridPane alignment="CENTER_RIGHT" prefWidth="1050.0" HBox.hgrow="ALWAYS">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="199.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="452.0" minWidth="10.0" prefWidth="156.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="179.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="258.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="10.0" prefWidth="258.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.0" minWidth="10.0" prefWidth="178.80001220703124" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="452.0" minWidth="10.0" prefWidth="156.39998779296874" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="176.6000793457032" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="194.59992065429685" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.0" minWidth="10.0" prefWidth="176.79996337890623" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="10.0" prefWidth="169.4000000000001" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -57,13 +66,13 @@
                               <TextField fx:id="fitPTextField" layoutX="62.0" layoutY="14.0" prefHeight="39.0" prefWidth="165.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="5.0" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="3">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="5" GridPane.rowIndex="3">
                            <children>
                               <Label layoutX="21.0" layoutY="18.0" text="AIC" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="5.0" />
                               <TextField fx:id="aicTextField" layoutX="62.0" layoutY="16.0" prefHeight="39.0" prefWidth="165.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="5.0" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="1">
                            <children>
                               <Label layoutY="22.0" text="Model" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="17.0" AnchorPane.topAnchor="5.0">
                                  <padding>
@@ -72,7 +81,7 @@
                               <ComboBox fx:id="modelNameComboBox" layoutX="141.0" layoutY="16.0" prefHeight="39.0" prefWidth="110.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="83.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="5.0" />
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="1">
                            <children>
                               <Label alignment="CENTER" layoutX="25.0" layoutY="23.0" text="ID" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="17.0" AnchorPane.topAnchor="5.0" />
                               <ComboBox fx:id="idComboBox" layoutX="65.0" layoutY="12.0" prefHeight="60.0" prefWidth="216.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="5.0" />
@@ -94,6 +103,12 @@
                            </children>
                         </AnchorPane>
                         <HBox fx:id="chkBoxOverlayHBox" prefHeight="32.0" prefWidth="1050.0" spacing="5.0" GridPane.columnSpan="2147483647" />
+                        <AnchorPane GridPane.columnIndex="4" GridPane.rowIndex="3">
+                           <children>
+                              <Label layoutX="27.0" layoutY="20.0" text="R^2" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="5.0" />
+                              <TextField fx:id="rSquaredTextField" layoutX="62.0" layoutY="14.0" prefHeight="39.0" prefWidth="165.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="17.0" AnchorPane.topAnchor="5.0" />
+                           </children>
+                        </AnchorPane>
                      </children>
                   </GridPane>
                </children>

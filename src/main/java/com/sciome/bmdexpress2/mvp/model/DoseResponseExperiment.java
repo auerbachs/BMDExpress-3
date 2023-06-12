@@ -3,20 +3,18 @@ package com.sciome.bmdexpress2.mvp.model;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
@@ -27,29 +25,29 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 	/**
 	 * 
 	 */
-	private static final long				serialVersionUID	= 6106646178862193241L;
-	private String							name;
+	private static final long serialVersionUID = 6106646178862193241L;
+	private String name;
 
 	// this will contain doses.
-	private List<Treatment>					treatments;
+	private List<Treatment> treatments;
 
 	// this is your dose response matrix
-	private List<ProbeResponse>				probeResponses;
-	private List<ReferenceGeneAnnotation>	referenceGeneAnnotations;
-	private ChipInfo						chip;
-	private Long							chipCreationDate;
-	private AnalysisInfo					analysisInfo;
+	private List<ProbeResponse> probeResponses;
+	private List<ReferenceGeneAnnotation> referenceGeneAnnotations;
+	private ChipInfo chip;
+	private Long chipCreationDate;
+	private AnalysisInfo analysisInfo;
 
 	// default to logTransformation of base2
 	// this defines how the data was log transformed before being input into bmdexpress
 	// this information is important to know for correctly calculating the fold change
-	private LogTransformationEnum			logTransformation	= LogTransformationEnum.BASE2;
+	private LogTransformationEnum logTransformation = LogTransformationEnum.BASE2;
 
-	private transient List<String>			columnHeader;
-	private transient List<Object>			columnHeader2;
-	private Long							id;
+	private transient List<String> columnHeader;
+	private transient List<Object> columnHeader2;
+	private Long id;
 
-	public static final String				EXPRESSION_VALUES	= "Expression Value";
+	public static final String EXPRESSION_VALUES = "Expression Value";
 
 	@JsonIgnore
 	public Long getID()
@@ -135,6 +133,7 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 		this.analysisInfo = analysisInfo;
 	}
 
+	@Override
 	public LogTransformationEnum getLogTransformation()
 	{
 		return logTransformation;
@@ -193,8 +192,6 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 		return null;
 	}
 
-	
-
 	@Override
 	@JsonIgnore
 	public List<String> getColumnHeader()
@@ -234,6 +231,64 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 			}
 		}
 		return columnHeader2;
+	}
+
+	/*
+	 * loop through each treatment and collapse to form
+	 * dosegroups. throughout the application dosegroups are used
+	 * to calcuate various metrics and define the x points for
+	 * dose response analysis.
+	 */
+	public List<DoseGroup> getDoseGroups()
+	{
+		List<DoseGroup> doseGroups = new ArrayList<>();
+		Float prevDose = null;
+		DoseGroup currDg = null;
+		// create the dosegroups list so we can use it to store corresponding dose response values.
+		for (Treatment t : getTreatments())
+		{
+			if (!t.getDose().equals(prevDose))
+			{
+				DoseGroup dg = new DoseGroup();
+				dg.setDose(t.getDose().doubleValue());
+				doseGroups.add(dg);
+				dg.incrementCount();
+				currDg = dg;
+			}
+			else
+				currDg.incrementCount();
+
+			prevDose = t.getDose();
+		}
+
+		int j = 0;
+
+		return doseGroups;
+	}
+
+	/*
+	 * get the dose groups while also calcualting the mean values for
+	 * correpsonding values in each dose group
+	 */
+	public List<DoseGroup> getDoseGroups(List<Float> responses)
+	{
+		List<DoseGroup> doseGroups = getDoseGroups();
+
+		int j = 0;
+
+		for (DoseGroup dg : doseGroups)
+		{
+			double sum = 0;
+			for (int i = 0; i < dg.getCount(); i++)
+			{
+				sum += responses.get(j).doubleValue();
+				j++;
+
+			}
+			dg.setResponseMean(sum / dg.getCount());
+		}
+
+		return doseGroups;
 	}
 
 	/*
