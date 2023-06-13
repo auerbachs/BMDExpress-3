@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
@@ -28,6 +29,8 @@ import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.model.stat.HillResult;
+import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponse;
+import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponseValues;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.serviceInterface.IProjectNavigationService;
@@ -337,6 +340,35 @@ public class ProjectNavigationService implements IProjectNavigationService
 					writer.write("\t" + result.getGenes() + "\t" + result.getGeneSymbols() + "\n");
 				}
 			}
+			writer.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile)
+	{
+		try
+		{
+			BMDStatisticsService bss = new BMDStatisticsService();
+			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResults, 100);
+			List<ModeledResponseValues> modeledResponses = modeledResponse.getValues();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
+			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
+			writer.write("\n");
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(modeledResponse.getHeader().stream().collect(Collectors.joining("\t"))).append("\n");
+			for (ModeledResponseValues result : modeledResponses)
+			{
+
+				sb.append(result.getProbeId()).append("\t").append(result.getModeledResponses().stream()
+						.map(String::valueOf).collect(Collectors.joining("\t"))).append("\n");
+			}
+			writer.write(sb.toString());
 			writer.close();
 		}
 		catch (IOException e)

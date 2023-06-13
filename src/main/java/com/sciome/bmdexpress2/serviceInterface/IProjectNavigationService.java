@@ -16,15 +16,29 @@ import com.sciome.filter.DataFilterPack;
 
 import javafx.collections.transformation.FilteredList;
 
-public interface IProjectNavigationService {
+public interface IProjectNavigationService
+{
 	public void assignArrayAnnotations(ChipInfo chipInfo, List<DoseResponseExperiment> experiments,
 			FileAnnotation fileAnnotation);
-	public String exportMultipleFiles(Map<String, Set<BMDExpressAnalysisDataSet>> header2rows, File selectedFile);
+
+	public String exportMultipleFiles(Map<String, Set<BMDExpressAnalysisDataSet>> header2rows,
+			File selectedFile);
+
 	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile);
-	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile);
-	public void exportFilteredResults(BMDExpressAnalysisDataSet bmdResults, FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack);
+
+	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment,
+			File selectedFile);
+
+	public void exportFilteredResults(BMDExpressAnalysisDataSet bmdResults,
+			FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack);
+
 	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile);
+
 	public Object[][] showGenesToProbeMatrix(DoseResponseExperiment doseResponseExperiment);
+
 	public Object[][] showProbeToGeneMatrix(DoseResponseExperiment doseResponseExperiment);
+
 	public void exportModelParameters(BMDProject bmdProject);
+
+	void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile);
 }

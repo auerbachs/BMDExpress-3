@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.commons.math3.linear.RealMatrix;
 
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
-import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponseValues;
+import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 
 public interface IBMDStatisticsService
@@ -20,7 +20,6 @@ public interface IBMDStatisticsService
 
 	public double calculateZScore(StatResult result, List<Double> doses, RealMatrix covarianceMatrix);
 
-	public List<ModeledResponseValues> generateResponsesBetweenDoseGroups(BMDResult bmdResults,
-			int betweenDose);
+	public ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults, int betweenDose);
 
 }

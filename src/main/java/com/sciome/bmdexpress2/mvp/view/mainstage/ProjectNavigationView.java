@@ -80,7 +80,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
-//treeViewContainer
+//treeViewContainer //Export Best Models
 public class ProjectNavigationView extends VBox implements IProjectNavigationView
 {
 
@@ -327,7 +327,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	}
 
 	/*
-	 * put the curve fit prefilter  result into the tree.
+	 * put the curve fit prefilter result into the tree.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -1153,6 +1153,19 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		});
 
 		ctxMenu.getItems().add(exportBestModelsMenuItem);
+
+		MenuItem exportModeledResponsesMenuItem = new MenuItem("Export All Modeled Responses");
+		exportModeledResponsesMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event)
+			{
+				handle_BMDResultExportModeledResponsesBestModels(bmdResults);
+			}
+		});
+
+		ctxMenu.getItems().add(exportModeledResponsesMenuItem);
+
 		return ctxMenu;
 
 	}
@@ -1503,6 +1516,16 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 			return;
 
 		presenter.exportBMDResultBestModel(bmdResults, selectedFile);
+	}
+
+	private void handle_BMDResultExportModeledResponsesBestModels(BMDResult bmdResults)
+	{
+		File selectedFile = getFileToSave("Export Modeled Responses " + bmdResults.toString(),
+				"ModeledResponses" + bmdResults.toString() + ".txt");
+		if (selectedFile == null)
+			return;
+
+		presenter.exportBMDResultModeledResponses(bmdResults, selectedFile);
 	}
 
 	@SuppressWarnings("rawtypes")

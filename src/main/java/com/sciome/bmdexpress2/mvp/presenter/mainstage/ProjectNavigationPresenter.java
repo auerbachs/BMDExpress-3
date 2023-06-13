@@ -764,6 +764,14 @@ public class ProjectNavigationPresenter
 	}
 
 	/*
+	 * write the best model for each probestat result to text file
+	 */
+	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile)
+	{
+		getService().exportBMDResultModeledResponses(bmdResults, selectedFile);
+	}
+
+	/*
 	 * show the probe to genes matrix
 	 */
 	public void showProbeToGeneMatrix(DoseResponseExperiment doseResponseExperiment)
