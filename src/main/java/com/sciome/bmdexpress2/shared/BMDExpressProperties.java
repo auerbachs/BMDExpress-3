@@ -430,6 +430,7 @@ public class BMDExpressProperties
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			tableInformation = new TableInformation();
 		}
 	}
 
