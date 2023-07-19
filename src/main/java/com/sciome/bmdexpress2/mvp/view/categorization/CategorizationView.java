@@ -114,6 +114,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	@FXML
 	private CheckBox deduplicateGeneSetsCheckBox;
 
+	@FXML
+	private CheckBox removeStepFunctionCheckBox;
+
 	// textfields
 
 	@FXML
@@ -350,6 +353,22 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		input.setRemoveGenesWithPrefilterAdjustedPValue(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
 		input.setEliminateGeneSetRedundancy(this.deduplicateGeneSetsCheckBox.isSelected());
 		input.setIdentifyConflictingProbeSets(this.conflictingProbeSetsCheckBox.isSelected());
+
+		input.setMinGenesInGeneset(this.filterMinGenesInSetCheckbox.isSelected());
+		input.setMaxGenesInGeneset(this.filterMaxGenesInSetCheckbox.isSelected());
+		try
+		{
+			input.setRemoveMaxGenesInGeneset(Integer.valueOf(this.maxGenesInSetTextBox.getText()));
+		}
+		catch (Exception e)
+		{}
+		try
+		{
+			input.setRemoveMinGenesInGeneset(Integer.valueOf(this.minGenesInSetTextBox.getText()));
+		}
+		catch (Exception e)
+		{}
+		input.setRemoveWithStepFunction(this.removeStepFunctionCheckBox.isSelected());
 
 		input.setRemoveBMDLessThanRSquaredNumber(Double.parseDouble(this.rSquaredFilterValue.getText()));
 
@@ -594,6 +613,14 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		this.conflictingProbeSetsCheckBox.setSelected(input.isIdentifyConflictingProbeSets());
 		this.deduplicateGeneSetsCheckBox.setSelected(input.isEliminateGeneSetRedundancy());
 
+		this.minGenesInSetTextBox.setText(String.valueOf(input.getRemoveMinGenesInGeneset()));
+		this.maxGenesInSetTextBox.setText(String.valueOf(input.getRemoveMaxGenesInGeneset()));
+
+		this.filterMinGenesInSetCheckbox.setSelected(input.isMinGenesInGeneset());
+		this.filterMaxGenesInSetCheckbox.setSelected(input.isMaxGenesInGeneset());
+
+		this.removeStepFunctionCheckBox.setSelected(input.isRemoveWithStepFunction());
+
 		this.rSquaredFilterValue.setText("" + input.getRemoveBMDLessThanRSquaredNumber());
 
 		this.bmdFilter2Value.setText("" + input.getRemoveBMDLessThanPValueNumber());
@@ -774,6 +801,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 		params.setRemoveMinGenesInSet(filterMinGenesInSetCheckbox.isSelected());
 		params.setMinGenesInSet(Integer.valueOf(this.minGenesInSetTextBox.getText()));
+		params.setRemoveStepFunction(this.removeStepFunctionCheckBox.isSelected());
 
 		params.setRemoveMaxGenesInSet(filterMaxGenesInSetCheckbox.isSelected());
 		params.setMaxGenesInSet(Integer.valueOf(this.maxGenesInSetTextBox.getText()));

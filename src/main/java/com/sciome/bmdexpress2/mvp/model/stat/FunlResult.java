@@ -29,6 +29,7 @@ public class FunlResult extends StatResult
 						"Funl Parameter 2", "Funl Parameter 3", "Funl Parameter 4", "Funl Parameter 5",
 						"Funl Parameter 6", "Funl Execution Complete", "Funl RSquared"));
 		header.addAll(residualHeader);
+		header.add("Funl Is Step Function");
 		return header;
 
 	}
@@ -59,6 +60,7 @@ public class FunlResult extends StatResult
 
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
+		returnList.add(getIsStepFunction());
 		return returnList;
 
 	}

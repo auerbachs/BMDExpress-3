@@ -60,6 +60,18 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				doseResponseExperiment.getLogTransformation());
 		BMDResult bMDResults = bMDSTool.bmdAnalyses();
 
+		// calculate step function
+		for (ProbeStatResult psr : bMDResults.getProbeStatResults())
+		{
+			for (StatResult statResult : psr.getStatResults())
+			{
+				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
+						inputParameters.getStepFunctionThreshold());
+				statResult.setIsStepFunction(isStep);
+			}
+
+		}
+
 		// someone canceled this. so just uncancel it before returning.
 		if (cancel)
 			cancel = false;
@@ -397,6 +409,17 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			analysisInfo.getNotes()
 					.add("Control Dose Adjustment: " + inputParameters.getControlDoseAdjustment());
 		bMDResults.setAnalysisInfo(analysisInfo);
+		// calculate step function
+		for (ProbeStatResult psr : bMDResults.getProbeStatResults())
+		{
+			for (StatResult statResult : psr.getStatResults())
+			{
+				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
+						inputParameters.getStepFunctionThreshold());
+				statResult.setIsStepFunction(isStep);
+			}
+
+		}
 
 		return bMDResults;
 
@@ -418,6 +441,51 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		return bmdAnalysisMA(processableData, inputParameters, modelsToRun, progressUpdater, true);
 	}
 
+	@Override
+	public boolean isStepFunction(List<Float> responses, StatResult bestResult,
+			DoseResponseExperiment doseResponseExp, double threshold)
+	{
+		if (bestResult != null)
+		{
+			List<DoseGroup> dosegroups = doseResponseExp.getDoseGroups(null);
+			double control = transform(bestResult.getResponseAt(dosegroups.get(0).getDose()),
+					doseResponseExp);
+			double last = transform(bestResult.getResponseAt(dosegroups.get(dosegroups.size() - 1).getDose()),
+					doseResponseExp);
+
+			double totalchange = Math.abs(last - control);
+
+			for (int i = 1; i < dosegroups.size(); i++)
+			{
+				double dg1 = transform(bestResult.getResponseAt(dosegroups.get(i - 1).getDose()),
+						doseResponseExp);
+				double dg2 = transform(bestResult.getResponseAt(dosegroups.get(i).getDose()),
+						doseResponseExp);
+
+				double change = Math.abs(dg2 - dg1);
+				if (change / totalchange >= threshold)
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	private double transform(Double responseMean, DoseResponseExperiment doseResponseExp)
+	{
+
+		// if (doseResponseExp.getLogTransformation().equals(LogTransformationEnum.BASE2))
+		// return Math.pow(2.0, responseMean);
+		// else if (doseResponseExp.getLogTransformation().equals(LogTransformationEnum.NONE))
+		return responseMean;
+		// else if (doseResponseExp.getLogTransformation().equals(LogTransformationEnum.NATURAL))
+		// return Math.pow(Math.E, responseMean);
+
+		// else
+		// return Math.pow(10.0, responseMean);
+
+	}
+
 	private BMDResult bmdAnalysisMA(IStatModelProcessable processableData,
 			ModelInputParameters inputParameters, List<StatModel> modelsToRun,
 			IBMDSToolProgress progressUpdater, boolean useMCMC)
@@ -435,6 +503,18 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			cancel = false;
 		if (bMDResults == null)
 			return null;
+
+		// calculate step function
+		for (ProbeStatResult psr : bMDResults.getProbeStatResults())
+		{
+			for (StatResult statResult : psr.getStatResults())
+			{
+				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
+						inputParameters.getStepFunctionThreshold());
+				statResult.setIsStepFunction(isStep);
+			}
+
+		}
 
 		bMDResults.setDoseResponseExperiment(doseResponseExperiment);
 		if (processableData instanceof PrefilterResults)

@@ -51,6 +51,7 @@ public class PolyResult extends StatResult
 
 		returnList.add(polyname + " RSquared");
 		returnList.addAll(residualHeader);
+		returnList.add(polyname + " Is Step Function");
 		return returnList;
 
 	}
@@ -71,6 +72,7 @@ public class PolyResult extends StatResult
 		}
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
+		returnList.add(getIsStepFunction());
 		return returnList;
 	}
 

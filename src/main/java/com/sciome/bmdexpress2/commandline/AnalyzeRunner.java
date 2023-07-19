@@ -494,6 +494,9 @@ public class AnalyzeRunner
 		if (bmdsConfig.getBmdsInputConfig().getBmdUBmdLEstimationMethod().equals(2))
 			inputParameters.setFast(true);
 
+		inputParameters.setStepFunctionThreshold(
+				bmdsConfig.getBmdsInputConfig().getStepFunctionThreshold().doubleValue());
+
 		// inputParameters.setIterations(bmdsConfig.getBmdsInputConfig().getMaxIterations());
 		// inputParameters.setConfidence(bmdsConfig.getBmdsInputConfig().getConfidenceLevel());
 		inputParameters.setBmrLevel(bmdsConfig.getBmdsInputConfig().getBmrFactor());
@@ -721,6 +724,8 @@ public class AnalyzeRunner
 		if (maConfig.getBmdsInputConfig().getBmdUBmdLEstimationMethod().equals(2))
 			inputParameters.setFast(true);
 
+		inputParameters.setStepFunctionThreshold(
+				maConfig.getBmdsInputConfig().getStepFunctionThreshold().doubleValue());
 		inputParameters.setBmrLevel(maConfig.getBmdsInputConfig().getBmrFactor());
 		inputParameters.setNumThreads(maConfig.getNumberOfThreads());
 

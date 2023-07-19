@@ -105,6 +105,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private ComboBox bMRFactorComboBox;
 	@FXML
 	private ComboBox bMRTypeComboBox;
+
+	@FXML
+	private ComboBox stepFunctionThresholdCombo;
+
 	// @FXML
 	// private ComboBox confidenceLevelComboBox;
 	// @FXML
@@ -438,6 +442,13 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		// Set String values
 		input.setBmrType(this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString());
 		input.setBMRFactor((BMRFactor) this.bMRFactorComboBox.getValue());
+
+		try
+		{
+			input.setStepFunctionThreshold(Double.valueOf(stepFunctionThresholdCombo.getValue().toString()));
+		}
+		catch (Exception e)
+		{}
 		// input.setRestrictPower((RestrictPowerEnum) this.restrictPowerComboBox.getValue());
 		// input.setRestrictHill((RestrictHillEnum) this.restrictHillComboBox.getValue());
 		input.setBestPolyModelTest((BestPolyModelTestEnum) this.bestPolyTestComboBox.getValue());
@@ -483,7 +494,13 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		// Set String values
 		maInput.setBmrType(this.bMRTypeComboBox.getSelectionModel().getSelectedItem().toString());
 		maInput.setBMRFactor((BMRFactor) this.bMRFactorComboBox.getValue());
-
+		try
+		{
+			maInput.setStepFunctionThreshold(
+					Double.valueOf(stepFunctionThresholdCombo.getValue().toString()));
+		}
+		catch (Exception e)
+		{}
 		if (!this.bmdULEstimationMethod.isDisable())
 			maInput.setUseWald(this.bmdULEstimationMethod.getValue().equals(WALD_METHOD_BMDUL_ESTIMATION));
 
@@ -962,6 +979,9 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 			bMRFactorComboBox.getSelectionModel().select(input.getBMRFactor());
+
+			stepFunctionThresholdCombo.getItems().addAll(initStepFunctionThreshold());
+			stepFunctionThresholdCombo.getSelectionModel().select(input.getStepFunctionThreshold());
 		}
 		else
 		{
@@ -992,6 +1012,10 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			else
 				bMRFactorComboBox.getItems().addAll(initBMRFactorsRelativeDeviation());
 			bMRFactorComboBox.getSelectionModel().select(maInput.getBMRFactor());
+
+			stepFunctionThresholdCombo.getItems().addAll(initStepFunctionThreshold());
+			stepFunctionThresholdCombo.getSelectionModel().select(maInput.getStepFunctionThreshold());
+
 		}
 
 		this.bMRTypeComboBox.getSelectionModel().selectedItemProperty().addListener(listener ->
@@ -1011,6 +1035,24 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 		ActionEvent event = new ActionEvent();
 		handle_HillCheckBox(event);
 		handle_PowerCheckBox(event);
+	}
+
+	private List<String> initStepFunctionThreshold()
+	{
+		List<String> doubles = new ArrayList<>();
+
+		doubles.add("0.5");
+		doubles.add("0.55");
+		doubles.add("0.6");
+		doubles.add("0.65");
+		doubles.add("0.7");
+		doubles.add("0.75");
+		doubles.add("0.8");
+		doubles.add("0.85");
+		doubles.add("0.9");
+		doubles.add("0.95");
+
+		return doubles;
 	}
 
 	private ModelInputParameters assignParameters()
@@ -1051,6 +1093,14 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 			inputParameters.setBmrLevel(Double.valueOf(
 					((BMRFactor) bMRFactorComboBox.getSelectionModel().getSelectedItem()).getValue()));
 			inputParameters.setNumThreads(Integer.valueOf(numberOfThreadsComboBox.getEditor().getText()));
+
+			try
+			{
+				inputParameters.setStepFunctionThreshold(
+						Double.valueOf(stepFunctionThresholdCombo.getValue().toString()));
+			}
+			catch (Exception e)
+			{}
 
 			inputParameters.setBmdlCalculation(1);
 			inputParameters.setBmdCalculation(1);

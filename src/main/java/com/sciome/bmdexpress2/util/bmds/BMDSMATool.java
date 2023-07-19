@@ -99,7 +99,7 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		notes.add("Operating System: " + System.getProperty("os.name"));
 		notes.add("BMDS Major Version: " + inputParameters.getBMDSMajorVersion());
 		notes.add("Model Averaging Method: " + inputParameters.getMAMethod());
-
+		notes.add("Step Function Calculation Threshold: " + inputParameters.getStepFunctionThreshold());
 		String modelsToFit = "";
 		if (modelsToRun != null)
 		{

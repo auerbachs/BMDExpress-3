@@ -33,6 +33,7 @@ public class ModelAveragingResult extends StatResult
 		returnList.add("MA RSquared");
 		List<String> residualHeader = getResidualHeader("MA Residual ");
 		returnList.addAll(residualHeader);
+		returnList.add("Is Step Function");
 		return returnList;
 
 	}
@@ -48,6 +49,7 @@ public class ModelAveragingResult extends StatResult
 		returnList.addAll(posteriorProbabilities);
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
+		returnList.add(getIsStepFunction());
 		return returnList;
 
 	}

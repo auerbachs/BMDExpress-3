@@ -3,10 +3,21 @@ package com.sciome.bmdexpress2.util.curvep;
 public class GCurvePInputParameters
 {
 
-	private float	BMR						= 1.349f;
-	private int		bootStraps				= 1000;
-	private float	pValueCutoff			= .05f;
-	private Double	controlDoseAdjustment	= null;
+	private float BMR = 1.349f;
+	private int bootStraps = 1000;
+	private float pValueCutoff = .05f;
+	private Double controlDoseAdjustment = null;
+	private double stepFunctionThreshold = 0.75;
+
+	public double getStepFunctionThreshold()
+	{
+		return stepFunctionThreshold;
+	}
+
+	public void setStepFunctionThreshold(double stepFunctionThreshold)
+	{
+		this.stepFunctionThreshold = stepFunctionThreshold;
+	}
 
 	public float getBMR()
 	{

@@ -2,8 +2,10 @@ package com.sciome.bmdexpress2.serviceInterface;
 
 import java.util.List;
 
+import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.util.bmds.IBMDSToolProgress;
 import com.sciome.bmdexpress2.util.bmds.ModelInputParameters;
 import com.sciome.bmdexpress2.util.bmds.ModelSelectionParameters;
@@ -26,4 +28,7 @@ public interface IBMDAnalysisService
 
 	public BMDResult bmdAnalysisMCMCMA(IStatModelProcessable processableData,
 			ModelInputParameters inputParameters, List<StatModel> modelsToRun, IBMDSToolProgress me);
+
+	boolean isStepFunction(List<Float> responses, StatResult bestResult,
+			DoseResponseExperiment doseResponseExp, double threshold);
 }

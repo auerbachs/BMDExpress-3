@@ -45,6 +45,7 @@ public class ExponentialResult extends StatResult
 
 		returnList.add(expName + " RSquared");
 		returnList.addAll(residualHeader);
+		returnList.add(expName + "Is Step Function");
 		return returnList;
 
 	}
@@ -77,6 +78,7 @@ public class ExponentialResult extends StatResult
 
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
+		returnList.add(getIsStepFunction());
 		return returnList;
 	}
 

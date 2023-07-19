@@ -212,10 +212,10 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 		if (inputParameters.getBmdMethod().equals(BMD_METHOD.ORIGINAL))
 		{
 			if (inputParameters.getKillTime() > 0)
-				notes.add("Destory Model Processes If Run More Than: " + inputParameters.getKillTime()
+				notes.add("Destr0y Model Processes If Run More Than: " + inputParameters.getKillTime()
 						+ " milliseconds.");
 			else
-				notes.add("Destory Model Processes If Run More Than: none");
+				notes.add("Destroy Model Processes If Run More Than: none");
 		}
 
 		notes.add("BMDL and BMDU Model Selection: "
@@ -223,6 +223,8 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 
 		if (inputParameters.getBmdMethod().equals(BMD_METHOD.TOXICR))
 			notes.add("Use Wald (Fast BMD): " + inputParameters.isFast());
+
+		notes.add("Step Function Calculation Threshold: " + inputParameters.getStepFunctionThreshold());
 
 		analysisInfo.setNotes(notes);
 

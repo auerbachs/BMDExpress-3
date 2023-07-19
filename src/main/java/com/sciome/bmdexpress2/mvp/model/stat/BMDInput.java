@@ -39,6 +39,7 @@ public class BMDInput
 	private FlagHillModelDoseEnum kParameterLessThan;
 	private BestModelSelectionWithFlaggedHillModelEnum bestModelWithFlaggedHill;
 	private BestModelSelectionBMDLandBMDU bestModelSelectionBMDLandBMDU;
+	private double stepFunctionThreshold = 0.75;
 
 	public BMDInput()
 	{
@@ -72,6 +73,18 @@ public class BMDInput
 		kParameterLessThan = FlagHillModelDoseEnum.ONE_THIRD_OF_LOWEST_DOSE;
 		bestModelWithFlaggedHill = BestModelSelectionWithFlaggedHillModelEnum.SELECT_NEXT_BEST_PVALUE_GREATER_OO5;
 		bestModelSelectionBMDLandBMDU = BestModelSelectionBMDLandBMDU.COMPUTE_AND_UTILIZE_BMD_BMDL;
+
+		stepFunctionThreshold = 0.75;
+	}
+
+	public double getStepFunctionThreshold()
+	{
+		return stepFunctionThreshold;
+	}
+
+	public void setStepFunctionThreshold(double stepFunctionThreshold)
+	{
+		this.stepFunctionThreshold = stepFunctionThreshold;
 	}
 
 	public boolean isPolyMonotonic()

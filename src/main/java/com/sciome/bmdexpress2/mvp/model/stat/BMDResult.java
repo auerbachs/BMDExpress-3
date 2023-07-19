@@ -75,6 +75,8 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String BEST_BMDU_BMDL_RATIO = "Best BMDU/BMDL";
 	public static final String BEST_BMDU_BMD_RATIO = "Best BMDU/BMD";
 	public static final String BEST_RSQUARED = "Best RSquared";
+
+	public static final String BEST_ISSTEPFUNCTION = "Best Is Step Function";
 	public static final String BEST_POLY = "Best Poly";
 	public static final String WAUC = "wAUC";
 	public static final String LOG_WAUC = "Log 2 wAUC";

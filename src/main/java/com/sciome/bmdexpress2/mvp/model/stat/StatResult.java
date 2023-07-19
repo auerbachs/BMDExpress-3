@@ -46,6 +46,8 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 
 	public double[] curveParameters;
 
+	private boolean isStepFunction;
+
 	// private double[] variances;
 
 	private Long id;
@@ -82,6 +84,16 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		if (BMD == -9999 || Double.isInfinite(BMD))
 			return Double.NaN;
 		return BMD;
+	}
+
+	public boolean getIsStepFunction()
+	{
+		return isStepFunction;
+	}
+
+	public void setIsStepFunction(boolean isStepFunction)
+	{
+		this.isStepFunction = isStepFunction;
 	}
 
 	public void setBMD(double bMD)

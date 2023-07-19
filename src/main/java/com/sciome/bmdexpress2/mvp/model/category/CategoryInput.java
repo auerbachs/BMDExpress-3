@@ -15,6 +15,10 @@ public class CategoryInput
 	private boolean removeGenesWithPrefilterAdjustedPValue;
 	private boolean eliminateGeneSetRedundancy;
 	private boolean identifyConflictingProbeSets;
+	private boolean minGenesInGeneset;
+	private boolean maxGenesInGeneset;
+
+	private boolean removeWithStepFunction;
 
 	private double removeBMDLessThanPValueNumber;
 	private double removeBMDLessThanRSquaredNumber;
@@ -26,6 +30,9 @@ public class CategoryInput
 	private double removeGenesWithPrefilterPValueNumber;
 	private double removeGenesWithPrefilterAdjustedPValueNumber;
 	private double correlationCutoffForConflictingProbeSets;
+
+	private int removeMinGenesInGeneset;
+	private int removeMaxGenesInGeneset;
 
 	public CategoryInput()
 	{
@@ -43,6 +50,10 @@ public class CategoryInput
 		this.removeGenesWithPrefilterAdjustedPValue = false;
 		this.eliminateGeneSetRedundancy = false;
 		this.identifyConflictingProbeSets = true;
+		removeWithStepFunction = false;
+
+		minGenesInGeneset = false;
+		maxGenesInGeneset = false;
 
 		this.removeBMDLessThanPValueNumber = 0.1;
 		this.removeBMDLessThanRSquaredNumber = 0.5;
@@ -54,6 +65,60 @@ public class CategoryInput
 		this.removeGenesWithPrefilterPValueNumber = 0.05;
 		this.removeGenesWithPrefilterAdjustedPValueNumber = 0.5;
 		this.correlationCutoffForConflictingProbeSets = 0.5;
+
+		removeMinGenesInGeneset = 20;
+		removeMaxGenesInGeneset = 500;
+
+	}
+
+	public boolean isMinGenesInGeneset()
+	{
+		return minGenesInGeneset;
+	}
+
+	public void setMinGenesInGeneset(boolean minGenesInGeneset)
+	{
+		this.minGenesInGeneset = minGenesInGeneset;
+	}
+
+	public boolean isMaxGenesInGeneset()
+	{
+		return maxGenesInGeneset;
+	}
+
+	public void setMaxGenesInGeneset(boolean maxGenesInGeneset)
+	{
+		this.maxGenesInGeneset = maxGenesInGeneset;
+	}
+
+	public boolean isRemoveWithStepFunction()
+	{
+		return removeWithStepFunction;
+	}
+
+	public void setRemoveWithStepFunction(boolean removeWithStepFunction)
+	{
+		this.removeWithStepFunction = removeWithStepFunction;
+	}
+
+	public int getRemoveMinGenesInGeneset()
+	{
+		return removeMinGenesInGeneset;
+	}
+
+	public void setRemoveMinGenesInGeneset(int removeMinGenesInGeneset)
+	{
+		this.removeMinGenesInGeneset = removeMinGenesInGeneset;
+	}
+
+	public int getRemoveMaxGenesInGeneset()
+	{
+		return removeMaxGenesInGeneset;
+	}
+
+	public void setRemoveMaxGenesInGeneset(int removeMaxGenesInGeneset)
+	{
+		this.removeMaxGenesInGeneset = removeMaxGenesInGeneset;
 	}
 
 	public boolean isRemoveBMDLessThanRSquared()

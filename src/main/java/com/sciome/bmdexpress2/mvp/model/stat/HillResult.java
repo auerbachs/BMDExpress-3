@@ -40,6 +40,7 @@ public class HillResult extends StatResult
 				"Hill BMD/BMDL", "Flagged Hill", "Hill Parameter Intercept", "Hill Parameter v",
 				"Hill Parameter n", "Hill Parameter k", "Hill Execution Complete", "Hill RSquared"));
 		header.addAll(residualHeader);
+		header.add("Hill Is Step Function");
 		return header;
 
 	}
@@ -66,6 +67,7 @@ public class HillResult extends StatResult
 
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
+		returnList.add(getIsStepFunction());
 		return returnList;
 
 	}

@@ -275,17 +275,19 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 		List<DoseGroup> doseGroups = getDoseGroups();
 
 		int j = 0;
-
-		for (DoseGroup dg : doseGroups)
+		if (responses != null)
 		{
-			double sum = 0;
-			for (int i = 0; i < dg.getCount(); i++)
+			for (DoseGroup dg : doseGroups)
 			{
-				sum += responses.get(j).doubleValue();
-				j++;
+				double sum = 0;
+				for (int i = 0; i < dg.getCount(); i++)
+				{
+					sum += responses.get(j).doubleValue();
+					j++;
 
+				}
+				dg.setResponseMean(sum / dg.getCount());
 			}
-			dg.setResponseMean(sum / dg.getCount());
 		}
 
 		return doseGroups;

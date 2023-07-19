@@ -18,6 +18,7 @@ public class CategoryAnalysisParameters
 	private boolean removeBMDPValueLessCuttoff = false;
 	private boolean removeBMDBMDLRatio = false;
 	private boolean removeNFoldBelowLowestDose = false;
+	private boolean removeStepFunction = false;
 	private double bmdBmdlRatio;
 	private double nFoldbelowLowestDoseValue;
 	private double pValueCutoff;
@@ -61,6 +62,16 @@ public class CategoryAnalysisParameters
 	public DefinedCategoryFileParameters getProbeFileParameters()
 	{
 		return probeFileParameters;
+	}
+
+	public boolean isRemoveStepFunction()
+	{
+		return removeStepFunction;
+	}
+
+	public void setRemoveStepFunction(boolean removeStepFunction)
+	{
+		this.removeStepFunction = removeStepFunction;
 	}
 
 	public boolean isRemoveMinGenesInSet()

@@ -19,6 +19,8 @@ public class BMDSInputConfig
 	// only relevant for the new version
 	private Integer bmdUBmdLEstimationMethod = 1; // 1 for epa profiling, 2 for Wald/EWald
 
+	private Double stepFunctionThreshold = 0.75;
+
 	// public Integer getMaxIterations()
 	// {
 	// return maxIterations;
@@ -68,6 +70,16 @@ public class BMDSInputConfig
 	// {
 	// this.restrictPower = restrict;
 	// }
+
+	public Double getStepFunctionThreshold()
+	{
+		return stepFunctionThreshold;
+	}
+
+	public void setStepFunctionThreshold(Double stepFunctionThreshold)
+	{
+		this.stepFunctionThreshold = stepFunctionThreshold;
+	}
 
 	public Integer getBmrType()
 	{

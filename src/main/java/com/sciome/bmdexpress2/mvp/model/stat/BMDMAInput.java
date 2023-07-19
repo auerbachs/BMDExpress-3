@@ -16,6 +16,7 @@ public class BMDMAInput
 	private String bmrType;
 	private int numThreads;
 	private boolean laplace;
+	private double stepFunctionThreshold;
 
 	public BMDMAInput()
 	{
@@ -29,8 +30,18 @@ public class BMDMAInput
 		numThreads = 1;
 		bmrType = "Standard Deviation";
 		useWald = false;
-
+		stepFunctionThreshold = 0.75;
 		BMRFactor = new BMRFactor("1.021 (5%)", "1.021");
+	}
+
+	public double getStepFunctionThreshold()
+	{
+		return stepFunctionThreshold;
+	}
+
+	public void setStepFunctionThreshold(double stepFunctionThreshold)
+	{
+		this.stepFunctionThreshold = stepFunctionThreshold;
 	}
 
 	public boolean isLaplace()

@@ -76,6 +76,18 @@ public class ModelInputParameters
 
 	private boolean isFast = false;
 
+	private double stepFunctionThreshold = 0.75;
+
+	public double getStepFunctionThreshold()
+	{
+		return stepFunctionThreshold;
+	}
+
+	public void setStepFunctionThreshold(double stepFunctionThreshold)
+	{
+		this.stepFunctionThreshold = stepFunctionThreshold;
+	}
+
 	public Double getPoly2BmrLevel()
 	{
 		return poly2BmrLevel;

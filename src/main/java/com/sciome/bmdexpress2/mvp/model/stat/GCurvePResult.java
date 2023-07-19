@@ -44,6 +44,8 @@ public class GCurvePResult extends StatResult
 				&& weightedStdDeviations.get(0) != null)
 			l.add("GCurveP Weighted STD DEV");
 
+		l.add("Is Step Function");
+
 		return l;
 
 	}
@@ -63,6 +65,7 @@ public class GCurvePResult extends StatResult
 				&& weightedStdDeviations.get(0) != null)
 			l.add(this.weightedStdDeviations.get(0));
 
+		l.add(getIsStepFunction());
 		return l;
 	}
 
