@@ -41,6 +41,8 @@ public abstract class CategoryConfig
 	private Boolean computeIVIVE = false;
 	private IVIVEConfig iviveConfig;
 
+	private Boolean removeStepFunction;
+
 	public String getInputName()
 	{
 		return inputName;
@@ -59,6 +61,16 @@ public abstract class CategoryConfig
 	public void setOutputName(String outputName)
 	{
 		this.outputName = outputName;
+	}
+
+	public Boolean getRemoveStepFunction()
+	{
+		return removeStepFunction;
+	}
+
+	public void setRemoveStepFunction(Boolean removeStepFunction)
+	{
+		this.removeStepFunction = removeStepFunction;
 	}
 
 	public Boolean getRemovePromiscuousProbes()

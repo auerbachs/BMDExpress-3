@@ -66,6 +66,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private Integer genesWithFoldChangeAboveValue;
 	private Integer genesWithPrefilterPValueAboveValue;
 	private Integer genesWithPrefilterAdjustedPValueAboveValue;
+	private Integer genesNotStepFunction;
 
 	private Integer genesThatPassedAllFilters;
 
@@ -345,6 +346,16 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	public void setGenesWithPrefilterAdjustedPValueAboveValue(Integer genesWithAdjustedPValueAboveValue)
 	{
 		this.genesWithPrefilterAdjustedPValueAboveValue = genesWithAdjustedPValueAboveValue;
+	}
+
+	public Integer getGenesNotStepFunction()
+	{
+		return genesNotStepFunction;
+	}
+
+	public void setGenesNotStepFunction(Integer genesNotStepFunction)
+	{
+		this.genesNotStepFunction = genesNotStepFunction;
 	}
 
 	public Double getPercentage()
@@ -1172,6 +1183,8 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 		if (genesWithPrefilterAdjustedPValueAboveValue != null)
 			headers.add("Genes with Prefilter Adjusted P-Value <=");
+		if (genesNotStepFunction != null)
+			headers.add("Genes Not Step Function");
 
 		headers.add("Genes That Passed All Filters");
 
@@ -1335,6 +1348,9 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 		if (genesWithPrefilterAdjustedPValueAboveValue != null)
 			row.add(genesWithPrefilterAdjustedPValueAboveValue);
+
+		if (genesNotStepFunction != null)
+			row.add(genesNotStepFunction);
 
 		row.add(getGenesThatPassedAllFilters());
 		row.add(this.fishersA);

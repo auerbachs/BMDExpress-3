@@ -335,6 +335,11 @@ public class CategoryMapTool
 			analysisInfo.getNotes().add("Max # of Genes in Gene Set: " + params.getMaxGenesInSet());
 		}
 
+		if (params.isRemoveStepFunction())
+		{
+			analysisInfo.getNotes().add("Remove Genes With Step Function: " + params.isRemoveStepFunction());
+		}
+
 		if (params.getDeduplicateGeneSets())
 		{
 			rstName += "_deduplicate";
@@ -588,6 +593,12 @@ public class CategoryMapTool
 				sub = bmdStats.checkAdjustedPValueBelowDose(subList, params.getAdjustedPValue(), subHashG2Ids,
 						removedProbes).size();
 				categoryAnalysisResult.setGenesWithPrefilterAdjustedPValueAboveValue(sub);
+			}
+
+			if (params.isRemoveStepFunction())
+			{
+				sub = bmdStats.checkStepFunction(subList, subHashG2Ids, removedProbes).size();
+				categoryAnalysisResult.setGenesNotStepFunction(sub);
 			}
 
 			subList = bmdStats.getFinalList(subList, subHashG2Ids, removedProbes);

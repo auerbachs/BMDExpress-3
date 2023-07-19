@@ -346,6 +346,11 @@ public class AnalyzeRunner
 		else
 			params.setDeduplicateGeneSets(catConfig.getDeduplicateGeneSets());
 
+		if (catConfig.getRemoveStepFunction() == null)
+			params.setRemoveStepFunction(false);
+		else
+			params.setRemoveStepFunction(catConfig.getRemoveStepFunction());
+
 		// Set IVIVE parameters
 		if (catConfig.getComputeIVIVE())
 		{
