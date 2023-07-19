@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -353,8 +354,21 @@ public class ProjectNavigationService implements IProjectNavigationService
 	{
 		try
 		{
+
+			FileAnnotation fileAnnotation = new FileAnnotation();
+			fileAnnotation.readArraysInfo();
+			fileAnnotation.setChip(bmdResults.getDoseResponseExperiment().getChip().getGeoID());
+
+			fileAnnotation.arrayProbesGenes();
+			fileAnnotation.arrayGenesSymbols();
+			fileAnnotation.getGene2ProbeHash();
+			Set<String> probeSet = fileAnnotation.getAllProbes();
+			if (probeSet == null)
+				probeSet = new HashSet<>();
+
 			BMDStatisticsService bss = new BMDStatisticsService();
-			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResults, 100);
+			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResults, 100,
+					probeSet);
 			List<ModeledResponseValues> modeledResponses = modeledResponse.getValues();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
 			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
@@ -376,6 +390,8 @@ public class ProjectNavigationService implements IProjectNavigationService
 			e.printStackTrace();
 		}
 	}
+
+	// Export All Modeled
 
 	@Override
 	public void exportModelParameters(BMDProject bmdProject)

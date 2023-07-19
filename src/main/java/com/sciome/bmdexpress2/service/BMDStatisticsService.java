@@ -26,7 +26,8 @@ public class BMDStatisticsService implements IBMDStatisticsService
 {
 
 	@Override
-	public ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults, int betweenDoses)
+	public ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults, int betweenDoses,
+			Set<String> probeSet)
 	{
 		ModeledResponse result = new ModeledResponse();
 		List<ModeledResponseValues> matrix = new ArrayList<>();
@@ -44,6 +45,8 @@ public class BMDStatisticsService implements IBMDStatisticsService
 		List<String> header = new ArrayList<>();
 
 		header.add("Probe ID");
+
+		Set<String> existingProbes = new HashSet<>();
 		for (int i = 0; i < doseGroups.size() - 1; i++)
 		{
 			DoseGroup dg = doseGroups.get(i);
@@ -58,13 +61,15 @@ public class BMDStatisticsService implements IBMDStatisticsService
 
 		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
 		{
+			String probeid = psr.getProbeResponse().getProbe().getId();
+			existingProbes.add(probeid);
 			StatResult bestie = psr.getBestStatResult();
 			if (bestie == null)
 				continue;
 
-			String probeid = psr.getProbeResponse().getProbe().getId();
 			ModeledResponseValues mrv = new ModeledResponseValues();
 			mrv.setProbeId(probeid);
+
 			mrv.setModeledResponses(new ArrayList<>());
 			matrix.add(mrv);
 			for (int i = 0; i < doseGroups.size() - 1; i++)
@@ -107,6 +112,30 @@ public class BMDStatisticsService implements IBMDStatisticsService
 				for (double j = dg.getDose(); j < nextDg.getDose(); j += step)
 					mrv.getModeledResponses().add(0.0);
 			}
+		}
+
+		// for probes on chip but not in experiment add 0's to the matrix
+		for (String probeid : probeSet)
+		{
+			if (existingProbes.contains(probeid))
+				continue;
+
+			ModeledResponseValues mrv = new ModeledResponseValues();
+			mrv.setProbeId(probeid);
+			mrv.setModeledResponses(new ArrayList<>());
+			matrix.add(mrv);
+
+			for (int i = 0; i < doseGroups.size() - 1; i++)
+			{
+				DoseGroup dg = doseGroups.get(i);
+				DoseGroup nextDg = doseGroups.get(i + 1);
+				double diff = nextDg.getDose() - dg.getDose();
+				// calculate the steps between.
+				double step = diff / betweenDoses;
+				for (double j = dg.getDose(); j < nextDg.getDose(); j += step)
+					mrv.getModeledResponses().add(0.0);
+			}
+
 		}
 
 		result.setValues(matrix);

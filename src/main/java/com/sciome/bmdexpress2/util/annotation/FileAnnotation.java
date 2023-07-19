@@ -38,11 +38,12 @@ import com.sciome.bmdexpress2.shared.BMDExpressProperties;
  */
 public class FileAnnotation extends ArrayAnnotation
 {
-	private String						baseURL, basePath;
-	private Hashtable<String, ChipInfo>	chipsHash	= new Hashtable<>();
-	private ChipInfo[]					probesChips;
-	public long							timeStamp	= 0;
-	private Set<String>					geneSet		= new HashSet<>();
+	private String baseURL, basePath;
+	private Hashtable<String, ChipInfo> chipsHash = new Hashtable<>();
+	private ChipInfo[] probesChips;
+	public long timeStamp = 0;
+	private Set<String> geneSet = new HashSet<>();
+	private Set<String> allProbesSet = new HashSet<>();
 
 	/**
 	 * class contructor used for local files and http url file download
@@ -55,6 +56,11 @@ public class FileAnnotation extends ArrayAnnotation
 		File file = new File("data");
 		basePath = file.getAbsolutePath();
 
+	}
+
+	public Set<String> getAllProbes()
+	{
+		return allProbesSet;
 	}
 
 	@Override
@@ -239,6 +245,10 @@ public class FileAnnotation extends ArrayAnnotation
 					if (!line.isEmpty())
 					{
 						String[] values = line.split(";"); // (probe;genes)
+
+						if (values.length > 0)
+							allProbesSet.add(values[0]);
+
 						String[] genes = values[1].split(tab);
 
 						for (int j = 0; j < genes.length; j++)

@@ -1,6 +1,7 @@
 package com.sciome.bmdexpress2.serviceInterface;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.math3.linear.RealMatrix;
 
@@ -20,6 +21,7 @@ public interface IBMDStatisticsService
 
 	public double calculateZScore(StatResult result, List<Double> doses, RealMatrix covarianceMatrix);
 
-	public ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults, int betweenDose);
+	ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults, int betweenDoses,
+			Set<String> probeSet);
 
 }
