@@ -26,8 +26,8 @@ public class BMDStatisticsService implements IBMDStatisticsService
 {
 
 	@Override
-	public ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults, int betweenDoses,
-			Set<String> probeSet)
+	public ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults,
+			List<ProbeStatResult> probeStatResults, int betweenDoses, Set<String> probeSet)
 	{
 		ModeledResponse result = new ModeledResponse();
 		List<ModeledResponseValues> matrix = new ArrayList<>();
@@ -59,7 +59,7 @@ public class BMDStatisticsService implements IBMDStatisticsService
 				header.add(String.valueOf(Precision.round(j, 5)));
 		}
 
-		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
+		for (ProbeStatResult psr : probeStatResults)
 		{
 			String probeid = psr.getProbeResponse().getProbe().getId();
 			existingProbes.add(probeid);

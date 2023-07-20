@@ -41,4 +41,11 @@ public interface IProjectNavigationService
 	public void exportModelParameters(BMDProject bmdProject);
 
 	void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile);
+
+	public void exportFilteredModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
+			FilteredList<BMDExpressAnalysisRow> filteredData, File selectedFile,
+			DataFilterPack filterDataPack);
+
+	public void exportBMDExpressAnalysisModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
+			File selectedFile);
 }

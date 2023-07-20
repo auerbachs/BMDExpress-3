@@ -1,5 +1,6 @@
 package com.sciome.bmdexpress2.mvp.view.mainstage.dataview;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.sciome.bmdexpress2.mvp.model.CombinedDataSet;
 import com.sciome.bmdexpress2.mvp.model.CombinedRow;
+import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview.BMDAnalysisResultsDataViewPresenter;
@@ -21,11 +23,16 @@ import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.annotation.pathway.PathwayToGeneSymbolUtility;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -36,40 +43,83 @@ import javafx.util.Callback;
 public class BMDAnalysisResultsDataView extends BMDExpressDataView<BMDResult> implements IBMDExpressDataView
 {
 
+	private static final String EXPORT_FILTERED_MODELED_RESPONSES = "Export Filtered Modeled Responses";
+	private static final String EXPORT_MODELED_RESPONSES = "Export Modeled Responses";
 	private BMDTableCallBack probeIDCellFactory;
+	private Button exportModeledResponses = null;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public BMDAnalysisResultsDataView(BMDExpressAnalysisDataSet bmdResult, String viewTypeKey)
 	{
 		super(ProbeStatResult.class, bmdResult, viewTypeKey);
 
+		if (enableFilterCheckBox.isSelected() && !(bmdAnalysisDataSet instanceof DoseResponseExperiment))
+		{
+			exportModeledResponses = new Button(EXPORT_FILTERED_MODELED_RESPONSES);
+			exportModeledResponses
+					.setTooltip(new Tooltip("Exports all modeled responses with filters applied"));
+		}
+		else
+		{
+			exportModeledResponses = new Button(EXPORT_MODELED_RESPONSES);
+			exportModeledResponses.setTooltip(new Tooltip("Exports all modeled responses"));
+		}
+		this.topHBox.getChildren().add(exportModeledResponses);
+
+		enableFilterCheckBox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue,
+					Boolean newValue)
+			{
+				if (newValue)
+				{
+					exportModeledResponses.setText(EXPORT_FILTERED_MODELED_RESPONSES);
+				}
+				else
+				{
+					exportModeledResponses.setText(EXPORT_MODELED_RESPONSES);
+				}
+			}
+		});
+
+		exportModeledResponses.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event)
+			{
+				exportModeledResponses();
+			}
+		});
+
 		try
 		{
 			presenter = new BMDAnalysisResultsDataViewPresenter(this, BMDExpressEventBus.getInstance());
-			
+
 			if (bmdResult.getColumnHeader().size() == 0)
 				return;
 
-			//Add any new columns to the map and list
+			// Add any new columns to the map and list
 			columnMap = BMDExpressProperties.getInstance().getTableInformation().getBmdMap();
 			columnOrder = BMDExpressProperties.getInstance().getTableInformation().getBmdOrder();
-			for(String header : bmdResult.getColumnHeader()) {
-				if(!columnMap.containsKey(header)) {
+			for (String header : bmdResult.getColumnHeader())
+			{
+				if (!columnMap.containsKey(header))
+				{
 					columnMap.put(header, true);
 				}
-				if(!columnOrder.contains(header)) {
-					if(header.equals("Analysis"))
+				if (!columnOrder.contains(header))
+				{
+					if (header.equals("Analysis"))
 						columnOrder.add(0, header);
 					else
 						columnOrder.add(header);
 				}
 			}
-			
+
 			setUpTableView(bmdResult);
 			setUpTableListeners();
 
 			setCellFactory();
-			
+
 			presenter.showVisualizations(bmdResult);
 		}
 		catch (Exception e)
@@ -79,12 +129,14 @@ public class BMDAnalysisResultsDataView extends BMDExpressDataView<BMDResult> im
 	}
 
 	@Override
-	protected void setCellFactory() {
-		if(columnMap.get("Probe ID")) {
+	protected void setCellFactory()
+	{
+		if (columnMap.get("Probe ID"))
+		{
 			int probeIDColumn = columnOrder.indexOf("Probe ID");
-			
+
 			TableColumn tc = tableView.getColumns().get(probeIDColumn);
-	
+
 			if (bmdAnalysisDataSet instanceof BMDResult)
 			{
 				// Create a CellFactory for the probeid. The reason for this is to allow us to detect user
@@ -101,7 +153,7 @@ public class BMDAnalysisResultsDataView extends BMDExpressDataView<BMDResult> im
 			}
 		}
 	}
-	
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void close()
@@ -133,10 +185,30 @@ public class BMDAnalysisResultsDataView extends BMDExpressDataView<BMDResult> im
 		return new BMDAnalysisResultsDataVisualizationView();
 	}
 
+	private void exportModeledResponses()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append(bmdAnalysisDataSet.getName());
+		// Dose response experiments can't be filtered
+		if (enableFilterCheckBox.isSelected())
+			builder.append("_filtered");
+		builder.append(".txt");
+
+		File selectedFile = getFileToSave(bmdAnalysisDataSet.getName(), builder.toString());
+		if (selectedFile == null)
+			return;
+
+		if (enableFilterCheckBox.isSelected() && !(bmdAnalysisDataSet instanceof DoseResponseExperiment))
+			presenter.exportModeledResponseFilteredResults(bmdAnalysisDataSet, filteredData, selectedFile,
+					filtrationNode.getFilterDataPack());
+		else
+			presenter.exportModeledResponseResults(bmdAnalysisDataSet, selectedFile);
+	}
+
 	private class BMDTableCallBack implements Callback<TableColumn, TableCell>
 	{
-		BMDResult					bmdResult;
-		private CurveFitView	modelGraphics;
+		BMDResult bmdResult;
+		private CurveFitView modelGraphics;
 
 		public BMDTableCallBack(BMDResult bmdr)
 		{

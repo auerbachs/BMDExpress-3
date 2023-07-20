@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
+import com.sciome.bmdexpress2.mvp.model.CombinedDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
@@ -349,48 +350,6 @@ public class ProjectNavigationService implements IProjectNavigationService
 		}
 	}
 
-	@Override
-	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile)
-	{
-		try
-		{
-
-			FileAnnotation fileAnnotation = new FileAnnotation();
-			fileAnnotation.readArraysInfo();
-			fileAnnotation.setChip(bmdResults.getDoseResponseExperiment().getChip().getGeoID());
-
-			fileAnnotation.arrayProbesGenes();
-			fileAnnotation.arrayGenesSymbols();
-			fileAnnotation.getGene2ProbeHash();
-			Set<String> probeSet = fileAnnotation.getAllProbes();
-			if (probeSet == null)
-				probeSet = new HashSet<>();
-
-			BMDStatisticsService bss = new BMDStatisticsService();
-			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResults, 100,
-					probeSet);
-			List<ModeledResponseValues> modeledResponses = modeledResponse.getValues();
-			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
-			writer.write("\n");
-
-			StringBuilder sb = new StringBuilder();
-			sb.append(modeledResponse.getHeader().stream().collect(Collectors.joining("\t"))).append("\n");
-			for (ModeledResponseValues result : modeledResponses)
-			{
-
-				sb.append(result.getProbeId()).append("\t").append(result.getModeledResponses().stream()
-						.map(String::valueOf).collect(Collectors.joining("\t"))).append("\n");
-			}
-			writer.write(sb.toString());
-			writer.close();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
-
 	// Export All Modeled
 
 	@Override
@@ -600,4 +559,153 @@ public class ProjectNavigationService implements IProjectNavigationService
 
 		return sb.toString();
 	}
+
+	@Override
+	public void exportFilteredModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
+			FilteredList<BMDExpressAnalysisRow> filteredData, File selectedFile,
+			DataFilterPack filterDataPack)
+	{
+
+		StringBuilder filterInformation = new StringBuilder();
+		filterInformation.append("Filter information: \n");
+		for (DataFilter filter : filterDataPack.getDataFilters())
+		{
+			if (filter.getDataFilterType().equals(DataFilterType.CONTAINS)
+					|| filter.getDataFilterType().equals(DataFilterType.BETWEEN))
+				filterInformation.append(filter.toString() + "\n");
+			else
+				filterInformation.append(filter.getKey() + "  " + filter.getDataFilterType().name() + " "
+						+ filter.getValues().get(0) + "\n");
+		}
+		filterInformation.append("\n");
+
+		exportModledResponsesFromDataView(bmdAnalysisDataSet, filteredData);
+
+	}
+
+	@Override
+	public void exportBMDExpressAnalysisModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
+			File selectedFile)
+	{
+		exportModledResponsesFromDataView(bmdAnalysisDataSet, bmdAnalysisDataSet.getAnalysisRows());
+	}
+
+	private void exportModledResponsesFromDataView(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
+			List<BMDExpressAnalysisRow> rowsOfData)
+	{
+		List<BMDResult> bmdResults = new ArrayList<>();
+		boolean isCombined = false;
+
+		if (bmdAnalysisDataSet instanceof CombinedDataSet)
+		{
+			for (Object obj : ((CombinedDataSet) bmdAnalysisDataSet).getObjects())
+				bmdResults.add((BMDResult) obj);
+			isCombined = true;
+		}
+		else
+			bmdResults.add((BMDResult) bmdAnalysisDataSet.getObject());
+
+		Map<String, Set<String>> analysisToProbeSetMap = new HashMap<>();
+		Map<String, List<ProbeStatResult>> analysisToProbeStatResultMap = new HashMap<>();
+		Map<String, BMDResult> analysisToBMDResultResultMap = new HashMap<>();
+		for (BMDResult result : bmdResults)
+		{
+			analysisToProbeSetMap.put(result.getName(),
+					this.getProbeSetFromAnnotations(result.getDoseResponseExperiment()));
+			analysisToProbeStatResultMap.put(result.getName(), new ArrayList<>());
+			analysisToBMDResultResultMap.put(result.getName(), result);
+		}
+
+		if (isCombined)
+		{
+			for (BMDExpressAnalysisRow row : rowsOfData)
+			{
+				String analysis = row.getRow().get(0).toString();
+				analysisToProbeStatResultMap.get(analysis).add((ProbeStatResult) row.getObject());
+			}
+		}
+		else
+		{
+			for (BMDExpressAnalysisRow row : rowsOfData)
+			{
+				analysisToProbeStatResultMap.get(bmdResults.get(0).getName())
+						.add((ProbeStatResult) row.getObject());
+			}
+		}
+
+		BMDStatisticsService bss = new BMDStatisticsService();
+
+		for (BMDResult bmdResult : bmdResults)
+		{
+
+			Set<String> probeSet = analysisToProbeSetMap.get(bmdResult.getName());
+			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResult,
+					analysisToProbeStatResultMap.get(bmdResult.getName()), 10, probeSet);
+
+			String towrite = getModeledResponseRows(modeledResponse,
+					(bmdResults.size() > 1) ? bmdResult.getName() : null);
+			System.out.println();
+		}
+
+	}
+
+	@Override
+	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile)
+	{
+		try
+		{
+			BMDStatisticsService bss = new BMDStatisticsService();
+			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
+			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
+			writer.write("\n");
+
+			Set<String> probeSet = getProbeSetFromAnnotations(bmdResults.getDoseResponseExperiment());
+			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResults,
+					bmdResults.getProbeStatResults(), 10, probeSet);
+			writer.write(getModeledResponseRows(modeledResponse, null));
+
+			writer.close();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private String getModeledResponseRows(ModeledResponse modeledResponse, String analysis)
+	{
+
+		StringBuilder sb = new StringBuilder();
+		if (analysis != null)
+			sb.append("Analysis").append("\t");
+		sb.append(modeledResponse.getHeader().stream().collect(Collectors.joining("\t"))).append("\n");
+		for (ModeledResponseValues result : modeledResponse.getValues())
+		{
+
+			if (analysis != null)
+				sb.append(analysis).append("\t");
+			sb.append(result.getProbeId()).append("\t").append(result.getModeledResponses().stream()
+					.map(String::valueOf).collect(Collectors.joining("\t"))).append("\n");
+		}
+
+		return sb.toString();
+	}
+
+	private Set<String> getProbeSetFromAnnotations(DoseResponseExperiment doseexp)
+	{
+		FileAnnotation fileAnnotation = new FileAnnotation();
+		fileAnnotation.readArraysInfo();
+		fileAnnotation.setChip(doseexp.getChip().getGeoID());
+
+		fileAnnotation.arrayProbesGenes();
+		fileAnnotation.arrayGenesSymbols();
+		fileAnnotation.getGene2ProbeHash();
+		Set<String> probeSet = fileAnnotation.getAllProbes();
+		if (probeSet == null)
+			probeSet = new HashSet<>();
+
+		return probeSet;
+
+	}
+
 }

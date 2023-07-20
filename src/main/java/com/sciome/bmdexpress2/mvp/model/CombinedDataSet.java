@@ -8,11 +8,11 @@ import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 public class CombinedDataSet extends BMDExpressAnalysisDataSet
 {
 
-	List<String>				header;
-	List<BMDExpressAnalysisRow>	rows;
-	List<Object>				objects;
-	AnalysisInfo				analysisInfo	= new AnalysisInfo();
-	String						name;
+	List<String> header;
+	List<BMDExpressAnalysisRow> rows;
+	List<Object> objects;
+	AnalysisInfo analysisInfo = new AnalysisInfo();
+	String name;
 
 	public CombinedDataSet(List<String> header, String name)
 	{
@@ -69,6 +69,11 @@ public class CombinedDataSet extends BMDExpressAnalysisDataSet
 
 	@Override
 	public Object getObject()
+	{
+		return objects;
+	}
+
+	public List<Object> getObjects()
 	{
 		return objects;
 	}

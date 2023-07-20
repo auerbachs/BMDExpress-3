@@ -16,9 +16,11 @@ import com.sciome.filter.DataFilterPack;
 
 import javafx.collections.transformation.FilteredList;
 
-public abstract class BMDExpressDataViewPresenter<T> extends ServicePresenterBase<IBMDExpressDataView, IProjectNavigationService>
+public abstract class BMDExpressDataViewPresenter<T>
+		extends ServicePresenterBase<IBMDExpressDataView, IProjectNavigationService>
 {
-	public BMDExpressDataViewPresenter(IBMDExpressDataView view, IProjectNavigationService service, BMDExpressEventBus eventBus)
+	public BMDExpressDataViewPresenter(IBMDExpressDataView view, IProjectNavigationService service,
+			BMDExpressEventBus eventBus)
 	{
 		super(view, service, eventBus);
 	}
@@ -29,18 +31,39 @@ public abstract class BMDExpressDataViewPresenter<T> extends ServicePresenterBas
 		results.add(dataSet);
 		getEventBus().post(new ShowBMDAnalysisDataSetVisualizationsEvent(results));
 	}
-	
-	public void exportResults(BMDExpressAnalysisDataSet bmdResults, File selectedFile) {
-		//Dose response experiments can't be filtered so use exporting from project navigation service instead
-		if(bmdResults instanceof DoseResponseExperiment) {
-			getService().exportDoseResponseExperiment((DoseResponseExperiment)bmdResults, selectedFile);
-		} else {
+
+	public void exportResults(BMDExpressAnalysisDataSet bmdResults, File selectedFile)
+	{
+		// Dose response experiments can't be filtered so use exporting from project navigation service
+		// instead
+		if (bmdResults instanceof DoseResponseExperiment)
+		{
+			getService().exportDoseResponseExperiment((DoseResponseExperiment) bmdResults, selectedFile);
+		}
+		else
+		{
 			getService().exportBMDExpressAnalysisDataSet(bmdResults, selectedFile);
 		}
 	}
-	
-	public void exportFilteredResults(BMDExpressAnalysisDataSet bmdResults, FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack)
+
+	public void exportFilteredResults(BMDExpressAnalysisDataSet bmdResults,
+			FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack)
 	{
 		getService().exportFilteredResults(bmdResults, filteredResults, selectedFile, pack);
+	}
+
+	public void exportModeledResponseFilteredResults(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
+			FilteredList<BMDExpressAnalysisRow> filteredData, File selectedFile,
+			DataFilterPack filterDataPack)
+	{
+		getService().exportFilteredModeledResponses(bmdAnalysisDataSet, filteredData, selectedFile,
+				filterDataPack);
+
+	}
+
+	public void exportModeledResponseResults(BMDExpressAnalysisDataSet bmdAnalysisDataSet, File selectedFile)
+	{
+		getService().exportBMDExpressAnalysisModeledResponses(bmdAnalysisDataSet, selectedFile);
+
 	}
 }
