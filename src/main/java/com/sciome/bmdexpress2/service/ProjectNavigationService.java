@@ -579,7 +579,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 		}
 		filterInformation.append("\n");
 
-		exportModledResponsesFromDataView(bmdAnalysisDataSet, filteredData);
+		exportModledResponsesFromDataView(bmdAnalysisDataSet, filteredData, selectedFile);
 
 	}
 
@@ -587,11 +587,12 @@ public class ProjectNavigationService implements IProjectNavigationService
 	public void exportBMDExpressAnalysisModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
 			File selectedFile)
 	{
-		exportModledResponsesFromDataView(bmdAnalysisDataSet, bmdAnalysisDataSet.getAnalysisRows());
+		exportModledResponsesFromDataView(bmdAnalysisDataSet, bmdAnalysisDataSet.getAnalysisRows(),
+				selectedFile);
 	}
 
 	private void exportModledResponsesFromDataView(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
-			List<BMDExpressAnalysisRow> rowsOfData)
+			List<BMDExpressAnalysisRow> rowsOfData, File selectedFile)
 	{
 		List<BMDResult> bmdResults = new ArrayList<>();
 		boolean isCombined = false;
@@ -635,6 +636,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 
 		BMDStatisticsService bss = new BMDStatisticsService();
 
+		int index = 0;
 		for (BMDResult bmdResult : bmdResults)
 		{
 
@@ -644,7 +646,27 @@ public class ProjectNavigationService implements IProjectNavigationService
 
 			String towrite = getModeledResponseRows(modeledResponse,
 					(bmdResults.size() > 1) ? bmdResult.getName() : null);
-			System.out.println();
+
+			File theFile = selectedFile;
+			if (index > 0) // use selected file
+				theFile = new File(selectedFile.getAbsolutePath() + "." + index + ".txt");
+
+			try
+			{
+				BufferedWriter writer = new BufferedWriter(new FileWriter(theFile), 1024 * 2000);
+				writer.write(String.join("\n", bmdResult.getAnalysisInfo().getNotes()));
+				writer.write("\n");
+
+				writer.write(towrite);
+
+				writer.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+
+			index++;
 		}
 
 	}
