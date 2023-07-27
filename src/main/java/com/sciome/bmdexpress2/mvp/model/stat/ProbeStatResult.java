@@ -209,6 +209,7 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(Double.NaN);
 			row.add(Double.NaN);
 			row.add(Double.NaN);
+			row.add(Double.NaN);
 		}
 		else
 		{
@@ -225,6 +226,7 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(bestStatResult.getBMDUdiffBMD());
 			row.add(bestStatResult.getRSquared());
 			row.add(bestStatResult.getIsStepFunction());
+			row.add(bestStatResult.isStepWithBMDLessLowest());
 		}
 
 		if (wAUC != null)
@@ -329,6 +331,7 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		columnHeader.add(BMDResult.BEST_BMDU_BMD_RATIO);
 		columnHeader.add(BMDResult.BEST_RSQUARED);
 		columnHeader.add(BMDResult.BEST_ISSTEPFUNCTION);
+		columnHeader.add(BMDResult.BEST_ISSTEPFUNCTION_WITH_BMD_LESS_THAN_LOWEST);
 
 		return columnHeader;
 	}

@@ -51,7 +51,7 @@ public class PolyResult extends StatResult
 
 		returnList.add(polyname + " RSquared");
 		returnList.addAll(residualHeader);
-		returnList.add(polyname + " Is Step Function");
+		returnList.add(polyname + "  Is Step Function With BMD Less Than Lowest Dose");
 		return returnList;
 
 	}
@@ -72,7 +72,7 @@ public class PolyResult extends StatResult
 		}
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
-		returnList.add(getIsStepFunction());
+		returnList.add(isStepWithBMDLessLowest());
 		return returnList;
 	}
 

@@ -27,7 +27,7 @@ public class PowerResult extends StatResult
 				"Power BMD/BMDL", "Power Parameter control", "Power Parameter slope", "Power Parameter power",
 				"Power Execution Complete", "Power RSquared"));
 		header.addAll(residualHeader);
-		header.add("Power Is Step Function");
+		header.add("Power Is Step Function With BMD Less Than Lowest Dose");
 
 		return header;
 
@@ -52,7 +52,7 @@ public class PowerResult extends StatResult
 
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
-		returnList.add(getIsStepFunction());
+		returnList.add(isStepWithBMDLessLowest());
 		return returnList;
 	}
 

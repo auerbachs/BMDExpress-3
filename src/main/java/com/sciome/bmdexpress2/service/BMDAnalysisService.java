@@ -67,7 +67,10 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			{
 				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
+
 				statResult.setIsStepFunction(isStep);
+				statResult.setStepWithBMDLessLowest(
+						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
 			}
 
 		}
@@ -417,6 +420,8 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
 				statResult.setIsStepFunction(isStep);
+				statResult.setStepWithBMDLessLowest(
+						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
 			}
 
 		}
@@ -471,6 +476,19 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		return false;
 	}
 
+	public boolean isStepFunctionWithBMDLessThanLowest(StatResult bestResult, boolean isStep,
+			DoseResponseExperiment doseResponseExp)
+	{
+
+		List<DoseGroup> dosegroups = doseResponseExp.getDoseGroups(null);
+
+		if (bestResult != null && bestResult.getBMD() != -9999 && dosegroups.size() >= 2
+				&& bestResult.getBMD() < dosegroups.get(1).getDose() && isStep)
+			return true;
+
+		return false;
+	}
+
 	private double transform(Double responseMean, DoseResponseExperiment doseResponseExp)
 	{
 
@@ -512,6 +530,8 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
 				statResult.setIsStepFunction(isStep);
+				statResult.setStepWithBMDLessLowest(
+						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
 			}
 
 		}

@@ -47,6 +47,7 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public double[] curveParameters;
 
 	private boolean isStepFunction;
+	private boolean isStepWithBMDLessLowest;
 
 	// private double[] variances;
 
@@ -84,6 +85,16 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		if (BMD == -9999 || Double.isInfinite(BMD))
 			return Double.NaN;
 		return BMD;
+	}
+
+	public boolean isStepWithBMDLessLowest()
+	{
+		return isStepWithBMDLessLowest;
+	}
+
+	public void setStepWithBMDLessLowest(boolean isStepWithBMDLessLowest)
+	{
+		this.isStepWithBMDLessLowest = isStepWithBMDLessLowest;
 	}
 
 	public boolean getIsStepFunction()

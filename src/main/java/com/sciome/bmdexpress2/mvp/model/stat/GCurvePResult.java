@@ -44,7 +44,7 @@ public class GCurvePResult extends StatResult
 				&& weightedStdDeviations.get(0) != null)
 			l.add("GCurveP Weighted STD DEV");
 
-		l.add("Is Step Function");
+		l.add("GCurveP Is Step Function With BMD Less Than Lowest Dose");
 
 		return l;
 
@@ -65,7 +65,7 @@ public class GCurvePResult extends StatResult
 				&& weightedStdDeviations.get(0) != null)
 			l.add(this.weightedStdDeviations.get(0));
 
-		l.add(getIsStepFunction());
+		l.add(isStepWithBMDLessLowest());
 		return l;
 	}
 

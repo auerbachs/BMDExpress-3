@@ -47,6 +47,8 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 	private transient List<Object> columnHeader2;
 	private Long id;
 
+	private List<DoseGroup> doseGroups;
+
 	public static final String EXPRESSION_VALUES = "Expression Value";
 
 	@JsonIgnore
@@ -241,7 +243,9 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 	 */
 	public List<DoseGroup> getDoseGroups()
 	{
-		List<DoseGroup> doseGroups = new ArrayList<>();
+		if (doseGroups != null)
+			return doseGroups;
+		doseGroups = new ArrayList<>();
 		Float prevDose = null;
 		DoseGroup currDg = null;
 		// create the dosegroups list so we can use it to store corresponding dose response values.
