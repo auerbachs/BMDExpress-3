@@ -1512,6 +1512,50 @@ public class BMDStatatistics
 		return pcGenes;
 	}
 
+	public Vector<String> checkStepFunctionWithBMDLower(Vector<String> vectGenes,
+			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes)
+	{
+		Vector<String> pcGenes = new Vector<String>();
+
+		if (vectGenes != null && vectGenes.size() > 0)
+		{
+			for (int i = vectGenes.size() - 1; i >= 0; i--)
+			{
+				String geneId = vectGenes.get(i);
+				Vector<String> probes = new Vector<>(subHashG2Ids.get(geneId));
+
+				if (probes != null && probes.size() > 0)
+				{
+					for (int j = probes.size() - 1; j >= 0; j--)
+					{
+						String st = probes.get(j);
+
+						ProbeStatResult probeStatResult = this.probeGeneMaps.getStatResultMap().get(st);
+						if (probeStatResult == null)
+							continue;
+
+						if (probeStatResult.getBestStatResult().isStepWithBMDLessLowest())
+						{
+							probes.remove(st);
+							removedProbes.add(st);
+						}
+					}
+				}
+
+				if (probes == null || probes.isEmpty())
+				{
+					// vectGenes.remove(geneId);
+				}
+				else
+				{
+					pcGenes.add(geneId);
+				}
+			}
+		}
+
+		return pcGenes;
+	}
+
 	public Vector<String> getFinalList(Vector<String> vectGenes, Hashtable<String, Vector> subHashG2Ids,
 			Set<String> removedProbes)
 	{

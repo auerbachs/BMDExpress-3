@@ -42,6 +42,7 @@ public abstract class CategoryConfig
 	private IVIVEConfig iviveConfig;
 
 	private Boolean removeStepFunction;
+	private Boolean removeStepFunctionWithBMDLower;
 
 	public String getInputName()
 	{
@@ -71,6 +72,16 @@ public abstract class CategoryConfig
 	public void setRemoveStepFunction(Boolean removeStepFunction)
 	{
 		this.removeStepFunction = removeStepFunction;
+	}
+
+	public Boolean getRemoveStepFunctionWithBMDLower()
+	{
+		return removeStepFunctionWithBMDLower;
+	}
+
+	public void setRemoveStepFunctionWithBMDLower(Boolean removeStepFunctionWithBMDLower)
+	{
+		this.removeStepFunctionWithBMDLower = removeStepFunctionWithBMDLower;
 	}
 
 	public Boolean getRemovePromiscuousProbes()

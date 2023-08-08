@@ -351,6 +351,11 @@ public class AnalyzeRunner
 		else
 			params.setRemoveStepFunction(catConfig.getRemoveStepFunction());
 
+		if (catConfig.getRemoveStepFunctionWithBMDLower() == null)
+			params.setRemoveStepFunctionWithBMDLower(false);
+		else
+			params.setRemoveStepFunctionWithBMDLower(catConfig.getRemoveStepFunction());
+
 		// Set IVIVE parameters
 		if (catConfig.getComputeIVIVE())
 		{

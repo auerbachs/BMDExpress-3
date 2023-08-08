@@ -340,6 +340,12 @@ public class CategoryMapTool
 			analysisInfo.getNotes().add("Remove Genes With Step Function: " + params.isRemoveStepFunction());
 		}
 
+		if (params.isRemoveStepFunctionWithBMDLower())
+		{
+			analysisInfo.getNotes().add("Remove Genes With Step Function Lower Than First Dose: "
+					+ params.isRemoveStepFunctionWithBMDLower());
+		}
+
 		if (params.getDeduplicateGeneSets())
 		{
 			rstName += "_deduplicate";
@@ -599,6 +605,12 @@ public class CategoryMapTool
 			{
 				sub = bmdStats.checkStepFunction(subList, subHashG2Ids, removedProbes).size();
 				categoryAnalysisResult.setGenesNotStepFunction(sub);
+			}
+
+			if (params.isRemoveStepFunctionWithBMDLower())
+			{
+				sub = bmdStats.checkStepFunctionWithBMDLower(subList, subHashG2Ids, removedProbes).size();
+				categoryAnalysisResult.setGenesNotStepFunctionWithBMDLower(sub);
 			}
 
 			subList = bmdStats.getFinalList(subList, subHashG2Ids, removedProbes);

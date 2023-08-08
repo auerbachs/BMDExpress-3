@@ -19,6 +19,7 @@ public class CategoryInput
 	private boolean maxGenesInGeneset;
 
 	private boolean removeWithStepFunction;
+	private boolean removeWithStepFunctionWithBMDLower;
 
 	private double removeBMDLessThanPValueNumber;
 	private double removeBMDLessThanRSquaredNumber;
@@ -51,6 +52,7 @@ public class CategoryInput
 		this.eliminateGeneSetRedundancy = false;
 		this.identifyConflictingProbeSets = true;
 		removeWithStepFunction = false;
+		removeWithStepFunctionWithBMDLower = false;
 
 		minGenesInGeneset = false;
 		maxGenesInGeneset = false;
@@ -99,6 +101,16 @@ public class CategoryInput
 	public void setRemoveWithStepFunction(boolean removeWithStepFunction)
 	{
 		this.removeWithStepFunction = removeWithStepFunction;
+	}
+
+	public boolean isRemoveWithStepFunctionWithBMDLower()
+	{
+		return removeWithStepFunctionWithBMDLower;
+	}
+
+	public void setRemoveWithStepFunctionWithBMDLower(boolean removeWithStepFunctionWithBMDLower)
+	{
+		this.removeWithStepFunctionWithBMDLower = removeWithStepFunctionWithBMDLower;
 	}
 
 	public int getRemoveMinGenesInGeneset()

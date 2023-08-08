@@ -132,6 +132,11 @@
                                                       <CheckBox fx:id="removeStepFunctionCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="399.0" selected="false" text="Remove Genes With Step Function Detected" wrapText="true" />
                                                    </children>
                                                 </HBox>
+                                                <HBox alignment="CENTER" layoutX="10.0" layoutY="527.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
+                                                   <children>
+                                                      <CheckBox fx:id="removeStepFunctionWithBMDLowerCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="408.0" selected="false" text="Remove Genes With Step Function Lower Than First Dose" wrapText="true" />
+                                                   </children>
+                                                </HBox>
                                                 <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                    <children>
                                                       <CheckBox fx:id="filterMinGenesInSetCheckbox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Min # of Genes in Gene Set" wrapText="true" />

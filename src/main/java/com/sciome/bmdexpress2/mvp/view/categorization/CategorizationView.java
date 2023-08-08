@@ -117,6 +117,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	@FXML
 	private CheckBox removeStepFunctionCheckBox;
 
+	@FXML
+	private CheckBox removeStepFunctionWithBMDLowerCheckBox;
+
 	// textfields
 
 	@FXML
@@ -370,6 +373,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		{}
 		input.setRemoveWithStepFunction(this.removeStepFunctionCheckBox.isSelected());
 
+		input.setRemoveWithStepFunctionWithBMDLower(removeStepFunctionWithBMDLowerCheckBox.isSelected());
+
 		input.setRemoveBMDLessThanRSquaredNumber(Double.parseDouble(this.rSquaredFilterValue.getText()));
 
 		input.setRemoveBMDLessThanPValueNumber(Double.parseDouble(this.bmdFilter2Value.getText()));
@@ -621,6 +626,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 		this.removeStepFunctionCheckBox.setSelected(input.isRemoveWithStepFunction());
 
+		this.removeStepFunctionWithBMDLowerCheckBox.setSelected(input.isRemoveWithStepFunctionWithBMDLower());
+
 		this.rSquaredFilterValue.setText("" + input.getRemoveBMDLessThanRSquaredNumber());
 
 		this.bmdFilter2Value.setText("" + input.getRemoveBMDLessThanPValueNumber());
@@ -802,6 +809,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		params.setRemoveMinGenesInSet(filterMinGenesInSetCheckbox.isSelected());
 		params.setMinGenesInSet(Integer.valueOf(this.minGenesInSetTextBox.getText()));
 		params.setRemoveStepFunction(this.removeStepFunctionCheckBox.isSelected());
+		params.setRemoveStepFunctionWithBMDLower(removeStepFunctionWithBMDLowerCheckBox.isSelected());
 
 		params.setRemoveMaxGenesInSet(filterMaxGenesInSetCheckbox.isSelected());
 		params.setMaxGenesInSet(Integer.valueOf(this.maxGenesInSetTextBox.getText()));
