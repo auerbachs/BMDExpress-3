@@ -129,9 +129,14 @@ public class ViewUtilities
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Save BMDExpress Project As");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("BMDExpress(*.bm2)", "*.bm2"));
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		File selectedFile = fileChooser.showSaveDialog(window);
 		if (selectedFile != null)
 		{
@@ -154,9 +159,14 @@ public class ViewUtilities
 		fileChooser.setTitle("Export BMDExpress Project As JSON");
 		fileChooser.getExtensionFilters()
 				.add(new FileChooser.ExtensionFilter("BMDExpress(*.json)", "*.json"));
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		File selectedFile = fileChooser.showSaveDialog(window);
 		if (selectedFile != null)
 		{
@@ -199,9 +209,14 @@ public class ViewUtilities
 	{
 		// prompt the user to select a file and then tell the presenter to fire off loading the experiment
 		FileChooser fileChooser = new FileChooser();
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		fileChooser.setTitle("Import BMDExpress 1 Project");
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("BMDExpress(*.bmd)", "*.bmd"));
 		File selectedFile = fileChooser.showOpenDialog(window);
@@ -223,9 +238,14 @@ public class ViewUtilities
 	{
 		// prompt the user to select a file and then tell the presenter to fire off loading the experiment
 		FileChooser fileChooser = new FileChooser();
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		fileChooser.setTitle("Import BMDExpress 3 Project in JSON Format");
 		fileChooser.getExtensionFilters()
 				.add(new FileChooser.ExtensionFilter("BMDExpress(*.json)", "*.json"));

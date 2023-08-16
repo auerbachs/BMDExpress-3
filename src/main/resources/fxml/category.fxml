@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="815.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="600.0" minWidth="-Infinity" prefHeight="868.0" prefWidth="766.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
 	<center>
 		<AnchorPane minHeight="700.0" prefHeight="900.0" BorderPane.alignment="CENTER">
 			<children>
@@ -134,7 +134,7 @@
                                                 </HBox>
                                                 <HBox alignment="CENTER" layoutX="10.0" layoutY="527.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                    <children>
-                                                      <CheckBox fx:id="removeStepFunctionWithBMDLowerCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="408.0" selected="false" text="Remove Genes With Step Function Lower Than First Dose" wrapText="true" />
+                                                      <CheckBox fx:id="removeStepFunctionWithBMDLowerCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="398.0" selected="false" text="Remove Genes With Step Function Lower Than First Dose" wrapText="true" />
                                                    </children>
                                                 </HBox>
                                                 <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">

@@ -1586,9 +1586,14 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getExportPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getExportPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		fileChooser.setInitialFileName(initName);
 		File selectedFile = fileChooser.showSaveDialog(analysisCheckList.getScene().getWindow());
 

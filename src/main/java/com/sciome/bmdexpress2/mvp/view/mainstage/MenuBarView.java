@@ -141,9 +141,14 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		// prompt the user to select a file and then tell the presenter to fire off loading the experiment
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Import Expression Data");
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getExpressionPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getExpressionPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		fileChooser.getExtensionFilters()
 				.addAll(new ExtensionFilter("Text Files", "*.txt", "*.csv", "*.dat"));
 

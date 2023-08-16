@@ -6,7 +6,7 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.service.PrefilterService;
 
 /*
- * use the presenter to run the one way anova as it would be run from the view.
+ * use the presenter to run the one way anova as it would be run from the view. FileChooser
  */
 public class ANOVARunner
 {
@@ -17,8 +17,8 @@ public class ANOVARunner
 	{
 		PrefilterService service = new PrefilterService();
 		OneWayANOVAResults results = service.oneWayANOVAAnalysis(processableData, pCutOff,
-				multipleTestingCorrection, filterOutControlGenes, useFoldFilter, foldFilterValue,
-				pValueLoel, foldChangeLoel, numThreads, null, tTest);
+				multipleTestingCorrection, filterOutControlGenes, useFoldFilter, foldFilterValue, pValueLoel,
+				foldChangeLoel, numThreads, null, tTest);
 
 		if (outputName != null)
 			results.setName(outputName);

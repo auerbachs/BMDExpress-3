@@ -75,9 +75,14 @@ public class MatrixSwingNodeView extends BMDExpressViewBase implements IMatrixSw
 
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Export Gene Mapping");
-		File initialDirectory = new File(BMDExpressProperties.getInstance().getExportPath());
-		if (initialDirectory.exists())
-			fileChooser.setInitialDirectory(initialDirectory);
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getExportPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
 		fileChooser.setInitialFileName("genemapping.txt");
 		File selectedFile = fileChooser.showSaveDialog(doneButton.getScene().getWindow());
 

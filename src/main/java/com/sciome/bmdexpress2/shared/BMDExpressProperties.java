@@ -683,6 +683,8 @@ public class BMDExpressProperties
 
 	public String getUpdateURL()
 	{
+		if (updateURL == null)
+			return "https://apps.sciome.com/bmdexpress3/annotations/";
 		return updateURL;
 	}
 
