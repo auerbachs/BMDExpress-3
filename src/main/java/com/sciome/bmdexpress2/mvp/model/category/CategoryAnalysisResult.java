@@ -36,7 +36,8 @@ import com.sciome.bmdexpress2.util.NumberManager;
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = GOAnalysisResult.class, name = "go"),
 		@Type(value = PathwayAnalysisResult.class, name = "pathway"),
-		@Type(value = DefinedCategoryAnalysisResult.class, name = "defined") })
+		@Type(value = DefinedCategoryAnalysisResult.class, name = "defined"),
+		@Type(value = GeneLevelAnalysisResult.class, name = "gene") })
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
 public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		implements Serializable, IGeneContainer, IMarkable

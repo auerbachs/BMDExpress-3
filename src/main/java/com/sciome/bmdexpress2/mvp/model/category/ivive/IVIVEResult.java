@@ -2,124 +2,203 @@ package com.sciome.bmdexpress2.mvp.model.category.ivive;
 
 import java.io.Serializable;
 
-public abstract class IVIVEResult implements Serializable {
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
+@JsonSubTypes({ @Type(value = OneCompResult.class, name = "onecomp"),
+		@Type(value = PBTKResult.class, name = "pbtk"),
+		@Type(value = ThreeCompResult.class, name = "threecomp"),
+		@Type(value = ThreeCompSSResult.class, name = "threecompss"),
+		@Type(value = ForwardPKResult.class, name = "forwardpk") })
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
+public abstract class IVIVEResult implements Serializable
+{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7856227651672012848L;
-	
+
 	private Double bmdMedianDose;
 	private Double bmdlMedianDose;
 	private Double bmduMedianDose;
-	
+
 	private Double bmdMeanDose;
 	private Double bmdlMeanDose;
 	private Double bmduMeanDose;
-	
+
 	private Double bmdMinimumDose;
 	private Double bmdlMinimumDose;
 	private Double bmduMinimumDose;
-	
+
 	private Double bmdFifthPercentile;
 	private Double bmdlFifthPercentile;
 	private Double bmduFifthPercentile;
-	
+
 	private Double bmdTenthPercentile;
 	private Double bmdlTenthPercentile;
 	private Double bmduTenthPercentile;
-	
-	public Double getBmdMedianDose() {
+
+	public Double getBmdMedianDose()
+	{
 		return bmdMedianDose;
 	}
-	public void setBmdMedianDose(Double bmdMedianDose) {
+
+	public void setBmdMedianDose(Double bmdMedianDose)
+	{
 		this.bmdMedianDose = bmdMedianDose;
 	}
-	public Double getBmdlMedianDose() {
+
+	public Double getBmdlMedianDose()
+	{
 		return bmdlMedianDose;
 	}
-	public void setBmdlMedianDose(Double bmdlMedianDose) {
+
+	public void setBmdlMedianDose(Double bmdlMedianDose)
+	{
 		this.bmdlMedianDose = bmdlMedianDose;
 	}
-	public Double getBmduMedianDose() {
+
+	public Double getBmduMedianDose()
+	{
 		return bmduMedianDose;
 	}
-	public void setBmduMedianDose(Double bmduMedianDose) {
+
+	public void setBmduMedianDose(Double bmduMedianDose)
+	{
 		this.bmduMedianDose = bmduMedianDose;
 	}
-	public Double getBmdMeanDose() {
+
+	public Double getBmdMeanDose()
+	{
 		return bmdMeanDose;
 	}
-	public void setBmdMeanDose(Double bmdMeanDose) {
+
+	public void setBmdMeanDose(Double bmdMeanDose)
+	{
 		this.bmdMeanDose = bmdMeanDose;
 	}
-	public Double getBmdlMeanDose() {
+
+	public Double getBmdlMeanDose()
+	{
 		return bmdlMeanDose;
 	}
-	public void setBmdlMeanDose(Double bmdlMeanDose) {
+
+	public void setBmdlMeanDose(Double bmdlMeanDose)
+	{
 		this.bmdlMeanDose = bmdlMeanDose;
 	}
-	public Double getBmduMeanDose() {
+
+	public Double getBmduMeanDose()
+	{
 		return bmduMeanDose;
 	}
-	public void setBmduMeanDose(Double bmduMeanDose) {
+
+	public void setBmduMeanDose(Double bmduMeanDose)
+	{
 		this.bmduMeanDose = bmduMeanDose;
 	}
-	public Double getBmdMinimumDose() {
+
+	public Double getBmdMinimumDose()
+	{
 		return bmdMinimumDose;
 	}
-	public void setBmdMinimumDose(Double bmdMinimumDose) {
+
+	public void setBmdMinimumDose(Double bmdMinimumDose)
+	{
 		this.bmdMinimumDose = bmdMinimumDose;
 	}
-	public Double getBmdlMinimumDose() {
+
+	public Double getBmdlMinimumDose()
+	{
 		return bmdlMinimumDose;
 	}
-	public void setBmdlMinimumDose(Double bmdlMinimumDose) {
+
+	public void setBmdlMinimumDose(Double bmdlMinimumDose)
+	{
 		this.bmdlMinimumDose = bmdlMinimumDose;
 	}
-	public Double getBmduMinimumDose() {
+
+	public Double getBmduMinimumDose()
+	{
 		return bmduMinimumDose;
 	}
-	public void setBmduMinimumDose(Double bmduMinimumDose) {
+
+	public void setBmduMinimumDose(Double bmduMinimumDose)
+	{
 		this.bmduMinimumDose = bmduMinimumDose;
 	}
-	public Double getBmdFifthPercentile() {
+
+	public Double getBmdFifthPercentile()
+	{
 		return bmdFifthPercentile;
 	}
-	public void setBmdFifthPercentile(Double bmdFifthPercentile) {
+
+	public void setBmdFifthPercentile(Double bmdFifthPercentile)
+	{
 		this.bmdFifthPercentile = bmdFifthPercentile;
 	}
-	public Double getBmdlFifthPercentile() {
+
+	public Double getBmdlFifthPercentile()
+	{
 		return bmdlFifthPercentile;
 	}
-	public void setBmdlFifthPercentile(Double bmdlFifthPercentile) {
+
+	public void setBmdlFifthPercentile(Double bmdlFifthPercentile)
+	{
 		this.bmdlFifthPercentile = bmdlFifthPercentile;
 	}
-	public Double getBmduFifthPercentile() {
+
+	public Double getBmduFifthPercentile()
+	{
 		return bmduFifthPercentile;
 	}
-	public void setBmduFifthPercentile(Double bmduFifthPercentile) {
+
+	public void setBmduFifthPercentile(Double bmduFifthPercentile)
+	{
 		this.bmduFifthPercentile = bmduFifthPercentile;
 	}
-	public Double getBmdTenthPercentile() {
+
+	public Double getBmdTenthPercentile()
+	{
 		return bmdTenthPercentile;
 	}
-	public void setBmdTenthPercentile(Double bmdTenthPercentile) {
+
+	public void setBmdTenthPercentile(Double bmdTenthPercentile)
+	{
 		this.bmdTenthPercentile = bmdTenthPercentile;
 	}
-	public Double getBmdlTenthPercentile() {
+
+	public Double getBmdlTenthPercentile()
+	{
 		return bmdlTenthPercentile;
 	}
-	public void setBmdlTenthPercentile(Double bmdlTenthPercentile) {
+
+	public void setBmdlTenthPercentile(Double bmdlTenthPercentile)
+	{
 		this.bmdlTenthPercentile = bmdlTenthPercentile;
 	}
-	public Double getBmduTenthPercentile() {
+
+	public Double getBmduTenthPercentile()
+	{
 		return bmduTenthPercentile;
 	}
-	public void setBmduTenthPercentile(Double bmduTenthPercentile) {
+
+	public void setBmduTenthPercentile(Double bmduTenthPercentile)
+	{
 		this.bmduTenthPercentile = bmduTenthPercentile;
 	}
-	public static long getSerialversionuid() {
+
+	public static long getSerialversionuid()
+	{
 		return serialVersionUID;
 	}
+
+	@JsonIgnore
 	public abstract String getName();
 }
