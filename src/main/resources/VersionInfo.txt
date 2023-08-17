@@ -7,7 +7,40 @@
 </h1>
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on November 15, 2022</h2>
+
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on August 24, 2023</h2>
+<h3>
+New Features
+</h3>
+<ul>
+<li>R Squared calculation for modeled curves</li>
+<li>Step Function detection for modeled curves</li>
+<li>Export curve response data</li>
+<li>Add category analysis filter parameters</li>
+<ul>
+<li>Min/Max number of genes in geneset</li>
+<li>Is step function</li>
+<li>Is step function with BMD less than lowest dose</li>
+<li>R Squared</li>
+</ul>
+
+
+</ul>
+
+<h3>
+Bug Fixes
+</h3>
+<ul>
+<li>Fixed issue when running multiple One Way Anova analyses causing LOTEL/NOTEL 
+calculation to shuffle p-value and fold change parameters in GUI. This was not an issue when running one dataset at a time and in the command line version </li>
+<li>Fixed issue cause by invalid default folder path for exporting and importing data.</li>
+
+
+</ul>
+
+
+
+<h2>Released on November 15, 2022</h2>
 <h3>
 New Features
 </h3>
