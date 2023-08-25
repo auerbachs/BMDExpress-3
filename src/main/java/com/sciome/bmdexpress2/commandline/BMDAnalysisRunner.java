@@ -42,14 +42,15 @@ public class BMDAnalysisRunner implements IBMDSToolProgress
 	{
 		int rounded = (int) (Precision.round(value, 3) * 100.0);
 		if (rounded % 10 == 0)
-			System.out.printf("\r%s", label + ": " + String.valueOf(rounded) + "% ");
+			System.out.printf("\r%s",
+					label + ": " + String.valueOf(rounded) + "%                              ");
 
 	}
 
 	@Override
 	public void clearProgress()
 	{
-		// TODO Auto-generated method stub
+		System.out.println();
 
 	}
 }

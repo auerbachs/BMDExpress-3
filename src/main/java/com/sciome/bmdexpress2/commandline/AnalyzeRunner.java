@@ -63,6 +63,7 @@ import com.sciome.bmdexpress2.util.bmds.shared.PolyModel;
 import com.sciome.bmdexpress2.util.bmds.shared.PowerModel;
 import com.sciome.bmdexpress2.util.bmds.shared.StatModel;
 import com.sciome.bmdexpress2.util.categoryanalysis.CategoryAnalysisParameters;
+import com.sciome.bmdexpress2.util.categoryanalysis.GeneLevelUtils;
 import com.sciome.bmdexpress2.util.categoryanalysis.IVIVEParameters;
 import com.sciome.bmdexpress2.util.categoryanalysis.defined.DefinedCategoryFileParameters;
 import com.sciome.bmdexpress2.util.curvep.GCurvePInputParameters;
@@ -494,6 +495,7 @@ public class AnalyzeRunner
 		if (catConfig instanceof GeneLevelConfig)
 		{
 			catPreString += "Gene Level Analysis on ";
+
 		}
 
 		if (catConfig instanceof GOConfig)
@@ -514,6 +516,14 @@ public class AnalyzeRunner
 
 		for (BMDResult bmdResult : bmdResultsToRun)
 		{
+			if (catConfig instanceof GeneLevelConfig)
+			{
+				params.setCategoryFileParameters(
+						GeneLevelUtils.getCategoryFileParameters(bmdResult.getDoseResponseExperiment()));
+				params.setProbeFileParameters(
+						GeneLevelUtils.getProbeFileParameters(bmdResult.getDoseResponseExperiment()));
+			}
+
 			System.out.println(catPreString + bmdResult.getName());
 			CategoryAnalysisResults catResults = new CategoryAnalysisRunner().runCategoryAnalysis(bmdResult,
 					catAn, params);
@@ -927,6 +937,7 @@ public class AnalyzeRunner
 			else
 				project.giveBMDAnalysisUniqueName(result, result.getName());
 			project.getbMDResult().add(result);
+			System.out.println();
 		}
 
 		System.out.println("Finished Model Averaging Analysis");
@@ -1188,6 +1199,7 @@ public class AnalyzeRunner
 								preFilterConfig.getOutputName(), preFilterConfig.getNumberOfThreads(),
 								preFilterConfig.getlotelTest().equals(2), modelsToRun,
 								cfpreCfg.getBmrFactor(), cfpreCfg.getPoly2BmrFactor(), constV, project));
+				System.out.println();
 			}
 		}
 		else if (preFilterConfig instanceof OriogenConfig)

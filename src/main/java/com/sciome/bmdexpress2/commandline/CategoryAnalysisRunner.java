@@ -16,6 +16,7 @@ public class CategoryAnalysisRunner
 		// prefilter.
 		// this is not a good thing, need to figure out how to automatically refresh
 		// when running in the GUI, clicking on the bmdResult triggers this method
+
 		bmdResult.getColumnHeader();
 		CategoryAnalysisService service = new CategoryAnalysisService();
 		return service.categoryAnalysis(params, bmdResult, catAnalysisEnum, null);

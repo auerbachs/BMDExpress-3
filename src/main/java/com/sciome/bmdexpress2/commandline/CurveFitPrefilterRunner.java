@@ -39,14 +39,15 @@ public class CurveFitPrefilterRunner implements IBMDSToolProgress
 		double pround = Precision.round(value, 2, BigDecimal.ROUND_UP);
 		int rounded = (int) (pround * 100.0);
 		if (rounded % 10 == 0)
-			System.out.printf("\r%s", label + ": " + String.valueOf(rounded) + "% ");
+			System.out.printf("\r%s",
+					label + ": " + String.valueOf(rounded) + "%                               ");
 
 	}
 
 	@Override
 	public void clearProgress()
 	{
-		// TODO Auto-generated method stub
+		System.out.println();
 
 	}
 }
