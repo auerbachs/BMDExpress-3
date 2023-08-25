@@ -1,6 +1,9 @@
 package com.sciome.bmdexpress2.commandline;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import org.apache.commons.math3.util.Precision;
 
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
@@ -32,7 +35,11 @@ public class CurveFitPrefilterRunner implements IBMDSToolProgress
 	@Override
 	public void updateProgress(String label, double value)
 	{
-		// TODO Auto-generated method stub
+
+		double pround = Precision.round(value, 2, BigDecimal.ROUND_UP);
+		int rounded = (int) (pround * 100.0);
+		if (rounded % 10 == 0)
+			System.out.printf("\r%s", label + ": " + String.valueOf(rounded) + "% ");
 
 	}
 

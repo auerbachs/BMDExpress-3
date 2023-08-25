@@ -2,6 +2,8 @@ package com.sciome.bmdexpress2.commandline;
 
 import java.util.List;
 
+import org.apache.commons.math3.util.Precision;
+
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.service.BMDAnalysisService;
@@ -38,7 +40,9 @@ public class BMDAnalysisRunner implements IBMDSToolProgress
 	@Override
 	public void updateProgress(String label, double value)
 	{
-		// System.out.print(StringUtils.rightPad(label + ": " + value, 80, " ") + "\r");
+		int rounded = (int) (Precision.round(value, 3) * 100.0);
+		if (rounded % 10 == 0)
+			System.out.printf("\r%s", label + ": " + String.valueOf(rounded) + "% ");
 
 	}
 

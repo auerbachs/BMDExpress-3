@@ -79,10 +79,13 @@ public class AnalyzeRunner
 {
 
 	BMDProject project = new BMDProject();
+	boolean verbose = true;
+	boolean veryverbose = false;
 
-	public void analyze(String configFile) throws Exception
+	public void analyze(String configFile, boolean veryverbose) throws Exception
 	{
 
+		this.veryverbose = veryverbose;
 		// deserialize the config file that was passed on commandline
 		RunConfig runConfig = getRunConfig(configFile);
 
@@ -110,6 +113,9 @@ public class AnalyzeRunner
 				project = (BMDProject) in.readObject();
 				in.close();
 				fileIn.close();
+				System.out.println("Reading existing project: " + runConfig.getBm2FileName());
+				if (veryverbose)
+					System.out.println("All results will be added to this existing project");
 			}
 			catch (IOException i)
 			{
@@ -121,49 +127,75 @@ public class AnalyzeRunner
 			}
 		}
 
+		if (veryverbose)
+			System.out.println(getJsonForObject(runConfig));
+
 		// 1: get all the expression data configs
+
 		List<ExpressionDataConfig> expressionConfigs = runConfig.getExpressionDataConfigs();
 		if (expressionConfigs != null)
+		{
+			System.out.println("Reading expression data");
 			for (ExpressionDataConfig expressionConfig : expressionConfigs)
 				doExpressionConfig(expressionConfig);
+		}
 
 		// 2: get all the anova configs
 		List<PrefilterConfig> preFilterConfigs = runConfig.getPreFilterConfigs();
 
 		if (preFilterConfigs != null)
+		{
+			System.out.println("Performing prefilter step");
 			for (PrefilterConfig preFilterConfig : preFilterConfigs)
 				doPrefilter(preFilterConfig);
+		}
 
 		// 3.1: get all the analysis configs
 		List<BMDSConfig> bmdsConfigs = runConfig.getBmdsConfigs();
 		if (bmdsConfigs != null)
+		{
+			System.out.println("Performing MLE BMD Analysis");
 			for (BMDSConfig bmdsConfig : bmdsConfigs)
 				doBMDSAnalysis(bmdsConfig);
+		}
 
 		// 3.2: get all the analysis configs
 		List<ModelAveragingConfig> maConfigs = runConfig.getMaConfigs();
 		if (maConfigs != null)
+		{
+			System.out.println("Performing Model Averaging BMD Analysis");
 			for (ModelAveragingConfig maConfig : maConfigs)
 				doMaAnalysis(maConfig);
+		}
 
 		// 4: get all the analysis configs
 		List<NonParametricConfig> nonParametricConfigs = runConfig.getNonParametricConfigs();
 		if (nonParametricConfigs != null)
+		{
+			System.out.println("Performing Non-Parametric BMD Analysis");
 			for (NonParametricConfig nonPConfig : nonParametricConfigs)
 				doNonParametricAnalysis(nonPConfig);
+		}
 
 		// 5: get all the category analysis configs
 		List<CategoryConfig> catConfigs = runConfig.getCategoryAnalysisConfigs();
 		if (catConfigs != null)
+		{
+			System.out.println("Performing Category Analysis");
 			for (CategoryConfig catConfig : catConfigs)
 				doCatAnalysis(catConfig);
+		}
 
 		// 6. see if this needs exporting to json
 		if (runConfig.getJsonExportFileName() != null)
+		{
+			System.out.println("Exporting as JSON: " + runConfig.getJsonExportFileName());
 			doJsonExport(runConfig.getJsonExportFileName());
+		}
 
 		try
 		{
+			System.out.println("Saving project: " + runConfig.getBm2FileName());
 			File selectedFile = new File(runConfig.getBm2FileName());
 			FileOutputStream fileOut = new FileOutputStream(selectedFile);
 
@@ -191,8 +223,11 @@ public class AnalyzeRunner
 	/*
 	 * perform category analysis based on the category configuration.
 	 */
-	private void doCatAnalysis(CategoryConfig catConfig)
+	private void doCatAnalysis(CategoryConfig catConfig) throws Exception
 	{
+
+		if (veryverbose)
+			System.out.println(getJsonForObject(catConfig));
 
 		CategoryAnalysisEnum catAn = null;
 		String analysisSpecificMessage = "";
@@ -359,7 +394,10 @@ public class AnalyzeRunner
 		// Set IVIVE parameters
 		if (catConfig.getComputeIVIVE())
 		{
+			System.out.println("Setting Toxicokinetic Modeling Parameters ");
 			IVIVEConfig config = catConfig.getIviveConfig();
+			if (veryverbose)
+				System.out.println(getJsonForObject(config));
 
 			IVIVEParameters iviveParameters = new IVIVEParameters();
 			// Set compound
@@ -421,8 +459,11 @@ public class AnalyzeRunner
 			params.setIviveParameters(iviveParameters);
 		}
 
+		String catPreString = "";
+
 		if (catConfig instanceof DefinedConfig)
 		{
+			catPreString += "Defined Category Analysis on ";
 			DefinedCategoryFileParameters probeFileParameters = new DefinedCategoryFileParameters();
 
 			probeFileParameters.setUsedColumns(new int[] { 0, 1 });
@@ -445,9 +486,19 @@ public class AnalyzeRunner
 		}
 
 		if (catConfig instanceof PathwayConfig)
+		{
 			params.setPathwayDB(((PathwayConfig) catConfig).getSignalingPathway());
+			catPreString += "Pathway Analysis on ";
+		}
+
+		if (catConfig instanceof GeneLevelConfig)
+		{
+			catPreString += "Gene Level Analysis on ";
+		}
+
 		if (catConfig instanceof GOConfig)
 		{
+			catPreString += "GO (" + ((GOConfig) catConfig).getGoCategory() + ") Analysis on ";
 			params.setGoCat(((GOConfig) catConfig).getGoCategory());
 
 			if (((GOConfig) catConfig).getGoCategory().equalsIgnoreCase("universal"))
@@ -463,6 +514,7 @@ public class AnalyzeRunner
 
 		for (BMDResult bmdResult : bmdResultsToRun)
 		{
+			System.out.println(catPreString + bmdResult.getName());
 			CategoryAnalysisResults catResults = new CategoryAnalysisRunner().runCategoryAnalysis(bmdResult,
 					catAn, params);
 
@@ -477,17 +529,15 @@ public class AnalyzeRunner
 	/*
 	 * perform bmd analysis on the data.
 	 */
-	private void doBMDSAnalysis(BMDSConfig bmdsConfig)
+	private void doBMDSAnalysis(BMDSConfig bmdsConfig) throws Exception
 	{
 		String method = "BMDS 3.x.x MLE";
 		// if (bmdsConfig.getMethod().equals(1))
 		// method = "BMDS 2.7.x MLE";
 
-		if (bmdsConfig.getInputName() != null)
-			System.out.println(method + " analysis on " + bmdsConfig.getInputName() + " from group "
-					+ bmdsConfig.getInputCategory());
-		else
-			System.out.println(method + " analysis on group " + bmdsConfig.getInputCategory());
+		if (veryverbose)
+			System.out.println(getJsonForObject(bmdsConfig));
+
 		// first set up the model input parameters basedo n
 		// bmdsConfig setup
 		ModelInputParameters inputParameters = new ModelInputParameters();
@@ -656,42 +706,58 @@ public class AnalyzeRunner
 
 		for (OneWayANOVAResults ways : project.getOneWayANOVAResults())
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
+			{
+				System.out.println("Performing MLE BMD Analysis on One-way ANOVA Test Results");
 				if (bmdsConfig.getInputName() == null)
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(ways);
+			}
 
 		for (WilliamsTrendResults will : project.getWilliamsTrendResults())
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
+			{
+				System.out.println("Performing MLE BMD Analysis on Williams Trend Test Results");
 				if (bmdsConfig.getInputName() == null)
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(will);
+			}
 
 		for (OriogenResults ori : project.getOriogenResults())
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
+			{
+				System.out.println("Performing MLE BMD Analysis on Oriogen Test Results");
 				if (bmdsConfig.getInputName() == null)
 					processables.add(ori);
 				else if (ori.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(ori);
+			}
 
 		for (CurveFitPrefilterResults curve : project.getCurveFitPrefilterResults())
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
+			{
+				System.out.println("Performing MLE BMD Analysis on Curve Fit Prefilter Test Results");
 				if (bmdsConfig.getInputName() == null)
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(curve);
+			}
 
 		for (DoseResponseExperiment exps : project.getDoseResponseExperiments())
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
+			{
+				System.out.println("Performing MLE BMD Analysis on Expression Data");
 				if (bmdsConfig.getInputName() == null)
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(exps);
+			}
 
 		// for each processable analysis, run the models and select best models.
 		for (IStatModelProcessable processableData : processables)
 		{
+			System.out.println("Performing MLE BMD Analysis on: " + processableData.getDataSetName());
 			BMDResult result = new BMDAnalysisRunner().runBMDAnalysis(processableData,
 					modelSelectionParameters, modelsToRun, inputParameters, null);
 			if (bmdsConfig.getOutputName() != null)
@@ -701,21 +767,25 @@ public class AnalyzeRunner
 			project.getbMDResult().add(result);
 		}
 
+		System.out.println("Finished MLE BMD Analysis");
+
 	}
 
 	/*
 	 * perform bmd analysis on the data.
 	 */
-	private void doMaAnalysis(ModelAveragingConfig maConfig)
+	private void doMaAnalysis(ModelAveragingConfig maConfig) throws Exception
 	{
+
+		if (veryverbose)
+			System.out.println(getJsonForObject(maConfig));
+
 		String method = "ToxicR MCMC";
 		if (maConfig.getMethod().equals(1))
 			method = "ToxicR Laplace";
-		if (maConfig.getInputName() != null)
-			System.out.println(method + " model averaging on " + maConfig.getInputName() + " from group "
-					+ maConfig.getInputCategory());
-		else
-			System.out.println(method + " model averaging on group " + maConfig.getInputCategory());
+
+		String outPrefix = "Performing " + method + " Model Averaging on";
+
 		// first set up the model input parameters basedo n
 		// bmdsConfig setup
 		ModelInputParameters inputParameters = new ModelInputParameters();
@@ -794,38 +864,54 @@ public class AnalyzeRunner
 
 		for (OneWayANOVAResults ways : project.getOneWayANOVAResults())
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
+			{
+				System.out.println(outPrefix + " on One-way ANOVA Test Results");
 				if (maConfig.getInputName() == null)
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(ways);
+			}
 
 		for (WilliamsTrendResults will : project.getWilliamsTrendResults())
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
+			{
+				System.out.println(outPrefix + " Williams Trend Test Results");
+
 				if (maConfig.getInputName() == null)
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(will);
+			}
 
 		for (OriogenResults ori : project.getOriogenResults())
+		{
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
-				if (maConfig.getInputName() == null)
-					processables.add(ori);
-				else if (ori.getName().equalsIgnoreCase(maConfig.getInputName()))
-					processables.add(ori);
+				System.out.println(outPrefix + " Oriogen Test Results");
+			if (maConfig.getInputName() == null)
+				processables.add(ori);
+			else if (ori.getName().equalsIgnoreCase(maConfig.getInputName()))
+				processables.add(ori);
+		}
 
 		for (CurveFitPrefilterResults curve : project.getCurveFitPrefilterResults())
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
+			{
+				System.out.println(outPrefix + " Curve Fit Prefilter Test Results");
 				if (maConfig.getInputName() == null)
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(curve);
+			}
 
 		for (DoseResponseExperiment exps : project.getDoseResponseExperiments())
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
+			{
+				System.out.println(outPrefix + " Expression Data");
 				if (maConfig.getInputName() == null)
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(exps);
+			}
 
 		// for each processable analysis, run the models and select best models.
 		boolean laplace = true;
@@ -833,6 +919,7 @@ public class AnalyzeRunner
 			laplace = false;
 		for (IStatModelProcessable processableData : processables)
 		{
+			System.out.println(outPrefix + ": " + processableData.getDataSetName());
 			BMDResult result = new BMDAnalysisRunner().runMAAnalysis(processableData, modelsToRun,
 					inputParameters, laplace);
 			if (maConfig.getOutputName() != null)
@@ -841,6 +928,8 @@ public class AnalyzeRunner
 				project.giveBMDAnalysisUniqueName(result, result.getName());
 			project.getbMDResult().add(result);
 		}
+
+		System.out.println("Finished Model Averaging Analysis");
 
 	}
 
@@ -921,35 +1010,49 @@ public class AnalyzeRunner
 	/*
 	 * do prefilter
 	 */
-	private void doPrefilter(PrefilterConfig preFilterConfig)
+	private void doPrefilter(PrefilterConfig preFilterConfig) throws Exception
 	{
 		// if the user specifies a dose experiment name, then find it and add it.
 		// if the inputname is null, then add all dose response experiments
 		// to receive the pre filter.
 		List<IStatModelProcessable> processables = new ArrayList<>();
 		boolean doOnlyDoseResponseExperimentInput = true;
+		if (veryverbose)
+			System.out.println(getJsonForObject(preFilterConfig));
 		if (preFilterConfig instanceof CurveFitPrefilterConfig)
 		{
 			CurveFitPrefilterConfig cfpreCfg = (CurveFitPrefilterConfig) preFilterConfig;
 
 			if (cfpreCfg.getInputCategory() == null || cfpreCfg.getInputCategory().equals("")
 					|| cfpreCfg.getInputCategory().equals(BMDExpressCommandLine.EXPRESSION))
+			{
+				System.out.println("Performing Curve Fit Prefilter on Expression Data");
 				doOnlyDoseResponseExperimentInput = true;
+			}
 			else
 			{
 				// we found out that we are running curve fit prefilter on
 				// another prefilter set.
 				if (BMDExpressCommandLine.WILLIAMS.equalsIgnoreCase(cfpreCfg.getInputCategory()))
 				{
+					System.out.println("Performing Curve Fit Prefilter on Williams Trend Test Results");
+
 					for (WilliamsTrendResults exp : project.getWilliamsTrendResults())
+					{
 						if (preFilterConfig.getInputName() == null
 								|| preFilterConfig.getInputName().equals(""))
+						{
 							processables.add(exp);
+						}
 						else if (exp.getName().equalsIgnoreCase(preFilterConfig.getInputName()))
+						{
 							processables.add(exp);
+						}
+					}
 				}
 				else if (BMDExpressCommandLine.ONE_WAY_ANOVA.equalsIgnoreCase(cfpreCfg.getInputCategory()))
 				{
+					System.out.println("Performing Curve Fit Prefilter on One-way ANOVA Test Results");
 					for (OneWayANOVAResults exp : project.getOneWayANOVAResults())
 						if (preFilterConfig.getInputName() == null
 								|| preFilterConfig.getInputName().equals(""))
@@ -959,6 +1062,7 @@ public class AnalyzeRunner
 				}
 				else if (BMDExpressCommandLine.ORIOGEN.equalsIgnoreCase(cfpreCfg.getInputCategory()))
 				{
+					System.out.println("Performing Curve Fit Prefilter on Oriogen Test Results");
 					for (OriogenResults exp : project.getOriogenResults())
 						if (preFilterConfig.getInputName() == null
 								|| preFilterConfig.getInputName().equals(""))
@@ -986,13 +1090,13 @@ public class AnalyzeRunner
 		{
 			ANOVARunner anovaRunner = new ANOVARunner();
 			if (preFilterConfig.getInputName() != null)
-				stdoutInfo = "One-way ANOVA on " + preFilterConfig.getInputName();
+				stdoutInfo = "One-way ANOVA Test";
 			else
-				stdoutInfo = "One-way ANOVA";
+				stdoutInfo = "One-way ANOVA Test";
 
-			System.out.println("Starting " + stdoutInfo);
 			for (IStatModelProcessable processable : processables)
 			{
+				System.out.println("Starting " + stdoutInfo + ": " + processable.getDataSetName());
 				project.getOneWayANOVAResults()
 						.add(anovaRunner.runANOVAFilter(processable, preFilterConfig.getpValueCutoff(),
 								preFilterConfig.getUseMultipleTestingCorrection(),
@@ -1008,13 +1112,13 @@ public class AnalyzeRunner
 			WilliamsTrendRunner williamsRunner = new WilliamsTrendRunner();
 
 			if (preFilterConfig.getInputName() != null)
-				stdoutInfo = "Williams Trend Test on " + preFilterConfig.getInputName();
+				stdoutInfo = "Williams Trend Test";
 			else
 				stdoutInfo = "Williams Trend Test";
 
-			System.out.println("Starting " + stdoutInfo);
 			for (IStatModelProcessable processable : processables)
 			{
+				System.out.println("Starting " + stdoutInfo + ": " + processable.getDataSetName());
 				project.getWilliamsTrendResults().add(williamsRunner.runWilliamsTrendFilter(processable,
 						preFilterConfig.getpValueCutoff(), preFilterConfig.getUseMultipleTestingCorrection(),
 						preFilterConfig.getFilterOutControlGenes(), preFilterConfig.getUseFoldChange(),
@@ -1067,13 +1171,13 @@ public class AnalyzeRunner
 			}
 
 			if (preFilterConfig.getInputName() != null)
-				stdoutInfo = "Curve Fit Prefilter Test on " + preFilterConfig.getInputName();
+				stdoutInfo = "Curve Fit Prefilter Test";
 			else
 				stdoutInfo = "Curve Fit Prefilter Test";
 
-			System.out.println("Starting " + stdoutInfo);
 			for (IStatModelProcessable processable : processables)
 			{
+				System.out.println("Starting " + stdoutInfo + ": " + processable.getDataSetName());
 				int constV = 1;
 				if (!cfpreCfg.getConstantVariance())
 					constV = 0;
@@ -1091,13 +1195,14 @@ public class AnalyzeRunner
 			OriogenRunner oriogenRunner = new OriogenRunner();
 
 			if (preFilterConfig.getInputName() != null)
-				stdoutInfo = "Oriogen on " + preFilterConfig.getInputName();
+				stdoutInfo = "Oriogen Test";
 			else
-				stdoutInfo = "Oriogen";
+				stdoutInfo = "Oriogen Test";
 
 			System.out.println("Starting " + stdoutInfo);
 			for (IStatModelProcessable processable : processables)
 			{
+				System.out.println("Starting " + stdoutInfo + ": " + processable.getDataSetName());
 				project.getOriogenResults()
 						.add(oriogenRunner.runOriogenFilter(processable, preFilterConfig.getpValueCutoff(),
 								preFilterConfig.getUseMultipleTestingCorrection(),
@@ -1115,17 +1220,21 @@ public class AnalyzeRunner
 		System.out.println("Finished " + stdoutInfo);
 	}
 
-	private void doExpressionConfig(ExpressionDataConfig expressionConfig)
+	private void doExpressionConfig(ExpressionDataConfig expressionConfig) throws Exception
 	{
 
-		System.out.println("import expression: " + expressionConfig.getInputFileName());
+		if (veryverbose)
+			System.out.println(getJsonForObject(expressionConfig));
 
 		// if the inputfilename is a directory, then loop through each file
 		// in the directory and import it as a doseresponse experiment.
 		if (new File(expressionConfig.getInputFileName()).isDirectory())
 		{
+			System.out
+					.println("Import Expression Data From Directory: " + expressionConfig.getInputFileName());
 			for (final File fileEntry : new File(expressionConfig.getInputFileName()).listFiles())
 			{
+				System.out.println("Import Expression Data File From Directory: " + fileEntry.getName());
 				if (fileEntry.isDirectory())
 					continue;
 				// the name stored in project bm2 file should be name of file without the extension
@@ -1140,6 +1249,7 @@ public class AnalyzeRunner
 		else
 		{
 			File inputFile = new File(expressionConfig.getInputFileName());
+			System.out.println("Import Expression Data File From Directory: " + inputFile.getName());
 			String outname = FilenameUtils.removeExtension(inputFile.getName());
 
 			// if config file outputname is set, then override the default
@@ -1158,5 +1268,10 @@ public class AnalyzeRunner
 	{
 		return new ObjectMapper().readValue(new File(configFile), RunConfig.class);
 
+	}
+
+	private String getJsonForObject(Object obj) throws Exception
+	{
+		return new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(obj);
 	}
 }

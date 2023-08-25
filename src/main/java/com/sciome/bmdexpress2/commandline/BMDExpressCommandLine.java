@@ -50,6 +50,7 @@ public class BMDExpressCommandLine
 	public final static String DELETE = "delete";
 	public final static String COMBINE = "combine";
 	public final static String VERSION = "--version";
+	public final static String VERY_VERBOSE = "veryverbose";
 
 	// Analysis Group names Current working directory bmdexpress3
 	public final static String EXPRESSION = "expression";
@@ -83,6 +84,8 @@ public class BMDExpressCommandLine
 		// the base dir.
 		analyzeOptions
 				.addOption(Option.builder().longOpt(CONFIG_FILE).hasArg().argName("JSON").required().build());
+		analyzeOptions
+				.addOption(Option.builder().longOpt(VERY_VERBOSE).hasArg(false).required(false).build());
 
 		exportOptions.addOption(
 				Option.builder().longOpt(INPUT_BM2).hasArg().required().argName("BM2FILE").build());
@@ -91,6 +94,7 @@ public class BMDExpressCommandLine
 		exportOptions.addOption(Option.builder().longOpt(ANALYSIS_NAME).hasArg().argName("NAME").build());
 		exportOptions.addOption(
 				Option.builder().longOpt(OUTPUT_FILE_NAME).hasArg().required().argName("OUTPUT").build());
+		exportOptions.addOption(Option.builder().longOpt(VERY_VERBOSE).hasArg(false).required(false).build());
 
 		deleteOptions.addOption(
 				Option.builder().longOpt(INPUT_BM2).hasArg().required().argName("BM2FILE").build());
@@ -98,16 +102,20 @@ public class BMDExpressCommandLine
 				Option.builder().longOpt(ANALYSIS_GROUP).hasArg().required().argName("GROUP").build());
 		deleteOptions.addOption(
 				Option.builder().longOpt(ANALYSIS_NAME).hasArg().required().argName("NAME").build());
+		deleteOptions.addOption(Option.builder().longOpt(VERY_VERBOSE).hasArg(false).required(false).build());
 
 		queryOptions.addOption(
 				Option.builder().longOpt(INPUT_BM2).hasArg().required().argName("BM2FILE").build());
 		queryOptions.addOption(
 				Option.builder().longOpt(ANALYSIS_GROUP).hasArg().required().argName("GROUP").build());
+		queryOptions.addOption(Option.builder().longOpt(VERY_VERBOSE).hasArg(false).required(false).build());
 
 		combineOptions.addOption(
 				Option.builder().longOpt(OUTPUT_FILE_NAME).hasArg().required().argName("OUTPUT").build());
 		combineOptions.addOption(Option.builder().longOpt(INPUT_BM2_FILES).hasArgs().required()
 				.argName("INPUT BM2 FILES").build());
+		combineOptions
+				.addOption(Option.builder().longOpt(VERY_VERBOSE).hasArg(false).required(false).build());
 
 		try
 		{
@@ -121,7 +129,10 @@ public class BMDExpressCommandLine
 			{
 				CommandLine cmd = parser.parse(analyzeOptions, theArgs);
 				AnalyzeRunner aRunner = new AnalyzeRunner();
-				aRunner.analyze(cmd.getOptionValue(CONFIG_FILE));
+				boolean vv = false;
+				if (cmd.hasOption(VERY_VERBOSE))
+					vv = true;
+				aRunner.analyze(cmd.getOptionValue(CONFIG_FILE), vv);
 			}
 			else if (args[0].equals(EXPORT))
 			{
