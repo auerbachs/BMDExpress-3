@@ -8,7 +8,7 @@
 
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on August 24, 2023</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on August 28, 2023</h2>
 <h3>
 New Features
 </h3>
