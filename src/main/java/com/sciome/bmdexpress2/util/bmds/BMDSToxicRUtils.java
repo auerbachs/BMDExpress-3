@@ -74,6 +74,8 @@ public class BMDSToxicRUtils
 				BMR = Math.log(1 + BMR);
 				bmdType = ToxicRConstants.BMD_TYPE_ABS;
 			}
+			else if (!isIncreasing && transform.equals(LogTransformationEnum.NONE))
+				BMR = 1 - BMR;
 
 		}
 
@@ -192,6 +194,9 @@ public class BMDSToxicRUtils
 				BMR = Math.log(1 + BMR);
 				bmdType = ToxicRConstants.BMD_TYPE_ABS;
 			}
+			else if (!isIncreasing && transform.equals(LogTransformationEnum.NONE))
+				BMR = 1 - BMR;
+
 		}
 
 		ToxicRJNI tRJNI = new ToxicRJNI();
