@@ -29,6 +29,6 @@ public interface IBMDAnalysisService
 	public BMDResult bmdAnalysisMCMCMA(IStatModelProcessable processableData,
 			ModelInputParameters inputParameters, List<StatModel> modelsToRun, IBMDSToolProgress me);
 
-	boolean isStepFunction(List<Float> responses, StatResult bestResult,
-			DoseResponseExperiment doseResponseExp, double threshold);
+	int isStepFunction(List<Float> responses, StatResult bestResult, DoseResponseExperiment doseResponseExp,
+			double threshold);
 }

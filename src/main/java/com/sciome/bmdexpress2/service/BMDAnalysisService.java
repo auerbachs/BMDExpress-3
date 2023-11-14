@@ -65,10 +65,10 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		{
 			for (StatResult statResult : psr.getStatResults())
 			{
-				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
+				int isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
 
-				statResult.setIsStepFunction(isStep);
+				statResult.setIsStepFunction(isStep > 0);
 				statResult.setStepWithBMDLessLowest(
 						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
 			}
@@ -417,9 +417,9 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		{
 			for (StatResult statResult : psr.getStatResults())
 			{
-				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
+				int isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
-				statResult.setIsStepFunction(isStep);
+				statResult.setIsStepFunction(isStep > 0);
 				statResult.setStepWithBMDLessLowest(
 						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
 			}
@@ -447,7 +447,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 	}
 
 	@Override
-	public boolean isStepFunction(List<Float> responses, StatResult bestResult,
+	public int isStepFunction(List<Float> responses, StatResult bestResult,
 			DoseResponseExperiment doseResponseExp, double threshold)
 	{
 		if (bestResult != null)
@@ -469,21 +469,21 @@ public class BMDAnalysisService implements IBMDAnalysisService
 
 				double change = Math.abs(dg2 - dg1);
 				if (change / totalchange >= threshold)
-					return true;
+					return i;
 			}
 		}
 
-		return false;
+		return 0;
 	}
 
-	public boolean isStepFunctionWithBMDLessThanLowest(StatResult bestResult, boolean isStep,
+	public boolean isStepFunctionWithBMDLessThanLowest(StatResult bestResult, int isStep,
 			DoseResponseExperiment doseResponseExp)
 	{
 
 		List<DoseGroup> dosegroups = doseResponseExp.getDoseGroups(null);
 
 		if (bestResult != null && bestResult.getBMD() != -9999 && dosegroups.size() >= 2
-				&& bestResult.getBMD() < dosegroups.get(1).getDose() && isStep)
+				&& bestResult.getBMD() < dosegroups.get(1).getDose() && isStep == 1)
 			return true;
 
 		return false;
@@ -527,9 +527,9 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		{
 			for (StatResult statResult : psr.getStatResults())
 			{
-				boolean isStep = isStepFunction(null, statResult, doseResponseExperiment,
+				int isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
-				statResult.setIsStepFunction(isStep);
+				statResult.setIsStepFunction(isStep > 0);
 				statResult.setStepWithBMDLessLowest(
 						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
 			}
