@@ -20,6 +20,8 @@ public class CategoryAnalysisParameters
 	private boolean removeNFoldBelowLowestDose = false;
 	private boolean removeStepFunction = false;
 	private boolean removeStepFunctionWithBMDLower = false;
+	private boolean removeAdverseDirection = false;
+	private String removeAdverseDirectionValue = "";
 	private double bmdBmdlRatio;
 	private double nFoldbelowLowestDoseValue;
 	private double pValueCutoff;
@@ -59,6 +61,26 @@ public class CategoryAnalysisParameters
 
 	// IVIVE calculation
 	private IVIVEParameters iviveParameters;
+
+	public boolean isRemoveAdverseDirection()
+	{
+		return removeAdverseDirection;
+	}
+
+	public void setRemoveAdverseDirection(boolean removeAdverseDirection)
+	{
+		this.removeAdverseDirection = removeAdverseDirection;
+	}
+
+	public String getRemoveAdverseDirectionValue()
+	{
+		return removeAdverseDirectionValue;
+	}
+
+	public void setRemoveAdverseDirectionValue(String removeAdverseDirectionValue)
+	{
+		this.removeAdverseDirectionValue = removeAdverseDirectionValue;
+	}
 
 	public DefinedCategoryFileParameters getProbeFileParameters()
 	{

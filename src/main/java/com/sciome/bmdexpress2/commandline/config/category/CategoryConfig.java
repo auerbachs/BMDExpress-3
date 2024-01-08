@@ -43,6 +43,7 @@ public abstract class CategoryConfig
 
 	private Boolean removeStepFunction;
 	private Boolean removeStepFunctionWithBMDLower;
+	private Integer removeAdverseDirection;
 
 	public String getInputName()
 	{
@@ -263,4 +264,15 @@ public abstract class CategoryConfig
 	{
 		this.iviveConfig = iviveConfig;
 	}
+
+	public Integer getRemoveAdverseDirection()
+	{
+		return removeAdverseDirection;
+	}
+
+	public void setRemoveAdverseDirection(Integer removeAdverseDirection)
+	{
+		this.removeAdverseDirection = removeAdverseDirection;
+	}
+
 }

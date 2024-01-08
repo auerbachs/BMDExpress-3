@@ -1490,7 +1490,8 @@ public class BMDStatatistics
 						if (probeStatResult == null)
 							continue;
 
-						if (probeStatResult.getBestStatResult().getIsStepFunction())
+						if (probeStatResult.getBestStatResult() == null
+								|| probeStatResult.getBestStatResult().getIsStepFunction())
 						{
 							probes.remove(st);
 							removedProbes.add(st);
@@ -1534,10 +1535,70 @@ public class BMDStatatistics
 						if (probeStatResult == null)
 							continue;
 
-						if (probeStatResult.getBestStatResult().isStepWithBMDLessLowest())
+						if (probeStatResult.getBestStatResult() == null
+								|| probeStatResult.getBestStatResult().isStepWithBMDLessLowest())
 						{
 							probes.remove(st);
 							removedProbes.add(st);
+						}
+					}
+				}
+
+				if (probes == null || probes.isEmpty())
+				{
+					// vectGenes.remove(geneId);
+				}
+				else
+				{
+					pcGenes.add(geneId);
+				}
+			}
+		}
+
+		return pcGenes;
+	}
+
+	public Vector<String> checkAdverseDirection(Vector<String> vectGenes,
+			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes, String adverseDirection)
+	{
+		Vector<String> pcGenes = new Vector<String>();
+
+		if (vectGenes != null && vectGenes.size() > 0)
+		{
+			for (int i = vectGenes.size() - 1; i >= 0; i--)
+			{
+				String geneId = vectGenes.get(i);
+				Vector<String> probes = new Vector<>(subHashG2Ids.get(geneId));
+
+				if (probes != null && probes.size() > 0)
+				{
+					for (int j = probes.size() - 1; j >= 0; j--)
+					{
+						String st = probes.get(j);
+
+						ProbeStatResult probeStatResult = this.probeGeneMaps.getStatResultMap().get(st);
+						if (probeStatResult == null)
+							continue;
+
+						if (probeStatResult.getBestStatResult() == null)
+						{
+							probes.remove(st);
+							removedProbes.add(st);
+						}
+						else
+						{
+							if (adverseDirection.equalsIgnoreCase("up")
+									&& probeStatResult.getBestStatResult().getAdverseDirection() > 0)
+							{
+								probes.remove(st);
+								removedProbes.add(st);
+							}
+							if (adverseDirection.equalsIgnoreCase("down")
+									&& probeStatResult.getBestStatResult().getAdverseDirection() < 0)
+							{
+								probes.remove(st);
+								removedProbes.add(st);
+							}
 						}
 					}
 				}

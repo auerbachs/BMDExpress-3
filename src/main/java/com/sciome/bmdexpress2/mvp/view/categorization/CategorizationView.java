@@ -120,6 +120,12 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	@FXML
 	private CheckBox removeStepFunctionWithBMDLowerCheckBox;
 
+	@FXML
+	private CheckBox bmdFilterAdverseDirectionCheckBox;
+
+	@FXML
+	private ComboBox bmdFilterAdverseDirectionComboBox;
+
 	// textfields
 
 	@FXML
@@ -374,6 +380,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		input.setRemoveWithStepFunction(this.removeStepFunctionCheckBox.isSelected());
 
 		input.setRemoveWithStepFunctionWithBMDLower(removeStepFunctionWithBMDLowerCheckBox.isSelected());
+		input.setRemoveGenesWithAdverseDirection(this.bmdFilterAdverseDirectionCheckBox.isSelected());
+		input.setRemoveGenesWithAdverseDirectionValue(
+				this.bmdFilterAdverseDirectionComboBox.getValue().toString());
 
 		input.setRemoveBMDLessThanRSquaredNumber(Double.parseDouble(this.rSquaredFilterValue.getText()));
 
@@ -571,6 +580,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	{
 		this.catAnalysisEnum = catAnalysisEnum;
 
+		this.bmdFilterAdverseDirectionComboBox.getItems().addAll("UP", "DOWN");
+		bmdFilterAdverseDirectionComboBox.getSelectionModel().select(0);
 		// Render the view based on the Category Analysis style.
 		if (catAnalysisEnum == CategoryAnalysisEnum.PATHWAY)
 		{
@@ -627,6 +638,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		this.removeStepFunctionCheckBox.setSelected(input.isRemoveWithStepFunction());
 
 		this.removeStepFunctionWithBMDLowerCheckBox.setSelected(input.isRemoveWithStepFunctionWithBMDLower());
+
+		this.bmdFilterAdverseDirectionCheckBox.setSelected(input.isRemoveGenesWithAdverseDirection());
+		this.bmdFilterAdverseDirectionComboBox.setValue(input.getRemoveGenesWithAdverseDirectionValue());
 
 		this.rSquaredFilterValue.setText("" + input.getRemoveBMDLessThanRSquaredNumber());
 
@@ -810,6 +824,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		params.setMinGenesInSet(Integer.valueOf(this.minGenesInSetTextBox.getText()));
 		params.setRemoveStepFunction(this.removeStepFunctionCheckBox.isSelected());
 		params.setRemoveStepFunctionWithBMDLower(removeStepFunctionWithBMDLowerCheckBox.isSelected());
+
+		params.setRemoveAdverseDirection(this.bmdFilterAdverseDirectionCheckBox.isSelected());
+		params.setRemoveAdverseDirectionValue(this.bmdFilterAdverseDirectionComboBox.getValue().toString());
 
 		params.setRemoveMaxGenesInSet(filterMaxGenesInSetCheckbox.isSelected());
 		params.setMaxGenesInSet(Integer.valueOf(this.maxGenesInSetTextBox.getText()));

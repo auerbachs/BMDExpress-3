@@ -367,6 +367,17 @@ public class AnalyzeRunner
 			params.setRemoveNFoldBelowLowestDose(true);
 		}
 
+		if (catConfig.getRemoveAdverseDirection() == null)
+			params.setRemoveAdverseDirection(false);
+		else
+		{
+			if (catConfig.getRemoveAdverseDirection() < 0)
+				params.setRemoveAdverseDirectionValue("DOWN");
+			else
+				params.setRemoveAdverseDirectionValue("UP");
+			params.setRemoveAdverseDirection(true);
+		}
+
 		if (catConfig.getRemoveBMDGreaterHighDose() == null)
 			params.setRemoveBMDGreaterHighDose(false);
 		else

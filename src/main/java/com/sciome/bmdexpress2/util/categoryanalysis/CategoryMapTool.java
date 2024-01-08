@@ -346,6 +346,12 @@ public class CategoryMapTool
 					+ params.isRemoveStepFunctionWithBMDLower());
 		}
 
+		if (params.isRemoveAdverseDirection())
+		{
+			analysisInfo.getNotes()
+					.add("Remove Genes With Adverse Direction: " + params.getRemoveAdverseDirectionValue());
+		}
+
 		if (params.getDeduplicateGeneSets())
 		{
 			rstName += "_deduplicate";
@@ -611,6 +617,14 @@ public class CategoryMapTool
 			{
 				sub = bmdStats.checkStepFunctionWithBMDLower(subList, subHashG2Ids, removedProbes).size();
 				categoryAnalysisResult.setGenesNotStepFunctionWithBMDLower(sub);
+			}
+
+			if (params.isRemoveAdverseDirection())
+			{
+				sub = bmdStats.checkAdverseDirection(subList, subHashG2Ids, removedProbes,
+						params.getRemoveAdverseDirectionValue()).size();
+
+				categoryAnalysisResult.setGenesNotAdverseDirection(sub);
 			}
 
 			subList = bmdStats.getFinalList(subList, subHashG2Ids, removedProbes);

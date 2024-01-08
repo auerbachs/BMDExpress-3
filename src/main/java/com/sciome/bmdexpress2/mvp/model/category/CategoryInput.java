@@ -17,6 +17,7 @@ public class CategoryInput
 	private boolean identifyConflictingProbeSets;
 	private boolean minGenesInGeneset;
 	private boolean maxGenesInGeneset;
+	private boolean removeGenesWithAdverseDirection;
 
 	private boolean removeWithStepFunction;
 	private boolean removeWithStepFunctionWithBMDLower;
@@ -31,6 +32,7 @@ public class CategoryInput
 	private double removeGenesWithPrefilterPValueNumber;
 	private double removeGenesWithPrefilterAdjustedPValueNumber;
 	private double correlationCutoffForConflictingProbeSets;
+	private String removeGenesWithAdverseDirectionValue;
 
 	private int removeMinGenesInGeneset;
 	private int removeMaxGenesInGeneset;
@@ -51,6 +53,7 @@ public class CategoryInput
 		this.removeGenesWithPrefilterAdjustedPValue = false;
 		this.eliminateGeneSetRedundancy = false;
 		this.identifyConflictingProbeSets = true;
+		this.removeGenesWithAdverseDirection = false;
 		removeWithStepFunction = false;
 		removeWithStepFunctionWithBMDLower = false;
 
@@ -71,6 +74,26 @@ public class CategoryInput
 		removeMinGenesInGeneset = 20;
 		removeMaxGenesInGeneset = 500;
 
+	}
+
+	public boolean isRemoveGenesWithAdverseDirection()
+	{
+		return removeGenesWithAdverseDirection;
+	}
+
+	public void setRemoveGenesWithAdverseDirection(boolean removeGenesWithAdverseDirection)
+	{
+		this.removeGenesWithAdverseDirection = removeGenesWithAdverseDirection;
+	}
+
+	public String getRemoveGenesWithAdverseDirectionValue()
+	{
+		return removeGenesWithAdverseDirectionValue;
+	}
+
+	public void setRemoveGenesWithAdverseDirectionValue(String removeGenesWithAdverseDirectionValue)
+	{
+		this.removeGenesWithAdverseDirectionValue = removeGenesWithAdverseDirectionValue;
 	}
 
 	public boolean isMinGenesInGeneset()

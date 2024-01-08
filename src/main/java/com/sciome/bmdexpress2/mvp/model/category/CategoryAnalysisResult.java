@@ -69,6 +69,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private Integer genesWithPrefilterAdjustedPValueAboveValue;
 	private Integer genesNotStepFunction;
 	private Integer genesNotStepFunctionWithBMDLower;
+	private Integer genesNotAdverseDirection;
 
 	private Integer genesThatPassedAllFilters;
 
@@ -368,6 +369,16 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	public void setGenesNotStepFunctionWithBMDLower(Integer genesNotStepFunctionWithBMDLower)
 	{
 		this.genesNotStepFunctionWithBMDLower = genesNotStepFunctionWithBMDLower;
+	}
+
+	public Integer getGenesNotAdverseDirection()
+	{
+		return genesNotAdverseDirection;
+	}
+
+	public void setGenesNotAdverseDirection(Integer genesNotAdverseDirection)
+	{
+		this.genesNotAdverseDirection = genesNotAdverseDirection;
 	}
 
 	public Double getPercentage()
@@ -1201,6 +1212,9 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		if (genesNotStepFunctionWithBMDLower != null)
 			headers.add("Genes Not Step Function with BMD Less Than Lowest Dose");
 
+		if (genesNotAdverseDirection != null)
+			headers.add("Genes Not Adverse Direction");
+
 		headers.add("Genes That Passed All Filters");
 
 		headers.add(CategoryAnalysisResults.FISHERS_A);
@@ -1368,6 +1382,8 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 			row.add(genesNotStepFunction);
 		if (genesNotStepFunctionWithBMDLower != null)
 			row.add(genesNotStepFunctionWithBMDLower);
+		if (genesNotAdverseDirection != null)
+			row.add(genesNotAdverseDirection);
 
 		row.add(getGenesThatPassedAllFilters());
 		row.add(this.fishersA);
