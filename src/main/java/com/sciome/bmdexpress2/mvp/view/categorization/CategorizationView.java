@@ -640,7 +640,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		this.removeStepFunctionWithBMDLowerCheckBox.setSelected(input.isRemoveWithStepFunctionWithBMDLower());
 
 		this.bmdFilterAdverseDirectionCheckBox.setSelected(input.isRemoveGenesWithAdverseDirection());
-		this.bmdFilterAdverseDirectionComboBox.setValue(input.getRemoveGenesWithAdverseDirectionValue());
+		if (input.getRemoveGenesWithAdverseDirectionValue() != null)
+			this.bmdFilterAdverseDirectionComboBox.setValue(input.getRemoveGenesWithAdverseDirectionValue());
 
 		this.rSquaredFilterValue.setText("" + input.getRemoveBMDLessThanRSquaredNumber());
 
