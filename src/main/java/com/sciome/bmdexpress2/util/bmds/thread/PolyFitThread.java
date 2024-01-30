@@ -164,8 +164,8 @@ public class PolyFitThread extends Thread implements IFitThread
 
 					resultsList = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), bmrLevel,
-							inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
-							transform);
+							inputParameters.getConstantVariance() != 1, true, dev, inputParameters.isFast(),
+							mono, transform);
 
 					double[] results1 = resultsList.get(0);
 					double[] covariates1 = resultsList.get(1);

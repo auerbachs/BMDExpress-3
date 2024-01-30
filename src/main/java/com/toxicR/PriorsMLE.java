@@ -83,31 +83,41 @@ public class PriorsMLE
 			}, 6, 5);
 			linear = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, 0, 1000, // 1
-					(MLE), 0, 5, -10000, 10000, // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 2
 					(MLE), 0, 1, 0, 100, // 3
 					(MLE), 0, 1, -18, 18// 4
 			}, 4, 5);
 			poly2 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, 0, 1000, // 1
-					(MLE), 0, 5, -10000, 10000, // 2
-					(MLE), 0, 5, -10000, 10000, // 3
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 3
 					(MLE), 0, 1, 0, 100, // 4
 					(MLE), 0, 1, -18, 18// 5
 			}, 5, 5);
 			poly3 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, 0, 1000, // 1
-					(MLE), 0, 5, -10000, 10000, // 2
-					(MLE), 0, 5, -10000, 10000, // 3
-					(MLE), 0, 5, -10000, 10000, // 4
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 3
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 4
 					(MLE), 0, 1, 0, 100, //
 					(MLE), 0, 1, -18, 18 }, //
 					6, 5);
 			poly4 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 5, 0, 1000, // 1
-					(MLE), 0, 5, -10000, 10000, // 2
-					(MLE), 0, 5, -10000, 10000, // 3
-					(MLE), 0, 5, -10000, 10000, // 4
-					(MLE), 0, 5, -10000, 10000, // 5
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 2
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 3
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 4
+					(MLE), 0, 5, (isIncreasing && isPolyMonotonic ? 0.00001 : -10000),
+					(isIncreasing || !isPolyMonotonic ? 10000 : -0.00001), // 5
 					(MLE), 0, 1, 0, 100, // 6
 					(MLE), 0, 1, -18, 18// 7
 			}, 7, 5);
