@@ -208,8 +208,8 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(Double.NaN);
 			row.add(Double.NaN);
 			row.add(Double.NaN);
-			row.add(Double.NaN);
-			row.add(Double.NaN);
+			row.add(false);
+			row.add(false);
 		}
 		else
 		{

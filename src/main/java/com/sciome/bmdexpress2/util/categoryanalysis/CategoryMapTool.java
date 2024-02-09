@@ -35,6 +35,7 @@ import com.sciome.bmdexpress2.mvp.model.category.PathwayTypeEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
+import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
@@ -352,11 +353,93 @@ public class CategoryMapTool
 					.add("Remove Genes With Adverse Direction: " + params.getRemoveAdverseDirectionValue());
 		}
 
+		Map<String, Set<String>> geneset2GenesPlatform = new HashMap<>();
+		Map<String, Set<String>> geneset2GenesExpression = new HashMap<>();
+
+		Hashtable<String, Vector> allHash = catMap.allHash();
+
+		Set<String> expressionProbes = new HashSet<>();
+		for (ProbeResponse pr : bmdResults.getDoseResponseExperiment().getProbeResponses())
+		{
+			expressionProbes.add(pr.getProbe().getId());
+		}
+
+		Set<String> genesFromExpression = new HashSet<>();
+
+		for (ReferenceGeneAnnotation refgene : bmdResults.getDoseResponseExperiment()
+				.getReferenceGeneAnnotations())
+			if (expressionProbes.contains(refgene.getProbe().getId()))
+				for (ReferenceGene refg : refgene.getReferenceGenes())
+					genesFromExpression.add(refg.getId());
+
+		int genesetsByPlatform = 0;
+		int genesetsByExpression = 0;
+		int geensetsByPlatformFiltered = 0;
+		int genesetsByExpressionFiltered = 0;
+
+		for (String key : allHash.keySet())
+		{
+
+			Set<String> geneset = new HashSet<>();
+			for (Object gene : allHash.get(key))
+				geneset.add(gene.toString());
+
+			if (geneset.size() > 0)
+			{
+				geneset2GenesPlatform.put(key, geneset);
+				genesetsByPlatform++;
+			}
+
+			boolean passfilter = true;
+			if (params.isRemoveMinGenesInSet() && geneset.size() < params.getMinGenesInSet())
+				passfilter = false;
+			if (passfilter)
+				if (params.isRemoveMaxGenesInSet() && geneset.size() > params.getMaxGenesInSet())
+					passfilter = false;
+
+			if (passfilter && geneset.size() > 0)
+				geensetsByPlatformFiltered++;
+
+			geneset = new HashSet<>();
+			for (Object gene : allHash.get(key))
+				if (genesFromExpression.contains(gene.toString()))
+					geneset.add(gene.toString());
+			if (geneset.size() > 0)
+			{
+				geneset = new HashSet<>();
+				for (Object gene : allHash.get(key))
+					geneset.add(gene.toString());
+				geneset2GenesExpression.put(key, geneset);
+				genesetsByExpression++;
+
+				passfilter = true;
+				if (params.isRemoveMinGenesInSet() && geneset.size() < params.getMinGenesInSet())
+					passfilter = false;
+				if (passfilter)
+					if (params.isRemoveMaxGenesInSet() && geneset.size() > params.getMaxGenesInSet())
+						passfilter = false;
+
+				if (passfilter)
+					genesetsByExpressionFiltered++;
+
+			}
+		}
+
 		if (params.getDeduplicateGeneSets())
 		{
 			rstName += "_deduplicate";
 			analysisInfo.getNotes().add("Eliminate Gene Set Redundancy: " + params.getDeduplicateGeneSets());
 		}
+
+		analysisInfo.getNotes()
+				.add("# Gene sets platform – no gene set size restriction:" + genesetsByPlatform);
+		analysisInfo.getNotes()
+				.add("# Gene sets expression data – no gene set size restriction:" + genesetsByExpression);
+		analysisInfo.getNotes()
+				.add("# Gene sets platform –  gene set size restriction:" + geensetsByPlatformFiltered);
+		analysisInfo.getNotes().add(
+				"# Gene sets expression data – gene set size restriction:" + genesetsByExpressionFiltered);
+
 		this.probeGeneMaps = probeGeneMaps;
 		this.categoryGeneMap = catMap;
 		this.rstName = rstName;
@@ -367,6 +450,11 @@ public class CategoryMapTool
 	{
 		return categoryAnalysis();
 
+	}
+
+	public Hashtable<String, Vector> getAllCategoryGeneMap()
+	{
+		return categoryGeneMap.allHash();
 	}
 
 	public CategoryAnalysisResults categoryAnalysis()
