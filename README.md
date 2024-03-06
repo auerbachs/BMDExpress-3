@@ -20,11 +20,11 @@ Updates in BMDExpress-3
 =========================
 - Curve fit-based prefilter to identify dose responsive features more effectively
 
-- New maximum likelihood estimate models currently employed EPA's BMDS software for best model-based approaches
+- New maximum likelihood estimate models implimented (i.e., those used in the best model approach). These are the validated models that currently employed [EPA's BMDS software](https://www.epa.gov/bmds).
 
 - Alternative confidence interval estimate method (Wald) that allows for more rapid curve fitting
 
-- Laplace and MCMC Bayesian model averaging (based the approach used in ToxicR package -- https://github.com/NIEHS/ToxicR)
+- Laplace and MCMC Bayesian model averaging based the approach used in the [ToxicR package](https://github.com/NIEHS/ToxicR). The methods in ToxicR have undergone peer review and are [published](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9997717/). The statistical details of the ToxicR model averaging approach has also been [published] (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9799099/) in the peer review literature 
 
 - Forward toxicokinetic modeling to estimate internal dose levels based upon external dose BMD value
 
