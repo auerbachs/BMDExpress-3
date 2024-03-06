@@ -406,9 +406,9 @@ public class CategoryMapTool
 					geneset.add(gene.toString());
 			if (geneset.size() > 0)
 			{
-				geneset = new HashSet<>();
-				for (Object gene : allHash.get(key))
-					geneset.add(gene.toString());
+				// geneset = new HashSet<>();
+				// for (Object gene : allHash.get(key))
+				// geneset.add(gene.toString());
 				geneset2GenesExpression.put(key, geneset);
 				genesetsByExpression++;
 
@@ -433,12 +433,12 @@ public class CategoryMapTool
 
 		analysisInfo.getNotes()
 				.add("# Gene sets platform – no gene set size restriction:" + genesetsByPlatform);
-		analysisInfo.getNotes()
-				.add("# Gene sets expression data – no gene set size restriction:" + genesetsByExpression);
+		//analysisInfo.getNotes()
+		//		.add("# Gene sets expression data – no gene set size restriction:" + genesetsByExpression);
 		analysisInfo.getNotes()
 				.add("# Gene sets platform –  gene set size restriction:" + geensetsByPlatformFiltered);
-		analysisInfo.getNotes().add(
-				"# Gene sets expression data – gene set size restriction:" + genesetsByExpressionFiltered);
+		//analysisInfo.getNotes().add(
+		//		"# Gene sets expression data – gene set size restriction:" + genesetsByExpressionFiltered);
 
 		this.probeGeneMaps = probeGeneMaps;
 		this.categoryGeneMap = catMap;

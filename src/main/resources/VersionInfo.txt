@@ -6,7 +6,27 @@
  BMDExpress 3
 </h1>
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on October 31, 2023</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on March 7, 2024</h2>
+
+<h3>
+New Features
+</h3>
+<ul>
+<li>Add Adverse Direction filter to Category Analysis.</li>
+<li>Update labels in Category Analysis input view to be consistent.</li>
+<li>Add geneset counts to Category Analysis notes based on platform and based on geneset size filter.</li>
+</ul>
+
+<h3>
+Bug Fixes
+</h3>
+<ul>
+<li>Fixed issue causing Polynomial models to produce non-monotonic results when user specified monontonic restriction</li>
+
+</ul>
+
+
+<h2>Released on October 31, 2023</h2>
 
 
 <h3>
@@ -20,7 +40,6 @@ Bug Fixes
 
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on August 28, 2023</h2>
 <h2>Released on August 28, 2023</h2>
 <h3>
 New Features
@@ -30,6 +49,7 @@ New Features
 <li>Step Function detection for modeled curves</li>
 <li>Export curve response data</li>
 <li>Add category analysis filter parameters</li>
+</ul>
 <ul>
 <li>Min/Max number of genes in geneset</li>
 <li>Is step function</li>
