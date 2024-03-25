@@ -77,7 +77,7 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String BEST_RSQUARED = "Best RSquared";
 
 	public static final String BEST_ISSTEPFUNCTION = "Best Is Step Function";
-	public static final String BEST_ISSTEPFUNCTION_WITH_BMD_LESS_THAN_LOWEST = "Best Is Step Function With BMD Less Than Lowest Dose";
+	public static final String BEST_ISSTEPFUNCTION_WITH_BMD_LESS_THAN_LOWEST = "Best Is Step Function Less Than Lowest Dose";
 	public static final String BEST_POLY = "Best Poly";
 	public static final String WAUC = "wAUC";
 	public static final String LOG_WAUC = "Log 2 wAUC";

@@ -27,7 +27,7 @@ public class PowerResult extends StatResult
 				"Power BMD/BMDL", "Power Parameter control", "Power Parameter slope", "Power Parameter power",
 				"Power Execution Complete", "Power RSquared"));
 		header.addAll(residualHeader);
-		header.add("Power Is Step Function With BMD Less Than Lowest Dose");
+		header.add("Power Is Step Function Less Than Lowest Dose");
 
 		return header;
 

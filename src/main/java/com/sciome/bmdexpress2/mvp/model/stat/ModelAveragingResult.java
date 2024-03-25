@@ -34,7 +34,7 @@ public class ModelAveragingResult extends StatResult
 		List<String> residualHeader = getResidualHeader("MA Residual ");
 		returnList.addAll(residualHeader);
 		returnList.add("MA Is Step Function");
-		returnList.add("MA Is Step Function With BMD Less Than Lowest Dose");
+		returnList.add("MA Is Step Function Less Than Lowest Dose");
 		return returnList;
 
 	}

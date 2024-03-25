@@ -420,8 +420,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				int isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
 				statResult.setIsStepFunction(isStep > 0);
-				statResult.setStepWithBMDLessLowest(
-						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
+				statResult.setStepWithBMDLessLowest(isStep == 1);
 			}
 
 		}
@@ -530,8 +529,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				int isStep = isStepFunction(null, statResult, doseResponseExperiment,
 						inputParameters.getStepFunctionThreshold());
 				statResult.setIsStepFunction(isStep > 0);
-				statResult.setStepWithBMDLessLowest(
-						isStepFunctionWithBMDLessThanLowest(statResult, isStep, doseResponseExperiment));
+				statResult.setStepWithBMDLessLowest(isStep == 1);
 			}
 
 		}

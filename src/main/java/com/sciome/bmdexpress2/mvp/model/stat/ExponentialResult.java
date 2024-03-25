@@ -45,7 +45,7 @@ public class ExponentialResult extends StatResult
 
 		returnList.add(expName + " RSquared");
 		returnList.addAll(residualHeader);
-		returnList.add(expName + " Is Step Function With BMD Less Than Lowest Dose");
+		returnList.add(expName + " Is Step Function Less Than Lowest Dose");
 		return returnList;
 
 	}
