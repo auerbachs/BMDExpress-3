@@ -17,7 +17,7 @@ public abstract class BMDExpressAnalysisDataSet
 
 	public abstract List<Object> getColumnHeader2();
 
-	public abstract AnalysisInfo getAnalysisInfo();
+	public abstract List<AnalysisInfo> getAnalysisInfo(boolean alsoParentNotes);
 
 	public abstract String getName();
 

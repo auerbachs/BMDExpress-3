@@ -21,16 +21,16 @@ public class OriogenResults extends BMDExpressAnalysisDataSet
 	/**
 	 * 
 	 */
-	private static final long		serialVersionUID	= 343075642510090330L;
+	private static final long serialVersionUID = 343075642510090330L;
 
-	private String					name;
+	private String name;
 
-	private DoseResponseExperiment	doseResponseExperiment;
-	private List<OriogenResult>		oriogenResults;
-	private AnalysisInfo			analysisInfo;
-	private transient List<String>	columnHeader;
+	private DoseResponseExperiment doseResponseExperiment;
+	private List<OriogenResult> oriogenResults;
+	private AnalysisInfo analysisInfo;
+	private transient List<String> columnHeader;
 
-	private Long					id;
+	private Long id;
 
 	@JsonIgnore
 	public Long getID()
@@ -59,11 +59,13 @@ public class OriogenResults extends BMDExpressAnalysisDataSet
 		return name;
 	}
 
+	@Override
 	public void setName(String name)
 	{
 		this.name = name;
 	}
 
+	@Override
 	public DoseResponseExperiment getDoseResponseExperiement()
 	{
 		return doseResponseExperiment;
@@ -121,9 +123,24 @@ public class OriogenResults extends BMDExpressAnalysisDataSet
 	}
 
 	@Override
-	public AnalysisInfo getAnalysisInfo()
+	public List<AnalysisInfo> getPrefilterAnalysisInfo(boolean getParents)
 	{
-		return analysisInfo;
+		return getAnalysisInfo(getParents);
+	}
+
+	@Override
+	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
+	{
+		List<AnalysisInfo> list = new ArrayList<>();
+		list.add(analysisInfo);
+		if (getParents)
+		{
+			if (doseResponseExperiment != null)
+			{
+				list.addAll(doseResponseExperiment.getAnalysisInfo(getParents));
+			}
+		}
+		return list;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)
@@ -262,4 +279,5 @@ public class OriogenResults extends BMDExpressAnalysisDataSet
 	{
 		return getName();
 	}
+
 }

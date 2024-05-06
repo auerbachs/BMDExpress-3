@@ -37,7 +37,9 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onLoadExperiement(ExpressionDataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	/*
@@ -46,7 +48,9 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onLoadOneWayAnova(OneWayANOVADataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	/*
@@ -55,7 +59,9 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onLoadWilliamsTrend(WilliamsTrendDataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	/*
@@ -64,7 +70,9 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onLoadCurveFitPrefilter(CurveFitPrefilterDataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	/*
@@ -73,7 +81,9 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onLoadOriogen(OriogenDataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	/*
@@ -82,7 +92,9 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onLoadBMDAnalysisResults(BMDAnalysisDataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	/*
@@ -91,49 +103,65 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	@Subscribe
 	public void onSelectCategoryAnalysis(CategoryAnalysisDataSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onLoadCombinedExperiement(ExpressionDataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onLoadCombinedOneWayAnova(OneWayANOVADataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onLoaCombineddWilliamsTrend(WilliamsTrendDataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onLoaCombinedCurveFitPrefilter(CurveFitPrefilterDataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onLoadCombinedOriogen(OriogenDataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onLoadCombinedBMDAnalysisResults(BMDAnalysisDataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe
 	public void onSelectCombinedCategoryAnalysis(CategoryAnalysisDataCombinedSelectedEvent event)
 	{
-		getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo());
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
 	}
 
 	@Subscribe

@@ -1492,7 +1492,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 			return;
 
 		DoseResponseExperiment newExp = new DoseResponseExperiment();
-		newExp.setAnalysisInfo(exp.getAnalysisInfo());
+		if (exp.getAnalysisInfo(false) != null && exp.getAnalysisInfo(false).size() > 0)
+			newExp.setAnalysisInfo(exp.getAnalysisInfo(false).get(0));
 		newExp.setChip(exp.getChip());
 		newExp.setChipCreationDate(exp.getChipCreationDate());
 		newExp.setTreatments(exp.getTreatments());

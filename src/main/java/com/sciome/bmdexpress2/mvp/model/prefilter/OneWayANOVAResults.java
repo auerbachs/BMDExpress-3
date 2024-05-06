@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
@@ -17,7 +18,6 @@ import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
@@ -28,16 +28,16 @@ public class OneWayANOVAResults extends BMDExpressAnalysisDataSet
 	/**
 	 * 
 	 */
-	private static final long		serialVersionUID	= -5704632335867988973L;
+	private static final long serialVersionUID = -5704632335867988973L;
 
-	private String					name;
+	private String name;
 
-	private DoseResponseExperiment	doseResponseExperiment;
-	private List<OneWayANOVAResult>	oneWayANOVAResults;
-	private AnalysisInfo			analysisInfo;
-	private transient List<String>	columnHeader;
+	private DoseResponseExperiment doseResponseExperiment;
+	private List<OneWayANOVAResult> oneWayANOVAResults;
+	private AnalysisInfo analysisInfo;
+	private transient List<String> columnHeader;
 
-	private Long					id;
+	private Long id;
 
 	@JsonIgnore
 	public Long getID()
@@ -66,11 +66,13 @@ public class OneWayANOVAResults extends BMDExpressAnalysisDataSet
 		return name;
 	}
 
+	@Override
 	public void setName(String name)
 	{
 		this.name = name;
 	}
 
+	@Override
 	public DoseResponseExperiment getDoseResponseExperiement()
 	{
 		return doseResponseExperiment;
@@ -129,9 +131,24 @@ public class OneWayANOVAResults extends BMDExpressAnalysisDataSet
 	}
 
 	@Override
-	public AnalysisInfo getAnalysisInfo()
+	public List<AnalysisInfo> getPrefilterAnalysisInfo(boolean getParents)
 	{
-		return analysisInfo;
+		return getAnalysisInfo(getParents);
+	}
+
+	@Override
+	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
+	{
+		List<AnalysisInfo> list = new ArrayList<>();
+		list.add(analysisInfo);
+		if (getParents)
+		{
+			if (doseResponseExperiment != null)
+			{
+				list.addAll(doseResponseExperiment.getAnalysisInfo(getParents));
+			}
+		}
+		return list;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)

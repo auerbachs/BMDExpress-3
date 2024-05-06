@@ -320,10 +320,11 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 			long endTime = System.currentTimeMillis();
 
 			long runTime = endTime - startTime;
-			bmdResults.getAnalysisInfo().getNotes().add("Total Run Time: " + runTime / 1000 + " seconds");
+			bmdResults.getAnalysisInfo(false).get(0).getNotes()
+					.add("Total Run Time: " + runTime / 1000 + " seconds");
 
 			for (String key : modelFailCount.keySet())
-				bmdResults.getAnalysisInfo().getNotes()
+				bmdResults.getAnalysisInfo(false).get(0).getNotes()
 						.add(key + " # of model timeouts: " + modelFailCount.get(key));
 
 		}
@@ -508,15 +509,17 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 		{
 			if (modelSelectionParameters.isFlagHillModel())
 			{
-				bmdResults.getAnalysisInfo().getNotes().add("Flag Hill Model with 'k' Parameter <: "
-						+ modelSelectionParameters.getFlagHillModelDose());
-				bmdResults.getAnalysisInfo().getNotes().add("Best Model Selection with Flagged Hill Model: "
-						+ modelSelectionParameters.getBestModelSelectionWithFlaggedHill());
+				bmdResults.getAnalysisInfo(false).get(0).getNotes()
+						.add("Flag Hill Model with 'k' Parameter <: "
+								+ modelSelectionParameters.getFlagHillModelDose());
+				bmdResults.getAnalysisInfo(false).get(0).getNotes()
+						.add("Best Model Selection with Flagged Hill Model: "
+								+ modelSelectionParameters.getBestModelSelectionWithFlaggedHill());
 
 				if (modelSelectionParameters
 						.getBestModelSelectionWithFlaggedHill() == BestModelSelectionWithFlaggedHillModelEnum.MODIFY_BMD_IF_FLAGGED_HILL_BEST)
 				{
-					bmdResults.getAnalysisInfo().getNotes()
+					bmdResults.getAnalysisInfo(false).get(0).getNotes()
 							.add("Modify BMD of flagged Hill as Best Models with Fraction of Minimum BMD: "
 									+ modelSelectionParameters.getModFlaggedHillBMDFractionMinBMD());
 				}
@@ -1363,13 +1366,13 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 		double flagBMDU = minBMDU * modelSelectionParameters.getModFlaggedHillBMDFractionMinBMD();
 		Double flagMinBMDU = Double.valueOf(flagBMDU);
 
-		bmdResults.getAnalysisInfo().getNotes()
+		bmdResults.getAnalysisInfo(false).get(0).getNotes()
 				.add("Minimum BMD of Best Models (excluding flagged Hill models): " + minBMD);
-		bmdResults.getAnalysisInfo().getNotes()
+		bmdResults.getAnalysisInfo(false).get(0).getNotes()
 				.add("BMD assigned to flagged Hill as Best Models: " + flagBMD);
-		bmdResults.getAnalysisInfo().getNotes()
+		bmdResults.getAnalysisInfo(false).get(0).getNotes()
 				.add("Minimum BMDL of Best Models (excluding flagged Hill models): " + minBMDL);
-		bmdResults.getAnalysisInfo().getNotes()
+		bmdResults.getAnalysisInfo(false).get(0).getNotes()
 				.add("BMDL assigned to flagged Hill as Best Models: " + flagBMDL);
 
 		short newflag = 1;

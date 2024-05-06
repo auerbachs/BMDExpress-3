@@ -175,7 +175,8 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 			long endTime = System.currentTimeMillis();
 
 			long runTime = endTime - startTime;
-			bmdResults.getAnalysisInfo().getNotes().add("Total Run Time: " + runTime / 1000 + " seconds");
+			bmdResults.getAnalysisInfo(false).get(0).getNotes()
+					.add("Total Run Time: " + runTime / 1000 + " seconds");
 
 		}
 		else

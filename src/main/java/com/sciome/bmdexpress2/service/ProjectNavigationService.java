@@ -235,8 +235,11 @@ public class ProjectNavigationService implements IProjectNavigationService
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
-			writer.write("\n\n");
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+			{
+				writer.write(String.join("\n", analysisInfo.getNotes()));
+				writer.write("\n\n");
+			}
 			writer.write(String.join("\t", bmdResults.getColumnHeader()) + "\n");
 			writer.write(getRowsToWrite(bmdResults.getAnalysisRows(), null));
 			writer.close();
@@ -268,7 +271,10 @@ public class ProjectNavigationService implements IProjectNavigationService
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
 			writer.write(filterInformation.toString());
-			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()) + "\n\n");
+
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+				writer.write(String.join("\n", analysisInfo.getNotes()) + "\n\n");
+
 			writer.write(String.join("\t", bmdResults.getColumnHeader()) + "\n");
 			writer.write(getRowsToWrite(filteredResults, null));
 			writer.close();
@@ -285,7 +291,8 @@ public class ProjectNavigationService implements IProjectNavigationService
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			writer.write(String.join("\n", doseResponseExperiment.getAnalysisInfo().getNotes()));
+			for (AnalysisInfo analysisInfo : doseResponseExperiment.getAnalysisInfo(true))
+				writer.write(String.join("\n", analysisInfo.getNotes()));
 			writer.write("\n");
 			writer.write(getExperimentToWrite(doseResponseExperiment, false));
 			writer.close();
@@ -303,7 +310,8 @@ public class ProjectNavigationService implements IProjectNavigationService
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+				writer.write(String.join("\n", analysisInfo.getNotes()));
 			writer.write("\n");
 
 			boolean hasHill = false;
@@ -654,7 +662,8 @@ public class ProjectNavigationService implements IProjectNavigationService
 			try
 			{
 				BufferedWriter writer = new BufferedWriter(new FileWriter(theFile), 1024 * 2000);
-				writer.write(String.join("\n", bmdResult.getAnalysisInfo().getNotes()));
+				for (AnalysisInfo analysisInfo : bmdResult.getAnalysisInfo(true))
+					writer.write(String.join("\n", analysisInfo.getNotes()));
 				writer.write("\n");
 
 				writer.write(towrite);
@@ -678,7 +687,8 @@ public class ProjectNavigationService implements IProjectNavigationService
 		{
 			BMDStatisticsService bss = new BMDStatisticsService();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			writer.write(String.join("\n", bmdResults.getAnalysisInfo().getNotes()));
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+				writer.write(String.join("\n", analysisInfo.getNotes()));
 			writer.write("\n");
 
 			Set<String> probeSet = getProbeSetFromAnnotations(bmdResults.getDoseResponseExperiment());

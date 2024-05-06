@@ -91,7 +91,8 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 		this.setDoseResponseExperiment(bmdResult.getDoseResponseExperiment());
 		this.setLogwAUC(bmdResult.getLogwAUC());
 		this.setwAUC(bmdResult.getwAUC());
-		this.setAnalysisInfo(new AnalysisInfo(bmdResult.getAnalysisInfo()));
+		if (bmdResult.getAnalysisInfo(false) != null && bmdResult.getAnalysisInfo(false).size() > 0)
+			this.setAnalysisInfo(new AnalysisInfo(bmdResult.getAnalysisInfo(false).get(0)));
 
 		this.setPrefilterResults(bmdResult.getPrefilterResults());
 		probeStatResults = new ArrayList<>();
@@ -247,9 +248,27 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	}
 
 	@Override
-	public AnalysisInfo getAnalysisInfo()
+	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
 	{
-		return analysisInfo;
+		List<AnalysisInfo> list = new ArrayList<>();
+		list.add(analysisInfo);
+
+		if (getParents)
+		{
+
+			List<AnalysisInfo> parentList = new ArrayList<>();
+			if (prefilterResults != null)
+			{
+				parentList.addAll(prefilterResults.getPrefilterAnalysisInfo(getParents));
+			}
+			else if (doseResponseExperiment != null)
+			{
+				parentList.addAll(doseResponseExperiment.getAnalysisInfo(getParents));
+			}
+			list.addAll(parentList);
+		}
+
+		return list;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)

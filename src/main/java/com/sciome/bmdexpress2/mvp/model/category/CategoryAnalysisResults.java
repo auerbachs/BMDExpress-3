@@ -182,9 +182,18 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 	}
 
 	@Override
-	public AnalysisInfo getAnalysisInfo()
+	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
 	{
-		return analysisInfo;
+		List<AnalysisInfo> list = new ArrayList<>();
+		list.add(analysisInfo);
+
+		if (getParents)
+		{
+			List<AnalysisInfo> parentList = bmdResult.getAnalysisInfo(getParents);
+			list.addAll(parentList);
+		}
+
+		return list;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
@@ -17,7 +18,6 @@ import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
@@ -41,6 +41,8 @@ public class CurveFitPrefilterResults extends BMDExpressAnalysisDataSet
 	private AnalysisInfo analysisInfo;
 	private transient List<String> columnHeader;
 
+	private PrefilterResults prefilterResults;
+
 	private Long id;
 
 	@JsonIgnore
@@ -62,6 +64,11 @@ public class CurveFitPrefilterResults extends BMDExpressAnalysisDataSet
 	public void setCurveFitPrefilterResults(List<CurveFitPrefilterResult> curveFitPrefilterResults)
 	{
 		this.curveFitPrefilterResults = curveFitPrefilterResults;
+	}
+
+	public void setPrefilterResults(PrefilterResults prefilterResults)
+	{
+		this.prefilterResults = prefilterResults;
 	}
 
 	@Override
@@ -135,9 +142,30 @@ public class CurveFitPrefilterResults extends BMDExpressAnalysisDataSet
 	}
 
 	@Override
-	public AnalysisInfo getAnalysisInfo()
+	public List<AnalysisInfo> getPrefilterAnalysisInfo(boolean getParents)
 	{
-		return analysisInfo;
+		return getAnalysisInfo(getParents);
+	}
+
+	@Override
+	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
+	{
+		List<AnalysisInfo> list = new ArrayList<>();
+		list.add(analysisInfo);
+
+		if (getParents)
+		{
+			if (prefilterResults != null)
+			{
+				list.addAll(prefilterResults.getPrefilterAnalysisInfo(getParents));
+			}
+			else if (doseResponseExperiment != null)
+			{
+				list.addAll(doseResponseExperiment.getAnalysisInfo(getParents));
+			}
+		}
+
+		return list;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)

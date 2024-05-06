@@ -125,9 +125,11 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 	}
 
 	@Override
-	public AnalysisInfo getAnalysisInfo()
+	public List<AnalysisInfo> getAnalysisInfo(boolean getParent)
 	{
-		return analysisInfo;
+		List<AnalysisInfo> list = new ArrayList<>();
+		list.add(analysisInfo);
+		return list;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)
