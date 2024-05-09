@@ -156,7 +156,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 
 	@Override
 	public String exportMultipleFiles(Map<String, Set<BMDExpressAnalysisDataSet>> header2Rows,
-			File selectedFile)
+			File selectedFile, boolean getParentNotes)
 	{
 		if (header2Rows.keySet().size() > MAX_FILES_FOR_MULTI_EXPORT)
 		{
@@ -230,12 +230,13 @@ public class ProjectNavigationService implements IProjectNavigationService
 	}
 
 	@Override
-	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile)
+	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile,
+			boolean getParentNotes)
 	{
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(getParentNotes))
 			{
 				writer.write(String.join("\n", analysisInfo.getNotes()));
 				writer.write("\n\n");
@@ -252,7 +253,8 @@ public class ProjectNavigationService implements IProjectNavigationService
 
 	@Override
 	public void exportFilteredResults(BMDExpressAnalysisDataSet bmdResults,
-			FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack)
+			FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack,
+			boolean getParentNotes)
 	{
 		StringBuilder filterInformation = new StringBuilder();
 		filterInformation.append("Filter information: \n");
@@ -272,7 +274,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
 			writer.write(filterInformation.toString());
 
-			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(getParentNotes))
 				writer.write(String.join("\n", analysisInfo.getNotes()) + "\n\n");
 
 			writer.write(String.join("\t", bmdResults.getColumnHeader()) + "\n");
@@ -286,14 +288,17 @@ public class ProjectNavigationService implements IProjectNavigationService
 	}
 
 	@Override
-	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile)
+	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile,
+			boolean getParentNotes)
 	{
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			for (AnalysisInfo analysisInfo : doseResponseExperiment.getAnalysisInfo(true))
+			for (AnalysisInfo analysisInfo : doseResponseExperiment.getAnalysisInfo(getParentNotes))
+			{
 				writer.write(String.join("\n", analysisInfo.getNotes()));
-			writer.write("\n");
+				writer.write("\n\n");
+			}
 			writer.write(getExperimentToWrite(doseResponseExperiment, false));
 			writer.close();
 		}
@@ -305,14 +310,16 @@ public class ProjectNavigationService implements IProjectNavigationService
 	}
 
 	@Override
-	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile)
+	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile, boolean getParentNotes)
 	{
 		try
 		{
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(getParentNotes))
+			{
 				writer.write(String.join("\n", analysisInfo.getNotes()));
-			writer.write("\n");
+				writer.write("\n\n");
+			}
 
 			boolean hasHill = false;
 			for (ProbeStatResult result : bmdResults.getProbeStatResults())
@@ -571,7 +578,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 	@Override
 	public void exportFilteredModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
 			FilteredList<BMDExpressAnalysisRow> filteredData, File selectedFile,
-			DataFilterPack filterDataPack)
+			DataFilterPack filterDataPack, boolean getParentNotes)
 	{
 
 		StringBuilder filterInformation = new StringBuilder();
@@ -587,20 +594,20 @@ public class ProjectNavigationService implements IProjectNavigationService
 		}
 		filterInformation.append("\n");
 
-		exportModledResponsesFromDataView(bmdAnalysisDataSet, filteredData, selectedFile);
+		exportModledResponsesFromDataView(bmdAnalysisDataSet, filteredData, selectedFile, getParentNotes);
 
 	}
 
 	@Override
 	public void exportBMDExpressAnalysisModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
-			File selectedFile)
+			File selectedFile, boolean getParentNotes)
 	{
 		exportModledResponsesFromDataView(bmdAnalysisDataSet, bmdAnalysisDataSet.getAnalysisRows(),
-				selectedFile);
+				selectedFile, getParentNotes);
 	}
 
 	private void exportModledResponsesFromDataView(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
-			List<BMDExpressAnalysisRow> rowsOfData, File selectedFile)
+			List<BMDExpressAnalysisRow> rowsOfData, File selectedFile, boolean getParentNotes)
 	{
 		List<BMDResult> bmdResults = new ArrayList<>();
 		boolean isCombined = false;
@@ -662,10 +669,11 @@ public class ProjectNavigationService implements IProjectNavigationService
 			try
 			{
 				BufferedWriter writer = new BufferedWriter(new FileWriter(theFile), 1024 * 2000);
-				for (AnalysisInfo analysisInfo : bmdResult.getAnalysisInfo(true))
+				for (AnalysisInfo analysisInfo : bmdResult.getAnalysisInfo(getParentNotes))
+				{
 					writer.write(String.join("\n", analysisInfo.getNotes()));
-				writer.write("\n");
-
+					writer.write("\n\n");
+				}
 				writer.write(towrite);
 
 				writer.close();
@@ -681,16 +689,18 @@ public class ProjectNavigationService implements IProjectNavigationService
 	}
 
 	@Override
-	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile)
+	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile,
+			boolean getParentNotes)
 	{
 		try
 		{
 			BMDStatisticsService bss = new BMDStatisticsService();
 			BufferedWriter writer = new BufferedWriter(new FileWriter(selectedFile), 1024 * 2000);
-			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(true))
+			for (AnalysisInfo analysisInfo : bmdResults.getAnalysisInfo(getParentNotes))
+			{
 				writer.write(String.join("\n", analysisInfo.getNotes()));
-			writer.write("\n");
-
+				writer.write("\n\n");
+			}
 			Set<String> probeSet = getProbeSetFromAnnotations(bmdResults.getDoseResponseExperiment());
 			ModeledResponse modeledResponse = bss.generateResponsesBetweenDoseGroups(bmdResults,
 					bmdResults.getProbeStatResults(), 10, probeSet);

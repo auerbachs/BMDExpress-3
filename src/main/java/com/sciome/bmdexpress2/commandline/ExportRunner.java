@@ -65,15 +65,16 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 			{
 				for (DoseResponseExperiment experiment : project.getDoseResponseExperiments())
 				{
 					if (analysisName.equals(experiment.getName()))
-					{
-						service.exportDoseResponseExperiment(experiment, new File(outputFile));
+					{// parent export
+						service.exportDoseResponseExperiment(experiment, new File(outputFile), true);
 						break;
 					}
 				}
@@ -89,7 +90,8 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 			{
@@ -97,7 +99,8 @@ public class ExportRunner
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
-						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						// parent export
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile), true);
 						break;
 					}
 				}
@@ -113,7 +116,8 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 			{
@@ -121,7 +125,8 @@ public class ExportRunner
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
-						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						// parent export
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile), true);
 						break;
 					}
 				}
@@ -137,7 +142,8 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 			{
@@ -145,7 +151,8 @@ public class ExportRunner
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
-						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						// parent export
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile), true);
 						break;
 					}
 				}
@@ -161,7 +168,8 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 			{
@@ -169,7 +177,8 @@ public class ExportRunner
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
-						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						// parent export
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile), true);
 						break;
 					}
 				}
@@ -185,7 +194,8 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 			{
@@ -193,7 +203,8 @@ public class ExportRunner
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
-						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						// parent export
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile), true);
 						break;
 					}
 				}
@@ -209,14 +220,16 @@ public class ExportRunner
 					dataset.add(experiment);
 				}
 				CombinedDataSet combinedDataSet = combinerService.combineBMDExpressAnalysisDataSets(dataset);
-				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile));
+				// parent export
+				service.exportBMDExpressAnalysisDataSet(combinedDataSet, new File(outputFile), true);
 			}
 			else
 				for (CategoryAnalysisResults experiment : project.getCategoryAnalysisResults())
 				{
 					if (analysisName.equals(experiment.getName()))
 					{
-						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile));
+						// parent export
+						service.exportBMDExpressAnalysisDataSet(experiment, new File(outputFile), true);
 						break;
 					}
 				}

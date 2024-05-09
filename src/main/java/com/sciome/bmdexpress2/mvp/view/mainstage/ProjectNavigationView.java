@@ -1346,7 +1346,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		if (selectedFile == null)
 			return;
 
-		presenter.exportDoseResponseExperiment(doseResponseExperiment, selectedFile);
+		// parent export
+		presenter.exportDoseResponseExperiment(doseResponseExperiment, selectedFile, true);
 	}
 
 	private void handle_DoseResponseExperimentRemove(DoseResponseExperiment doseResponseExperiment)
@@ -1404,8 +1405,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 				bmdResults.toString() + ".txt");
 		if (selectedFile == null)
 			return;
-
-		presenter.exportBMDExpressAnalysisDataSet(bmdResults, selectedFile);
+		// parent export
+		presenter.exportBMDExpressAnalysisDataSet(bmdResults, selectedFile, true);
 	}
 
 	private void handle_BMDResultReselectBestModels(BMDResult bmdResults)
@@ -1479,8 +1480,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 			if (forTheseProbes.contains(consumer.getProbeResponse().getProbe()))
 				newBMDResult.getProbeStatResults().add(consumer);
 		});
-
-		presenter.exportBMDResultBestModel(newBMDResult, selectedFile);
+		// parent export
+		presenter.exportBMDResultBestModel(newBMDResult, selectedFile, true);
 	}
 
 	private void handle_AnalsyisResultExportDoseResponseForCertainProbes(DoseResponseExperiment exp,
@@ -1505,8 +1506,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 			if (forTheseProbes.contains(pr.getProbe()))
 				newExp.getProbeResponses().add(pr);
 		}
-
-		presenter.exportDoseResponseExperiment(newExp, selectedFile);
+		// parent export
+		presenter.exportDoseResponseExperiment(newExp, selectedFile, true);
 	}
 
 	private void handle_BMDResultExportBestModels(BMDResult bmdResults)
@@ -1515,8 +1516,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 				"BestModels_" + bmdResults.toString() + ".txt");
 		if (selectedFile == null)
 			return;
-
-		presenter.exportBMDResultBestModel(bmdResults, selectedFile);
+		// parent export
+		presenter.exportBMDResultBestModel(bmdResults, selectedFile, true);
 	}
 
 	private void handle_BMDResultExportModeledResponsesBestModels(BMDResult bmdResults)
@@ -1525,8 +1526,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 				"ModeledResponses" + bmdResults.toString() + ".txt");
 		if (selectedFile == null)
 			return;
-
-		presenter.exportBMDResultModeledResponses(bmdResults, selectedFile);
+		// parent export
+		presenter.exportBMDResultModeledResponses(bmdResults, selectedFile, true);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -1576,8 +1577,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		File selectedFile = getFileToSave("Export Multi Selected Results", "multiselect_results.txt");
 		if (selectedFile == null)
 			return;
-
-		presenter.exportMultipleResults(selectedItems, selectedFile);
+		// parent export
+		presenter.exportMultipleResults(selectedItems, selectedFile, true);
 	}
 
 	/*

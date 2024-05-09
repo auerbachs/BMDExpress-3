@@ -22,17 +22,19 @@ public interface IProjectNavigationService
 			FileAnnotation fileAnnotation);
 
 	public String exportMultipleFiles(Map<String, Set<BMDExpressAnalysisDataSet>> header2rows,
-			File selectedFile);
+			File selectedFile, boolean getParentNotes);
 
-	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile);
+	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile,
+			boolean getParentNotes);
 
-	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment,
-			File selectedFile);
+	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile,
+			boolean getParentNotes);
 
 	public void exportFilteredResults(BMDExpressAnalysisDataSet bmdResults,
-			FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack);
+			FilteredList<BMDExpressAnalysisRow> filteredResults, File selectedFile, DataFilterPack pack,
+			boolean getParentNotes);
 
-	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile);
+	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile, boolean getParentNotes);
 
 	public Object[][] showGenesToProbeMatrix(DoseResponseExperiment doseResponseExperiment);
 
@@ -40,12 +42,12 @@ public interface IProjectNavigationService
 
 	public void exportModelParameters(BMDProject bmdProject);
 
-	void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile);
+	void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile, boolean getParentNotes);
 
 	public void exportFilteredModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
 			FilteredList<BMDExpressAnalysisRow> filteredData, File selectedFile,
-			DataFilterPack filterDataPack);
+			DataFilterPack filterDataPack, boolean getParentNotes);
 
 	public void exportBMDExpressAnalysisModeledResponses(BMDExpressAnalysisDataSet bmdAnalysisDataSet,
-			File selectedFile);
+			File selectedFile, boolean getParentNotes);
 }

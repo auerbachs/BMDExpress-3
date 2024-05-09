@@ -198,11 +198,12 @@ public class BMDAnalysisResultsDataView extends BMDExpressDataView<BMDResult> im
 		if (selectedFile == null)
 			return;
 
+		// parent export
 		if (enableFilterCheckBox.isSelected() && !(bmdAnalysisDataSet instanceof DoseResponseExperiment))
 			presenter.exportModeledResponseFilteredResults(bmdAnalysisDataSet, filteredData, selectedFile,
-					filtrationNode.getFilterDataPack());
+					filtrationNode.getFilterDataPack(), true);
 		else
-			presenter.exportModeledResponseResults(bmdAnalysisDataSet, selectedFile);
+			presenter.exportModeledResponseResults(bmdAnalysisDataSet, selectedFile, true);
 	}
 
 	private class BMDTableCallBack implements Callback<TableColumn, TableCell>

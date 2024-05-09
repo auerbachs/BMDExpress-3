@@ -742,33 +742,36 @@ public class ProjectNavigationPresenter
 	/*
 	 * export the dose response experiment to a text file
 	 */
-	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile)
+	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile,
+			boolean getParentInfo)
 	{
-		getService().exportDoseResponseExperiment(doseResponseExperiment, selectedFile);
+		getService().exportDoseResponseExperiment(doseResponseExperiment, selectedFile, getParentInfo);
 	}
 
 	/*
 	 * write the bmdresults to a text file
 	 */
-	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile)
+	public void exportBMDExpressAnalysisDataSet(BMDExpressAnalysisDataSet bmdResults, File selectedFile,
+			boolean getParentInfo)
 	{
-		getService().exportBMDExpressAnalysisDataSet(bmdResults, selectedFile);
+		getService().exportBMDExpressAnalysisDataSet(bmdResults, selectedFile, getParentInfo);
 	}
 
 	/*
 	 * write the best model for each probestat result to text file
 	 */
-	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile)
+	public void exportBMDResultBestModel(BMDResult bmdResults, File selectedFile, boolean getParentInfo)
 	{
-		getService().exportBMDResultBestModel(bmdResults, selectedFile);
+		getService().exportBMDResultBestModel(bmdResults, selectedFile, getParentInfo);
 	}
 
 	/*
 	 * write the best model for each probestat result to text file
 	 */
-	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile)
+	public void exportBMDResultModeledResponses(BMDResult bmdResults, File selectedFile,
+			boolean getParentInfo)
 	{
-		getService().exportBMDResultModeledResponses(bmdResults, selectedFile);
+		getService().exportBMDResultModeledResponses(bmdResults, selectedFile, getParentInfo);
 	}
 
 	/*
@@ -901,7 +904,8 @@ public class ProjectNavigationPresenter
 	 * A list of analysis data sets will be exported to one or more files. If there are datasets with varying
 	 * headers, then we will export to more than one file.
 	 */
-	public void exportMultipleResults(List<BMDExpressAnalysisDataSet> selectedItems, File selectedFile)
+	public void exportMultipleResults(List<BMDExpressAnalysisDataSet> selectedItems, File selectedFile,
+			boolean getParentInfo)
 	{
 		List<BMDExpressAnalysisDataSet> datasets = new ArrayList<>();
 		for (BMDExpressAnalysisDataSet item : selectedItems)
@@ -909,7 +913,7 @@ public class ProjectNavigationPresenter
 
 		CombinedDataSet combined = combinerService.combineBMDExpressAnalysisDataSets(datasets);
 
-		getService().exportBMDExpressAnalysisDataSet(combined, selectedFile);
+		getService().exportBMDExpressAnalysisDataSet(combined, selectedFile, getParentInfo);
 
 	}
 

@@ -961,11 +961,12 @@ public abstract class BMDExpressDataView<T> extends VBox
 		if (selectedFile == null)
 			return;
 
+		// parent export
 		if (enableFilterCheckBox.isSelected() && !(bmdAnalysisDataSet instanceof DoseResponseExperiment))
 			presenter.exportFilteredResults(bmdAnalysisDataSet, filteredData, selectedFile,
-					filtrationNode.getFilterDataPack());
+					filtrationNode.getFilterDataPack(), true);
 		else
-			presenter.exportResults(bmdAnalysisDataSet, selectedFile);
+			presenter.exportResults(bmdAnalysisDataSet, selectedFile, true);
 	}
 
 	// This is copied from ProjectNavigationView (might be a better way)
