@@ -55,9 +55,16 @@ public class BMDStatisticsService implements IBMDStatisticsService
 			double diff = nextDg.getDose() - dg.getDose();
 			// calculate the steps between.
 			double step = diff / betweenDoses;
+
 			for (double j = dg.getDose(); j < nextDg.getDose(); j += step)
-				header.add(String.valueOf(Precision.round(j, 5)));
+			{
+				if (!String.valueOf(Precision.round(j, 5))
+						.equals(String.valueOf(Precision.round(nextDg.getDose().doubleValue(), 5))))
+					header.add(String.valueOf(Precision.round(j, 5)));
+			}
+
 		}
+		header.add(String.valueOf(Precision.round(doseGroups.get(doseGroups.size() - 1).getDose(), 5)));
 
 		for (ProbeStatResult psr : probeStatResults)
 		{
@@ -80,12 +87,17 @@ public class BMDStatisticsService implements IBMDStatisticsService
 				double diff = nextDg.getDose() - dg.getDose();
 				// calculate the steps between.
 				double step = diff / betweenDoses;
+
 				for (double j = dg.getDose(); j < nextDg.getDose(); j += step)
 				{
-					mrv.getModeledResponses().add(bestie.getResponseAt(j));
+					if (!String.valueOf(Precision.round(j, 5))
+							.equals(String.valueOf(Precision.round(nextDg.getDose().doubleValue(), 5))))
+						mrv.getModeledResponses().add(bestie.getResponseAt(j));
 				}
 
 			}
+			mrv.getModeledResponses()
+					.add(bestie.getResponseAt(doseGroups.get(doseGroups.size() - 1).getDose()));
 
 			responsiveProbes.add(probeid);
 

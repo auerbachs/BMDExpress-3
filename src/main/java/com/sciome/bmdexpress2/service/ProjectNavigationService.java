@@ -57,7 +57,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 			FileAnnotation fileAnnotation)
 	{
 
-		// set up the analysis information
+		// set up the analysis information Export All Modeled
 		for (DoseResponseExperiment doseResponseExperiment : experiments)
 		{
 			AnalysisInfo analysisInfo = new AnalysisInfo();
@@ -286,6 +286,7 @@ public class ProjectNavigationService implements IProjectNavigationService
 			e.printStackTrace();
 		}
 	}
+	// Export BMD Analysis Data
 
 	@Override
 	public void exportDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment, File selectedFile,
@@ -331,31 +332,85 @@ public class ProjectNavigationService implements IProjectNavigationService
 				}
 			}
 
-			writer.write("Probe Id\tBMDS Model\t");
-			writer.write("\tGenes\tGene Symbols\t");
-			writer.write("BMD\tBMDL\tBMDU\tfitPValue\tfitLogLikelihood\tAIC\tadverseDirection\t2BMD/BMDL");
-			if (hasHill)
-				writer.write("\tFlagged Hill");
+			List<String> columnHeader = new ArrayList<>();
+			columnHeader.add("Probe Id");
+			columnHeader.add("BMDS Model");
+			columnHeader.add("Genes");
+			columnHeader.add("Gene Symbols");
+			columnHeader.add(BMDResult.BEST_MODEL);
+			columnHeader.add(BMDResult.BEST_BMD);
+			columnHeader.add(BMDResult.BEST_BMDL);
+			columnHeader.add(BMDResult.BEST_BMDU);
+			columnHeader.add(BMDResult.BEST_FITPVALUE);
+			columnHeader.add(BMDResult.BEST_LOGLIKLIHOOD);
+			columnHeader.add(BMDResult.BEST_AIC);
+			columnHeader.add(BMDResult.BEST_ADVERSE_DIRECTION);
+			columnHeader.add(BMDResult.BEST_BMD_BMDL_RATIO);
+			columnHeader.add(BMDResult.BEST_BMDU_BMDL_RATIO);
+			columnHeader.add(BMDResult.BEST_BMDU_BMD_RATIO);
+			columnHeader.add(BMDResult.BEST_RSQUARED);
+			columnHeader.add(BMDResult.BEST_ISSTEPFUNCTION);
+			columnHeader.add(BMDResult.BEST_ISSTEPFUNCTION_WITH_BMD_LESS_THAN_LOWEST);
+			writer.write(String.join("\t", columnHeader));
+			// if (hasHill)
+			// writer.write("\tFlagged Hill");
 			writer.write("\n");
 			for (ProbeStatResult result : bmdResults.getProbeStatResults())
 			{
+
+				List<String> row = new ArrayList<>();
+
+				row.add(result.getProbeResponse().getProbe().getId());
+
 				if (result.getBestStatResult() != null)
 				{
-					writer.write(result.getProbeResponse().getProbe().getId() + "\t"
-							+ result.getBestStatResult() + "\t");
-					writer.write("\t" + result.getGenes() + "\t" + result.getGeneSymbols() + "\t");
-					writer.write(joinRowData(result.getBestStatResult().getRow(), "\t"));
-					if (!(result.getBestStatResult() instanceof HillResult))
-					{// add an extra column on account of hill's k-flag
-						writer.write("\t");
-					}
-					writer.write("\n");
+					row.add(result.getBestStatResult().toString());
 				}
 				else
 				{
-					writer.write(result.getProbeResponse().getProbe().getId() + "\t" + "none");
-					writer.write("\t" + result.getGenes() + "\t" + result.getGeneSymbols() + "\n");
+					row.add("none");
 				}
+				row.add(result.getGenes());
+				row.add(result.getGeneSymbols());
+
+				if (result.getBestStatResult() == null)
+				{
+					row.add("none");
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(Double.NaN));
+					row.add(String.valueOf(false));
+					row.add(String.valueOf(false));
+				}
+				else
+				{
+					row.add(String.valueOf(result.getBestStatResult().toString()));
+					row.add(String.valueOf(result.getBestStatResult().getBMD()));
+					row.add(String.valueOf(result.getBestStatResult().getBMDL()));
+					row.add(String.valueOf(result.getBestStatResult().getBMDU()));
+					row.add(String.valueOf(result.getBestStatResult().getFitPValue()));
+					row.add(String.valueOf(result.getBestStatResult().getFitLogLikelihood()));
+					row.add(String.valueOf(result.getBestStatResult().getAIC()));
+					row.add(String.valueOf(result.getBestStatResult().getAdverseDirection()));
+					row.add(String.valueOf(result.getBestStatResult().getBMDdiffBMDL()));
+					row.add(String.valueOf(result.getBestStatResult().getBMDUdiffBMDL()));
+					row.add(String.valueOf(result.getBestStatResult().getBMDUdiffBMD()));
+					row.add(String.valueOf(result.getBestStatResult().getrSquared()));
+					row.add(String.valueOf(result.getBestStatResult().getIsStepFunction()));
+					row.add(String.valueOf(result.getBestStatResult().isStepWithBMDLessLowest()));
+				}
+
+				writer.write(String.join("\t", row));
+				writer.write("\n");
+
 			}
 			writer.close();
 		}
