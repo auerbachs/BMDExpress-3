@@ -16,41 +16,47 @@ import com.sciome.charts.model.SciomeSeries;
 import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 
-public class SciomeVennDiagram extends SciomeChartBase<String, Number> {
+public class SciomeVennDiagram extends SciomeChartBase<String, Number>
+{
 
-	public SciomeVennDiagram(String title, List chartDataPacks, ChartKey key, SciomeChartListener chartListener) {
-		super(title, chartDataPacks, new ChartKey[] {key}, chartListener);
+	public SciomeVennDiagram(String title, List chartDataPacks, ChartKey key,
+			SciomeChartListener chartListener)
+	{
+		super(title, chartDataPacks, new ChartKey[] { key }, chartListener);
 	}
 
 	@Override
-	public void reactToChattingCharts() {
-		//Not needed for this graph
+	public void reactToChattingCharts()
+	{
+		// Not needed for this graph
 	}
 
 	@Override
-	public void markData(Set markings) {
-		//Not needed for this graph
+	public void markData(Set markings)
+	{
+		// Not needed for this graph
 	}
 
 	@Override
-	protected Node generateChart(ChartKey[] keys, ChartConfiguration chartConfiguration) {
+	protected Node generateChart(ChartKey[] keys, ChartConfiguration chartConfiguration)
+	{
 		BorderPane borderPane = new BorderPane();
 
 		boolean hasData = false;
-		
-		//Make venn calc and set data
+
+		// Make venn calc and set data
 		VennCalc vennCalc = new VennCalc();
 
 		int count = 1;
-		for(SciomeSeries<String, Number> series : getSeriesData())
+		for (SciomeSeries<String, Number> series : getSeriesData())
 		{
 			StringBuilder dataBuilder = new StringBuilder();
-			for(SciomeData<String, Number> data : series.getData()) 
+			for (SciomeData<String, Number> data : series.getData())
 			{
 				hasData = true;
 				dataBuilder.append(data.getXValue() + "\n");
 			}
-			switch(count)
+			switch (count)
 			{
 				case 1:
 					vennCalc.setA(dataBuilder.toString());
@@ -77,27 +83,35 @@ public class SciomeVennDiagram extends SciomeChartBase<String, Number> {
 		}
 		vennCalc.countVenn();
 		vennCalc.setEulerType();
-		
-		//Make appropriate euler or venn diagram
+
+		// Make appropriate euler or venn diagram
 		VennDiagram diagram;
-		if(hasData) {
-			switch(getSeriesData().size()) {
+		if (hasData)
+		{
+			switch (getSeriesData().size())
+			{
 				case 1:
 					diagram = new Euler1(borderPane, vennCalc);
 					break;
 				case 2:
-					//This means all intersections have data (2 circles)
-					if(vennCalc.getVennType() == 7) {
+					// This means all intersections have data (2 circles)
+					if (vennCalc.getVennType() == 7 || vennCalc.getVennType() == 4)
+					{
 						diagram = new Venn2(borderPane, vennCalc);
-					} else {
+					}
+					else
+					{
 						diagram = new Euler2(borderPane, vennCalc);
 					}
 					break;
 				case 3:
-					//This means all intersections have data (3 circles)
-					if(vennCalc.getVennType() == 127) {
+					// This means all intersections have data (3 circles)
+					if (vennCalc.getVennType() == 127 || vennCalc.getVennType() == 65)
+					{
 						diagram = new Venn3(borderPane, vennCalc);
-					} else {
+					}
+					else
+					{
 						diagram = new Euler3(borderPane, vennCalc);
 					}
 					break;
@@ -111,43 +125,47 @@ public class SciomeVennDiagram extends SciomeChartBase<String, Number> {
 					break;
 			}
 		}
-		
+
 		return borderPane;
 	}
 
 	@Override
-	protected boolean isXAxisDefineable() {
+	protected boolean isXAxisDefineable()
+	{
 		return false;
 	}
 
 	@Override
-	protected boolean isYAxisDefineable() {
+	protected boolean isYAxisDefineable()
+	{
 		return false;
 	}
 
 	@Override
-	protected void redrawChart() {
-		
+	protected void redrawChart()
+	{
+
 	}
 
 	@Override
-	protected void convertChartDataPacksToSciomeSeries(ChartKey[] keys, List chartPacks) {
+	protected void convertChartDataPacksToSciomeSeries(ChartKey[] keys, List chartPacks)
+	{
 		List<SciomeSeries<String, Number>> seriesData = new ArrayList<>();
-		
+
 		for (ChartDataPack chartDataPack : getChartDataPacks())
 		{
 			SciomeSeries<String, Number> series = new SciomeSeries<>();
 			series.setName(chartDataPack.getName());
-			for(ChartData chartData : chartDataPack.getChartData())
+			for (ChartData chartData : chartDataPack.getChartData())
 			{
 				String dataPoint = chartData.getDataPointLabel();
-				SciomeData<String, Number> theData = new SciomeData<>(dataPoint, dataPoint, 0, new ChartExtraValue(dataPoint,
-								0, chartData.getCharttableObject()));
+				SciomeData<String, Number> theData = new SciomeData<>(dataPoint, dataPoint, 0,
+						new ChartExtraValue(dataPoint, 0, chartData.getCharttableObject()));
 				series.getData().add(theData);
 			}
 			seriesData.add(series);
 		}
 		setSeriesData(seriesData);
 	}
-	
+
 }

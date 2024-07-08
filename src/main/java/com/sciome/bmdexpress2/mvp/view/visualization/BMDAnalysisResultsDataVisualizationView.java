@@ -8,7 +8,6 @@ import java.util.Map;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.sciome.bmdexpress2.mvp.model.ChartKey;
-import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.presenter.visualization.BMDAnalysisResultsDataVisualizationPresenter;
 import com.sciome.bmdexpress2.mvp.viewinterface.visualization.IDataVisualizationView;
@@ -23,6 +22,7 @@ import com.sciome.charts.jfree.SciomePieChartJFree;
 import com.sciome.charts.jfree.SciomeRangePlotJFree;
 import com.sciome.charts.jfree.SciomeScatterChartJFree;
 import com.sciome.charts.jfree.violin.SciomeViolinPlotDatasetJFree;
+import com.sciome.charts.venndis.SciomeVennDiagram;
 import com.sciome.filter.DataFilterPack;
 
 /*
@@ -31,13 +31,14 @@ import com.sciome.filter.DataFilterPack;
 public class BMDAnalysisResultsDataVisualizationView extends DataVisualizationView
 		implements IDataVisualizationView
 {
-	private static final String	ACCUMULATION_CHARTS				= "Accumulation Charts";
-	private final static String	BMDL_HISTOGRAM					= "BMDL Histogram";
-	private final static String	BMDU_HISTOGRAM					= "BMDU Histogram";
-	private final static String	FIT_PVALUE_HISTOGRAM			= "Fit P-Value Histogram";
-	private final static String	FIT_LOG_LIKELIHOOD_HISTOGRAM	= "Log Likelihood Histogram";
-	private final static String RANGE_PLOT						= "Range Plot";
-	private final static String VIOLIN_PLOT_DATASET				= "Violin Plot";
+	private static final String ACCUMULATION_CHARTS = "Accumulation Charts";
+	private final static String BMDL_HISTOGRAM = "BMDL Histogram";
+	private final static String BMDU_HISTOGRAM = "BMDU Histogram";
+	private final static String FIT_PVALUE_HISTOGRAM = "Fit P-Value Histogram";
+	private final static String FIT_LOG_LIKELIHOOD_HISTOGRAM = "Log Likelihood Histogram";
+	private final static String RANGE_PLOT = "Range Plot";
+	private final static String VIOLIN_PLOT_DATASET = "Violin Plot";
+	private static final String VENN_DIAGRAM = "Venn Diagaram";
 
 	public BMDAnalysisResultsDataVisualizationView()
 	{
@@ -65,18 +66,15 @@ public class BMDAnalysisResultsDataVisualizationView extends DataVisualizationVi
 				new SciomeHistogramJFree("", new ArrayList<>(),
 						new ChartKey(BMDResult.BEST_LOGLIKLIHOOD, null), 20.0,
 						BMDAnalysisResultsDataVisualizationView.this));
-		
-		chartCache.put(RANGE_PLOT, 
-				new SciomeRangePlotJFree("Range Plot", new ArrayList<>(),
-						new ChartKey(BMDResult.BMDL, null),
-						new ChartKey(BMDResult.BMD, null),
-						new ChartKey(BMDResult.BMDU, null),
+
+		chartCache.put(RANGE_PLOT,
+				new SciomeRangePlotJFree("Range Plot", new ArrayList<>(), new ChartKey(BMDResult.BMDL, null),
+						new ChartKey(BMDResult.BMD, null), new ChartKey(BMDResult.BMDU, null),
 						BMDAnalysisResultsDataVisualizationView.this));
 
 		chartCache.put(VIOLIN_PLOT_DATASET, new SciomeViolinPlotDatasetJFree("", new ArrayList<>(),
-				new ChartKey(BMDResult.BEST_BMD, null),
-				BMDAnalysisResultsDataVisualizationView.this));
-		
+				new ChartKey(BMDResult.BEST_BMD, null), BMDAnalysisResultsDataVisualizationView.this));
+
 		chartCache.put("DEFAULT-" + BMDResult.BMD + BMDResult.BMDL,
 				new SciomeScatterChartJFree("", new ArrayList<>(), new ChartKey(BMDResult.BMD, null),
 						new ChartKey(BMDResult.BMDL, null), BMDAnalysisResultsDataVisualizationView.this));
@@ -87,6 +85,9 @@ public class BMDAnalysisResultsDataVisualizationView extends DataVisualizationVi
 				new SciomePieChartJFree(
 						BMDAnalysisResultsDataVisualizationView.this.getBMDStatResultCounts(results, null),
 						null, null, "BMDS Model Counts", BMDAnalysisResultsDataVisualizationView.this));
+
+		chartCache.put(VENN_DIAGRAM,
+				new SciomeVennDiagram("", new ArrayList<>(), new ChartKey(BMDResult.PROBE_ID, null), this));
 
 	}
 
@@ -138,15 +139,20 @@ public class BMDAnalysisResultsDataVisualizationView extends DataVisualizationVi
 			SciomeChartBase chart3 = chartCache.get(ACCUMULATION_CHARTS + "-" + BMDResult.BMDU);
 			chartsList.add(chart3);
 		}
-		else if(chartKey.equals(RANGE_PLOT))
+		else if (chartKey.equals(RANGE_PLOT))
 		{
 			SciomeChartBase chart1 = chartCache.get(RANGE_PLOT);
 			chartsList.add(chart1);
 		}
-		else if(chartKey.equals(VIOLIN_PLOT_DATASET))
+		else if (chartKey.equals(VIOLIN_PLOT_DATASET))
 		{
 			SciomeChartBase chart1 = chartCache.get(VIOLIN_PLOT_DATASET);
 			chartsList.add(chart1);
+		}
+		else if (chartKey.equals(VENN_DIAGRAM))
+		{
+			SciomeChartBase chart = chartCache.get(VENN_DIAGRAM);
+			chartsList.add(chart);
 		}
 		else
 		{
@@ -225,6 +231,7 @@ public class BMDAnalysisResultsDataVisualizationView extends DataVisualizationVi
 		returnList.add(FIT_LOG_LIKELIHOOD_HISTOGRAM);
 		returnList.add(RANGE_PLOT);
 		returnList.add(VIOLIN_PLOT_DATASET);
+		returnList.add(VENN_DIAGRAM);
 		return returnList;
 	}
 

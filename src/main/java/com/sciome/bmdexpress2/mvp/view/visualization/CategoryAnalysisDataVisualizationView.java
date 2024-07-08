@@ -32,6 +32,7 @@ import com.sciome.charts.jfree.SciomeRangePlotJFree;
 import com.sciome.charts.jfree.SciomeScatterChartJFree;
 import com.sciome.charts.jfree.violin.SciomeViolinPlotDatasetJFree;
 import com.sciome.charts.jfree.violin.SciomeViolinPlotJFree;
+import com.sciome.charts.venndis.SciomeVennDiagram;
 import com.sciome.filter.DataFilterPack;
 
 /*
@@ -42,17 +43,18 @@ public class CategoryAnalysisDataVisualizationView extends DataVisualizationView
 		implements IDataVisualizationView
 {
 
-	private static final String	CURVEPLOT			= "Curve Overlay";
-	private static final String	RANGEPLOT			= "Range Plot";
-	private static final String	BUBBLE_CHART		= "Bubble Chart";
-	private static final String	ACCUMULATION_CHARTS	= "Accumulation Charts";
-	private static final String	BMD_BMDL_BARCHARTS	= "BMD and BMDL Bar Charts";
-	private static final String	BEST_MODEL_PIE		= "Best Models Pie Chart";
-	private static final String	MEAN_HISTOGRAMS		= "Mean Histograms";
-	private static final String	MEDIAN_HISTOGRAMS	= "Median Histograms";
-	private static final String	BMD_BMDL_SCATTER	= "BMD vs BMDL Scatter Plots";
-	private static final String	VIOLIN				= "Violin Plot Per Category";
-	private final static String	VIOLIN_PLOT_DATASET	= "Global Violin Plot";
+	private static final String CURVEPLOT = "Curve Overlay";
+	private static final String RANGEPLOT = "Range Plot";
+	private static final String BUBBLE_CHART = "Bubble Chart";
+	private static final String ACCUMULATION_CHARTS = "Accumulation Charts";
+	private static final String BMD_BMDL_BARCHARTS = "BMD and BMDL Bar Charts";
+	private static final String BEST_MODEL_PIE = "Best Models Pie Chart";
+	private static final String MEAN_HISTOGRAMS = "Mean Histograms";
+	private static final String MEDIAN_HISTOGRAMS = "Median Histograms";
+	private static final String BMD_BMDL_SCATTER = "BMD vs BMDL Scatter Plots";
+	private static final String VIOLIN = "Violin Plot Per Category";
+	private final static String VIOLIN_PLOT_DATASET = "Global Violin Plot";
+	private static final String VENN_DIAGRAM = "Venn Diagaram";
 
 	public CategoryAnalysisDataVisualizationView()
 	{
@@ -206,6 +208,9 @@ public class CategoryAnalysisDataVisualizationView extends DataVisualizationView
 						new ChartKey(CategoryAnalysisResults.BMDL_MEDIAN, null),
 						CategoryAnalysisDataVisualizationView.this));
 
+		chartCache.put(VENN_DIAGRAM, new SciomeVennDiagram("", new ArrayList<>(),
+				new ChartKey(CategoryAnalysisResults.CATEGORY_ID, null), this));
+
 	}
 
 	@Override
@@ -354,6 +359,11 @@ public class CategoryAnalysisDataVisualizationView extends DataVisualizationView
 			chartsList.add(chart3);
 
 		}
+		else if (chartKey.equals(VENN_DIAGRAM))
+		{
+			SciomeChartBase chart = chartCache.get(VENN_DIAGRAM);
+			chartsList.add(chart);
+		}
 
 		List<ChartDataPack> chartDataPacks = presenter.getBMDAnalysisDataSetChartDataPack(results, pack,
 				getUsedChartKeys(), getMathedChartKeys(),
@@ -387,6 +397,7 @@ public class CategoryAnalysisDataVisualizationView extends DataVisualizationView
 		resultList.add(BMD_BMDL_SCATTER);
 		resultList.add(VIOLIN);
 		resultList.add(VIOLIN_PLOT_DATASET);
+		resultList.add(VENN_DIAGRAM);
 
 		return resultList;
 	}
