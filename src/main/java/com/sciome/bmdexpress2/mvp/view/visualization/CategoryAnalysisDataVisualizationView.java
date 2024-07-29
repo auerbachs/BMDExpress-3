@@ -209,7 +209,7 @@ public class CategoryAnalysisDataVisualizationView extends DataVisualizationView
 						CategoryAnalysisDataVisualizationView.this));
 
 		chartCache.put(VENN_DIAGRAM, new SciomeVennDiagram("", new ArrayList<>(),
-				new ChartKey(CategoryAnalysisResults.CATEGORY_ID, null), this));
+				new ChartKey(CategoryAnalysisResults.CATEGORY_DESCRIPTION, null), this));
 
 	}
 
@@ -367,7 +367,7 @@ public class CategoryAnalysisDataVisualizationView extends DataVisualizationView
 
 		List<ChartDataPack> chartDataPacks = presenter.getBMDAnalysisDataSetChartDataPack(results, pack,
 				getUsedChartKeys(), getMathedChartKeys(),
-				new ChartKey(CategoryAnalysisResults.CATEGORY_ID, null));
+				new ChartKey(CategoryAnalysisResults.CATEGORY_DESCRIPTION, null));
 
 		// add straggler pie charts that need the chartdatapacks as input.
 		if (chartKey.equals(BEST_MODEL_PIE))
