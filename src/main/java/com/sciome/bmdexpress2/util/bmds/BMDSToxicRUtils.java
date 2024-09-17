@@ -155,7 +155,11 @@ public class BMDSToxicRUtils
 
 		returnList.add(results);
 		returnList.add(results2);
+		double[] covariates = new double[continousResult.getCov().size()];
+		for (int i = 0; i < covariates.length; i++)
+			covariates[i] = continousResult.getCov().get(i);
 
+		returnList.add(covariates);
 		return returnList;
 	}
 
@@ -295,6 +299,10 @@ public class BMDSToxicRUtils
 					results2[0] = continousResult.getParms().get(parmsize - 1);
 				}
 
+				double[] covariates = new double[continousResult.getCov().size()];
+				for (int i = 0; i < covariates.length; i++)
+					covariates[i] = continousResult.getCov().get(i);
+
 				// theStatResult.setVariances(results2);
 				theStatResult.setAIC(aic);
 
@@ -303,6 +311,9 @@ public class BMDSToxicRUtils
 				theStatResult.setFitPValue(fitp);
 				maModels.add(theStatResult);
 				theStatResult.setCurveParameters(results);
+				theStatResult.setCovariances(covariates);
+				theStatResult.setOtherParameters(results2);
+
 			}
 
 		}

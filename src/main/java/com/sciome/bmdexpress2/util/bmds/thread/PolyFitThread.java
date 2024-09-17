@@ -138,6 +138,8 @@ public class PolyFitThread extends Thread implements IFitThread
 				List<double[]> resultsList = null;
 
 				double[] results = null;
+				double[] otherParams = null;
+
 				double[] covariates = null;
 
 				if (inputParameters.getPolyDegree() == 1)
@@ -147,7 +149,8 @@ public class PolyFitThread extends Thread implements IFitThread
 							inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
 							transform);
 					results = resultsList.get(0);
-					covariates = resultsList.get(1);
+					otherParams = resultsList.get(1);
+					covariates = resultsList.get(2);
 				}
 				else
 				{
@@ -168,31 +171,38 @@ public class PolyFitThread extends Thread implements IFitThread
 							mono, transform);
 
 					double[] results1 = resultsList.get(0);
-					double[] covariates1 = resultsList.get(1);
+					double[] otherParams1 = resultsList.get(1);
+
+					double[] covariates1 = resultsList.get(2);
 
 					resultsList = BMDSToxicRUtils.calculateToxicR(polyModelConstant, responsesD, dosesd,
 							inputParameters.getBmrType(), bmrLevel,
 							inputParameters.getConstantVariance() != 1, false, dev, inputParameters.isFast(),
 							mono, transform);
 					double[] results2 = resultsList.get(0);
-					double[] covariates2 = resultsList.get(1);
+					double[] otherParams2 = resultsList.get(1);
+
+					double[] covariates2 = resultsList.get(2);
 
 					if ((results1[0] > results2[0] && results2[0] != DEFAULTDOUBLE)
 							|| results1[0] == DEFAULTDOUBLE)
 					{
 						results = results2;
 						covariates = covariates2;
+						otherParams = otherParams2;
 					}
 					else
 					{
 						results = results1;
 						covariates = covariates1;
+						otherParams = otherParams1;
+
 					}
 				}
 
 				if (results != null)
 				{
-					fillOutput(results, covariates, polyResult);
+					fillOutput(results, otherParams, covariates, polyResult);
 				}
 			}
 			catch (Exception e)
@@ -205,7 +215,7 @@ public class PolyFitThread extends Thread implements IFitThread
 
 	}
 
-	private void fillOutput(double[] results, double[] covariates, PolyResult polyResult)
+	private void fillOutput(double[] results, double[] results1, double[] covariates, PolyResult polyResult)
 	{
 		polyResult.setBMD(results[0]);
 		polyResult.setBMDL(results[1]);
@@ -213,7 +223,8 @@ public class PolyFitThread extends Thread implements IFitThread
 		polyResult.setFitPValue(results[3]);
 		polyResult.setFitLogLikelihood(results[4]);
 		polyResult.setAIC(results[5]);
-		// polyResult.setVariances(covariates);
+		polyResult.setOtherParameters(results1);
+		polyResult.setCovariances(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

@@ -76,6 +76,14 @@ public class PowerResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double dose, double[] customParameters)
+	{
+		int base = 0;
+		return customParameters[base]
+				+ customParameters[base + 1] * Math.pow(dose, customParameters[base + 2]);
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		return "y[dose] = control + slope * dose^power";

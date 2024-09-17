@@ -182,6 +182,76 @@ public class ExponentialResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double d, double[] customParameters)
+	{
+		if (option == 2)
+		{
+			return exp2Function(0, d, customParameters);
+		}
+		else if (option == 3)
+		{
+			return exp3Function(0, d, customParameters);
+		}
+		else if (option == 4)
+		{
+			return exp4Function(0, d, customParameters);
+		}
+		else if (option == 5)
+		{
+			return exp5Function(0, d, customParameters);
+		}
+		return 0.0;
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp2Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base + 1];
+		double b = customParameters[base + 2];
+
+		return a * Math.exp(customParameters[base] * b * dose);
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp3Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base + 1];
+		double b = customParameters[base + 2];
+		double d = customParameters[base + 3];
+
+		double expvalue = Math.pow(b * dose, d);
+		return a * Math.exp(customParameters[base] * expvalue);
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp4Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base + 1];
+		double b = customParameters[base + 2];
+		double c = customParameters[base + 3];
+		return a * (c - (c - 1) * Math.exp(-b * dose));
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp5Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base + 1];
+		double b = customParameters[base + 2];
+		double c = customParameters[base + 3];
+		double d = customParameters[base + 4];
+		double expvalue = Math.pow(b * dose, d);
+		return a * (c - (c - 1) * Math.exp(-expvalue));
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		String formula = "";

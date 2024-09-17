@@ -45,11 +45,12 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	private double rSquared;
 
 	public double[] curveParameters;
+	public double[] otherParameters;
 
 	private boolean isStepFunction;
 	private boolean isStepWithBMDLessLowest;
 
-	// private double[] variances;
+	private double[] covariances;
 
 	private Long id;
 
@@ -70,15 +71,25 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.id = id;
 	}
 
-	// public double[] getVariances()
-	// {
-	// return variances;
-	// }
+	public double[] getOtherParameters()
+	{
+		return otherParameters;
+	}
 
-	// public void setVariances(double[] vs)
-	// {
-	// this.variances = vs;
-	// }
+	public void setOtherParameters(double[] otherParameters)
+	{
+		this.otherParameters = otherParameters;
+	}
+
+	public double[] getCovariances()
+	{
+		return covariances;
+	}
+
+	public void setCovariances(double[] covariances)
+	{
+		this.covariances = covariances;
+	}
 
 	public double getBMD()
 	{
@@ -261,6 +272,8 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	}
 
 	public abstract double getResponseAt(double d);
+
+	public abstract double getResponseAt(double d, double[] parameters);
 
 	@JsonIgnore
 	public abstract List<String> getColumnNames();

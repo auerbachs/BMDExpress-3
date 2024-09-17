@@ -565,6 +565,10 @@ public class BMDAnalysisService implements IBMDAnalysisService
 							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
 					double rSquared = statServ.calculateRSquared(residuals,
 							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
+
+					double zScore = statServ.calculateZScore(statResult,
+							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
+
 					statResult.setResiduals(residuals);
 					statResult.setrSquared(rSquared);
 

@@ -133,6 +133,7 @@ public class HillFitThread extends Thread implements IFitThread
 						transform);
 				double[] results = resultsList.get(0);
 				double[] results1 = resultsList.get(1);
+				double[] covariates = resultsList.get(2);
 
 				double tmpr = results[8];
 				results[8] = results[9];
@@ -140,7 +141,7 @@ public class HillFitThread extends Thread implements IFitThread
 
 				if (results != null)
 				{
-					fillOutput(results, results1, hillResult);
+					fillOutput(results, results1, covariates, hillResult);
 					if (flagHill)
 					{
 						if (results[9] < flagDose)
@@ -167,7 +168,7 @@ public class HillFitThread extends Thread implements IFitThread
 	/*
 	 * given the results double array, we need to fill up the hillResult Object with the results.
 	 */
-	private void fillOutput(double[] results, double[] covariates, HillResult hillResult)
+	private void fillOutput(double[] results, double[] results1, double[] covariates, HillResult hillResult)
 	{
 		hillResult.setBMD(results[0]);
 		hillResult.setBMDL(results[1]);
@@ -175,7 +176,8 @@ public class HillFitThread extends Thread implements IFitThread
 		hillResult.setFitPValue(results[3]);
 		hillResult.setFitLogLikelihood(results[4]);
 		hillResult.setAIC(results[5]);
-		// hillResult.setVariances(covariates);
+		hillResult.setOtherParameters(results1);
+		hillResult.setCovariances(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

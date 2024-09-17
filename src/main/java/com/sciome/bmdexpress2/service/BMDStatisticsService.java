@@ -5,17 +5,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.math3.analysis.differentiation.DerivativeStructure;
-import org.apache.commons.math3.analysis.differentiation.FiniteDifferencesDifferentiator;
-import org.apache.commons.math3.analysis.differentiation.UnivariateDifferentiableFunction;
-import org.apache.commons.math3.exception.DimensionMismatchException;
-import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.util.Precision;
 
 import com.sciome.bmdexpress2.mvp.model.DoseGroup;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.stat.ModelAveragingResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponseValues;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
@@ -197,51 +193,82 @@ public class BMDStatisticsService implements IBMDStatisticsService
 	@Override
 	public double calculateZScore(StatResult result, List<Double> doses) throws Exception
 	{
-		/*
-		 * double[] variances = result.getVariances();
-		 * if (variances == null)
-		 * return 0;
-		 * 
-		 * double low = result.getResponseAt(doses.get(0));
-		 * double high = result.getResponseAt(doses.get(doses.size() - 1));
-		 * if (variances.length == 1)
-		 * return (low - high) / Math.exp(0.5 * variances[0]);
-		 * 
-		 * if (variances.length == 2)
-		 * return (low - high) / Math.sqrt(Math.exp(variances[1]) * Math.pow(low, variances[0]));
-		 */
+		double[] gradients1;
+		double[] gradients0;
+		double[] covariances;
+		double mean0;
+		double mean1;
+		try
+		{
+			StatResult theResult = result;
+			// must be careful with model averaging result. separate function
+			if (result instanceof ModelAveragingResult)
+				theResult = ((ModelAveragingResult) result).getModelWithHighestPP();
+
+			gradients1 = calculateGradients(theResult, result.getBMD());
+			gradients0 = calculateGradients(theResult, 0.0);
+
+			// for now we can get the actuall model average result for the responses at these doses.
+			mean0 = result.getResponseAt(0);
+			mean1 = result.getResponseAt(result.getBMD());
+
+			covariances = theResult.getCovariances();
+
+		}
+		catch (Exception e)
+		{
+
+		}
 
 		return 0;
 	}
 
-	@Override
-	public double calculateZScore(StatResult result, List<Double> doses, RealMatrix covarianceMatrix)
+	private double[] calculateGradients(StatResult result, Double atValue) throws Exception
 	{
-		int params = 1;
-		int order = 3;
-		double xRealValue = 2.5;
 
-		UnivariateDifferentiableFunction function = new UnivariateDifferentiableFunction() {
+		double[] gradients = new double[result.getCurveParameters().length
+				+ result.getOtherParameters().length];
+		List<Double> params = new ArrayList<>();
+		for (int i = 0; i < result.getCurveParameters().length; i++)
+			params.add(result.getCurveParameters()[i]);
 
-			@Override
-			public double value(double x)
+		Double mpres = Math.pow(1.0e-16, 0.33333);
+		List<Double> h = new ArrayList<>();
+		double[] hvector = new double[params.size()];
+		for (int i = 0; i < params.size(); i++)
+			hvector[i] = params.get(i);
+		Double x;
+		for (int i = 0; i < params.size(); i++)
+		{
+			x = params.get(i);
+			if (Math.abs(x) > 1.0e-16)
 			{
-				return result.getResponseAt(x);
+				h.add(mpres * Math.abs(x));
+				Double temp = x + h.get(i);
+				h.set(i, temp - x);
 			}
-
-			@Override
-			public DerivativeStructure value(DerivativeStructure t) throws DimensionMismatchException
+			else
 			{
-				// TODO Auto-generated method stub
-				return null;
+				h.add(mpres);
 			}
+		}
 
-		};
+		for (int i = 0; i < params.size(); i++)
+		{
+			x = params.get(i);
+			hvector[i] = x + h.get(i);
 
-		FiniteDifferencesDifferentiator diff = new FiniteDifferencesDifferentiator(5, .25);
-		// diff.differentiate(function).
-		// .
-		return 0;
+			Double f1 = result.getResponseAt(atValue, hvector);
+
+			hvector[i] = x - h.get(i);
+			Double f2 = result.getResponseAt(atValue, hvector);
+
+			gradients[i] = (f1 - f2) / (2.0 * h.get(i));
+			hvector[i] = x;
+
+		}
+
+		return gradients;
 	}
 
 }

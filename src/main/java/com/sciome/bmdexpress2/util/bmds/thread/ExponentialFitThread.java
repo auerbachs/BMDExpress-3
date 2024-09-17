@@ -134,6 +134,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 						transform);
 				double[] results = resultsList.get(0);
 				double[] results1 = resultsList.get(1);
+				double[] covariates = resultsList.get(2);
 
 				// if (expModel == ToxicRConstants.EXP3) // move param d to param c
 				// results[9] = results[10];
@@ -141,7 +142,7 @@ public class ExponentialFitThread extends Thread implements IFitThread
 					results[9] = Math.pow(Math.E, results[9]);
 				if (results != null)
 				{
-					fillOutput(results, results1, expResult);
+					fillOutput(results, results1, covariates, expResult);
 				}
 			}
 			catch (Exception e)
@@ -154,7 +155,8 @@ public class ExponentialFitThread extends Thread implements IFitThread
 
 	}
 
-	private void fillOutput(double[] results, double[] covariates, ExponentialResult expResult)
+	private void fillOutput(double[] results, double[] results1, double[] covariates,
+			ExponentialResult expResult)
 	{
 		expResult.setBMD(results[0]);
 		expResult.setBMDL(results[1]);
@@ -163,7 +165,9 @@ public class ExponentialFitThread extends Thread implements IFitThread
 		expResult.setFitLogLikelihood(results[4]);
 		expResult.setAIC(results[5]);
 		expResult.setOption(expOption);
-		// expResult.setVariances(covariates);
+		expResult.setOtherParameters(results1);
+		expResult.setCovariances(covariates);
+
 		int direction = 1;
 
 		if (results[6] < 0)

@@ -104,6 +104,27 @@ public class ModelAveragingResult extends StatResult
 
 	}
 
+	// custom parameters here will equate to custom posterior proabilities
+	@Override
+	public double getResponseAt(double dose, double[] customParameters)
+	{
+		int i = 0;
+		Double sum = 0.0;
+
+		List<Double> customPP = new ArrayList<>();
+		for (int j = 0; j < customParameters.length; j++)
+			customPP.add(customParameters[j]);
+		for (StatResult model : this.modelResults)
+		{
+			if (customPP.get(i) > 0.0)
+				sum += model.getResponseAt(dose) * customPP.get(i);
+			i++;
+		}
+
+		return sum.doubleValue();
+
+	}
+
 	@Override
 	public String getFormulaText()
 	{
@@ -119,6 +140,24 @@ public class ModelAveragingResult extends StatResult
 			returnStr += "(PP " + sr.getModel() + ": " + this.posteriorProbabilities.get(i++) + "),  ";
 
 		return returnStr.replaceAll("\\,  $", "");
+	}
+
+	public StatResult getModelWithHighestPP()
+	{
+		int i = 0;
+		Double highestPP = 0.0;
+		StatResult highestModel = null;
+		for (StatResult model : this.modelResults)
+		{
+			if (posteriorProbabilities.get(i) > highestPP)
+			{
+				highestPP = posteriorProbabilities.get(i);
+				highestModel = model;
+			}
+			i++;
+		}
+
+		return highestModel;
 	}
 
 }

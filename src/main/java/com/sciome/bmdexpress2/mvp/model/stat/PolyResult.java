@@ -132,6 +132,39 @@ public class PolyResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double d, double[] customParameters)
+	{
+		return polyFunction(d, degree, customParameters);
+	}
+
+	/**
+	 * Polynomial dynamic degree function
+	 */
+	private double polyFunction(double dose, int degree, double[] customParamters)
+	{
+		int base = 0;
+		int start = base + 1;
+
+		return customParamters[base] + polyValue(dose, start, 1, degree, customParamters);
+	}
+
+	/**
+	 * Recursive function
+	 */
+	private double polyValue(double dose, int index, int cur, int max, double[] customParamters)
+	{
+		if (cur == max)
+		{
+			return customParamters[index] * Math.pow(dose, max);
+		}
+		else
+		{
+			return customParamters[index] * Math.pow(dose, cur)
+					+ polyValue(dose, index + 1, cur + 1, max, customParamters);
+		}
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		StringBuilder sb = new StringBuilder("y[dose] = beta_0 + beta_1 * dose"); // degree == 1
