@@ -84,6 +84,8 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String LOEL_VALUE = "LOTEL";
 	public static final String NOEL_VALUE = "NOTEL";
 
+	public static final String BEST_ZSCORE = "Best Z-Score";
+
 	// clone a bmdexpress result
 	public BMDResult(BMDResult bmdResult)
 	{

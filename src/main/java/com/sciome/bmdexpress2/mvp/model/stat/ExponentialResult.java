@@ -46,6 +46,7 @@ public class ExponentialResult extends StatResult
 		returnList.add(expName + " RSquared");
 		returnList.addAll(residualHeader);
 		returnList.add(expName + " Is Step Function Less Than Lowest Dose");
+		returnList.add(expName + " Z-Score");
 		return returnList;
 
 	}
@@ -79,6 +80,7 @@ public class ExponentialResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
 		return returnList;
 	}
 

@@ -52,6 +52,7 @@ public class PolyResult extends StatResult
 		returnList.add(polyname + " RSquared");
 		returnList.addAll(residualHeader);
 		returnList.add(polyname + "  Is Step Function Less Than Lowest Dose");
+		returnList.add(polyname + " Z-Score");
 		return returnList;
 
 	}
@@ -73,6 +74,7 @@ public class PolyResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
 		return returnList;
 	}
 

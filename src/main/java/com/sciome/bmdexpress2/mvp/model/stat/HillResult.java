@@ -41,6 +41,7 @@ public class HillResult extends StatResult
 				"Hill Parameter n", "Hill Parameter k", "Hill Execution Complete", "Hill RSquared"));
 		header.addAll(residualHeader);
 		header.add("Hill Is Step Function Less Than Lowest Dose");
+		header.add("Hill Z-Score");
 		return header;
 
 	}
@@ -68,6 +69,7 @@ public class HillResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
 		return returnList;
 
 	}

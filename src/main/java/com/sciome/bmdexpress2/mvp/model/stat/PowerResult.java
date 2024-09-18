@@ -28,6 +28,7 @@ public class PowerResult extends StatResult
 				"Power Execution Complete", "Power RSquared"));
 		header.addAll(residualHeader);
 		header.add("Power Is Step Function Less Than Lowest Dose");
+		header.add("Power Z-Score");
 
 		return header;
 
@@ -53,6 +54,7 @@ public class PowerResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
 		return returnList;
 	}
 

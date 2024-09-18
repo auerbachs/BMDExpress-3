@@ -52,6 +52,8 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 
 	private double[] covariances;
 
+	private double zscore;
+
 	private Long id;
 
 	@JsonIgnore
@@ -216,6 +218,16 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.success = success;
 	}
 
+	public double getZscore()
+	{
+		return zscore;
+	}
+
+	public void setZscore(double zscore)
+	{
+		this.zscore = zscore;
+	}
+
 	@JsonIgnore
 	public double getBMDdiffBMDL()
 	{
@@ -269,6 +281,22 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public void setrSquared(double rSquared)
 	{
 		this.rSquared = rSquared;
+	}
+
+	public double[] getAllParameters()
+	{
+		// maybe in the case of model averaging or gcurvep
+		if (curveParameters == null || otherParameters == null)
+			return new double[0];
+
+		double[] returnval = new double[curveParameters.length + otherParameters.length];
+		for (int i = 0; i < curveParameters.length; i++)
+			returnval[i] = curveParameters[i];
+		for (int i = 0; i < otherParameters.length; i++)
+			returnval[i] = otherParameters[i];
+
+		return returnval;
+
 	}
 
 	public abstract double getResponseAt(double d);

@@ -35,6 +35,7 @@ public class ModelAveragingResult extends StatResult
 		returnList.addAll(residualHeader);
 		returnList.add("MA Is Step Function");
 		returnList.add("MA Is Step Function Less Than Lowest Dose");
+		returnList.add("MA Z-Score");
 		return returnList;
 
 	}
@@ -52,6 +53,7 @@ public class ModelAveragingResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(getIsStepFunction());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
 		return returnList;
 
 	}
