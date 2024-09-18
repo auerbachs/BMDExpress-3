@@ -289,11 +289,12 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		if (curveParameters == null || otherParameters == null)
 			return new double[0];
 
+		int ii = 0;
 		double[] returnval = new double[curveParameters.length + otherParameters.length];
 		for (int i = 0; i < curveParameters.length; i++)
-			returnval[i] = curveParameters[i];
+			returnval[ii++] = curveParameters[i];
 		for (int i = 0; i < otherParameters.length; i++)
-			returnval[i] = otherParameters[i];
+			returnval[ii++] = otherParameters[i];
 
 		return returnval;
 

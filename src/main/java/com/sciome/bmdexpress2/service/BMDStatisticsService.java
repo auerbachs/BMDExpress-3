@@ -201,28 +201,30 @@ public class BMDStatisticsService implements IBMDStatisticsService
 		double[] covariances;
 		double mean0;
 		double mean1;
+		double zscore = Double.NaN;
+		StatResult theResult = result;
+		// must be careful with model averaging result. separate function
+		if (result instanceof ModelAveragingResult)
+			theResult = ((ModelAveragingResult) result).getModelWithHighestPP();
 		try
 		{
-			StatResult theResult = result;
-			// must be careful with model averaging result. separate function
-			if (result instanceof ModelAveragingResult)
-				theResult = ((ModelAveragingResult) result).getModelWithHighestPP();
 
-			gradients1 = calculateGradients(theResult, result.getBMD());
-			gradients0 = calculateGradients(theResult, 0.0);
+			double[] allparams = theResult.getAllParameters();
+			gradients1 = calculateGradients(theResult, result.getBMD(), allparams);
+			gradients0 = calculateGradients(theResult, 0.0, allparams);
 
 			// for now we can get the actuall model average result for the responses at these doses.
 			mean0 = result.getResponseAt(0);
 			mean1 = result.getResponseAt(result.getBMD());
 
 			covariances = theResult.getCovariances();
-			double[] allparams = theResult.getAllParameters();
+
 			int allparamslength = allparams.length;
 			if (theResult instanceof ExponentialResult)
-				allparamslength = allparams.length - 1;
+				allparamslength = allparams.length;
 			if (theResult instanceof ExponentialResult && ((ExponentialResult) theResult).getOption() == 3
 					&& result instanceof ModelAveragingResult)
-				allparamslength = allparams.length - 2;
+				allparamslength = allparams.length;
 
 			double[][] covmatrix = new double[allparamslength][];
 			int ii = 0;
@@ -244,10 +246,7 @@ public class BMDStatisticsService implements IBMDStatisticsService
 			RealMatrix gradMatrixTransposed = gradMatrix.transpose();
 			RealMatrix varianceMatrix = gradMatrix.multiply(covarianceMatrix).multiply(gradMatrixTransposed);
 			double variance = varianceMatrix.getTrace();
-			double zscore = (mean1 - mean0) / Math.sqrt(variance);
-
-			theResult.setZscore(zscore);
-			result.setZscore(zscore);
+			zscore = (mean1 - mean0) / Math.sqrt(variance);
 
 		}
 		catch (Exception e)
@@ -255,19 +254,24 @@ public class BMDStatisticsService implements IBMDStatisticsService
 			e.printStackTrace();
 		}
 
-		return 0;
+		result.setZscore(zscore);
+		if (theResult != null)
+			theResult.setZscore(zscore);
+
+		return zscore;
 	}
 
-	private double[] calculateGradients(StatResult result, Double atValue) throws Exception
+	private double[] calculateGradients(StatResult result, Double atValue, double[] allparams)
+			throws Exception
 	{
-
-		int otherParamslength = result.getOtherParameters().length;
+		int allparamslength = allparams.length;
 		if (result instanceof ExponentialResult)
-			otherParamslength = 0;
-		double[] gradients = new double[result.getCurveParameters().length + otherParamslength];
+			allparamslength = allparams.length;
+		double[] gradients = new double[allparamslength];
 		List<Double> params = new ArrayList<>();
-		for (int i = 0; i < result.getCurveParameters().length; i++)
-			params.add(result.getCurveParameters()[i]);
+
+		for (int i = 0; i < allparamslength; i++)
+			params.add(allparams[i]);
 
 		Double mpres = Math.pow(1.0e-16, 0.33333);
 		List<Double> h = new ArrayList<>();

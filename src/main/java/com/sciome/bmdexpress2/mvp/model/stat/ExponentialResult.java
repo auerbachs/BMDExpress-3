@@ -170,6 +170,44 @@ public class ExponentialResult extends StatResult
 		return a * (c - (c - 1) * Math.exp(-b * dose));
 	}
 
+	@Override
+	public double[] getAllParameters()
+	{
+		// maybe in the case of model averaging or gcurvep
+		if (curveParameters == null || otherParameters == null)
+			return new double[0];
+
+		if (option == 3)
+		{
+			double[] returnval = new double[3 + otherParameters.length];
+			returnval[0] = curveParameters[1];
+			returnval[1] = curveParameters[2];
+			returnval[2] = curveParameters[3];
+			int ii = 3;
+			for (int i = 0; i < otherParameters.length; i++)
+				returnval[ii++] = otherParameters[i];
+
+			return returnval;
+		}
+		else if (option == 5)
+		{
+			double[] returnval = new double[4 + otherParameters.length];
+			returnval[0] = curveParameters[1];
+			returnval[1] = curveParameters[2];
+			returnval[2] = curveParameters[3];
+			returnval[3] = curveParameters[4];
+			int ii = 4;
+			for (int i = 0; i < otherParameters.length; i++)
+				returnval[ii++] = otherParameters[i];
+
+			return returnval;
+		}
+
+		else
+			return super.getAllParameters();
+
+	}
+
 	/**
 	 * Exp functioin
 	 */

@@ -102,7 +102,7 @@ public class BMDSToxicRUtils
 
 		// special logic for EXP3
 		double[] results = new double[6 + continousResult.getNparms() - extraparms
-				+ (extraoption != 0 ? 1 : 0) + (model == ToxicRConstants.EXP3 ? 1 : 0)];
+				+ (extraoption != 0 ? 1 : 0)]; // + (model == ToxicRConstants.EXP3 ? 1 : 0)];
 
 		double[] results2 = new double[isNCV ? 2 : 1];
 		// throw away instance. just using this to get the bmd values
@@ -235,7 +235,7 @@ public class BMDSToxicRUtils
 
 			// special logic for EXP3
 			double[] results = new double[continousResult.getNparms() - extraparms
-					+ (extraoption != 0 ? 1 : 0) + (model == ToxicRConstants.EXP3 ? 1 : 0)];
+					+ (extraoption != 0 ? 1 : 0)];// + (model == ToxicRConstants.EXP3 ? 1 : 0)];
 
 			int start = 0;
 			if (extraoption != 0)
