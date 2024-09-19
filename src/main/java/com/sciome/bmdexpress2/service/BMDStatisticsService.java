@@ -220,17 +220,13 @@ public class BMDStatisticsService implements IBMDStatisticsService
 			covariances = theResult.getCovariances();
 
 			int allparamslength = allparams.length;
-			if (theResult instanceof ExponentialResult)
-				allparamslength = allparams.length;
-			if (theResult instanceof ExponentialResult && ((ExponentialResult) theResult).getOption() == 3
-					&& result instanceof ModelAveragingResult)
-				allparamslength = allparams.length;
 
 			double[][] covmatrix = new double[allparamslength][];
 			int ii = 0;
 			for (int i = 0; i < allparamslength; i++)
 			{
 				double[] row = new double[allparamslength];
+				covmatrix[i] = row;
 				for (int j = 0; j < allparamslength; j++)
 					row[j] = covariances[ii++];
 				covmatrix[i] = row;
@@ -265,11 +261,17 @@ public class BMDStatisticsService implements IBMDStatisticsService
 			throws Exception
 	{
 		int allparamslength = allparams.length;
-		if (result instanceof ExponentialResult)
-			allparamslength = allparams.length;
 		double[] gradients = new double[allparamslength];
 		List<Double> params = new ArrayList<>();
 
+		double[] allparams1 = new double[allparams.length];
+		for (int i = 0; i < allparams.length; i++)
+			allparams1[i] = allparams[i];
+
+		allparams = allparams1;
+
+		if (result instanceof ExponentialResult && ((ExponentialResult) result).getOption() == 5)
+			allparams[2] = Math.log(allparams[2]);
 		for (int i = 0; i < allparamslength; i++)
 			params.add(allparams[i]);
 
@@ -279,6 +281,9 @@ public class BMDStatisticsService implements IBMDStatisticsService
 		for (int i = 0; i < params.size(); i++)
 			hvector[i] = params.get(i);
 		Double x;
+
+		// add jiggle values that corresponde to each
+		// parameter
 		for (int i = 0; i < params.size(); i++)
 		{
 			x = params.get(i);
@@ -294,19 +299,26 @@ public class BMDStatisticsService implements IBMDStatisticsService
 			}
 		}
 
+		// iterate through each parameter.
+		// jiggle one parameter at a time and get
+		// responses on both sides of jiggle to calcualte
+		// gradient for the parameter.
+		// store gradients in array
 		for (int i = 0; i < params.size(); i++)
 		{
 			x = params.get(i);
+			// jiggle to the right and get response
 			hvector[i] = x + h.get(i);
-
 			Double f1 = result.getResponseAt(atValue, hvector);
 
+			// jiggle to the left and get response
 			hvector[i] = x - h.get(i);
 			Double f2 = result.getResponseAt(atValue, hvector);
 
 			gradients[i] = (f1 - f2) / (2.0 * h.get(i));
-			hvector[i] = x;
 
+			// reset the parameter that was jiggled to its original state.
+			hvector[i] = x;
 		}
 
 		return gradients;

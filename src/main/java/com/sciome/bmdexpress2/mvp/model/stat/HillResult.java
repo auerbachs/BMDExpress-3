@@ -102,18 +102,46 @@ public class HillResult extends StatResult
 	public double getResponseAt(double dose, double[] customParameters)
 	{
 		int base = 0;
-		double theDose = dose; // Math.log(dose + Math.sqrt(dose * dose + 1.0));
-		double nom = customParameters[base + 1] * Math.pow(theDose, customParameters[base + 2]);
-		double denom = Math.pow(customParameters[base + 3], customParameters[base + 2])
-				+ Math.pow(theDose, customParameters[base + 2]);
+		double[] fixedparms = new double[customParameters.length];
+		for (int i = 0; i < customParameters.length; i++)
+			fixedparms[i] = customParameters[i];
+		double tmp = fixedparms[3];
+		fixedparms[3] = fixedparms[2];
+		fixedparms[2] = tmp;
 
-		return customParameters[base] + nom / denom;
+		double theDose = dose; // Math.log(dose + Math.sqrt(dose * dose + 1.0));
+		double nom = fixedparms[base + 1] * Math.pow(theDose, fixedparms[base + 2]);
+		double denom = Math.pow(fixedparms[base + 3], fixedparms[base + 2])
+				+ Math.pow(theDose, fixedparms[base + 2]);
+
+		return fixedparms[base] + nom / denom;
 	}
 
 	@Override
 	public String getFormulaText()
 	{
 		return "intercept + v * dose^n/(k^n + dose^n)";
+	}
+
+	@Override
+	public double[] getAllParameters()
+	{
+		if (curveParameters == null || otherParameters == null)
+			return new double[0];
+
+		int ii = 0;
+		double[] returnval = new double[curveParameters.length + otherParameters.length];
+		for (int i = 0; i < curveParameters.length; i++)
+			returnval[ii++] = curveParameters[i];
+		// this is to get it back in the same
+		// order as it came in. hillfitthread switches the two elements
+		double tmp = returnval[curveParameters.length - 1];
+		returnval[curveParameters.length - 1] = returnval[curveParameters.length - 2];
+		returnval[curveParameters.length - 2] = tmp;
+		for (int i = 0; i < otherParameters.length; i++)
+			returnval[ii++] = otherParameters[i];
+
+		return returnval;
 	}
 
 	@Override

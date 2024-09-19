@@ -136,10 +136,11 @@ public class ExponentialFitThread extends Thread implements IFitThread
 				double[] results1 = resultsList.get(1);
 				double[] covariates = resultsList.get(2);
 
-				// if (expModel == ToxicRConstants.EXP3) // move param d to param c
-				// results[9] = results[10];
+				// hmmm. I wonder if I have log c when doing the z-score?
 				if (expModel == ToxicRConstants.EXP5) // anti log c
+				{
 					results[9] = Math.pow(Math.E, results[9]);
+				}
 				if (results != null)
 				{
 					fillOutput(results, results1, covariates, expResult);

@@ -135,6 +135,10 @@ public class HillFitThread extends Thread implements IFitThread
 				double[] results1 = resultsList.get(1);
 				double[] covariates = resultsList.get(2);
 
+				// switch these guys to match code all over the place
+				// but when calculating z-score downstream,
+				// the parameters need to be switched back to
+				// match the covariance matrix.
 				double tmpr = results[8];
 				results[8] = results[9];
 				results[9] = tmpr;

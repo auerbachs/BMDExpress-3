@@ -283,6 +283,14 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.rSquared = rSquared;
 	}
 
+	// get all the parameters for a model
+	// this includes the parameters for the equation
+	// and the parameters that are something else which I can't quite say
+	// aka otherParameters.
+	// this was made for calculating the z-score
+	// fyi. the exponential has a override for this method
+	// because exponential model's first parameter is a -1 or 1
+	// which is not a parameter returned by toxicr.
 	public double[] getAllParameters()
 	{
 		// maybe in the case of model averaging or gcurvep

@@ -170,6 +170,9 @@ public class ExponentialResult extends StatResult
 		return a * (c - (c - 1) * Math.exp(-b * dose));
 	}
 
+	// for the case of exp3 and exp5, the first "parameter" stored
+	// is actually a sign..aka -1 or 1. so we do not return
+	// that parameter with this method.
 	@Override
 	public double[] getAllParameters()
 	{
@@ -259,12 +262,16 @@ public class ExponentialResult extends StatResult
 	 */
 	private double exp3Function(int base, double dose, double[] customParameters)
 	{
-		double a = customParameters[base + 1];
-		double b = customParameters[base + 2];
-		double d = customParameters[base + 3];
+		double a = customParameters[base];
+		double b = customParameters[base + 1];
+		double d = customParameters[base + 2];
 
 		double expvalue = Math.pow(b * dose, d);
-		return a * Math.exp(customParameters[base] * expvalue);
+		// the sign parameter is really not a parameter that is returned by
+		// toxicr. it is added when model is brought into bmdexpress
+		// since this is meant for calculating gradient, keep in line
+		// with toxicr
+		return a * Math.exp(this.curveParameters[base] * expvalue);
 	}
 
 	/**
@@ -275,6 +282,7 @@ public class ExponentialResult extends StatResult
 		double a = customParameters[base + 1];
 		double b = customParameters[base + 2];
 		double c = customParameters[base + 3];
+
 		return a * (c - (c - 1) * Math.exp(-b * dose));
 	}
 
@@ -283,10 +291,11 @@ public class ExponentialResult extends StatResult
 	 */
 	private double exp5Function(int base, double dose, double[] customParameters)
 	{
-		double a = customParameters[base + 1];
-		double b = customParameters[base + 2];
-		double c = customParameters[base + 3];
-		double d = customParameters[base + 4];
+		double a = customParameters[base];
+		double b = customParameters[base + 1];
+		double c = customParameters[base + 2];
+		double d = customParameters[base + 3];
+		c = Math.pow(Math.E, c);
 		double expvalue = Math.pow(b * dose, d);
 		return a * (c - (c - 1) * Math.exp(-expvalue));
 	}
