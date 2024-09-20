@@ -208,4 +208,15 @@ public class PolyResult extends StatResult
 		return sb.toString();
 	}
 
+	public double getVertext()
+	{
+		if (degree != 2)
+			return Double.NaN;
+		double returnval = 0;
+
+		returnval = (-1 * curveParameters[1]) / (2 * curveParameters[2]);
+		return returnval;
+
+	}
+
 }

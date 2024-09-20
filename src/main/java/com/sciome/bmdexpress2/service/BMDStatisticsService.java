@@ -17,6 +17,7 @@ import com.sciome.bmdexpress2.mvp.model.stat.ExponentialResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ModelAveragingResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponseValues;
+import com.sciome.bmdexpress2.mvp.model.stat.PolyResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.serviceInterface.IBMDStatisticsService;
@@ -210,8 +211,27 @@ public class BMDStatisticsService implements IBMDStatisticsService
 		{
 
 			double[] allparams = theResult.getAllParameters();
-			gradients1 = calculateGradients(theResult, result.getBMD(), allparams);
-			gradients0 = calculateGradients(theResult, 0.0, allparams);
+			double maxdose = doses.get(doses.size() - 1);
+			double mindose = doses.get(0);
+
+			// for nonmonotonic curves find the top
+			// figure out if bmd is < or > top and reset start/end for gradient
+			if (result instanceof PolyResult && ((PolyResult) result).getDegree() == 2)
+			{
+				maxdose = ((PolyResult) result).getVertext();
+				if (maxdose > doses.get(doses.size() - 1))
+					maxdose = doses.get(doses.size() - 1);
+				if (((PolyResult) result).getBMD() > maxdose)
+				{
+					mindose = maxdose;
+					if (mindose < doses.get(0))
+						mindose = doses.get(0);
+					maxdose = doses.size() - 1;
+				}
+			}
+
+			gradients1 = calculateGradients(theResult, maxdose, allparams);
+			gradients0 = calculateGradients(theResult, mindose, allparams);
 
 			// for now we can get the actuall model average result for the responses at these doses.
 			mean0 = result.getResponseAt(0);
