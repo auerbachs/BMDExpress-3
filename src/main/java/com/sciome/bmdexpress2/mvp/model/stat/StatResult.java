@@ -70,6 +70,24 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		return id;
 	}
 
+	@JsonIgnore
+	public double getAbsFoldChangeToTop()
+	{
+		return Math.abs(this.getFoldChangeToTop());
+	}
+
+	@JsonIgnore
+	public double getAbsBmrCountsToTop()
+	{
+		return Math.abs(this.getBmrCountsToTop());
+	}
+
+	@JsonIgnore
+	public double getAbsZScore()
+	{
+		return Math.abs(this.getZscore());
+	}
+
 	public void setID(Long id)
 	{
 		this.id = id;

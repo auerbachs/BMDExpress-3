@@ -53,8 +53,12 @@ public class PolyResult extends StatResult
 		returnList.addAll(residualHeader);
 		returnList.add(polyname + "  Is Step Function Less Than Lowest Dose");
 		returnList.add(polyname + " Z-Score");
-		returnList.add(polyname + " BMR Counts To Top");
-		returnList.add(polyname + " Fold Change To Top");
+		returnList.add(polyname + " ABS Z-Score");
+		returnList.add(polyname + " Power Modelled Response BMR Multiples");
+		returnList.add(polyname + " ABS Power Modelled Response BMR Multiples");
+		returnList.add(polyname + " Fold Change Top To Bottom (Model)");
+		returnList.add(polyname + " ABS" + " Fold Change Top To Bottom (Model)");
+
 		return returnList;
 
 	}
@@ -77,8 +81,11 @@ public class PolyResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
 		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
 		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
 		return returnList;
 	}
 

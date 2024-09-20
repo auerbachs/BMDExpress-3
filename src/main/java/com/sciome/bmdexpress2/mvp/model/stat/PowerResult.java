@@ -29,8 +29,11 @@ public class PowerResult extends StatResult
 		header.addAll(residualHeader);
 		header.add("Power Is Step Function Less Than Lowest Dose");
 		header.add("Power Z-Score");
-		header.add("Power BMR Counts To Top");
-		header.add("Power Fold Change To Top");
+		header.add("Power ABS Z-Score");
+		header.add("Power Modelled Response BMR Multiples");
+		header.add("Power ABS Modelled Response BMR Multiples");
+		header.add("Power Fold Change Top To Bottom (Model)");
+		header.add("Power ABS Fold Change Top To Bottom (Model)");
 
 		return header;
 
@@ -57,8 +60,11 @@ public class PowerResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
 		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
 		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
 		return returnList;
 	}
 

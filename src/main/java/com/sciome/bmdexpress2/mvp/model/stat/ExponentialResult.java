@@ -47,8 +47,12 @@ public class ExponentialResult extends StatResult
 		returnList.addAll(residualHeader);
 		returnList.add(expName + " Is Step Function Less Than Lowest Dose");
 		returnList.add(expName + " Z-Score");
-		returnList.add(expName + " BMR Counts To Top");
-		returnList.add(expName + " Fold Change To Top");
+		returnList.add(expName + " ABS Z-Score");
+		returnList.add(expName + " Modelled Response BMR Multiples");
+		returnList.add(expName + " ABS Modelled Response BMR Multiples");
+		returnList.add(expName + " Fold Change Top To Bottom (Model)");
+		returnList.add(expName + " ABS Fold Change Top To Bottom (Model)");
+
 		return returnList;
 
 	}
@@ -83,8 +87,11 @@ public class ExponentialResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
 		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
 		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
 		return returnList;
 	}
 
@@ -177,6 +184,7 @@ public class ExponentialResult extends StatResult
 	// for the case of exp3 and exp5, the first "parameter" stored
 	// is actually a sign..aka -1 or 1. so we do not return
 	// that parameter with this method.
+
 	@Override
 	public double[] getAllParameters()
 	{
@@ -228,6 +236,12 @@ public class ExponentialResult extends StatResult
 		return a * (c - (c - 1) * Math.exp(-expvalue));
 	}
 
+	// this implementation is assuming the parameters are coming straight from toxicR
+	// it was written to handle calculating gradients, so it is slightly
+	// different than the main getResponseAt because we store the parameters
+	// slightly differently. we store the parameters with a anti-logged c value
+	// and we store the sign as a parameter in bmdexpress. toxicr doesnt'
+	// send it that way
 	@Override
 	public double getResponseAt(double d, double[] customParameters)
 	{
