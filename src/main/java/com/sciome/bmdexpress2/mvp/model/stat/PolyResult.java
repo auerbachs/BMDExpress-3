@@ -60,6 +60,8 @@ public class PolyResult extends StatResult
 		returnList.add(polyname + " ABS" + " Fold Change Top To Bottom (Model)");
 		returnList.add(polyname + " BMD/Low Dose");
 		returnList.add(polyname + " BMD/High Dose");
+		returnList.add(polyname + " BMD Response/Low Dose Response");
+		returnList.add(polyname + " BMD Response/High Dose Response");
 
 		return returnList;
 
@@ -90,6 +92,8 @@ public class PolyResult extends StatResult
 		returnList.add(this.getAbsFoldChangeToTop());
 		returnList.add(this.getBmdLowDoseRatio());
 		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 	}
 

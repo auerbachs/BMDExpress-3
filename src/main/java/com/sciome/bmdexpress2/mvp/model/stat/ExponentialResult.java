@@ -55,6 +55,9 @@ public class ExponentialResult extends StatResult
 		returnList.add(expName + " BMD/Low Dose");
 		returnList.add(expName + " BMD/High Dose");
 
+		returnList.add(expName + " BMD Response/Low Dose Response");
+		returnList.add(expName + " BMD Response/High Dose Response");
+
 		return returnList;
 
 	}
@@ -96,6 +99,8 @@ public class ExponentialResult extends StatResult
 		returnList.add(this.getAbsFoldChangeToTop());
 		returnList.add(this.getBmdLowDoseRatio());
 		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 	}
 

@@ -43,6 +43,8 @@ public class ModelAveragingResult extends StatResult
 		returnList.add("MA ABS Fold Change Top To Bottom (Model)");
 		returnList.add("MA BMD/Low Dose");
 		returnList.add("MA BMD/High Dose");
+		returnList.add("MA BMD Response/Low Dose Response");
+		returnList.add("MA BMD Response/High Dose Response");
 
 		return returnList;
 
@@ -69,6 +71,8 @@ public class ModelAveragingResult extends StatResult
 		returnList.add(this.getAbsFoldChangeToTop());
 		returnList.add(this.getBmdLowDoseRatio());
 		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 
 	}

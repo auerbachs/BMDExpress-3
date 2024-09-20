@@ -606,21 +606,72 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				catch (Exception e)
 				{}
 
+				double maxdose = doseGroups.get(doseGroups.size() - 1).getDose();
+				double mindose = doseGroups.get(1).getDose();
+
+				// for nonmonotonic curves find the top
+				// figure out if bmd is < or > top and reset start/end for gradient
+				if (statResult instanceof PolyResult && ((PolyResult) statResult).getDegree() == 2)
+				{
+					// assume maxdose is at vertex and bmd to the left
+					maxdose = ((PolyResult) statResult).getVertext();
+
+					// but if the vertex is beyond maxdose, just reset max dose
+					if (maxdose > doseGroups.get(doseGroups.size() - 1).getDose())
+						maxdose = doseGroups.get(doseGroups.size() - 1).getDose();
+
+					// but if bmd is to the right of max dose...shift the min and max
+					if (((PolyResult) statResult).getBMD() > maxdose)
+					{
+						// shift the mindose to the maxdose, which is probably vertext
+						mindose = maxdose;
+						// if the mindose (or vertex) is less than the low dose
+						// set the mindose to the original
+						if (mindose <= doseGroups.get(1).getDose())
+							mindose = doseGroups.get(1).getDose();
+
+						// make sure the max dose is the last dose in this situation
+						maxdose = doseGroups.get(doseGroups.size() - 1).getDose();
+
+						if (maxdose == mindose)
+							mindose = doseGroups.get(1).getDose();
+
+					}
+				}
+
+				// initialize
+				statResult.setBmdLowDoseRatio(Double.NaN);
+				statResult.setBmdHighDoseRatio(Double.NaN);
+				statResult.setBmdResponseLowDoseResponseRatio(Double.NaN);
+				statResult.setBmdResponseHighDoseResponseRatio(Double.NaN);
 				try
 				{
-
-					statResult.setBmdLowDoseRatio(statResult.getBMD() / doseGroups.get(1).getDose());
-
+					statResult.setBmdLowDoseRatio(statResult.getBMD() / mindose);
 				}
 				catch (Exception e)
 				{}
 
 				try
 				{
+					statResult.setBmdHighDoseRatio(statResult.getBMD() / maxdose);
+				}
+				catch (Exception e)
+				{}
 
-					statResult.setBmdHighDoseRatio(
-							statResult.getBMD() / doseGroups.get(doseGroups.size() - 1).getDose());
+				try
+				{
+					statResult
+							.setBmdResponseLowDoseResponseRatio(statResult.getResponseAt(statResult.getBMD())
+									/ statResult.getResponseAt(mindose));
+				}
+				catch (Exception e)
+				{}
 
+				try
+				{
+					statResult
+							.setBmdResponseHighDoseResponseRatio(statResult.getResponseAt(statResult.getBMD())
+									/ statResult.getResponseAt(maxdose));
 				}
 				catch (Exception e)
 				{}

@@ -95,7 +95,9 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String BEST_ABS_FC_TO_TOP = "Best ABS Fold Change Top To Bottom (Model)";
 
 	public static final String BEST_BMD_LOWDOSE_RATIO = "Best BMD/Low Dose";
-	public static final String BEST_BMD_HIGHOSE_RATIO = "Best BMD/Hign Dose";
+	public static final String BEST_BMD_HIGHDOSE_RATIO = "Best BMD/High Dose";
+	public static final String BEST_BMD_RESP_LOWDOSE_RESP_RATIO = "Best BMD Response/Low Dose Response";
+	public static final String BEST_BMD_RESP_HIGHDOSE_RESP_RATIO = "Best BMD Response/High Dose Response";
 
 	// clone a bmdexpress result
 	public BMDResult(BMDResult bmdResult)

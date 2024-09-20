@@ -49,6 +49,8 @@ public class HillResult extends StatResult
 		header.add("Hill ABS Fold Change Top To Bottom (Model)");
 		header.add("Hill BMD/Low Dose");
 		header.add("Hill BMD/High Dose");
+		header.add("Hill BMD Response/Low Dose Response");
+		header.add("Hill BMD Response/High Dose Response");
 
 		return header;
 
@@ -85,6 +87,8 @@ public class HillResult extends StatResult
 		returnList.add(this.getAbsFoldChangeToTop());
 		returnList.add(this.getBmdLowDoseRatio());
 		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 
 	}

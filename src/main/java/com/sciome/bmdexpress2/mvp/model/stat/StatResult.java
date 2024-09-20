@@ -59,6 +59,9 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	private double bmdLowDoseRatio;
 	private double bmdHighDoseRatio;
 
+	private double bmdResponseLowDoseResponseRatio;
+	private double bmdResponseHighDoseResponseRatio;
+
 	private Long id;
 
 	@JsonIgnore
@@ -89,6 +92,26 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public double getAbsZScore()
 	{
 		return Math.abs(this.getZscore());
+	}
+
+	public double getBmdResponseLowDoseResponseRatio()
+	{
+		return bmdResponseLowDoseResponseRatio;
+	}
+
+	public void setBmdResponseLowDoseResponseRatio(double bmdResponseLowDoseResponseRatio)
+	{
+		this.bmdResponseLowDoseResponseRatio = bmdResponseLowDoseResponseRatio;
+	}
+
+	public double getBmdResponseHighDoseResponseRatio()
+	{
+		return bmdResponseHighDoseResponseRatio;
+	}
+
+	public void setBmdResponseHighDoseResponseRatio(double bmdResponseHighDoseResponseRatio)
+	{
+		this.bmdResponseHighDoseResponseRatio = bmdResponseHighDoseResponseRatio;
 	}
 
 	public double getBmdLowDoseRatio()

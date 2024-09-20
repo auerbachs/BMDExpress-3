@@ -361,7 +361,9 @@ public class BMDStatisticsService implements IBMDStatisticsService
 				mindose = maxdose;
 				if (mindose < doses.get(0))
 					mindose = doses.get(0);
-				maxdose = doses.size() - 1;
+				maxdose = doses.get(doses.size() - 1);
+				if (mindose == maxdose)
+					mindose = doses.get(0);
 			}
 		}
 
@@ -407,7 +409,10 @@ public class BMDStatisticsService implements IBMDStatisticsService
 				mindose = maxdose;
 				if (mindose < doses.get(0))
 					mindose = doses.get(0);
-				maxdose = doses.size() - 1;
+				maxdose = doses.get(doses.size() - 1);
+
+				if (mindose == maxdose)
+					mindose = doses.get(0);
 			}
 		}
 
