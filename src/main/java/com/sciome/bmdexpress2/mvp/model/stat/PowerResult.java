@@ -29,6 +29,8 @@ public class PowerResult extends StatResult
 		header.addAll(residualHeader);
 		header.add("Power Is Step Function Less Than Lowest Dose");
 		header.add("Power Z-Score");
+		header.add("Power BMR Counts To Top");
+		header.add("Power Fold Change To Top");
 
 		return header;
 
@@ -55,6 +57,8 @@ public class PowerResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
 		return returnList;
 	}
 

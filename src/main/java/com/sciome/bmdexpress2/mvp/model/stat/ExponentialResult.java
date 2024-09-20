@@ -47,6 +47,8 @@ public class ExponentialResult extends StatResult
 		returnList.addAll(residualHeader);
 		returnList.add(expName + " Is Step Function Less Than Lowest Dose");
 		returnList.add(expName + " Z-Score");
+		returnList.add(expName + " BMR Counts To Top");
+		returnList.add(expName + " Fold Change To Top");
 		return returnList;
 
 	}
@@ -81,6 +83,8 @@ public class ExponentialResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
 		return returnList;
 	}
 

@@ -86,6 +86,9 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 
 	public static final String BEST_ZSCORE = "Best Z-Score";
 
+	public static final String BEST_BMR_COUNT_TO_TOP = "Best BMR Count To Top";
+	public static final String BEST_FC_TO_TOP = "Best Fold Change To Top";
+
 	// clone a bmdexpress result
 	public BMDResult(BMDResult bmdResult)
 	{

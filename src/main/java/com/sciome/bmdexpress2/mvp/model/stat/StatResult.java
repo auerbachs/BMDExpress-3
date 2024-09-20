@@ -53,6 +53,8 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	private double[] covariances;
 
 	private double zscore;
+	private double bmrCountsToTop;
+	private double foldChangeToTop;
 
 	private Long id;
 
@@ -281,6 +283,26 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	public void setrSquared(double rSquared)
 	{
 		this.rSquared = rSquared;
+	}
+
+	public double getBmrCountsToTop()
+	{
+		return bmrCountsToTop;
+	}
+
+	public void setBmrCountsToTop(double bmrCountsToTop)
+	{
+		this.bmrCountsToTop = bmrCountsToTop;
+	}
+
+	public double getFoldChangeToTop()
+	{
+		return foldChangeToTop;
+	}
+
+	public void setFoldChangeToTop(double foldChangeToTop)
+	{
+		this.foldChangeToTop = foldChangeToTop;
 	}
 
 	// get all the parameters for a model

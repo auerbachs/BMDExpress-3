@@ -11,6 +11,7 @@ import org.apache.commons.math3.util.Precision;
 
 import com.sciome.bmdexpress2.mvp.model.DoseGroup;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ExponentialResult;
@@ -207,72 +208,60 @@ public class BMDStatisticsService implements IBMDStatisticsService
 		// must be careful with model averaging result. separate function
 		if (result instanceof ModelAveragingResult)
 			theResult = ((ModelAveragingResult) result).getModelWithHighestPP();
-		try
+
+		double[] allparams = theResult.getAllParameters();
+		double maxdose = doses.get(doses.size() - 1);
+		double mindose = doses.get(0);
+
+		// for nonmonotonic curves find the top
+		// figure out if bmd is < or > top and reset start/end for gradient
+		if (result instanceof PolyResult && ((PolyResult) result).getDegree() == 2)
 		{
-
-			double[] allparams = theResult.getAllParameters();
-			double maxdose = doses.get(doses.size() - 1);
-			double mindose = doses.get(0);
-
-			// for nonmonotonic curves find the top
-			// figure out if bmd is < or > top and reset start/end for gradient
-			if (result instanceof PolyResult && ((PolyResult) result).getDegree() == 2)
+			maxdose = ((PolyResult) result).getVertext();
+			if (maxdose > doses.get(doses.size() - 1))
+				maxdose = doses.get(doses.size() - 1);
+			if (((PolyResult) result).getBMD() > maxdose)
 			{
-				maxdose = ((PolyResult) result).getVertext();
-				if (maxdose > doses.get(doses.size() - 1))
-					maxdose = doses.get(doses.size() - 1);
-				if (((PolyResult) result).getBMD() > maxdose)
-				{
-					mindose = maxdose;
-					if (mindose < doses.get(0))
-						mindose = doses.get(0);
-					maxdose = doses.size() - 1;
-				}
+				mindose = maxdose;
+				if (mindose < doses.get(0))
+					mindose = doses.get(0);
+				maxdose = doses.size() - 1;
 			}
-
-			gradients1 = calculateGradients(theResult, maxdose, allparams);
-			gradients0 = calculateGradients(theResult, mindose, allparams);
-
-			// for now we can get the actuall model average result for the responses at these doses.
-			mean0 = result.getResponseAt(0);
-			mean1 = result.getResponseAt(result.getBMD());
-
-			covariances = theResult.getCovariances();
-
-			int allparamslength = allparams.length;
-
-			double[][] covmatrix = new double[allparamslength][];
-			int ii = 0;
-			for (int i = 0; i < allparamslength; i++)
-			{
-				double[] row = new double[allparamslength];
-				covmatrix[i] = row;
-				for (int j = 0; j < allparamslength; j++)
-					row[j] = covariances[ii++];
-				covmatrix[i] = row;
-			}
-
-			double[][] tmpmatrix = new double[2][];
-			tmpmatrix[0] = gradients0;
-			tmpmatrix[1] = gradients1;
-
-			Array2DRowRealMatrix gradMatrix = new Array2DRowRealMatrix(tmpmatrix);
-			Array2DRowRealMatrix covarianceMatrix = new Array2DRowRealMatrix(covmatrix);
-
-			RealMatrix gradMatrixTransposed = gradMatrix.transpose();
-			RealMatrix varianceMatrix = gradMatrix.multiply(covarianceMatrix).multiply(gradMatrixTransposed);
-			double variance = varianceMatrix.getTrace();
-			zscore = (mean1 - mean0) / Math.sqrt(variance);
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
 		}
 
-		result.setZscore(zscore);
-		if (theResult != null)
-			theResult.setZscore(zscore);
+		gradients1 = calculateGradients(theResult, maxdose, allparams);
+		gradients0 = calculateGradients(theResult, mindose, allparams);
+
+		// for now we can get the actuall model average result for the responses at these doses.
+		mean0 = result.getResponseAt(mindose);
+		mean1 = result.getResponseAt(maxdose);
+
+		covariances = theResult.getCovariances();
+
+		int allparamslength = allparams.length;
+
+		double[][] covmatrix = new double[allparamslength][];
+		int ii = 0;
+		for (int i = 0; i < allparamslength; i++)
+		{
+			double[] row = new double[allparamslength];
+			covmatrix[i] = row;
+			for (int j = 0; j < allparamslength; j++)
+				row[j] = covariances[ii++];
+			covmatrix[i] = row;
+		}
+
+		double[][] tmpmatrix = new double[2][];
+		tmpmatrix[0] = gradients0;
+		tmpmatrix[1] = gradients1;
+
+		Array2DRowRealMatrix gradMatrix = new Array2DRowRealMatrix(tmpmatrix);
+		Array2DRowRealMatrix covarianceMatrix = new Array2DRowRealMatrix(covmatrix);
+
+		RealMatrix gradMatrixTransposed = gradMatrix.transpose();
+		RealMatrix varianceMatrix = gradMatrix.multiply(covarianceMatrix).multiply(gradMatrixTransposed);
+		double variance = varianceMatrix.getTrace();
+		zscore = (mean1 - mean0) / Math.sqrt(variance);
 
 		return zscore;
 	}
@@ -342,6 +331,108 @@ public class BMDStatisticsService implements IBMDStatisticsService
 		}
 
 		return gradients;
+	}
+
+	/*
+	 * based on bmr and where the bmd lands from control dose (the respsponse difference from
+	 * control to bmd), how many of those distances divide into the total distance to top (or bottom)
+	 */
+	@Override
+	public double calculateSDBeyond(StatResult result, List<Double> doses) throws Exception
+	{
+
+		double sdcountbeyondcontrol = Double.NaN;
+
+		double maxdose = doses.get(doses.size() - 1);
+		double mindose = doses.get(0);
+
+		if (result.getBMD() == Double.NaN)
+			return Double.NaN;
+
+		// for nonmonotonic curves find the top
+		// figure out if bmd is < or > top and reset start/end for gradient
+		if (result instanceof PolyResult && ((PolyResult) result).getDegree() == 2)
+		{
+			maxdose = ((PolyResult) result).getVertext();
+			if (maxdose > doses.get(doses.size() - 1))
+				maxdose = doses.get(doses.size() - 1);
+			if (((PolyResult) result).getBMD() > maxdose)
+			{
+				mindose = maxdose;
+				if (mindose < doses.get(0))
+					mindose = doses.get(0);
+				maxdose = doses.size() - 1;
+			}
+		}
+
+		// for now we can get the actuall model average result for the responses at these doses.
+		double responseAtControl = result.getResponseAt(mindose);
+		double responseAtTop = result.getResponseAt(maxdose);
+		double responseAtBMD = result.getResponseAt(result.getBMD());
+		double curveResponseSpan = responseAtTop - responseAtControl;
+		double curveBMDSpan = responseAtBMD - responseAtControl;
+		sdcountbeyondcontrol = (curveResponseSpan) / Math.abs(curveBMDSpan);
+
+		return sdcountbeyondcontrol;
+	}
+
+	@Override
+	public double calculateFCToTop(StatResult result, List<Double> doses,
+			LogTransformationEnum logTransformation) throws Exception
+	{
+
+		double fctotop = Double.NaN;
+
+		double baseValue = 2.0;
+		boolean isLogTransformation = true;
+		if (logTransformation.equals(LogTransformationEnum.BASE10))
+			baseValue = 10.0d;
+		else if (logTransformation.equals(LogTransformationEnum.NATURAL))
+			baseValue = 2.718281828459045;
+		else if (logTransformation.equals(LogTransformationEnum.NONE))
+			isLogTransformation = false;
+
+		double maxdose = doses.get(doses.size() - 1);
+		double mindose = doses.get(0);
+
+		// for nonmonotonic curves find the top
+		// figure out if bmd is < or > top and reset start/end for gradient
+		if (result instanceof PolyResult && ((PolyResult) result).getDegree() == 2)
+		{
+			maxdose = ((PolyResult) result).getVertext();
+			if (maxdose > doses.get(doses.size() - 1))
+				maxdose = doses.get(doses.size() - 1);
+			if (((PolyResult) result).getBMD() > maxdose)
+			{
+				mindose = maxdose;
+				if (mindose < doses.get(0))
+					mindose = doses.get(0);
+				maxdose = doses.size() - 1;
+			}
+		}
+
+		fctotop = performFoldCalculation(result.getResponseAt(maxdose), result.getResponseAt(mindose),
+				isLogTransformation, baseValue);
+
+		return fctotop;
+	}
+
+	private double performFoldCalculation(double firstValue, double secondValue, boolean isLogTransformation,
+			double baseValue)
+	{
+		int sign = 1;
+		if (secondValue > firstValue)
+			sign = -1;
+		double max = Math.max(firstValue, secondValue);
+		double min = Math.min(firstValue, secondValue);
+		if (isLogTransformation)
+		{
+			return sign * Math.pow(baseValue, max - min);
+		}
+		else
+		{
+			return sign * max / min;
+		}
 	}
 
 }

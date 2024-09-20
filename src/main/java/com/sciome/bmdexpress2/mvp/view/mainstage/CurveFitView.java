@@ -729,7 +729,7 @@ public class CurveFitView extends BMDExpressViewBase implements ICurveFitView, I
 
 		for (int i = 0; i < inputs.length; i++)
 		{
-			outputs[i] = NumberManager.numberFormat(6, inputs[i]);;
+			outputs[i] = NumberManager.numberFormat(16, inputs[i]);;
 		}
 
 		return outputs;

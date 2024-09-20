@@ -12,6 +12,7 @@ import org.apache.commons.math3.util.Precision;
 import com.sciome.bmdexpress2.mvp.model.DoseGroup;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
@@ -555,29 +556,55 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			// build the dosegroup array.
 			List<DoseGroup> doseGroups = bmdResults.getDoseResponseExperiment()
 					.getDoseGroups(psr.getProbeResponse().getResponses());
-
+			LogTransformationEnum logTrans = bmdResults.getDoseResponseExperiment().getLogTransformation();
 			for (StatResult statResult : psr.getStatResults())
 			{
+				double[] residuals = null;
 				try
 				{
-					double[] residuals = statServ.calculateResiduals(statResult,
+					residuals = statServ.calculateResiduals(statResult,
 							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()),
 							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
-					double rSquared = statServ.calculateRSquared(residuals,
-							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
-
-					double zScore = statServ.calculateZScore(statResult,
-							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
-
 					statResult.setResiduals(residuals);
-					statResult.setrSquared(rSquared);
-
 				}
 				catch (Exception e)
+				{}
+				try
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (residuals != null)
+					{
+						double rSquared = statServ.calculateRSquared(residuals, doseGroups.stream()
+								.map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
+						statResult.setrSquared(rSquared);
+					}
 				}
+				catch (Exception e)
+				{}
+				try
+				{
+					double zScore = statServ.calculateZScore(statResult,
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
+					statResult.setZscore(zScore);
+				}
+				catch (Exception e)
+				{}
+				try
+				{
+					double bmrCountsToTop = statServ.calculateSDBeyond(statResult,
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
+					statResult.setBmrCountsToTop(bmrCountsToTop);
+				}
+				catch (Exception e)
+				{}
+				try
+				{
+					double fcToTop = statServ.calculateFCToTop(statResult,
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()),
+							logTrans);
+					statResult.setFoldChangeToTop(fcToTop);
+				}
+				catch (Exception e)
+				{}
 
 			}
 

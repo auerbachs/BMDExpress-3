@@ -36,6 +36,9 @@ public class ModelAveragingResult extends StatResult
 		returnList.add("MA Is Step Function");
 		returnList.add("MA Is Step Function Less Than Lowest Dose");
 		returnList.add("MA Z-Score");
+		returnList.add("MA BMR Counts To Top");
+		returnList.add("MA Fold Change To Top");
+
 		return returnList;
 
 	}
@@ -54,6 +57,8 @@ public class ModelAveragingResult extends StatResult
 		returnList.add(getIsStepFunction());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
 		return returnList;
 
 	}

@@ -42,6 +42,8 @@ public class HillResult extends StatResult
 		header.addAll(residualHeader);
 		header.add("Hill Is Step Function Less Than Lowest Dose");
 		header.add("Hill Z-Score");
+		header.add("Hill BMR Counts To Top");
+		header.add("Hill Fold Change To Top");
 		return header;
 
 	}
@@ -70,6 +72,8 @@ public class HillResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
 		returnList.add(this.getZscore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
 		return returnList;
 
 	}

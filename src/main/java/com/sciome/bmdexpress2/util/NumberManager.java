@@ -152,6 +152,8 @@ public class NumberManager
 	{
 		if (Double.isNaN(num))
 			return Double.NaN;
+		if (Double.isInfinite(num))
+			return Double.NaN;
 		DecimalFormat formatter = new DecimalFormat(pattern);
 		String s = formatter.format(num);
 		return Double.parseDouble(s);

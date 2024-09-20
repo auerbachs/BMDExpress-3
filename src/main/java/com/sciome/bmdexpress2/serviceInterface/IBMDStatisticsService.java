@@ -3,6 +3,7 @@ package com.sciome.bmdexpress2.serviceInterface;
 import java.util.List;
 import java.util.Set;
 
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ModeledResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
@@ -20,5 +21,10 @@ public interface IBMDStatisticsService
 
 	ModeledResponse generateResponsesBetweenDoseGroups(BMDResult bmdResults,
 			List<ProbeStatResult> probeStatResults, int betweenDoses, Set<String> probeSet);
+
+	double calculateSDBeyond(StatResult result, List<Double> doses) throws Exception;
+
+	double calculateFCToTop(StatResult result, List<Double> doses, LogTransformationEnum logTransformation)
+			throws Exception;
 
 }
