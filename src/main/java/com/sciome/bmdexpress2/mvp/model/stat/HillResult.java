@@ -47,6 +47,8 @@ public class HillResult extends StatResult
 		header.add("Hill ABS Modelled Response BMR Multiples");
 		header.add("Hill Fold Change Top To Bottom (Model)");
 		header.add("Hill ABS Fold Change Top To Bottom (Model)");
+		header.add("Hill BMD/Low Dose");
+		header.add("Hill BMD/High Dose");
 
 		return header;
 
@@ -81,6 +83,8 @@ public class HillResult extends StatResult
 		returnList.add(this.getAbsBmrCountsToTop());
 		returnList.add(this.getFoldChangeToTop());
 		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
 		return returnList;
 
 	}

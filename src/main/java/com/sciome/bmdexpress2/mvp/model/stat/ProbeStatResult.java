@@ -216,6 +216,8 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(Double.NaN);
 			row.add(Double.NaN);
 			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
 		}
 		else
 		{
@@ -239,6 +241,9 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(bestStatResult.getAbsBmrCountsToTop());
 			row.add(bestStatResult.getFoldChangeToTop());
 			row.add(bestStatResult.getAbsFoldChangeToTop());
+
+			row.add(bestStatResult.getBmdLowDoseRatio());
+			row.add(bestStatResult.getBmdHighDoseRatio());
 		}
 
 		if (wAUC != null)
@@ -350,6 +355,8 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		columnHeader.add(BMDResult.BEST_ABS_BMR_COUNT_TO_TOP);
 		columnHeader.add(BMDResult.BEST_FC_TO_TOP);
 		columnHeader.add(BMDResult.BEST_ABS_FC_TO_TOP);
+		columnHeader.add(BMDResult.BEST_BMD_LOWDOSE_RATIO);
+		columnHeader.add(BMDResult.BEST_BMD_HIGHOSE_RATIO);
 
 		return columnHeader;
 	}

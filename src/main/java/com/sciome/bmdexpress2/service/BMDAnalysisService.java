@@ -606,6 +606,25 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				catch (Exception e)
 				{}
 
+				try
+				{
+
+					statResult.setBmdLowDoseRatio(statResult.getBMD() / doseGroups.get(1).getDose());
+
+				}
+				catch (Exception e)
+				{}
+
+				try
+				{
+
+					statResult.setBmdHighDoseRatio(
+							statResult.getBMD() / doseGroups.get(doseGroups.size() - 1).getDose());
+
+				}
+				catch (Exception e)
+				{}
+
 			}
 
 		}

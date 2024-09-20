@@ -58,6 +58,8 @@ public class PolyResult extends StatResult
 		returnList.add(polyname + " ABS Power Modelled Response BMR Multiples");
 		returnList.add(polyname + " Fold Change Top To Bottom (Model)");
 		returnList.add(polyname + " ABS" + " Fold Change Top To Bottom (Model)");
+		returnList.add(polyname + " BMD/Low Dose");
+		returnList.add(polyname + " BMD/High Dose");
 
 		return returnList;
 
@@ -86,6 +88,8 @@ public class PolyResult extends StatResult
 		returnList.add(this.getAbsBmrCountsToTop());
 		returnList.add(this.getFoldChangeToTop());
 		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
 		return returnList;
 	}
 

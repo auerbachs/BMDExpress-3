@@ -34,6 +34,8 @@ public class PowerResult extends StatResult
 		header.add("Power ABS Modelled Response BMR Multiples");
 		header.add("Power Fold Change Top To Bottom (Model)");
 		header.add("Power ABS Fold Change Top To Bottom (Model)");
+		header.add("Power BMD/Low Dose");
+		header.add("Power BMD/High Dose");
 
 		return header;
 
@@ -65,6 +67,8 @@ public class PowerResult extends StatResult
 		returnList.add(this.getAbsBmrCountsToTop());
 		returnList.add(this.getFoldChangeToTop());
 		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
 		return returnList;
 	}
 
