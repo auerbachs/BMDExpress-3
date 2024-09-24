@@ -56,8 +56,8 @@ public class PolyResult extends StatResult
 		returnList.add(polyname + " ABS Z-Score");
 		returnList.add(polyname + " Power Modelled Response BMR Multiples");
 		returnList.add(polyname + " ABS Power Modelled Response BMR Multiples");
-		returnList.add(polyname + " Fold Change Top To Bottom (Model)");
-		returnList.add(polyname + " ABS" + " Fold Change Top To Bottom (Model)");
+		returnList.add(polyname + " Fold Change");
+		returnList.add(polyname + " ABS Fold Change");
 		returnList.add(polyname + " BMD/Low Dose");
 		returnList.add(polyname + " BMD/High Dose");
 		returnList.add(polyname + " BMD Response/Low Dose Response");

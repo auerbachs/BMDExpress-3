@@ -39,8 +39,8 @@ public class ModelAveragingResult extends StatResult
 		returnList.add("MA ABS Z-Score");
 		returnList.add("MA Modelled Response BMR Multiples");
 		returnList.add("MA ABS Modelled Response BMR Multiples");
-		returnList.add("MA Fold Change Top To Bottom (Model)");
-		returnList.add("MA ABS Fold Change Top To Bottom (Model)");
+		returnList.add("MA Fold Change");
+		returnList.add("MA ABS Fold Change");
 		returnList.add("MA BMD/Low Dose");
 		returnList.add("MA BMD/High Dose");
 		returnList.add("MA BMD Response/Low Dose Response");

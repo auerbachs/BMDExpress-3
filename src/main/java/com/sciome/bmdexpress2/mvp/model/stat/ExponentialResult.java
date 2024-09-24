@@ -50,8 +50,8 @@ public class ExponentialResult extends StatResult
 		returnList.add(expName + " ABS Z-Score");
 		returnList.add(expName + " Modelled Response BMR Multiples");
 		returnList.add(expName + " ABS Modelled Response BMR Multiples");
-		returnList.add(expName + " Fold Change Top To Bottom (Model)");
-		returnList.add(expName + " ABS Fold Change Top To Bottom (Model)");
+		returnList.add(expName + " Fold Change");
+		returnList.add(expName + " ABS Fold Change");
 		returnList.add(expName + " BMD/Low Dose");
 		returnList.add(expName + " BMD/High Dose");
 

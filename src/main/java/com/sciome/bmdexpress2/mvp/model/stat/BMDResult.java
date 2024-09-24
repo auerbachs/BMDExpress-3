@@ -87,12 +87,12 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String BEST_ZSCORE = "Best Z-Score";
 
 	public static final String BEST_BMR_COUNT_TO_TOP = "Best Modelled Response BMR Multiples";
-	public static final String BEST_FC_TO_TOP = "Best Fold Change Top To Bottom (Model)";
+	public static final String BEST_FC_TO_TOP = "Best Model Fold Change";
 
 	public static final String BEST_ABS_ZSCORE = "Best ABS Z-Score";
 
 	public static final String BEST_ABS_BMR_COUNT_TO_TOP = "Best ABS Modelled Response BMR Multiples";
-	public static final String BEST_ABS_FC_TO_TOP = "Best ABS Fold Change Top To Bottom (Model)";
+	public static final String BEST_ABS_FC_TO_TOP = "Best ABS Model Fold Change";
 
 	public static final String BEST_BMD_LOWDOSE_RATIO = "Best BMD/Low Dose";
 	public static final String BEST_BMD_HIGHDOSE_RATIO = "Best BMD/High Dose";

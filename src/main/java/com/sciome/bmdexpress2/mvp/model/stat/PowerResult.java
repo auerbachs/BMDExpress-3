@@ -32,8 +32,8 @@ public class PowerResult extends StatResult
 		header.add("Power ABS Z-Score");
 		header.add("Power Modelled Response BMR Multiples");
 		header.add("Power ABS Modelled Response BMR Multiples");
-		header.add("Power Fold Change Top To Bottom (Model)");
-		header.add("Power ABS Fold Change Top To Bottom (Model)");
+		header.add("Power Fold Change");
+		header.add("Power ABS Fold Change");
 		header.add("Power BMD/Low Dose");
 		header.add("Power BMD/High Dose");
 		header.add("Power BMD Response/Low Dose Response");
