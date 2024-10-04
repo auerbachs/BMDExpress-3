@@ -132,6 +132,18 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 	public static final String BMDUUPPER95 = "Upper bound of the 95% confidence interval -  BMDU";
 	public static final String BMDULOWER95 = "Lower bound of the 95% confidence interval -  BMDU";
 
+	// model fold change stats
+	public static final String MEAN_MODEL_FOLD_CHANGE = "Mean Model Fold Change";
+	public static final String MEDIAN_MODEL_FOLD_CHANGE = "Median Model Fold Change";
+	public static final String MAX_MODEL_FOLD_CHANGE = "Max Model Fold Change";
+	public static final String MIN_MODEL_FOLD_CHANGE = "Min Model Fold Change";
+
+	// zscore stats
+	public static final String MEAN_ZSCORE = "Mean Z-Score";
+	public static final String MEDIAN_ZSCORE = "Median Z-Score";
+	public static final String MAX_ZSCORE = "Max Z-Score";
+	public static final String MIN_ZSCORE = "Min Z-Score";
+
 	@JsonIgnore
 	public Long getID()
 	{
@@ -240,6 +252,16 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 		columnHeader.add(PERCENT_WITH_OVERALL_DIRECTION_UP);
 		columnHeader.add(PERCENT_WITH_OVERALL_DIRECTION_DOWN);
 		columnHeader.add(PERCENT_WITH_OVERALL_DIRECTION_CONFLICT);
+
+		columnHeader.add(MIN_MODEL_FOLD_CHANGE);
+		columnHeader.add(MEDIAN_MODEL_FOLD_CHANGE);
+		columnHeader.add(MAX_MODEL_FOLD_CHANGE);
+		columnHeader.add(MEAN_MODEL_FOLD_CHANGE);
+		columnHeader.add(MIN_ZSCORE);
+		columnHeader.add(MEDIAN_ZSCORE);
+		columnHeader.add(MAX_ZSCORE);
+		columnHeader.add(MEAN_ZSCORE);
+
 	}
 
 	@Override
@@ -321,8 +343,7 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 						if (c == 0)
 							c = o1.getBmdMedian().compareTo(o2.getBmdMedian());
 						if (c == 0 && categoryAnalsyisResults.get(0) instanceof GOAnalysisResult)
-							c = ((GOAnalysisResult) o2).getGotermLevel()
-									.compareTo(((GOAnalysisResult) o1).getGotermLevel());
+							c = o2.getGotermLevel().compareTo(o1.getGotermLevel());
 						return c;
 
 					}
@@ -347,8 +368,7 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 						&& firstWinner.getBmdMedian().equals(result.getBmdMedian()))
 				{
 					if (result instanceof GOAnalysisResult)
-						if (((GOAnalysisResult) firstWinner).getGotermLevel()
-								.intValue() > ((GOAnalysisResult) result).getGotermLevel().intValue())
+						if (firstWinner.getGotermLevel().intValue() > result.getGotermLevel().intValue())
 							break; // first winner is cool.
 
 					winners.add(result); // this is a tie. show both results.

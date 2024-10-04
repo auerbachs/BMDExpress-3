@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="908.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
+<BorderPane prefHeight="560.0" prefWidth="770.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.categorization.CategorizationView">
 	<center>
 		<AnchorPane BorderPane.alignment="CENTER">
 			<children>
@@ -138,13 +138,13 @@
       																</HBox>
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="533.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                          <children>
-                                                            <CheckBox fx:id="bmdFilterABSZScoreCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Remove Genes With Prefilter |Z-Score| &lt;" wrapText="true" />
+                                                            <CheckBox fx:id="bmdFilterABSZScoreCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Remove Genes With |Z-Score| &lt;" wrapText="true" />
                                                             <TextField fx:id="bmdFilterABSZScoreValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="2" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="566.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                          <children>
-                                                            <CheckBox fx:id="bmdFilterABSModeFCCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Remove Genes With Prefilter |Model Fold Change| &lt;" wrapText="true" />
+                                                            <CheckBox fx:id="bmdFilterABSModeFCCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="300.0" selected="false" text="Remove Genes With |Model Fold Change| &lt;" wrapText="true" />
                                                             <TextField fx:id="bmdFilterABSModelFCValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="3" />
                                                          </children>
                                                       </HBox>

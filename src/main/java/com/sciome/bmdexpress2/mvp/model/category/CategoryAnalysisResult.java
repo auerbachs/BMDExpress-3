@@ -185,6 +185,18 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private transient Double bmdlTenthPercentile;
 	private transient Double bmduTenthPercentile;
 
+	// zscore stats
+	private transient Double minZScore;
+	private transient Double medianZScore;
+	private transient Double maxZScore;
+	private transient Double meanZScore;
+
+	// model fold change stats
+	private transient Double minModelFoldChange;
+	private transient Double medianModelFoldChange;
+	private transient Double maxModelFoldChange;
+	private transient Double meanModelFoldChange;
+
 	private List<IVIVEResult> ivive;
 
 	private StringBuffer getStringBuffer()
@@ -1571,6 +1583,16 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		row.add(this.percentWithOverallDirectionDOWN);
 		row.add(this.percentWithOverallDirectionConflict);
 
+		calculateZScoreAndModelFoldChanageStats();
+		row.add(this.minModelFoldChange);
+		row.add(this.medianModelFoldChange);
+		row.add(this.maxModelFoldChange);
+		row.add(this.meanModelFoldChange);
+		row.add(this.minZScore);
+		row.add(this.medianZScore);
+		row.add(this.maxZScore);
+		row.add(this.meanZScore);
+
 	}
 
 	public void setGenesThatPassedAllFilters(Integer number)
@@ -2672,6 +2694,51 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		}
 
 		return sb.toString();
+	}
+
+	/*
+	 * method to calculate min/median/max/mean of model fold change and zscore
+	 */
+	private void calculateZScoreAndModelFoldChanageStats()
+	{
+		if (this.referenceGeneProbeStatResults == null)
+			return;
+
+		DescriptiveStatistics statsFC = new DescriptiveStatistics();
+		DescriptiveStatistics statsZScore = new DescriptiveStatistics();
+
+		for (ReferenceGeneProbeStatResult rgp : referenceGeneProbeStatResults)
+		{
+			int i = 0;
+			double statsFCValue = 0.0;
+			double statsZScoreValue = 0.0;
+			for (ProbeStatResult probeStatResult : rgp.getProbeStatResults())
+			{
+				StatResult sr = probeStatResult.getBestStatResult();
+
+				if (sr == null)
+					continue;
+				statsFCValue += sr.getAbsFoldChangeToTop();
+				statsZScoreValue += sr.getAbsZScore();
+
+				i++;
+			}
+			if (i > 0)
+			{
+				statsFC.addValue(statsFCValue / i);
+				statsZScore.addValue(statsZScoreValue / i);
+			}
+		}
+
+		this.minZScore = statsZScore.getMin();
+		this.maxZScore = statsZScore.getMax();
+		this.meanZScore = statsZScore.getMean();
+		this.medianZScore = statsZScore.getPercentile(50);
+
+		this.minModelFoldChange = statsFC.getMin();
+		this.meanModelFoldChange = statsFC.getMean();
+		this.maxModelFoldChange = statsFC.getMax();
+		this.medianModelFoldChange = statsFC.getPercentile(50);
 	}
 
 	private String double2String(Double d)
