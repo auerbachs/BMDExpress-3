@@ -70,6 +70,8 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private Integer genesNotStepFunction;
 	private Integer genesNotStepFunctionWithBMDLower;
 	private Integer genesNotAdverseDirection;
+	private Integer genesWithABSZScoreAboveValue;
+	private Integer genesWithABSModelFCAboveValue;
 
 	private Integer genesThatPassedAllFilters;
 
@@ -1077,6 +1079,26 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		this.ivive = ivive;
 	}
 
+	public Integer getGenesWithABSZScoreAboveValue()
+	{
+		return genesWithABSZScoreAboveValue;
+	}
+
+	public void setGenesWithABSZScoreAboveValue(Integer genesWithABSZScoreAboveValue)
+	{
+		this.genesWithABSZScoreAboveValue = genesWithABSZScoreAboveValue;
+	}
+
+	public Integer getGenesWithABSModelFCAboveValue()
+	{
+		return genesWithABSModelFCAboveValue;
+	}
+
+	public void setGenesWithABSModelFCAboveValue(Integer genesWithABSModelFCAboveValue)
+	{
+		this.genesWithABSModelFCAboveValue = genesWithABSModelFCAboveValue;
+	}
+
 	// add in the ratios filters
 	@JsonIgnore
 	public Double getBMDUdivBMDLMEDIAN()
@@ -1214,6 +1236,11 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 		if (genesNotAdverseDirection != null)
 			headers.add("Genes Not Adverse Direction");
+
+		if (genesWithABSZScoreAboveValue != null)
+			headers.add("Genes with ABS Z-Score >");
+		if (genesWithABSModelFCAboveValue != null)
+			headers.add("Genes with Model Fold Change >");
 
 		headers.add("Genes That Passed All Filters");
 
@@ -1384,6 +1411,11 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 			row.add(genesNotStepFunctionWithBMDLower);
 		if (genesNotAdverseDirection != null)
 			row.add(genesNotAdverseDirection);
+
+		if (genesWithABSZScoreAboveValue != null)
+			row.add(genesWithABSZScoreAboveValue);
+		if (genesWithABSModelFCAboveValue != null)
+			row.add(genesWithABSModelFCAboveValue);
 
 		row.add(getGenesThatPassedAllFilters());
 		row.add(this.fishersA);
