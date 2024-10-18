@@ -357,7 +357,10 @@ public class AnalyzeRunner
 		if (catConfig.getIdentifyConflictingProbeSets() == null)
 			params.setIdentifyConflictingProbeSets(false);
 		else
+		{
+			params.setIdentifyConflictingProbeSets(true);
 			params.setIdentifyConflictingProbeSets(catConfig.getIdentifyConflictingProbeSets());
+		}
 
 		if (catConfig.getnFoldBelowLowestDose() == null)
 			params.setRemoveNFoldBelowLowestDose(false);
@@ -381,27 +384,59 @@ public class AnalyzeRunner
 		if (catConfig.getRemoveBMDGreaterHighDose() == null)
 			params.setRemoveBMDGreaterHighDose(false);
 		else
+		{
+			params.setRemoveBMDGreaterHighDose(true);
+
 			params.setRemoveBMDGreaterHighDose(catConfig.getRemoveBMDGreaterHighDose());
+		}
 
 		if (catConfig.getRemovePromiscuousProbes() == null)
 			params.setRemovePromiscuousProbes(false);
 		else
+		{
+			params.setRemovePromiscuousProbes(true);
 			params.setRemovePromiscuousProbes(catConfig.getRemovePromiscuousProbes());
+		}
 
 		if (catConfig.getDeduplicateGeneSets() == null)
 			params.setDeduplicateGeneSets(false);
 		else
+		{
+			params.setDeduplicateGeneSets(true);
 			params.setDeduplicateGeneSets(catConfig.getDeduplicateGeneSets());
+		}
 
 		if (catConfig.getRemoveStepFunction() == null)
 			params.setRemoveStepFunction(false);
 		else
+		{
+			params.setRemoveStepFunction(true);
 			params.setRemoveStepFunction(catConfig.getRemoveStepFunction());
+		}
 
 		if (catConfig.getRemoveStepFunctionWithBMDLower() == null)
 			params.setRemoveStepFunctionWithBMDLower(false);
 		else
+		{
+			params.setRemoveStepFunctionWithBMDLower(true);
 			params.setRemoveStepFunctionWithBMDLower(catConfig.getRemoveStepFunction());
+		}
+
+		if (catConfig.getAbsModelFoldChangeMax() == null)
+			params.setRemoveABSModelFC(false);
+		else
+		{
+			params.setRemoveABSModelFC(true);
+			params.setaBsModelFC(catConfig.getAbsModelFoldChangeMax());
+		}
+
+		if (catConfig.getAbsZScoreMax() == null)
+			params.setRemoveABSZscore(false);
+		else
+		{
+			params.setRemoveABSZscore(true);
+			params.setaBsZScore(catConfig.getAbsZScoreMax());
+		}
 
 		// Set IVIVE parameters
 		if (catConfig.getComputeIVIVE())

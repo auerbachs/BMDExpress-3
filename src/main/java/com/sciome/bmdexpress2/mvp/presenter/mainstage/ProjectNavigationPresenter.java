@@ -727,6 +727,8 @@ public class ProjectNavigationPresenter
 			this.currentProject.getOriogenResults().remove(catAnalysisResults);
 		else if (catAnalysisResults instanceof DoseResponseExperiment)
 			this.currentProject.getDoseResponseExperiments().remove(catAnalysisResults);
+		else if (catAnalysisResults instanceof CurveFitPrefilterResults)
+			this.currentProject.getCurveFitPrefilterResults().remove(catAnalysisResults);
 
 	}
 
