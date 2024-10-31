@@ -18,7 +18,7 @@ module com.sciome.bmdexpress2
 	requires org.apache.commons.lang3;
 	requires org.apache.commons.cli;
 	// requires commons.cli;
-	requires guava;
+	requires com.google.common;
 	requires jfreechart.fx;
 	requires jcommon;
 	requires org.apache.commons.io;
@@ -50,13 +50,14 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.model.stat to com.fasterxml.jackson.databind;
 	opens com.sciome.filter to com.fasterxml.jackson.databind;
 
-	opens com.sciome.bmdexpress2.mvp.presenter to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.annotation to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.prefilter to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.bmdanalysis to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.categorization to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.visualization to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to guava;
+	opens com.sciome.bmdexpress2.mvp.presenter to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.annotation to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.prefilter to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.bmdanalysis to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.categorization to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.visualization to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.mainstage to com.google.common;
 
 	exports com.sciome.bmdexpress2;
 	exports com.sciome.filter;

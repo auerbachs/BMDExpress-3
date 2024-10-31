@@ -17,7 +17,7 @@
 		<junit.version>4.12</junit.version>
   
         <!-- EventBus Version -->
-        <eventbus.version>18.0</eventbus.version>
+        <eventbus.version>33.3.1-jre</eventbus.version>
         
         <!-- FontAwesome Version -->
         <fontawesome.version>8.9</fontawesome.version>
