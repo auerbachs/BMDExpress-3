@@ -16,11 +16,12 @@ module com.sciome.bmdexpress2
 	requires jfreechart;
 	requires math;
 	requires org.apache.commons.lang3;
-	requires commons.cli;
+	requires org.apache.commons.cli;
+	// requires commons.cli;
 	requires guava;
 	requires jfreechart.fx;
 	requires jcommon;
-	requires commons.io;
+	requires org.apache.commons.io;
 	requires com.fasterxml.jackson.core;
 	requires com.fasterxml.jackson.databind;
 	requires java.management;

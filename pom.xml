@@ -6,8 +6,8 @@
     <version>3.0.0-SNAPSHOT</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         		<!-- Logging -->
 		<logback.version>1.2.11</logback.version>
 		<slf4j.version>1.7.36</slf4j.version>
@@ -24,7 +24,7 @@
         
          <!-- Jcommon Version -->
         <jcommon.version>1.0.23</jcommon.version>
-         <javafx.version>15.0.1</javafx.version>
+         <javafx.version>17.0.13</javafx.version>
     </properties>
     
     
@@ -141,41 +141,42 @@
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-core</artifactId>
-		    <version>2.10.3</version>
+		    <version>2.18.1</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
 		<dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-annotations</artifactId>
-		    <version>2.10.3</version>
+		    <version>2.18.1</version>
 		</dependency>
 		
 		<dependency>
 	        <groupId>com.fasterxml.jackson.core</groupId>
 	        <artifactId>jackson-databind</artifactId>
-	        <version>2.10.3</version>
+	        <version>2.18.1</version>
 		</dependency>
-
+		
 		<!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
 		<dependency>
 		    <groupId>commons-cli</groupId>
 		    <artifactId>commons-cli</artifactId>
-		    <version>1.4</version>
+		    <version>1.6.0</version>
 		</dependency>
+
 		
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
-		    <version>2.5</version>
+		    <version>2.17.0</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
 		<dependency>
 		    <groupId>org.apache.commons</groupId>
 		    <artifactId>commons-lang3</artifactId>
-		    <version>3.6</version>
+		    <version>3.17.0</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-math3 -->
@@ -189,7 +190,7 @@
 		<dependency>
 		    <groupId>org.controlsfx</groupId>
 		    <artifactId>controlsfx</artifactId>
-		    <version>11.0.1</version>
+		    <version>11.2.1</version>
 		</dependency>
 
 		<!-- sciome commons math functions-->
@@ -215,11 +216,11 @@
      <plugin>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
-        <version>0.0.4</version>
+        <version>0.0.8</version>
         <configuration>
-                                  <source>11</source>
-                                <target>11</target>
-                                <release>11</release>
+                                  <source>21</source>
+                                <target>21</target>
+                                <release>21</release>
                                 <compilerArgs>
 
                                 <arg>--add-modules</arg>
@@ -243,9 +244,9 @@
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.8.0</version>
+            <version>3.13.0</version>
             <configuration>
-                <release>11</release>
+                <release>21</release>
             </configuration>
         </plugin >
       <plugin>
@@ -263,10 +264,5 @@
     </plugin>
     </plugins>
   </build>
-    
-    
-  
-    
-    
     
 </project>
