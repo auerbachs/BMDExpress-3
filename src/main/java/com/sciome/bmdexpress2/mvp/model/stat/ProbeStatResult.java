@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -23,6 +24,7 @@ import com.sciome.bmdexpress2.util.NumberManager;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializable, IGeneContainer, IMarkable
 {
 
@@ -419,7 +421,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 	 * make charttable stuff work with best stat model
 	 */
 
-	@JsonIgnore
 	public Double getBestBMD()
 	{
 		if (bestStatResult == null)
@@ -427,7 +428,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMD();
 	}
 
-	@JsonIgnore
 	public Double getBestBMDL()
 	{
 		if (bestStatResult == null)
@@ -435,7 +435,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMDL();
 	}
 
-	@JsonIgnore
 	public Double getBestFitPValue()
 	{
 		if (bestStatResult == null)
@@ -443,7 +442,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getFitPValue();
 	}
 
-	@JsonIgnore
 	public Double getBestFitLogLikelihood()
 	{
 		if (bestStatResult == null)
@@ -451,7 +449,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getFitLogLikelihood();
 	}
 
-	@JsonIgnore
 	public Double getBestBMDU()
 	{
 		if (bestStatResult == null)
@@ -459,37 +456,31 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMDU();
 	}
 
-	@JsonIgnore
 	public Double getPrefilterAdjustedPValue()
 	{
 		return prefilterAdjustedPValue;
 	}
 
-	@JsonIgnore
 	public Double getPrefilterPValue()
 	{
 		return prefilterPvalue;
 	}
 
-	@JsonIgnore
 	public Double getBestFoldChange()
 	{
 		return prefilterBestFoldChange;
 	}
 
-	@JsonIgnore
 	public Double getBestABSFoldChange()
 	{
 		return prefilterBestABSFoldChange;
 	}
 
-	@JsonIgnore
 	public Float getPrefilterNoel()
 	{
 		return prefilterNoel;
 	}
 
-	@JsonIgnore
 	public Float getPrefilterLoel()
 	{
 		return prefilterLoel;

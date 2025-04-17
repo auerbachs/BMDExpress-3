@@ -193,6 +193,7 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 		return name;
 	}
 
+	@JsonIgnore
 	@Override
 	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
 	{
@@ -206,6 +207,11 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 		}
 
 		return list;
+	}
+
+	public AnalysisInfo getAnalysisInfo()
+	{
+		return this.analysisInfo;
 	}
 
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)
@@ -382,6 +388,20 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 		}
 
 		this.categoryAnalsyisResults = deDupList;
+	}
+
+	/*
+	 * method to just generate the row data. this is needed
+	 * when exporting to json to create values for fields that
+	 * are lazy generated in the view.
+	 */
+	public void generateRowData()
+	{
+		for (CategoryAnalysisResult cResult : getCategoryAnalsyisResults())
+		{
+			cResult.getRow();
+		}
+
 	}
 
 }

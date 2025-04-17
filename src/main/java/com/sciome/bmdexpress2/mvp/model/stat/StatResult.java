@@ -377,6 +377,7 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	// fyi. the exponential has a override for this method
 	// because exponential model's first parameter is a -1 or 1
 	// which is not a parameter returned by toxicr.
+	@JsonIgnore
 	public double[] getAllParameters()
 	{
 		// maybe in the case of model averaging or gcurvep

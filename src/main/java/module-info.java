@@ -72,6 +72,7 @@ module com.sciome.bmdexpress2
 	exports com.sciome.bmdexpress2.mvp.model.stat;
 	exports com.sciome.bmdexpress2.mvp.model.category;
 	exports com.sciome.bmdexpress2.mvp.model.category.identifier;
+	exports com.sciome.bmdexpress2.mvp.model.info;
 	exports com.sciome.bmdexpress2.mvp.view.visualization;
 	exports com.sciome.bmdexpress2.util.bmds.shared;
 	exports com.sciome.bmdexpress2.util.bmds;

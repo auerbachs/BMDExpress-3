@@ -187,6 +187,10 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		// clean up any leftovers from this process
 		bMDSTool.cleanUp();
 		calculateExtraStatistics(bMDResults);
+
+		// temporary to test loglikeliood
+		calculateLikelihood(bMDResults);
+
 		return bMDResults;
 	}
 
@@ -557,6 +561,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			List<DoseGroup> doseGroups = bmdResults.getDoseResponseExperiment()
 					.getDoseGroups(psr.getProbeResponse().getResponses());
 			LogTransformationEnum logTrans = bmdResults.getDoseResponseExperiment().getLogTransformation();
+
 			for (StatResult statResult : psr.getStatResults())
 			{
 				double[] residuals = null;
@@ -675,6 +680,44 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				}
 				catch (Exception e)
 				{}
+
+			}
+
+		}
+
+	}
+
+	private void calculateLikelihood(BMDResult bmdResults)
+	{
+
+		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
+		{
+			List<Float> y_j = psr.getProbeResponse().getResponses();
+			// build the dosegroup array.
+			List<Treatment> doses = bmdResults.getDoseResponseExperiment().getTreatments();
+
+			Double maxconstant = doses.size() * Math.log((1 / Math.sqrt(2 * Math.PI)));
+			for (StatResult statResult : psr.getStatResults())
+			{
+				List<Double> mu_j = new ArrayList<>();
+				int i = 0;
+				Double sum = 0.0;
+				for (Treatment treatment : doses)
+				{
+					Double value = statResult.getResponseAt(treatment.getDose());
+					sum += Math.pow(y_j.get(i) - value, 2.0);
+
+					i++;
+				}
+				Double signma2 = sum / doses.size();
+				Double loglikelihood = -(doses.size() / 2) * (Math.log(2 * Math.PI) + Math.log(signma2))
+						- (doses.size() / 2);
+
+				Double realloglikelioddfromtoxicr = statResult.getFitLogLikelihood() + maxconstant;
+
+				String result = statResult.getModel() + "\t" + loglikelihood + "\t"
+						+ realloglikelioddfromtoxicr + "\t" + statResult.getFitLogLikelihood();
+				System.out.println(result);
 
 			}
 

@@ -262,6 +262,7 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 		return columnHeader;
 	}
 
+	@JsonIgnore
 	@Override
 	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
 	{
@@ -289,6 +290,11 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)
 	{
 		this.analysisInfo = analysisInfo;
+	}
+
+	public AnalysisInfo getAnalysisInfo()
+	{
+		return this.analysisInfo;
 	}
 
 	// This is called in order to generate data for each probe stat result fo viewing
@@ -498,6 +504,12 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public String getDataSetName()
 	{
 		return getName();
+	}
+
+	public void generateRowData()
+	{
+		this.fillRowData();
+
 	}
 
 }

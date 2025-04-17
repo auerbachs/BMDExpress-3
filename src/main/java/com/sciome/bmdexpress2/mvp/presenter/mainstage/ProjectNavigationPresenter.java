@@ -672,6 +672,17 @@ public class ProjectNavigationPresenter
 			return;
 		}
 
+		// make sure to generate all the results that are lazy loaded for various analyses
+		for (CategoryAnalysisResults cResults : currentProject.getCategoryAnalysisResults())
+		{
+			cResults.generateRowData();
+		}
+
+		for (BMDResult bmdResult : currentProject.getbMDResult())
+		{
+			bmdResult.generateRowData();
+		}
+
 		// TODO this is a hack. needs to be in the view.
 		DialogWithThreadProcess saveDialog = new DialogWithThreadProcess(
 				((ProjectNavigationView) getView()).getWindow());

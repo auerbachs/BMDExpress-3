@@ -155,6 +155,11 @@ public class WilliamsTrendResults extends BMDExpressAnalysisDataSet
 		this.analysisInfo = analysisInfo;
 	}
 
+	public AnalysisInfo getAnalysisInfo()
+	{
+		return this.analysisInfo;
+	}
+
 	/*
 	 * fill the column header for table display or file export purposes.
 	 */
