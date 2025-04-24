@@ -2781,7 +2781,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 				{
 					fcValueNaNCount++;
 				}
-				if (Double.isFinite(sr.getAbsZScore()))
+				if (!Double.isFinite(sr.getAbsZScore()))
 				{
 					zscoreNaNCount++;
 				}
@@ -2790,11 +2790,15 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 			boolean kickOutFCNaN = false;
 			boolean kickOutZScoreNaN = false;
-			if ((double) zscoreNaNCount / (double) rgp.getProbeStatResults().size() > .10)
+
+			// if the number NaN is less than 10% the number of values
+			// calculate by kicking out NaN. otherwise, just allow the
+			// value to return NaN
+			if ((double) zscoreNaNCount / (double) rgp.getProbeStatResults().size() < .10)
 			{
 				kickOutZScoreNaN = true;
 			}
-			if ((double) fcValueNaNCount / (double) rgp.getProbeStatResults().size() > .10)
+			if ((double) fcValueNaNCount / (double) rgp.getProbeStatResults().size() < .10)
 			{
 				kickOutFCNaN = true;
 			}

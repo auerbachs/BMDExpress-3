@@ -29,6 +29,8 @@
 #include "continuous_clean_aux.h"
 #include "continuous_entry_code.h"
 #include "mcmc_analysis.h"
+#include "seeder.h"
+#include <nlopt.h>
 
 #include "com_toxicR_ToxicRJNI.h"
 #define MAX_PARMS 32 // Should never get close to this many!!!
@@ -43,6 +45,10 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_calcDeviance
     ////////////////////////////////////////////////
     /// Set up the analysis
     ////////////////////////////////////////////////
+  Seeder *seeder = Seeder::getInstance();
+  seeder->setSeed(12331);
+  nlopt_srand(12331);
+
 
    jsize len = env->GetArrayLength( doses);
    jdouble *doseBody = env->GetDoubleArrayElements( doses, 0);
@@ -81,7 +87,7 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_calcDeviance
     }
 
 
-    for (int i = 0; i < len; i++){
+   for (int i = 0; i < len; i++){
       analysis.Y[i] = yBody[i]; 
       analysis.doses[i] = doseBody[i]; 
       //if (suff_stat){ //sufficient statistics
@@ -113,6 +119,9 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_runContinuousSingleJNI
     ////////////////////////////////////////////////
     /// Set up the analysis
     ////////////////////////////////////////////////
+  Seeder *seeder = Seeder::getInstance();
+  seeder->setSeed(12331);
+  nlopt_srand(12331);
 
    jsize len = env->GetArrayLength( doses);
    jdouble *doseBody = env->GetDoubleArrayElements( doses, 0);
@@ -165,6 +174,7 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_runContinuousSingleJNI
 
     
    string jsonResults = convertSingleContinuousResultToJSON(result);
+
    del_continuous_analysis(analysis);
    del_continuous_model_result(result); 
 
@@ -185,6 +195,9 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_runContinuousMAJNI
     ////////////////////////////////////////////////
     /// Set up the analysis
     ////////////////////////////////////////////////
+  Seeder *seeder = Seeder::getInstance();
+  seeder->setSeed(12331);
+  nlopt_srand(12331);
 
    jsize len = env->GetArrayLength( doses);
    jdouble *doseBody = env->GetDoubleArrayElements( doses, 0);
@@ -293,6 +306,9 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_runContinuousMCMCSingleJNI
     ////////////////////////////////////////////////
     /// Set up the analysis
     ////////////////////////////////////////////////
+  Seeder *seeder = Seeder::getInstance();
+  seeder->setSeed(12331);
+  nlopt_srand(12331);
 
    jsize len = env->GetArrayLength( doses);
    jdouble *doseBody = env->GetDoubleArrayElements( doses, 0);
@@ -372,6 +388,9 @@ JNIEXPORT jstring JNICALL Java_com_toxicR_ToxicRJNI_runContinuousMCMCMAJNI
     ////////////////////////////////////////////////
     /// Set up the analysis
     ////////////////////////////////////////////////
+  Seeder *seeder = Seeder::getInstance();
+  seeder->setSeed(12331);
+  nlopt_srand(12331);
 
    jsize len = env->GetArrayLength( doses);
    jdouble *doseBody = env->GetDoubleArrayElements( doses, 0);
@@ -527,10 +546,10 @@ string convertSingleContinuousResultToJSON(continuous_model_result* result)
   buffer <<"],";
   buffer << std::endl;
 
-  /*
+
   buffer << "\"cov\":";
   buffer <<"[";
-  for(int i=0; i< result->dist_numE; i++)
+  for(int i=0; i< result->nparms*result->nparms; i++)
   {
     if(i!=0)
        buffer<<",";
@@ -538,7 +557,7 @@ string convertSingleContinuousResultToJSON(continuous_model_result* result)
   }
   buffer <<"],";
   buffer << std::endl;
-  */
+ 
 
   buffer << "\"bmd_dist\":";
   buffer <<"[";

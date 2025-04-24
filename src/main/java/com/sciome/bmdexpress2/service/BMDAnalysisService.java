@@ -189,7 +189,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		calculateExtraStatistics(bMDResults);
 
 		// temporary to test loglikeliood
-		calculateLikelihood(bMDResults);
+		// calculateLikelihood(bMDResults);
 
 		return bMDResults;
 	}
