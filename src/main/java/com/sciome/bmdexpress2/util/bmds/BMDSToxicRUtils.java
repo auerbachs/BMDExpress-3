@@ -86,8 +86,20 @@ public class BMDSToxicRUtils
 		Double maxconstant = doses.length * Math.log((1 / Math.sqrt(2 * Math.PI)));
 
 		Double logMax = -1 * continousResult.getMax() - maxconstant;
+		int numParams = continousResult.getParms().size();
 
-		double aic = BMDSToxicRUtils.calculateAIC(continousResult.getNparms(), logMax);
+		int index = 0;
+		for (Double parm : continousResult.getParms())
+		{
+			double lower = continousResult.getModelBounds()[index][0];
+			double upper = continousResult.getModelBounds()[index][1];
+			if (parm.doubleValue() == lower || parm.doubleValue() == upper)
+				numParams--;
+			index++;
+		}
+
+		// double aic = BMDSToxicRUtils.calculateAIC(continousResult.getNparms(), logMax);
+		double aic = BMDSToxicRUtils.calculateAIC(numParams, logMax);
 
 		int extraparms = 1;
 
@@ -124,7 +136,8 @@ public class BMDSToxicRUtils
 				avalue = deviance.getA1();
 				df = deviance.getN1();
 			}
-			ChiSquaredDistribution csd = new ChiSquaredDistribution(df - continousResult.getNparms());
+			// ChiSquaredDistribution csd = new ChiSquaredDistribution(df - continousResult.getNparms());
+			ChiSquaredDistribution csd = new ChiSquaredDistribution(df - numParams);
 			p1 = 1.0 - csd.cumulativeProbability(
 					2 * (continousResult.getMax().doubleValue() - avalue.doubleValue()));
 

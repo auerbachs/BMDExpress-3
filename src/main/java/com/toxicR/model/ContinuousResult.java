@@ -2,6 +2,7 @@ package com.toxicR.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class ContinuousResult
@@ -17,6 +18,9 @@ public class ContinuousResult
 	private List<Double> bmdDist;
 	private Double modelDF;
 	private Double totalDF;
+
+	@JsonIgnore
+	private double[][] modelBounds;
 
 	public Integer getModel()
 	{
@@ -120,6 +124,16 @@ public class ContinuousResult
 	public void setTotalDF(Double totalDF)
 	{
 		this.totalDF = totalDF;
+	}
+
+	public double[][] getModelBounds()
+	{
+		return modelBounds;
+	}
+
+	public void setModelBounds(double[][] modelBounds)
+	{
+		this.modelBounds = modelBounds;
 	}
 
 }
