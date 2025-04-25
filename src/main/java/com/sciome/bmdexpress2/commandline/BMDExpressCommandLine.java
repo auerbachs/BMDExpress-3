@@ -22,6 +22,7 @@ import com.sciome.bmdexpress2.commandline.config.bmds.BMDSInputConfig;
 import com.sciome.bmdexpress2.commandline.config.bmds.BMDSModelConfig;
 import com.sciome.bmdexpress2.commandline.config.bmds.ExponentialConfig;
 import com.sciome.bmdexpress2.commandline.config.bmds.HillConfig;
+import com.sciome.bmdexpress2.commandline.config.bmds.ModelAveragingConfig;
 import com.sciome.bmdexpress2.commandline.config.bmds.PolyConfig;
 import com.sciome.bmdexpress2.commandline.config.bmds.PowerConfig;
 import com.sciome.bmdexpress2.commandline.config.category.CategoryConfig;
@@ -29,7 +30,11 @@ import com.sciome.bmdexpress2.commandline.config.category.DefinedConfig;
 import com.sciome.bmdexpress2.commandline.config.category.GOConfig;
 import com.sciome.bmdexpress2.commandline.config.category.PathwayConfig;
 import com.sciome.bmdexpress2.commandline.config.expression.ExpressionDataConfig;
+import com.sciome.bmdexpress2.commandline.config.nonparametric.GCurvePConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.ANOVAConfig;
+import com.sciome.bmdexpress2.commandline.config.prefilter.CurveFitPrefilterConfig;
+import com.sciome.bmdexpress2.commandline.config.prefilter.OriogenConfig;
+import com.sciome.bmdexpress2.commandline.config.prefilter.WilliamsConfig;
 import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 
@@ -78,6 +83,7 @@ public class BMDExpressCommandLine
 
 	private void run(String[] args)
 	{
+		// createStrawMan();
 		CommandLineParser parser = new DefaultParser();
 		// Do not invoke the BMDExpress Properties of BMDExpress Constants singlton in this block
 		// please do so in the individual commands. This is because analyze has the ability to override
@@ -240,7 +246,35 @@ public class BMDExpressCommandLine
 		anovaConfig1.setpValueCutoff(0.05);
 		anovaConfig1.setUseFoldChange(true);
 
-		runConfig.setPreFilterConfigs(Arrays.asList(anovaConfig, anovaConfig1));
+		OriogenConfig orioginConfig = new OriogenConfig();
+
+		orioginConfig.setFilterOutControlGenes(true);
+		orioginConfig.setFoldChange(2.0);
+		orioginConfig.setInputName("expression2");
+		orioginConfig.setOutputName("expression2_oriogen");
+		orioginConfig.setpValueCutoff(0.05);
+		orioginConfig.setUseFoldChange(true);
+
+		WilliamsConfig williamsConfig = new WilliamsConfig();
+
+		williamsConfig.setFilterOutControlGenes(true);
+		williamsConfig.setFoldChange(2.0);
+		williamsConfig.setInputName("expression2");
+		williamsConfig.setOutputName("expression2_williams");
+		williamsConfig.setpValueCutoff(0.05);
+		williamsConfig.setUseFoldChange(true);
+
+		CurveFitPrefilterConfig curveConfig = new CurveFitPrefilterConfig();
+
+		curveConfig.setModelConfigs(getCurveFitPrefilterModelConfigs());
+		curveConfig.setFilterOutControlGenes(true);
+		curveConfig.setFoldChange(2.0);
+		curveConfig.setInputName("expression2");
+		curveConfig.setOutputName("expression2_curvefit_prefilter");
+		curveConfig.setpValueCutoff(0.05);
+		curveConfig.setUseFoldChange(true);
+
+		runConfig.setPreFilterConfigs(Arrays.asList(anovaConfig, williamsConfig, orioginConfig, curveConfig));
 
 		// load bmd config
 
@@ -281,6 +315,18 @@ public class BMDExpressCommandLine
 		bmdsConfig1.setModelConfigs(getModelConfigs());
 		bmdsConfig1.setBmdsBestModelSelection(bestModConfig1);
 		runConfig.setBmdsConfigs(Arrays.asList(bmdsConfig, bmdsConfig1));
+
+		ModelAveragingConfig modelAveragingConfig = new ModelAveragingConfig();
+		bmdsConfig1.setInputCategory("curvefit");
+		bmdsConfig.setNumberOfThreads(100);
+		bmdsConfig1.setInputName("");
+		bmdsConfig1.setOutputName("expression1_curvefit_bmds");
+		modelAveragingConfig.setModelConfigs(getMAModelConfigs());
+		runConfig.setMaConfigs(Arrays.asList(modelAveragingConfig));
+
+		GCurvePConfig gcurveConfig = new GCurvePConfig();
+
+		runConfig.setNonParametricConfigs(Arrays.asList(gcurveConfig));
 
 		List<CategoryConfig> configs = new ArrayList<>();
 		configs.addAll(getCategoryConfigs("express1_anova_bmds"));
@@ -382,19 +428,51 @@ public class BMDExpressCommandLine
 		PolyConfig poly3 = new PolyConfig();
 		poly3.setDegree(3);
 
-		ExponentialConfig exp2 = new ExponentialConfig();
-		exp2.setExpModel(2);
-
 		ExponentialConfig exp3 = new ExponentialConfig();
 		exp3.setExpModel(3);
-
-		ExponentialConfig exp4 = new ExponentialConfig();
-		exp4.setExpModel(4);
 
 		ExponentialConfig exp5 = new ExponentialConfig();
 		exp5.setExpModel(5);
 
-		return Arrays.asList(hill, power, poly1, poly2, poly3, exp2, exp3, exp4, exp5);
+		return Arrays.asList(hill, power, poly1, poly2, poly3, exp3, exp5);
+
+	}
+
+	private List<BMDSModelConfig> getCurveFitPrefilterModelConfigs()
+	{
+		HillConfig hill = new HillConfig();
+
+		PowerConfig power = new PowerConfig();
+
+		PolyConfig poly1 = new PolyConfig();
+		poly1.setDegree(1);
+
+		PolyConfig poly2 = new PolyConfig();
+		poly2.setDegree(2);
+
+		ExponentialConfig exp3 = new ExponentialConfig();
+		exp3.setExpModel(3);
+
+		ExponentialConfig exp5 = new ExponentialConfig();
+		exp5.setExpModel(5);
+
+		return Arrays.asList(hill, power, poly1, poly2, exp3, exp5);
+
+	}
+
+	private List<BMDSModelConfig> getMAModelConfigs()
+	{
+		HillConfig hill = new HillConfig();
+
+		PowerConfig power = new PowerConfig();
+
+		ExponentialConfig exp3 = new ExponentialConfig();
+		exp3.setExpModel(3);
+
+		ExponentialConfig exp5 = new ExponentialConfig();
+		exp5.setExpModel(5);
+
+		return Arrays.asList(hill, power, exp3, exp5);
 
 	}
 
