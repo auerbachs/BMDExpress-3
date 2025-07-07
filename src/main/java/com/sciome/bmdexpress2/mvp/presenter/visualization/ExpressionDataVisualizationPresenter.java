@@ -54,6 +54,32 @@ public class ExpressionDataVisualizationPresenter extends DataVisualizationPrese
 		return intensityResults;
 	}
 
+	// TODO: implement the tissue contamination stuff
+	// will need to read the genesets from the resource files
+	// and return the data that can be plotted.
+	public List<BMDExpressAnalysisDataSet> getTissueContaminationData(
+			DoseResponseExperiment doseResponseExperiment)
+	{
+		List<BMDExpressAnalysisDataSet> intensityResults = new ArrayList<BMDExpressAnalysisDataSet>();
+		for (int i = 0; i < doseResponseExperiment.getTreatments().size(); i++)
+		{
+			IntensityResults singleResult = new IntensityResults();
+			List<IntensityResult> intensityResultList = new ArrayList<IntensityResult>();
+			for (int j = 0; j < doseResponseExperiment.getProbeResponses().size(); j++)
+			{
+				ProbeResponse response = doseResponseExperiment.getProbeResponses().get(j);
+				IntensityResult row = new IntensityResult();
+				row.setResponse((float) ((response.getResponses().get(i))));
+				row.setName(response.getProbe().getId());
+				intensityResultList.add(row);
+			}
+			singleResult.setName(doseResponseExperiment.getTreatments().get(i).getName());
+			singleResult.setIntensityResults(intensityResultList);
+			intensityResults.add(singleResult);
+		}
+		return intensityResults;
+	}
+
 	public OneWayANOVAResults getOneWayResult(IStatModelProcessable pdata)
 	{
 		PrefilterService service = new PrefilterService();
