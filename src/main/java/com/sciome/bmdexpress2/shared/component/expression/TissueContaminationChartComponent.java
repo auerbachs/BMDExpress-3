@@ -21,6 +21,8 @@ import com.sciome.bmdexpress2.service.TissueContaminationService;
 import com.sciome.charts.jfree.SciomeChartViewer;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -36,7 +38,7 @@ public class TissueContaminationChartComponent extends VBox
 	private ComboBox<String> tissueBox;
 	private TextArea textArea = new TextArea();
 
-	SciomeChartViewer barChartViewer;
+	SciomeChartViewer tissueContaminationViewer;
 	private HBox tissueLayout;
 	private TissueContaminationService tissueService;
 
@@ -49,7 +51,6 @@ public class TissueContaminationChartComponent extends VBox
 
 		Label tissueLabel = new Label("Tissue");
 		textArea.setPromptText("Add custom genes here...");
-		// textArea.setPrefRowCount(5); // Optional: default height
 
 		textArea.textProperty().addListener((observable, oldValue, newValue) ->
 		{
@@ -68,11 +69,14 @@ public class TissueContaminationChartComponent extends VBox
 			updateChart();
 		});
 		// Lock height and give width
-		textArea.setPrefHeight(80);
-		textArea.setMinHeight(80);
-		textArea.setMaxHeight(80);
+		textArea.setPrefHeight(60);
+		textArea.setMinHeight(60);
+		textArea.setMaxHeight(60);
 		textArea.setPrefWidth(400);
 		tissueLayout = new HBox(10, tissueLabel, tissueBox, textArea);
+		tissueLayout.setAlignment(Pos.CENTER_LEFT);
+		VBox.setMargin(tissueLayout, new Insets(10));
+		tissueLayout.setMaxHeight(90);
 
 		this.getChildren().add(tissueLayout);
 
@@ -140,10 +144,10 @@ public class TissueContaminationChartComponent extends VBox
 
 		Platform.runLater(() ->
 		{
-			if (barChartViewer != null)
-				this.getChildren().removeAll(barChartViewer);
-			barChartViewer = new SciomeChartViewer(chart);
-			this.getChildren().add(barChartViewer);
+			if (tissueContaminationViewer != null)
+				this.getChildren().removeAll(tissueContaminationViewer);
+			tissueContaminationViewer = new SciomeChartViewer(chart);
+			this.getChildren().add(tissueContaminationViewer);
 		});
 
 	}
