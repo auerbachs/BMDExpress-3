@@ -1,13 +1,17 @@
 package com.sciome.bmdexpress2.shared.component.expression;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.axis.SymbolAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -15,6 +19,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.probe.Probe;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
+import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.service.TissueContaminationService;
@@ -113,13 +118,14 @@ public class TissueContaminationChartComponent extends VBox
 		XYSeriesCollection dataset = new XYSeriesCollection();
 
 		Map<String, Integer> geneCountMap = new HashMap<>();
+		List<Treatment> treatments = doseResponseExperiment.getTreatments();
 		for (ProbeResponse pr : doseResponseExperiment.getProbeResponses())
 		{
 			if (probesToUse.get(pr.getProbe()) == null)
 				continue;
 			String gene = probesToUse.get(pr.getProbe());
 
-			int count = 1;
+			int count = 0;
 			if (geneCountMap.containsKey(gene))
 				geneCountMap.put(gene, geneCountMap.get(gene) + 1);
 			else
@@ -132,7 +138,9 @@ public class TissueContaminationChartComponent extends VBox
 
 			for (Float response : pr.getResponses())
 			{
-				series.add((double) count++, response.doubleValue());
+
+				Treatment theTreatment = treatments.get(count++);
+				series.add((double) count, response.doubleValue());
 
 			}
 
@@ -140,7 +148,34 @@ public class TissueContaminationChartComponent extends VBox
 
 		}
 
-		JFreeChart chart = createChart(dataset);
+		Set<String> orderedCategorySet = new LinkedHashSet<>();
+		List<String> categories = new ArrayList<>();
+		for (Treatment t : treatments)
+		{
+			String key = t.getName() + " (" + t.getDose() + ")";
+			int count = 0;
+			while (!orderedCategorySet.contains(key))
+			{
+				if (count == 0)
+					orderedCategorySet.add(key);
+				else
+					key = t.getName() + "." + String.valueOf(count++) + " (" + t.getDose() + ")";
+
+			}
+
+		}
+
+		categories.addAll(orderedCategorySet);
+		categories.add(0, "");
+		SymbolAxis xAxis = new SymbolAxis("Samples", categories.toArray(new String[0]));
+		xAxis.setGridBandsVisible(false); // Optional
+
+		xAxis.setTickUnit(new NumberTickUnit(1.0));
+		// xAxis.setRange(-0.5, categories.size() - 0.5); // Add padding to show all labels
+		xAxis.setGridBandsVisible(false);
+		xAxis.setVerticalTickLabels(true);
+
+		JFreeChart chart = createChart(dataset, xAxis);
 
 		Platform.runLater(() ->
 		{
@@ -157,10 +192,11 @@ public class TissueContaminationChartComponent extends VBox
 	 *
 	 * @param dataset
 	 *            the dataset for the chart.
+	 * @param xAxis
 	 *
 	 * @return a sample chart.
 	 */
-	private JFreeChart createChart(XYSeriesCollection dataset)
+	private JFreeChart createChart(XYSeriesCollection dataset, SymbolAxis xAxis)
 	{
 
 		JFreeChart chart = ChartFactory.createXYLineChart("Tissue Contamination", "Sample", "Dose Response",
@@ -168,6 +204,8 @@ public class TissueContaminationChartComponent extends VBox
 
 		// chart.addSubtitle(new TextTitle("qc bar chart"));
 		XYPlot plot = (XYPlot) chart.getPlot();
+
+		plot.setDomainAxis(xAxis);
 
 		return chart;
 
