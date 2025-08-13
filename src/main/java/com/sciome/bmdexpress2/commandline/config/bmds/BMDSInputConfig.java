@@ -12,6 +12,7 @@ public class BMDSInputConfig
 
 	private Double bmrFactor = 1.021;
 
+	// 1 for standard deviation. 2 for relative deviation
 	private Integer bmrType = 1;
 
 	private Boolean restrictPolyToMonotonic;

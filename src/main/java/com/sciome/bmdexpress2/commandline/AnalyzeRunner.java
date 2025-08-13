@@ -419,7 +419,7 @@ public class AnalyzeRunner
 		else
 		{
 			params.setRemoveStepFunctionWithBMDLower(true);
-			params.setRemoveStepFunctionWithBMDLower(catConfig.getRemoveStepFunction());
+			params.setRemoveStepFunctionWithBMDLower(catConfig.getRemoveStepFunctionWithBMDLower());
 		}
 
 		if (catConfig.getAbsModelFoldChangeMax() == null)
