@@ -37,30 +37,30 @@ If you still have further questions, concerns, comments or suggestions, please c
 Contributors
 ============
 
--   Scott S Auerbach, National Toxicology Program (Project Lead)
+-   Scott S Auerbach, Division of Translational Toxicology at NIEHS (Project Lead)
 -   Jason Phillips, Sciome (Lead Software Engineer)
--   Matt Wheeler, NIEHS (Developer of ToxicR and statistical modelling consultant)
--   Fred Parham, National Toxicology Program (Statistical and Modeling Consultant)
+-   Matt Wheeler, Formerly NIEHS (Developer of ToxicR and statistical modelling consultant on BMDExpress3)
+-   Fred Parham, Division of Translational Toxicology at NIEHS (Statistical and Modeling Consultant)
 -   Dan Svoboda, Sciome (Lead Designer)
 -   Shyam Patel, Sciome (Software Developer)
 -   Louis Olszyk, CSRA via USEPA (Updated BMD models)
 -   Arpit Tandon, Sciome (Platform Annotations)
--   Trey Saddler, National Toxicology Program (Documentation)
+-   Trey Saddler, Formerly Division of Translational Toxicology at NIEHS (Documentation)
 -   Deepak Mav, Sciome (Statistical and Modelling Consultant)
 -   Carole Yauk, Health Canada (Design Consultant)
 -   Byron Kuo, Health Canada (Design Consultant)
 -   Alex Sedyh, Sciome (Statistical and Modeling Consultant)
--   Russell Thomas, US EPA, originally The Hamner Institute (BMDExpress v1 Project Lead)
+-   Russell Thomas, Formerly US EPA, originally The Hamner Institute (BMDExpress v1 Project Lead)
 -   Longlong Yang, Vistronix, originally The Hamner Institute (BMDExpress v1 Lead Software Engineer)
 -   Mel Anderson, Scitovation, orignally The Hamner Institute (BMDExpress v1 contributor)
 -   Jeff Gift, US EPA (Updated BMD models)
 -   Allen Davis, US EPA (Updated BMD models)
 -   Bruce Allen, Bruce Allen Consulting (BMDExpress v1 Modeling and Statistical Consultant)
--   B. Alex Merrick, National Toxicology Program (Contract Officer for the NTP Bioinformatics Contract)
+-   B. Alex Merrick, Formerly Division of Translational Toxicology at NIEHS (Contract Officer for the NTP Bioinformatics Contract)
 -   Jessica Ewald (Methods consultant)
 -   Testers
     -   Julia Rager (ToxStrategies)
-    -   Stephen Ferguson (National Toxicology Program)
+    -   Stephen Ferguson (Division of Translational Toxicology at NIEHS)
     -   Joshua Harrill (US EPA)
 
 BMDExpress License Agreements
