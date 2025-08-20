@@ -1,5 +1,6 @@
 package com.sciome.bmdexpress2.mvp.model.category;
 
+// Export Filtered Data
 import java.awt.Color;
 import java.io.Serializable;
 import java.math.RoundingMode;

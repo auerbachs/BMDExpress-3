@@ -398,7 +398,9 @@ public abstract class BMDExpressDataView<T> extends VBox
 								}
 
 								setUpTableView(analysisDataSet);
+
 								setCellFactory();
+								dataFilterChanged();
 								return true;
 							}
 

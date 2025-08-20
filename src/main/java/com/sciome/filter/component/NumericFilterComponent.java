@@ -27,13 +27,13 @@ import javafx.scene.layout.VBox;
 public class NumericFilterComponent extends FilterComponent
 {
 
-	private boolean						isInteger;
-	private boolean						textEditingSlider	= false;
-	protected RangeSlider				hSlider;
-	protected TextField					value1;
-	protected TextField					value2;
+	private boolean isInteger;
+	private boolean textEditingSlider = false;
+	protected RangeSlider hSlider;
+	protected TextField value1;
+	protected TextField value2;
 
-	protected ComboBox<DataFilterType>	dataFilterType;
+	protected ComboBox<DataFilterType> dataFilterType;
 
 	public NumericFilterComponent(String key, DataFilterComponentListener dataFilterComponentListener,
 			Class filterFieldClass, DataFilter df, Method method, FilterComponentContainer container)
@@ -252,15 +252,15 @@ public class NumericFilterComponent extends FilterComponent
 		{
 			if (value1.getText() == null || value1.getText().equals(""))
 				values.add("0");
-			else if (Double.valueOf(value1.getText()) <= hSlider.getMin())
-				values.add(Double.NEGATIVE_INFINITY);
+			// else if (Double.valueOf(value1.getText()) <= hSlider.getMin())
+			// values.add(Double.NEGATIVE_INFINITY);
 			else
 				values.add(Double.valueOf(value1.getText()));
 
 			if (value2.getText() == null || value2.getText().equals(""))
 				values.add(0.0);
-			else if (Double.valueOf(value2.getText()) >= hSlider.getMax())
-				values.add(Double.POSITIVE_INFINITY);
+			// else if (Double.valueOf(value2.getText()) >= hSlider.getMax())
+			// values.add(Double.POSITIVE_INFINITY);
 			else
 				values.add(Double.valueOf(value2.getText()));
 		}
