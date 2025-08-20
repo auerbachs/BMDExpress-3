@@ -22,26 +22,6 @@ public class BMDSInputConfig
 
 	private Double stepFunctionThreshold = 0.75;
 
-	// public Integer getMaxIterations()
-	// {
-	// return maxIterations;
-	// }
-
-	// public void setMaxIterations(Integer maxIterations)
-	// {
-	// this.maxIterations = maxIterations;
-	// }
-
-	// public Double getConfidenceLevel()
-	// {
-	// return confidenceLevel;
-	// }
-
-	// public void setConfidenceLevel(Double confidenceLevel)
-	// {
-	// this.confidenceLevel = confidenceLevel;
-	// }
-
 	public Boolean getConstantVariance()
 	{
 		return constantVariance;

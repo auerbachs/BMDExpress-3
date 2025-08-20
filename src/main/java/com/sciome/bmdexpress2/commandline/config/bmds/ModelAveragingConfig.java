@@ -20,18 +20,6 @@ public class ModelAveragingConfig
 
 	private Integer numberOfThreads = 1;
 
-	private Double stepFunctionThreshold = 0.75;
-
-	public Double getStepFunctionThreshold()
-	{
-		return stepFunctionThreshold;
-	}
-
-	public void setStepFunctionThreshold(Double stepFunctionThreshold)
-	{
-		this.stepFunctionThreshold = stepFunctionThreshold;
-	}
-
 	public String getInputCategory()
 	{
 		return inputCategory;

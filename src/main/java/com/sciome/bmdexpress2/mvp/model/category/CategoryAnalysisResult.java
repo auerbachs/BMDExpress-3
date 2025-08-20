@@ -2798,6 +2798,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 			{
 				kickOutZScoreNaN = true;
 			}
+
 			if ((double) fcValueNaNCount / (double) rgp.getProbeStatResults().size() < .10)
 			{
 				kickOutFCNaN = true;
@@ -2810,19 +2811,18 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 				if (sr == null)
 					continue;
 
-				if (Double.isFinite(sr.getAbsFoldChangeToTop()) || kickOutFCNaN)
+				if (Double.isFinite(sr.getAbsFoldChangeToTop()) || !kickOutFCNaN)
 				{
 					statsFCValue += sr.getAbsFoldChangeToTop();
 					i++;
 				}
 
-				if (Double.isFinite(sr.getAbsZScore()) || kickOutZScoreNaN)
+				if (Double.isFinite(sr.getAbsZScore()) || !kickOutZScoreNaN)
 				{
 					statsZScoreValue += sr.getAbsZScore();
 					j++;
 				}
 
-				i++;
 			}
 			if (i > 0)
 			{
@@ -2830,7 +2830,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 			}
 			if (j > 0)
 			{
-				statsZScore.addValue(statsZScoreValue / i);
+				statsZScore.addValue(statsZScoreValue / j);
 			}
 		}
 
