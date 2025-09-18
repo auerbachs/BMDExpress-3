@@ -46,6 +46,18 @@ public class ExponentialResult extends StatResult
 		returnList.add(expName + " RSquared");
 		returnList.addAll(residualHeader);
 		returnList.add(expName + " Is Step Function Less Than Lowest Dose");
+		returnList.add(expName + " Z-Score");
+		returnList.add(expName + " ABS Z-Score");
+		returnList.add(expName + " Modelled Response BMR Multiples");
+		returnList.add(expName + " ABS Modelled Response BMR Multiples");
+		returnList.add(expName + " Fold Change");
+		returnList.add(expName + " ABS Fold Change");
+		returnList.add(expName + " BMD/Low Dose");
+		returnList.add(expName + " BMD/High Dose");
+
+		returnList.add(expName + " BMD Response/Low Dose Response");
+		returnList.add(expName + " BMD Response/High Dose Response");
+
 		return returnList;
 
 	}
@@ -79,6 +91,16 @@ public class ExponentialResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 	}
 
@@ -168,6 +190,48 @@ public class ExponentialResult extends StatResult
 		return a * (c - (c - 1) * Math.exp(-b * dose));
 	}
 
+	// for the case of exp3 and exp5, the first "parameter" stored
+	// is actually a sign..aka -1 or 1. so we do not return
+	// that parameter with this method.
+
+	@Override
+	public double[] getAllParameters()
+	{
+		// maybe in the case of model averaging or gcurvep
+		if (curveParameters == null || otherParameters == null)
+			return new double[0];
+
+		if (option == 3)
+		{
+			double[] returnval = new double[3 + otherParameters.length];
+			returnval[0] = curveParameters[1];
+			returnval[1] = curveParameters[2];
+			returnval[2] = curveParameters[3];
+			int ii = 3;
+			for (int i = 0; i < otherParameters.length; i++)
+				returnval[ii++] = otherParameters[i];
+
+			return returnval;
+		}
+		else if (option == 5)
+		{
+			double[] returnval = new double[4 + otherParameters.length];
+			returnval[0] = curveParameters[1];
+			returnval[1] = curveParameters[2];
+			returnval[2] = curveParameters[3];
+			returnval[3] = curveParameters[4];
+			int ii = 4;
+			for (int i = 0; i < otherParameters.length; i++)
+				returnval[ii++] = otherParameters[i];
+
+			return returnval;
+		}
+
+		else
+			return super.getAllParameters();
+
+	}
+
 	/**
 	 * Exp functioin
 	 */
@@ -177,6 +241,88 @@ public class ExponentialResult extends StatResult
 		double b = curveParameters[base + 2];
 		double c = curveParameters[base + 3];
 		double d = curveParameters[base + 4];
+		double expvalue = Math.pow(b * dose, d);
+		return a * (c - (c - 1) * Math.exp(-expvalue));
+	}
+
+	// this implementation is assuming the parameters are coming straight from toxicR
+	// it was written to handle calculating gradients, so it is slightly
+	// different than the main getResponseAt because we store the parameters
+	// slightly differently. we store the parameters with a anti-logged c value
+	// and we store the sign as a parameter in bmdexpress. toxicr doesnt'
+	// send it that way
+	@Override
+	public double getResponseAt(double d, double[] customParameters)
+	{
+		if (option == 2)
+		{
+			return exp2Function(0, d, customParameters);
+		}
+		else if (option == 3)
+		{
+			return exp3Function(0, d, customParameters);
+		}
+		else if (option == 4)
+		{
+			return exp4Function(0, d, customParameters);
+		}
+		else if (option == 5)
+		{
+			return exp5Function(0, d, customParameters);
+		}
+		return 0.0;
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp2Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base + 1];
+		double b = customParameters[base + 2];
+
+		return a * Math.exp(customParameters[base] * b * dose);
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp3Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base];
+		double b = customParameters[base + 1];
+		double d = customParameters[base + 2];
+
+		double expvalue = Math.pow(b * dose, d);
+		// the sign parameter is really not a parameter that is returned by
+		// toxicr. it is added when model is brought into bmdexpress
+		// since this is meant for calculating gradient, keep in line
+		// with toxicr
+		return a * Math.exp(this.curveParameters[base] * expvalue);
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp4Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base + 1];
+		double b = customParameters[base + 2];
+		double c = customParameters[base + 3];
+
+		return a * (c - (c - 1) * Math.exp(-b * dose));
+	}
+
+	/**
+	 * Exp functioin
+	 */
+	private double exp5Function(int base, double dose, double[] customParameters)
+	{
+		double a = customParameters[base];
+		double b = customParameters[base + 1];
+		double c = customParameters[base + 2];
+		double d = customParameters[base + 3];
+		c = Math.pow(Math.E, c);
 		double expvalue = Math.pow(b * dose, d);
 		return a * (c - (c - 1) * Math.exp(-expvalue));
 	}

@@ -70,6 +70,8 @@ public class ToxicRJNI
 		ContinuousResult result = new ObjectMapper().readValue(fixNonNumerics(resultString),
 				ContinuousResult.class);
 
+		result.setModelBounds(pr.getBoundsForModel(model));
+
 		return result;
 	}
 

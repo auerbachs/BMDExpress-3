@@ -1,5 +1,6 @@
 package com.sciome.bmdexpress2.mvp.model.category;
 
+// Export Filtered Data
 import java.awt.Color;
 import java.io.Serializable;
 import java.math.RoundingMode;
@@ -18,6 +19,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Percentile;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -39,6 +41,7 @@ import com.sciome.bmdexpress2.util.NumberManager;
 		@Type(value = DefinedCategoryAnalysisResult.class, name = "defined"),
 		@Type(value = GeneLevelAnalysisResult.class, name = "gene") })
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		implements Serializable, IGeneContainer, IMarkable
 {
@@ -70,6 +73,8 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private Integer genesNotStepFunction;
 	private Integer genesNotStepFunctionWithBMDLower;
 	private Integer genesNotAdverseDirection;
+	private Integer genesWithABSZScoreAboveValue;
+	private Integer genesWithABSModelFCAboveValue;
 
 	private Integer genesThatPassedAllFilters;
 
@@ -182,6 +187,18 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private transient Double bmdTenthPercentile;
 	private transient Double bmdlTenthPercentile;
 	private transient Double bmduTenthPercentile;
+
+	// zscore stats
+	private transient Double minZScore;
+	private transient Double medianZScore;
+	private transient Double maxZScore;
+	private transient Double meanZScore;
+
+	// model fold change stats
+	private transient Double minModelFoldChange;
+	private transient Double medianModelFoldChange;
+	private transient Double maxModelFoldChange;
+	private transient Double meanModelFoldChange;
 
 	private List<IVIVEResult> ivive;
 
@@ -1077,6 +1094,26 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		this.ivive = ivive;
 	}
 
+	public Integer getGenesWithABSZScoreAboveValue()
+	{
+		return genesWithABSZScoreAboveValue;
+	}
+
+	public void setGenesWithABSZScoreAboveValue(Integer genesWithABSZScoreAboveValue)
+	{
+		this.genesWithABSZScoreAboveValue = genesWithABSZScoreAboveValue;
+	}
+
+	public Integer getGenesWithABSModelFCAboveValue()
+	{
+		return genesWithABSModelFCAboveValue;
+	}
+
+	public void setGenesWithABSModelFCAboveValue(Integer genesWithABSModelFCAboveValue)
+	{
+		this.genesWithABSModelFCAboveValue = genesWithABSModelFCAboveValue;
+	}
+
 	// add in the ratios filters
 	@JsonIgnore
 	public Double getBMDUdivBMDLMEDIAN()
@@ -1214,6 +1251,11 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 		if (genesNotAdverseDirection != null)
 			headers.add("Genes Not Adverse Direction");
+
+		if (genesWithABSZScoreAboveValue != null)
+			headers.add("Genes with ABS Z-Score >");
+		if (genesWithABSModelFCAboveValue != null)
+			headers.add("Genes with Model Fold Change >");
 
 		headers.add("Genes That Passed All Filters");
 
@@ -1385,6 +1427,11 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		if (genesNotAdverseDirection != null)
 			row.add(genesNotAdverseDirection);
 
+		if (genesWithABSZScoreAboveValue != null)
+			row.add(genesWithABSZScoreAboveValue);
+		if (genesWithABSModelFCAboveValue != null)
+			row.add(genesWithABSModelFCAboveValue);
+
 		row.add(getGenesThatPassedAllFilters());
 		row.add(this.fishersA);
 		row.add(this.fishersB);
@@ -1396,7 +1443,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 
 		row.add(this.percentage);
 		row.add(getGenesIds());
-		row.add(getGeneSymbolsPrivate());
+		row.add(getGeneSymbols());
 		row.add(getProbeIds());
 
 		if (genesWithConflictingProbeSets != null)
@@ -1539,6 +1586,16 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		row.add(this.percentWithOverallDirectionDOWN);
 		row.add(this.percentWithOverallDirectionConflict);
 
+		calculateZScoreAndModelFoldChanageStats();
+		row.add(this.minModelFoldChange);
+		row.add(this.medianModelFoldChange);
+		row.add(this.maxModelFoldChange);
+		row.add(this.meanModelFoldChange);
+		row.add(this.minZScore);
+		row.add(this.medianZScore);
+		row.add(this.maxZScore);
+		row.add(this.meanZScore);
+
 	}
 
 	public void setGenesThatPassedAllFilters(Integer number)
@@ -1579,7 +1636,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDLConflictList()
+	public String getBMDLConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1611,7 +1668,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUConflictList()
+	public String getBMDUConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1643,7 +1700,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDConflictList()
+	public String getBMDConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1676,7 +1733,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbesConflictList()
+	public String getProbesConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1702,7 +1759,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesConflictList()
+	public String getGenesConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1722,7 +1779,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private Integer getAdverseConflictCount()
+	public Integer getAdverseConflictCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -1740,7 +1797,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private String getBMDLDown()
+	public String getBMDLDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1773,7 +1830,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUDown()
+	public String getBMDUDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1806,7 +1863,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDDown()
+	public String getBMDDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1839,7 +1896,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbesDown()
+	public String getProbesDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1865,7 +1922,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesDown()
+	public String getGenesDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1885,7 +1942,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private Integer getGenesAdverseDownCount()
+	public Integer getGenesAdverseDownCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -1903,7 +1960,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private String getBMDLUp()
+	public String getBMDLUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1936,7 +1993,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUUp()
+	public String getBMDUUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1969,7 +2026,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUp()
+	public String getBMDUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2002,7 +2059,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbesUp()
+	public String getProbesUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2028,7 +2085,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesUp()
+	public String getGenesUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2048,7 +2105,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private Integer getGenesAdverseUpCount()
+	public Integer getGenesAdverseUpCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -2066,7 +2123,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private Integer getProbesAdverseDownCount()
+	public Integer getProbesAdverseDownCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -2084,7 +2141,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private Integer getProbesAdversUpCount()
+	public Integer getProbesAdversUpCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -2102,7 +2159,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private String getBMDLList()
+	public String getBMDLList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2132,7 +2189,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUList()
+	public String getBMDUList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2162,7 +2219,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDList()
+	public String getBMDList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2193,7 +2250,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbeIds()
+	public String getProbeIds()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2224,7 +2281,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesIds()
+	public String getGenesIds()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2247,7 +2304,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGeneSymbolsPrivate()
+	public String getGeneSymbolsPrivate()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2396,6 +2453,61 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	public void setBmduTenthPercentile(Double bmduTenthPercentile)
 	{
 		this.bmduTenthPercentile = bmduTenthPercentile;
+	}
+
+	public Double getPercentWithOverallDirectionUP()
+	{
+		return this.percentWithOverallDirectionUP;
+	}
+
+	public Double getPercentWithOverallDirectionDOWN()
+	{
+		return this.percentWithOverallDirectionDOWN;
+	}
+
+	public Double getPercentWithOverallDirectionConflict()
+	{
+		return this.percentWithOverallDirectionConflict;
+	}
+
+	public Double getMinModelFoldChange()
+	{
+		return this.minModelFoldChange;
+	}
+
+	public Double getMedianModelFoldChange()
+	{
+		return this.medianModelFoldChange;
+	}
+
+	public Double getMaxModelFoldChange()
+	{
+		return this.maxModelFoldChange;
+	}
+
+	public Double getMeanModelFoldChange()
+	{
+		return this.meanModelFoldChange;
+	}
+
+	public Double getMinZScore()
+	{
+		return this.minZScore;
+	}
+
+	public Double getMedianZScore()
+	{
+		return this.medianZScore;
+	}
+
+	public Double getMaxZScore()
+	{
+		return this.maxZScore;
+	}
+
+	public Double getMeanZScore()
+	{
+		return this.meanZScore;
 	}
 
 	private void calculateOverAllDirection()
@@ -2595,7 +2707,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	 * calculate statresult counts
 	 */
 
-	private String calculateStatResultCounts()
+	public String calculateStatResultCounts()
 	{
 
 		Map<String, List<StatResult>> statResultCounts = new HashMap<>();
@@ -2640,6 +2752,106 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		}
 
 		return sb.toString();
+	}
+
+	/*
+	 * method to calculate min/median/max/mean of model fold change and zscore
+	 */
+	private void calculateZScoreAndModelFoldChanageStats()
+	{
+		if (this.referenceGeneProbeStatResults == null)
+			return;
+
+		DescriptiveStatistics statsFC = new DescriptiveStatistics();
+		DescriptiveStatistics statsZScore = new DescriptiveStatistics();
+
+		for (ReferenceGeneProbeStatResult rgp : referenceGeneProbeStatResults)
+		{
+			int i = 0;
+			int j = 0;
+			double statsFCValue = 0.0;
+			double statsZScoreValue = 0.0;
+
+			int zscoreNaNCount = 0;
+			int fcValueNaNCount = 0;
+
+			for (ProbeStatResult probeStatResult : rgp.getProbeStatResults())
+			{
+				StatResult sr = probeStatResult.getBestStatResult();
+				if (!Double.isFinite(sr.getAbsFoldChangeToTop()))
+				{
+					fcValueNaNCount++;
+				}
+				if (!Double.isFinite(sr.getAbsZScore()))
+				{
+					zscoreNaNCount++;
+				}
+
+			}
+
+			boolean kickOutFCNaN = false;
+			boolean kickOutZScoreNaN = false;
+
+			// if the number NaN is less than 10% the number of values
+			// calculate by kicking out NaN. otherwise, just allow the
+			// value to return NaN
+			if ((double) zscoreNaNCount / (double) rgp.getProbeStatResults().size() < .10)
+			{
+				kickOutZScoreNaN = true;
+			}
+
+			if ((double) fcValueNaNCount / (double) rgp.getProbeStatResults().size() < .10)
+			{
+				kickOutFCNaN = true;
+			}
+
+			for (ProbeStatResult probeStatResult : rgp.getProbeStatResults())
+			{
+				StatResult sr = probeStatResult.getBestStatResult();
+
+				if (sr == null)
+					continue;
+
+				if (Double.isFinite(sr.getAbsFoldChangeToTop()) || !kickOutFCNaN)
+				{
+					statsFCValue += sr.getAbsFoldChangeToTop();
+					i++;
+				}
+
+				if (Double.isFinite(sr.getAbsZScore()) || !kickOutZScoreNaN)
+				{
+					statsZScoreValue += sr.getAbsZScore();
+					j++;
+				}
+
+			}
+			if (i > 0)
+			{
+				statsFC.addValue(statsFCValue / i);
+			}
+			if (j > 0)
+			{
+				statsZScore.addValue(statsZScoreValue / j);
+			}
+		}
+
+		/*
+		 * if 10% is NaN...do NaN
+		 */
+		this.minZScore = statsZScore.getMin();
+		this.maxZScore = statsZScore.getMax();
+		this.meanZScore = statsZScore.getMean();
+		this.medianZScore = statsZScore.getPercentile(50);
+
+		this.minModelFoldChange = statsFC.getMin();
+		this.meanModelFoldChange = statsFC.getMean();
+		this.maxModelFoldChange = statsFC.getMax();
+		this.medianModelFoldChange = statsFC.getPercentile(50);
+	}
+
+	private int howManyNaNs()
+	{
+		return 0;
 	}
 
 	private String double2String(Double d)

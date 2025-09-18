@@ -2,6 +2,7 @@ package com.toxicR.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class ContinuousResult
@@ -13,10 +14,13 @@ public class ContinuousResult
 	private Double max;
 	private Integer distNumE;
 	private List<Double> parms;
-	// private List<Double> cov;
+	private List<Double> cov;
 	private List<Double> bmdDist;
 	private Double modelDF;
 	private Double totalDF;
+
+	@JsonIgnore
+	private double[][] modelBounds;
 
 	public Integer getModel()
 	{
@@ -58,15 +62,15 @@ public class ContinuousResult
 		this.parms = parms;
 	}
 
-	// public List<Double> getCov()
-	// {
-	// return cov;
-	// }
+	public List<Double> getCov()
+	{
+		return cov;
+	}
 
-	// public void setCov(List<Double> cov)
-	// {
-	// this.cov = cov;
-	// }
+	public void setCov(List<Double> cov)
+	{
+		this.cov = cov;
+	}
 
 	public Double getMax()
 	{
@@ -100,25 +104,36 @@ public class ContinuousResult
 		this.bmdDist = bmdDist;
 	}
 
-	public Double getModelDF() {
+	public Double getModelDF()
+	{
 		return modelDF;
 	}
 
 	@JsonSetter("model_df")
-	public void setModelDF(Double modelDF) {
+	public void setModelDF(Double modelDF)
+	{
 		this.modelDF = modelDF;
 	}
 
-	public Double getTotalDF() {
+	public Double getTotalDF()
+	{
 		return totalDF;
 	}
 
 	@JsonSetter("total_df")
-	public void setTotalDF(Double totalDF) {
+	public void setTotalDF(Double totalDF)
+	{
 		this.totalDF = totalDF;
 	}
-	
-	
-	
+
+	public double[][] getModelBounds()
+	{
+		return modelBounds;
+	}
+
+	public void setModelBounds(double[][] modelBounds)
+	{
+		this.modelBounds = modelBounds;
+	}
 
 }

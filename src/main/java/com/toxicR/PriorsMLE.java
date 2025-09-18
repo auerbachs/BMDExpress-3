@@ -271,6 +271,48 @@ public class PriorsMLE
 		return returnD;
 	}
 
+	public double[][] getBoundsForModel(Integer model)
+	{
+		double[] priors = null;
+
+		if (model.equals(ToxicRConstants.EXP3))
+			priors = exp3;
+		else if (model.equals(ToxicRConstants.POWER))
+			priors = power;
+		else if (model.equals(ToxicRConstants.HILL))
+			priors = hill;
+		else if (model.equals(ToxicRConstants.EXP5))
+			priors = exp5;
+		else if (model.equals(ToxicRConstants.LINEAR))
+			priors = linear;
+		else if (model.equals(ToxicRConstants.POLY2))
+			priors = poly2;
+		else if (model.equals(ToxicRConstants.POLY3))
+			priors = poly3;
+		else if (model.equals(ToxicRConstants.POLY4))
+			priors = poly4;
+		else if (model.equals(ToxicRConstants.FUNL))
+			priors = funl;
+
+		int rowSize = 5;
+		int colSize = priors.length / rowSize;
+		int startIndex = priors.length - colSize * 2;
+
+		double[][] modelBounds = new double[colSize][];
+
+		for (int j = 0; j < colSize; j++)
+		{
+
+			double[] bounds = new double[2];
+			bounds[0] = priors[startIndex];
+			bounds[1] = priors[startIndex + colSize];
+			modelBounds[j] = bounds;
+			startIndex++;
+		}
+
+		return modelBounds;
+	}
+
 	int[] getRowCounts(int[] models)
 	{
 		int[] returnI = new int[models.length];

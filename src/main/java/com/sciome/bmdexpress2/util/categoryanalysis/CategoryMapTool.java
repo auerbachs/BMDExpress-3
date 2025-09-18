@@ -353,6 +353,16 @@ public class CategoryMapTool
 					.add("Remove Genes With Adverse Direction: " + params.getRemoveAdverseDirectionValue());
 		}
 
+		if (params.isRemoveABSModelFC())
+		{
+			analysisInfo.getNotes().add("Remove Genes With |Model Fold Change| <: " + params.getaBsModelFC());
+		}
+
+		if (params.isRemoveABSZscore())
+		{
+			analysisInfo.getNotes().add("Remove Genes With |Z-Score| <: " + params.getaBsZScore());
+		}
+
 		Map<String, Set<String>> geneset2GenesPlatform = new HashMap<>();
 		Map<String, Set<String>> geneset2GenesExpression = new HashMap<>();
 
@@ -433,12 +443,12 @@ public class CategoryMapTool
 
 		analysisInfo.getNotes()
 				.add("# Gene sets platform – no gene set size restriction:" + genesetsByPlatform);
-		//analysisInfo.getNotes()
-		//		.add("# Gene sets expression data – no gene set size restriction:" + genesetsByExpression);
+		// analysisInfo.getNotes()
+		// .add("# Gene sets expression data – no gene set size restriction:" + genesetsByExpression);
 		analysisInfo.getNotes()
 				.add("# Gene sets platform –  gene set size restriction:" + geensetsByPlatformFiltered);
-		//analysisInfo.getNotes().add(
-		//		"# Gene sets expression data – gene set size restriction:" + genesetsByExpressionFiltered);
+		// analysisInfo.getNotes().add(
+		// "# Gene sets expression data – gene set size restriction:" + genesetsByExpressionFiltered);
 
 		this.probeGeneMaps = probeGeneMaps;
 		this.categoryGeneMap = catMap;
@@ -693,6 +703,22 @@ public class CategoryMapTool
 				sub = bmdStats.checkAdjustedPValueBelowDose(subList, params.getAdjustedPValue(), subHashG2Ids,
 						removedProbes).size();
 				categoryAnalysisResult.setGenesWithPrefilterAdjustedPValueAboveValue(sub);
+			}
+
+			if (params.isRemoveABSModelFC())
+			{
+				sub = bmdStats
+						.checkABSModelFCAbove(subList, params.getaBsModelFC(), subHashG2Ids, removedProbes)
+						.size();
+				categoryAnalysisResult.setGenesWithABSModelFCAboveValue(sub);
+			}
+
+			if (params.isRemoveABSZscore())
+			{
+				sub = bmdStats
+						.checkABSZScoreAbove(subList, params.getaBsZScore(), subHashG2Ids, removedProbes)
+						.size();
+				categoryAnalysisResult.setGenesWithABSZScoreAboveValue(sub);
 			}
 
 			if (params.isRemoveStepFunction())

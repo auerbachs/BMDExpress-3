@@ -18,6 +18,8 @@ public class CategoryInput
 	private boolean minGenesInGeneset;
 	private boolean maxGenesInGeneset;
 	private boolean removeGenesWithAdverseDirection;
+	private boolean removeGenesWithABSModelFC;
+	private boolean removeGenesWithABSZScore;
 
 	private boolean removeWithStepFunction;
 	private boolean removeWithStepFunctionWithBMDLower;
@@ -32,6 +34,9 @@ public class CategoryInput
 	private double removeGenesWithPrefilterPValueNumber;
 	private double removeGenesWithPrefilterAdjustedPValueNumber;
 	private double correlationCutoffForConflictingProbeSets;
+	private double removeGenesWithABSModelFCNumber;
+	private double removeGenesWithABSZScoreNumber;
+
 	private String removeGenesWithAdverseDirectionValue;
 
 	private int removeMinGenesInGeneset;
@@ -56,6 +61,8 @@ public class CategoryInput
 		this.removeGenesWithAdverseDirection = false;
 		removeWithStepFunction = false;
 		removeWithStepFunctionWithBMDLower = false;
+		this.removeGenesWithABSModelFC = false;
+		this.removeGenesWithABSZScore = false;
 
 		minGenesInGeneset = false;
 		maxGenesInGeneset = false;
@@ -70,6 +77,8 @@ public class CategoryInput
 		this.removeGenesWithPrefilterPValueNumber = 0.05;
 		this.removeGenesWithPrefilterAdjustedPValueNumber = 0.5;
 		this.correlationCutoffForConflictingProbeSets = 0.5;
+		this.removeGenesWithABSZScoreNumber = 2.0;
+		this.removeGenesWithABSModelFCNumber = 3.0;
 
 		removeMinGenesInGeneset = 20;
 		removeMaxGenesInGeneset = 500;
@@ -387,6 +396,46 @@ public class CategoryInput
 	public void setCorrelationCutoffForConflictingProbeSets(double correlationCutoffForConflictingProbeSets)
 	{
 		this.correlationCutoffForConflictingProbeSets = correlationCutoffForConflictingProbeSets;
+	}
+
+	public boolean isRemoveGenesWithABSModelFC()
+	{
+		return removeGenesWithABSModelFC;
+	}
+
+	public void setRemoveGenesWithABSModelFC(boolean removeGenesWithABSModelFC)
+	{
+		this.removeGenesWithABSModelFC = removeGenesWithABSModelFC;
+	}
+
+	public boolean isRemoveGenesWithABSZScore()
+	{
+		return removeGenesWithABSZScore;
+	}
+
+	public void setRemoveGenesWithABSZScore(boolean removeGenesWithABSZScore)
+	{
+		this.removeGenesWithABSZScore = removeGenesWithABSZScore;
+	}
+
+	public double getRemoveGenesWithABSModelFCNumber()
+	{
+		return removeGenesWithABSModelFCNumber;
+	}
+
+	public void setRemoveGenesWithABSModelFCNumber(double removeGenesWithABSModelFCNumber)
+	{
+		this.removeGenesWithABSModelFCNumber = removeGenesWithABSModelFCNumber;
+	}
+
+	public double getRemoveGenesWithABSZScoreNumber()
+	{
+		return removeGenesWithABSZScoreNumber;
+	}
+
+	public void setRemoveGenesWithABSZScoreNumber(double removeGenesWithABSZScoreNumber)
+	{
+		this.removeGenesWithABSZScoreNumber = removeGenesWithABSZScoreNumber;
 	}
 
 }

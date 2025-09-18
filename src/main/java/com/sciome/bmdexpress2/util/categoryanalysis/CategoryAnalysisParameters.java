@@ -21,6 +21,12 @@ public class CategoryAnalysisParameters
 	private boolean removeStepFunction = false;
 	private boolean removeStepFunctionWithBMDLower = false;
 	private boolean removeAdverseDirection = false;
+
+	private boolean removeABSZscore = false;
+	private double aBsZScore;
+	private double aBsModelFC;
+	private boolean removeABSModelFC = false;
+
 	private String removeAdverseDirectionValue = "";
 	private double bmdBmdlRatio;
 	private double nFoldbelowLowestDoseValue;
@@ -465,4 +471,45 @@ public class CategoryAnalysisParameters
 	{
 		this.iviveParameters = iviveParameters;
 	}
+
+	public boolean isRemoveABSZscore()
+	{
+		return removeABSZscore;
+	}
+
+	public void setRemoveABSZscore(boolean removeABSZscore)
+	{
+		this.removeABSZscore = removeABSZscore;
+	}
+
+	public double getaBsZScore()
+	{
+		return aBsZScore;
+	}
+
+	public void setaBsZScore(double aBsZScore)
+	{
+		this.aBsZScore = aBsZScore;
+	}
+
+	public double getaBsModelFC()
+	{
+		return aBsModelFC;
+	}
+
+	public void setaBsModelFC(double aBsModelFC)
+	{
+		this.aBsModelFC = aBsModelFC;
+	}
+
+	public boolean isRemoveABSModelFC()
+	{
+		return removeABSModelFC;
+	}
+
+	public void setRemoveABSModelFC(boolean removeABSModelFC)
+	{
+		this.removeABSModelFC = removeABSModelFC;
+	}
+
 }

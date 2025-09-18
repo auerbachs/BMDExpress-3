@@ -10,6 +10,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -23,6 +24,7 @@ import com.sciome.bmdexpress2.util.NumberManager;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializable, IGeneContainer, IMarkable
 {
 
@@ -210,6 +212,16 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(Double.NaN);
 			row.add(false);
 			row.add(false);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
+			row.add(Double.NaN);
 		}
 		else
 		{
@@ -227,6 +239,18 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(bestStatResult.getRSquared());
 			row.add(bestStatResult.getIsStepFunction());
 			row.add(bestStatResult.isStepWithBMDLessLowest());
+			row.add(bestStatResult.getZscore());
+			row.add(bestStatResult.getAbsZScore());
+			row.add(bestStatResult.getBmrCountsToTop());
+			row.add(bestStatResult.getAbsBmrCountsToTop());
+			row.add(bestStatResult.getFoldChangeToTop());
+			row.add(bestStatResult.getAbsFoldChangeToTop());
+
+			row.add(bestStatResult.getBmdLowDoseRatio());
+			row.add(bestStatResult.getBmdHighDoseRatio());
+
+			row.add(bestStatResult.getBmdResponseLowDoseResponseRatio());
+			row.add(bestStatResult.getBmdResponseHighDoseResponseRatio());
 		}
 
 		if (wAUC != null)
@@ -332,6 +356,16 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		columnHeader.add(BMDResult.BEST_RSQUARED);
 		columnHeader.add(BMDResult.BEST_ISSTEPFUNCTION);
 		columnHeader.add(BMDResult.BEST_ISSTEPFUNCTION_WITH_BMD_LESS_THAN_LOWEST);
+		columnHeader.add(BMDResult.BEST_ZSCORE);
+		columnHeader.add(BMDResult.BEST_ABS_ZSCORE);
+		columnHeader.add(BMDResult.BEST_BMR_COUNT_TO_TOP);
+		columnHeader.add(BMDResult.BEST_ABS_BMR_COUNT_TO_TOP);
+		columnHeader.add(BMDResult.BEST_FC_TO_TOP);
+		columnHeader.add(BMDResult.BEST_ABS_FC_TO_TOP);
+		columnHeader.add(BMDResult.BEST_BMD_LOWDOSE_RATIO);
+		columnHeader.add(BMDResult.BEST_BMD_HIGHDOSE_RATIO);
+		columnHeader.add(BMDResult.BEST_BMD_RESP_LOWDOSE_RESP_RATIO);
+		columnHeader.add(BMDResult.BEST_BMD_RESP_HIGHDOSE_RESP_RATIO);
 
 		return columnHeader;
 	}
@@ -387,7 +421,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 	 * make charttable stuff work with best stat model
 	 */
 
-	@JsonIgnore
 	public Double getBestBMD()
 	{
 		if (bestStatResult == null)
@@ -395,7 +428,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMD();
 	}
 
-	@JsonIgnore
 	public Double getBestBMDL()
 	{
 		if (bestStatResult == null)
@@ -403,7 +435,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMDL();
 	}
 
-	@JsonIgnore
 	public Double getBestFitPValue()
 	{
 		if (bestStatResult == null)
@@ -411,7 +442,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getFitPValue();
 	}
 
-	@JsonIgnore
 	public Double getBestFitLogLikelihood()
 	{
 		if (bestStatResult == null)
@@ -419,7 +449,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getFitLogLikelihood();
 	}
 
-	@JsonIgnore
 	public Double getBestBMDU()
 	{
 		if (bestStatResult == null)
@@ -427,37 +456,31 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMDU();
 	}
 
-	@JsonIgnore
 	public Double getPrefilterAdjustedPValue()
 	{
 		return prefilterAdjustedPValue;
 	}
 
-	@JsonIgnore
 	public Double getPrefilterPValue()
 	{
 		return prefilterPvalue;
 	}
 
-	@JsonIgnore
 	public Double getBestFoldChange()
 	{
 		return prefilterBestFoldChange;
 	}
 
-	@JsonIgnore
 	public Double getBestABSFoldChange()
 	{
 		return prefilterBestABSFoldChange;
 	}
 
-	@JsonIgnore
 	public Float getPrefilterNoel()
 	{
 		return prefilterNoel;
 	}
 
-	@JsonIgnore
 	public Float getPrefilterLoel()
 	{
 		return prefilterLoel;

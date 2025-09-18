@@ -45,11 +45,22 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 	private double rSquared;
 
 	public double[] curveParameters;
+	public double[] otherParameters;
 
 	private boolean isStepFunction;
 	private boolean isStepWithBMDLessLowest;
 
-	// private double[] variances;
+	private double[] covariances;
+
+	private double zscore;
+	private double bmrCountsToTop;
+	private double foldChangeToTop;
+
+	private double bmdLowDoseRatio;
+	private double bmdHighDoseRatio;
+
+	private double bmdResponseLowDoseResponseRatio;
+	private double bmdResponseHighDoseResponseRatio;
 
 	private Long id;
 
@@ -65,20 +76,88 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		return id;
 	}
 
+	@JsonIgnore
+	public double getAbsFoldChangeToTop()
+	{
+		return Math.abs(this.getFoldChangeToTop());
+	}
+
+	@JsonIgnore
+	public double getAbsBmrCountsToTop()
+	{
+		return Math.abs(this.getBmrCountsToTop());
+	}
+
+	@JsonIgnore
+	public double getAbsZScore()
+	{
+		return Math.abs(this.getZscore());
+	}
+
+	public double getBmdResponseLowDoseResponseRatio()
+	{
+		return bmdResponseLowDoseResponseRatio;
+	}
+
+	public void setBmdResponseLowDoseResponseRatio(double bmdResponseLowDoseResponseRatio)
+	{
+		this.bmdResponseLowDoseResponseRatio = bmdResponseLowDoseResponseRatio;
+	}
+
+	public double getBmdResponseHighDoseResponseRatio()
+	{
+		return bmdResponseHighDoseResponseRatio;
+	}
+
+	public void setBmdResponseHighDoseResponseRatio(double bmdResponseHighDoseResponseRatio)
+	{
+		this.bmdResponseHighDoseResponseRatio = bmdResponseHighDoseResponseRatio;
+	}
+
+	public double getBmdLowDoseRatio()
+	{
+		return bmdLowDoseRatio;
+	}
+
+	public void setBmdLowDoseRatio(double bmdLowDoseRatio)
+	{
+		this.bmdLowDoseRatio = bmdLowDoseRatio;
+	}
+
+	public double getBmdHighDoseRatio()
+	{
+		return bmdHighDoseRatio;
+	}
+
+	public void setBmdHighDoseRatio(double bmdHighDoseRatio)
+	{
+		this.bmdHighDoseRatio = bmdHighDoseRatio;
+	}
+
 	public void setID(Long id)
 	{
 		this.id = id;
 	}
 
-	// public double[] getVariances()
-	// {
-	// return variances;
-	// }
+	public double[] getOtherParameters()
+	{
+		return otherParameters;
+	}
 
-	// public void setVariances(double[] vs)
-	// {
-	// this.variances = vs;
-	// }
+	public void setOtherParameters(double[] otherParameters)
+	{
+		this.otherParameters = otherParameters;
+	}
+
+	public double[] getCovariances()
+	{
+		return covariances;
+	}
+
+	public void setCovariances(double[] covariances)
+	{
+		this.covariances = covariances;
+	}
 
 	public double getBMD()
 	{
@@ -205,6 +284,16 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.success = success;
 	}
 
+	public double getZscore()
+	{
+		return zscore;
+	}
+
+	public void setZscore(double zscore)
+	{
+		this.zscore = zscore;
+	}
+
 	@JsonIgnore
 	public double getBMDdiffBMDL()
 	{
@@ -260,7 +349,55 @@ public abstract class StatResult extends BMDExpressAnalysisRow implements Serial
 		this.rSquared = rSquared;
 	}
 
+	public double getBmrCountsToTop()
+	{
+		return bmrCountsToTop;
+	}
+
+	public void setBmrCountsToTop(double bmrCountsToTop)
+	{
+		this.bmrCountsToTop = bmrCountsToTop;
+	}
+
+	public double getFoldChangeToTop()
+	{
+		return foldChangeToTop;
+	}
+
+	public void setFoldChangeToTop(double foldChangeToTop)
+	{
+		this.foldChangeToTop = foldChangeToTop;
+	}
+
+	// get all the parameters for a model
+	// this includes the parameters for the equation
+	// and the parameters that are something else which I can't quite say
+	// aka otherParameters.
+	// this was made for calculating the z-score
+	// fyi. the exponential has a override for this method
+	// because exponential model's first parameter is a -1 or 1
+	// which is not a parameter returned by toxicr.
+	@JsonIgnore
+	public double[] getAllParameters()
+	{
+		// maybe in the case of model averaging or gcurvep
+		if (curveParameters == null || otherParameters == null)
+			return new double[0];
+
+		int ii = 0;
+		double[] returnval = new double[curveParameters.length + otherParameters.length];
+		for (int i = 0; i < curveParameters.length; i++)
+			returnval[ii++] = curveParameters[i];
+		for (int i = 0; i < otherParameters.length; i++)
+			returnval[ii++] = otherParameters[i];
+
+		return returnval;
+
+	}
+
 	public abstract double getResponseAt(double d);
+
+	public abstract double getResponseAt(double d, double[] parameters);
 
 	@JsonIgnore
 	public abstract List<String> getColumnNames();

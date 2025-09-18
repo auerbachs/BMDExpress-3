@@ -84,9 +84,22 @@ public class BMDSToxicRUtils
 				isIncreasing, isFast, isPolyMonotonic);
 
 		Double maxconstant = doses.length * Math.log((1 / Math.sqrt(2 * Math.PI)));
-		Double logMax = -1 * continousResult.getMax() - maxconstant;
 
-		double aic = BMDSToxicRUtils.calculateAIC(continousResult.getNparms(), logMax);
+		Double logMax = -1 * continousResult.getMax() - maxconstant;
+		int numParams = continousResult.getParms().size();
+
+		int index = 0;
+		for (Double parm : continousResult.getParms())
+		{
+			double lower = continousResult.getModelBounds()[index][0];
+			double upper = continousResult.getModelBounds()[index][1];
+			if (parm.doubleValue() == lower || parm.doubleValue() == upper)
+				numParams--;
+			index++;
+		}
+
+		// double aic = BMDSToxicRUtils.calculateAIC(continousResult.getNparms(), logMax);
+		double aic = BMDSToxicRUtils.calculateAIC(numParams, logMax);
 
 		int extraparms = 1;
 
@@ -102,7 +115,7 @@ public class BMDSToxicRUtils
 
 		// special logic for EXP3
 		double[] results = new double[6 + continousResult.getNparms() - extraparms
-				+ (extraoption != 0 ? 1 : 0) + (model == ToxicRConstants.EXP3 ? 1 : 0)];
+				+ (extraoption != 0 ? 1 : 0)]; // + (model == ToxicRConstants.EXP3 ? 1 : 0)];
 
 		double[] results2 = new double[isNCV ? 2 : 1];
 		// throw away instance. just using this to get the bmd values
@@ -117,9 +130,14 @@ public class BMDSToxicRUtils
 		try
 		{
 			Double avalue = deviance.getA3();
+			Integer df = deviance.getN3();
 			if (!isNCV)
+			{
 				avalue = deviance.getA1();
-			ChiSquaredDistribution csd = new ChiSquaredDistribution(continousResult.getModelDF());
+				df = deviance.getN1();
+			}
+			// ChiSquaredDistribution csd = new ChiSquaredDistribution(df - continousResult.getNparms());
+			ChiSquaredDistribution csd = new ChiSquaredDistribution(df - numParams);
 			p1 = 1.0 - csd.cumulativeProbability(
 					2 * (continousResult.getMax().doubleValue() - avalue.doubleValue()));
 
@@ -155,7 +173,11 @@ public class BMDSToxicRUtils
 
 		returnList.add(results);
 		returnList.add(results2);
+		double[] covariates = new double[continousResult.getCov().size()];
+		for (int i = 0; i < covariates.length; i++)
+			covariates[i] = continousResult.getCov().get(i);
 
+		returnList.add(covariates);
 		return returnList;
 	}
 
@@ -231,7 +253,7 @@ public class BMDSToxicRUtils
 
 			// special logic for EXP3
 			double[] results = new double[continousResult.getNparms() - extraparms
-					+ (extraoption != 0 ? 1 : 0) + (model == ToxicRConstants.EXP3 ? 1 : 0)];
+					+ (extraoption != 0 ? 1 : 0)];// + (model == ToxicRConstants.EXP3 ? 1 : 0)];
 
 			int start = 0;
 			if (extraoption != 0)
@@ -295,6 +317,10 @@ public class BMDSToxicRUtils
 					results2[0] = continousResult.getParms().get(parmsize - 1);
 				}
 
+				double[] covariates = new double[continousResult.getCov().size()];
+				for (int i = 0; i < covariates.length; i++)
+					covariates[i] = continousResult.getCov().get(i);
+
 				// theStatResult.setVariances(results2);
 				theStatResult.setAIC(aic);
 
@@ -303,6 +329,9 @@ public class BMDSToxicRUtils
 				theStatResult.setFitPValue(fitp);
 				maModels.add(theStatResult);
 				theStatResult.setCurveParameters(results);
+				theStatResult.setCovariances(covariates);
+				theStatResult.setOtherParameters(results2);
+
 			}
 
 		}

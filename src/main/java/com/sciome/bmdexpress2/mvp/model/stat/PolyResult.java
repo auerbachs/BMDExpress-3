@@ -52,6 +52,17 @@ public class PolyResult extends StatResult
 		returnList.add(polyname + " RSquared");
 		returnList.addAll(residualHeader);
 		returnList.add(polyname + "  Is Step Function Less Than Lowest Dose");
+		returnList.add(polyname + " Z-Score");
+		returnList.add(polyname + " ABS Z-Score");
+		returnList.add(polyname + " Power Modelled Response BMR Multiples");
+		returnList.add(polyname + " ABS Power Modelled Response BMR Multiples");
+		returnList.add(polyname + " Fold Change");
+		returnList.add(polyname + " ABS Fold Change");
+		returnList.add(polyname + " BMD/Low Dose");
+		returnList.add(polyname + " BMD/High Dose");
+		returnList.add(polyname + " BMD Response/Low Dose Response");
+		returnList.add(polyname + " BMD Response/High Dose Response");
+
 		return returnList;
 
 	}
@@ -73,6 +84,16 @@ public class PolyResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 	}
 
@@ -132,6 +153,39 @@ public class PolyResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double d, double[] customParameters)
+	{
+		return polyFunction(d, degree, customParameters);
+	}
+
+	/**
+	 * Polynomial dynamic degree function
+	 */
+	private double polyFunction(double dose, int degree, double[] customParamters)
+	{
+		int base = 0;
+		int start = base + 1;
+
+		return customParamters[base] + polyValue(dose, start, 1, degree, customParamters);
+	}
+
+	/**
+	 * Recursive function
+	 */
+	private double polyValue(double dose, int index, int cur, int max, double[] customParamters)
+	{
+		if (cur == max)
+		{
+			return customParamters[index] * Math.pow(dose, max);
+		}
+		else
+		{
+			return customParamters[index] * Math.pow(dose, cur)
+					+ polyValue(dose, index + 1, cur + 1, max, customParamters);
+		}
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		StringBuilder sb = new StringBuilder("y[dose] = beta_0 + beta_1 * dose"); // degree == 1
@@ -171,6 +225,17 @@ public class PolyResult extends StatResult
 		}
 
 		return sb.toString();
+	}
+
+	public double getVertext()
+	{
+		if (degree != 2)
+			return Double.NaN;
+		double returnval = 0;
+
+		returnval = (-1 * curveParameters[1]) / (2 * curveParameters[2]);
+		return returnval;
+
 	}
 
 }

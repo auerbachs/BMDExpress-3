@@ -200,6 +200,14 @@ public class GCurvePResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double d, double[] customParameters)
+	{
+
+		// TODO Auto-generated method stub
+		return -9999;
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		return "none";

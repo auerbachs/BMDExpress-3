@@ -16,11 +16,12 @@ module com.sciome.bmdexpress2
 	requires jfreechart;
 	requires math;
 	requires org.apache.commons.lang3;
-	requires commons.cli;
-	requires guava;
+	requires org.apache.commons.cli;
+	// requires commons.cli;
+	requires com.google.common;
 	requires jfreechart.fx;
 	requires jcommon;
-	requires commons.io;
+	requires org.apache.commons.io;
 	requires com.fasterxml.jackson.core;
 	requires com.fasterxml.jackson.databind;
 	requires java.management;
@@ -49,13 +50,14 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.model.stat to com.fasterxml.jackson.databind;
 	opens com.sciome.filter to com.fasterxml.jackson.databind;
 
-	opens com.sciome.bmdexpress2.mvp.presenter to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.annotation to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.prefilter to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.bmdanalysis to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.categorization to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.visualization to guava;
-	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to guava;
+	opens com.sciome.bmdexpress2.mvp.presenter to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.annotation to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.prefilter to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.bmdanalysis to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.categorization to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.visualization to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.mainstage to com.google.common;
 
 	exports com.sciome.bmdexpress2;
 	exports com.sciome.filter;
@@ -70,6 +72,7 @@ module com.sciome.bmdexpress2
 	exports com.sciome.bmdexpress2.mvp.model.stat;
 	exports com.sciome.bmdexpress2.mvp.model.category;
 	exports com.sciome.bmdexpress2.mvp.model.category.identifier;
+	exports com.sciome.bmdexpress2.mvp.model.info;
 	exports com.sciome.bmdexpress2.mvp.view.visualization;
 	exports com.sciome.bmdexpress2.util.bmds.shared;
 	exports com.sciome.bmdexpress2.util.bmds;

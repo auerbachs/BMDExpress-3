@@ -44,6 +44,8 @@ public abstract class CategoryConfig
 	private Boolean removeStepFunction;
 	private Boolean removeStepFunctionWithBMDLower;
 	private Integer removeAdverseDirection;
+	private Double absZScoreMax;
+	private Double absModelFoldChangeMax;
 
 	public String getInputName()
 	{
@@ -273,6 +275,26 @@ public abstract class CategoryConfig
 	public void setRemoveAdverseDirection(Integer removeAdverseDirection)
 	{
 		this.removeAdverseDirection = removeAdverseDirection;
+	}
+
+	public Double getAbsZScoreMax()
+	{
+		return absZScoreMax;
+	}
+
+	public void setAbsZScoreMax(Double absZScoreMax)
+	{
+		this.absZScoreMax = absZScoreMax;
+	}
+
+	public Double getAbsModelFoldChangeMax()
+	{
+		return absModelFoldChangeMax;
+	}
+
+	public void setAbsModelFoldChangeMax(Double absModelFoldChangeMax)
+	{
+		this.absModelFoldChangeMax = absModelFoldChangeMax;
 	}
 
 }

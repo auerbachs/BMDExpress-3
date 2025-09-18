@@ -124,10 +124,11 @@ public class PowerFitThread extends Thread implements IFitThread
 						transform);
 				double[] results = resultsList.get(0);
 				double[] results1 = resultsList.get(1);
+				double[] covariates = resultsList.get(2);
 
 				if (results != null)
 				{
-					fillOutput(results, results1, powerResult);
+					fillOutput(results, results1, covariates, powerResult);
 				}
 			}
 			catch (Exception e)
@@ -140,7 +141,7 @@ public class PowerFitThread extends Thread implements IFitThread
 
 	}
 
-	private void fillOutput(double[] results, double[] covariates, PowerResult powerResult)
+	private void fillOutput(double[] results, double[] results1, double[] covariates, PowerResult powerResult)
 	{
 		powerResult.setBMD(results[0]);
 		powerResult.setBMDL(results[1]);
@@ -148,8 +149,8 @@ public class PowerFitThread extends Thread implements IFitThread
 		powerResult.setFitPValue(results[3]);
 		powerResult.setFitLogLikelihood(results[4]);
 		powerResult.setAIC(results[5]);
-		// powerResult.setVariances(covariates);
-
+		powerResult.setOtherParameters(results1);
+		powerResult.setCovariances(covariates);
 		int direction = 1;
 
 		if (results[7] < 0)

@@ -12,6 +12,7 @@ import org.apache.commons.math3.util.Precision;
 import com.sciome.bmdexpress2.mvp.model.DoseGroup;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
+import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
@@ -186,6 +187,10 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		// clean up any leftovers from this process
 		bMDSTool.cleanUp();
 		calculateExtraStatistics(bMDResults);
+
+		// temporary to test loglikeliood
+		// calculateLikelihood(bMDResults);
+
 		return bMDResults;
 	}
 
@@ -555,25 +560,164 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			// build the dosegroup array.
 			List<DoseGroup> doseGroups = bmdResults.getDoseResponseExperiment()
 					.getDoseGroups(psr.getProbeResponse().getResponses());
+			LogTransformationEnum logTrans = bmdResults.getDoseResponseExperiment().getLogTransformation();
 
 			for (StatResult statResult : psr.getStatResults())
 			{
+				double[] residuals = null;
 				try
 				{
-					double[] residuals = statServ.calculateResiduals(statResult,
+					residuals = statServ.calculateResiduals(statResult,
 							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()),
 							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
-					double rSquared = statServ.calculateRSquared(residuals,
-							doseGroups.stream().map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
 					statResult.setResiduals(residuals);
-					statResult.setrSquared(rSquared);
-
 				}
 				catch (Exception e)
+				{}
+				try
 				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (residuals != null)
+					{
+						double rSquared = statServ.calculateRSquared(residuals, doseGroups.stream()
+								.map(dg -> dg.getResponseMean()).collect(Collectors.toList()));
+						statResult.setrSquared(rSquared);
+					}
 				}
+				catch (Exception e)
+				{}
+				try
+				{
+					double zScore = statServ.calculateZScore(statResult,
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
+					statResult.setZscore(zScore);
+				}
+				catch (Exception e)
+				{}
+				try
+				{
+					double bmrCountsToTop = statServ.calculateSDBeyond(statResult,
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()));
+					statResult.setBmrCountsToTop(bmrCountsToTop);
+				}
+				catch (Exception e)
+				{}
+				try
+				{
+					double fcToTop = statServ.calculateFCToTop(statResult,
+							doseGroups.stream().map(dg -> dg.getDose()).collect(Collectors.toList()),
+							logTrans);
+					statResult.setFoldChangeToTop(fcToTop);
+				}
+				catch (Exception e)
+				{}
+
+				double maxdose = doseGroups.get(doseGroups.size() - 1).getDose();
+				double mindose = doseGroups.get(1).getDose();
+
+				// for nonmonotonic curves find the top
+				// figure out if bmd is < or > top and reset start/end for gradient
+				if (statResult instanceof PolyResult && ((PolyResult) statResult).getDegree() == 2)
+				{
+					// assume maxdose is at vertex and bmd to the left
+					maxdose = ((PolyResult) statResult).getVertext();
+
+					// but if the vertex is beyond maxdose, just reset max dose
+					if (maxdose > doseGroups.get(doseGroups.size() - 1).getDose())
+						maxdose = doseGroups.get(doseGroups.size() - 1).getDose();
+
+					// but if bmd is to the right of max dose...shift the min and max
+					if (((PolyResult) statResult).getBMD() > maxdose)
+					{
+						// shift the mindose to the maxdose, which is probably vertext
+						mindose = maxdose;
+						// if the mindose (or vertex) is less than the low dose
+						// set the mindose to the original
+						if (mindose <= doseGroups.get(1).getDose())
+							mindose = doseGroups.get(1).getDose();
+
+						// make sure the max dose is the last dose in this situation
+						maxdose = doseGroups.get(doseGroups.size() - 1).getDose();
+
+						if (maxdose == mindose)
+							mindose = doseGroups.get(1).getDose();
+
+					}
+				}
+
+				// initialize
+				statResult.setBmdLowDoseRatio(Double.NaN);
+				statResult.setBmdHighDoseRatio(Double.NaN);
+				statResult.setBmdResponseLowDoseResponseRatio(Double.NaN);
+				statResult.setBmdResponseHighDoseResponseRatio(Double.NaN);
+				try
+				{
+					statResult.setBmdLowDoseRatio(statResult.getBMD() / mindose);
+				}
+				catch (Exception e)
+				{}
+
+				try
+				{
+					statResult.setBmdHighDoseRatio(statResult.getBMD() / maxdose);
+				}
+				catch (Exception e)
+				{}
+
+				try
+				{
+					statResult
+							.setBmdResponseLowDoseResponseRatio(statResult.getResponseAt(statResult.getBMD())
+									/ statResult.getResponseAt(mindose));
+				}
+				catch (Exception e)
+				{}
+
+				try
+				{
+					statResult
+							.setBmdResponseHighDoseResponseRatio(statResult.getResponseAt(statResult.getBMD())
+									/ statResult.getResponseAt(maxdose));
+				}
+				catch (Exception e)
+				{}
+
+			}
+
+		}
+
+	}
+
+	private void calculateLikelihood(BMDResult bmdResults)
+	{
+
+		for (ProbeStatResult psr : bmdResults.getProbeStatResults())
+		{
+			List<Float> y_j = psr.getProbeResponse().getResponses();
+			// build the dosegroup array.
+			List<Treatment> doses = bmdResults.getDoseResponseExperiment().getTreatments();
+
+			Double maxconstant = doses.size() * Math.log((1 / Math.sqrt(2 * Math.PI)));
+			for (StatResult statResult : psr.getStatResults())
+			{
+				List<Double> mu_j = new ArrayList<>();
+				int i = 0;
+				Double sum = 0.0;
+				for (Treatment treatment : doses)
+				{
+					Double value = statResult.getResponseAt(treatment.getDose());
+					sum += Math.pow(y_j.get(i) - value, 2.0);
+
+					i++;
+				}
+				Double signma2 = sum / doses.size();
+				Double loglikelihood = -(doses.size() / 2) * (Math.log(2 * Math.PI) + Math.log(signma2))
+						- (doses.size() / 2);
+
+				Double realloglikelioddfromtoxicr = statResult.getFitLogLikelihood() + maxconstant;
+
+				String result = statResult.getModel() + "\t" + loglikelihood + "\t"
+						+ realloglikelioddfromtoxicr + "\t" + statResult.getFitLogLikelihood();
+				System.out.println(result);
 
 			}
 

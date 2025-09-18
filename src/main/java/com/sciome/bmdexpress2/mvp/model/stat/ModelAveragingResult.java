@@ -35,6 +35,17 @@ public class ModelAveragingResult extends StatResult
 		returnList.addAll(residualHeader);
 		returnList.add("MA Is Step Function");
 		returnList.add("MA Is Step Function Less Than Lowest Dose");
+		returnList.add("MA Z-Score");
+		returnList.add("MA ABS Z-Score");
+		returnList.add("MA Modelled Response BMR Multiples");
+		returnList.add("MA ABS Modelled Response BMR Multiples");
+		returnList.add("MA Fold Change");
+		returnList.add("MA ABS Fold Change");
+		returnList.add("MA BMD/Low Dose");
+		returnList.add("MA BMD/High Dose");
+		returnList.add("MA BMD Response/Low Dose Response");
+		returnList.add("MA BMD Response/High Dose Response");
+
 		return returnList;
 
 	}
@@ -52,6 +63,16 @@ public class ModelAveragingResult extends StatResult
 		returnList.addAll(getResidualList());
 		returnList.add(getIsStepFunction());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 
 	}
@@ -104,6 +125,27 @@ public class ModelAveragingResult extends StatResult
 
 	}
 
+	// custom parameters here will equate to custom posterior proabilities
+	@Override
+	public double getResponseAt(double dose, double[] customParameters)
+	{
+		int i = 0;
+		Double sum = 0.0;
+
+		List<Double> customPP = new ArrayList<>();
+		for (int j = 0; j < customParameters.length; j++)
+			customPP.add(customParameters[j]);
+		for (StatResult model : this.modelResults)
+		{
+			if (customPP.get(i) > 0.0)
+				sum += model.getResponseAt(dose) * customPP.get(i);
+			i++;
+		}
+
+		return sum.doubleValue();
+
+	}
+
 	@Override
 	public String getFormulaText()
 	{
@@ -119,6 +161,24 @@ public class ModelAveragingResult extends StatResult
 			returnStr += "(PP " + sr.getModel() + ": " + this.posteriorProbabilities.get(i++) + "),  ";
 
 		return returnStr.replaceAll("\\,  $", "");
+	}
+
+	public StatResult getModelWithHighestPP()
+	{
+		int i = 0;
+		Double highestPP = 0.0;
+		StatResult highestModel = null;
+		for (StatResult model : this.modelResults)
+		{
+			if (posteriorProbabilities.get(i) > highestPP)
+			{
+				highestPP = posteriorProbabilities.get(i);
+				highestModel = model;
+			}
+			i++;
+		}
+
+		return highestModel;
 	}
 
 }

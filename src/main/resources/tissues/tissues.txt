@@ -1,0 +1,18 @@
+Adipose
+Adrenal Gland
+Bone Marrow
+Brain
+Colon
+Heart
+Kidney
+Liver
+Lung
+Ovary
+Pancreas
+Skin
+Spleen
+Stomach
+Testis
+Thymus
+Thyroid
+Uterus

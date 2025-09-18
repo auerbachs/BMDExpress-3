@@ -60,6 +60,11 @@ public class OneWayANOVAResults extends BMDExpressAnalysisDataSet
 		this.oneWayANOVAResults = oneWayANOVAResults;
 	}
 
+	public AnalysisInfo getAnalysisInfo()
+	{
+		return this.analysisInfo;
+	}
+
 	@Override
 	public String getName()
 	{

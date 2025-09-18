@@ -36,6 +36,7 @@ public class BMDExpress3Main extends Application
 	{
 		try
 		{
+
 			cleanTmpFiles();
 			AnchorPane root = (AnchorPane) FXMLLoader.load(getClass().getResource("/fxml/mainstage.fxml"));
 			scene = new Scene(root, 800, 800);
@@ -96,7 +97,9 @@ public class BMDExpress3Main extends Application
 	public static void main(String[] args)
 	{
 		renameTableInformationJSONFields();
+
 		launch(args);
+
 	}
 
 	private void cleanTmpFiles()

@@ -137,6 +137,11 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 		this.analysisInfo = analysisInfo;
 	}
 
+	public AnalysisInfo getAnalysisInfo()
+	{
+		return this.analysisInfo;
+	}
+
 	@Override
 	public LogTransformationEnum getLogTransformation()
 	{
@@ -221,6 +226,7 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 		return probeResponses;
 	}
 
+	@JsonIgnore
 	@Override
 	public List<Object> getColumnHeader2()
 	{
@@ -243,6 +249,7 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 	 * to calcuate various metrics and define the x points for
 	 * dose response analysis.
 	 */
+	@JsonIgnore
 	public List<DoseGroup> getDoseGroups()
 	{
 		if (doseGroups != null)

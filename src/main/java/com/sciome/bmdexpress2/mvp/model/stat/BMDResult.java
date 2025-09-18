@@ -84,6 +84,21 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String LOEL_VALUE = "LOTEL";
 	public static final String NOEL_VALUE = "NOTEL";
 
+	public static final String BEST_ZSCORE = "Best Z-Score";
+
+	public static final String BEST_BMR_COUNT_TO_TOP = "Best Modelled Response BMR Multiples";
+	public static final String BEST_FC_TO_TOP = "Best Model Fold Change";
+
+	public static final String BEST_ABS_ZSCORE = "Best ABS Z-Score";
+
+	public static final String BEST_ABS_BMR_COUNT_TO_TOP = "Best ABS Modelled Response BMR Multiples";
+	public static final String BEST_ABS_FC_TO_TOP = "Best ABS Model Fold Change";
+
+	public static final String BEST_BMD_LOWDOSE_RATIO = "Best BMD/Low Dose";
+	public static final String BEST_BMD_HIGHDOSE_RATIO = "Best BMD/High Dose";
+	public static final String BEST_BMD_RESP_LOWDOSE_RESP_RATIO = "Best BMD Response/Low Dose Response";
+	public static final String BEST_BMD_RESP_HIGHDOSE_RESP_RATIO = "Best BMD Response/High Dose Response";
+
 	// clone a bmdexpress result
 	public BMDResult(BMDResult bmdResult)
 	{
@@ -247,6 +262,7 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 		return columnHeader;
 	}
 
+	@JsonIgnore
 	@Override
 	public List<AnalysisInfo> getAnalysisInfo(boolean getParents)
 	{
@@ -274,6 +290,11 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public void setAnalysisInfo(AnalysisInfo analysisInfo)
 	{
 		this.analysisInfo = analysisInfo;
+	}
+
+	public AnalysisInfo getAnalysisInfo()
+	{
+		return this.analysisInfo;
 	}
 
 	// This is called in order to generate data for each probe stat result fo viewing
@@ -483,6 +504,12 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public String getDataSetName()
 	{
 		return getName();
+	}
+
+	public void generateRowData()
+	{
+		this.fillRowData();
+
 	}
 
 }

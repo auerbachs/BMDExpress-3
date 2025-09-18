@@ -28,6 +28,16 @@ public class PowerResult extends StatResult
 				"Power Execution Complete", "Power RSquared"));
 		header.addAll(residualHeader);
 		header.add("Power Is Step Function Less Than Lowest Dose");
+		header.add("Power Z-Score");
+		header.add("Power ABS Z-Score");
+		header.add("Power Modelled Response BMR Multiples");
+		header.add("Power ABS Modelled Response BMR Multiples");
+		header.add("Power Fold Change");
+		header.add("Power ABS Fold Change");
+		header.add("Power BMD/Low Dose");
+		header.add("Power BMD/High Dose");
+		header.add("Power BMD Response/Low Dose Response");
+		header.add("Power BMD Response/High Dose Response");
 
 		return header;
 
@@ -53,6 +63,16 @@ public class PowerResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 	}
 
@@ -73,6 +93,14 @@ public class PowerResult extends StatResult
 	{
 		int base = 0;
 		return curveParameters[base] + curveParameters[base + 1] * Math.pow(dose, curveParameters[base + 2]);
+	}
+
+	@Override
+	public double getResponseAt(double dose, double[] customParameters)
+	{
+		int base = 0;
+		return customParameters[base]
+				+ customParameters[base + 1] * Math.pow(dose, customParameters[base + 2]);
 	}
 
 	@Override

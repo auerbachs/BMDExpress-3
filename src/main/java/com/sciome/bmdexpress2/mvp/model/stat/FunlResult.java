@@ -95,6 +95,22 @@ public class FunlResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double dose, double[] customParameters)
+	{
+		Double param1 = customParameters[0];
+		Double param2 = customParameters[1];
+		Double param3 = customParameters[2];
+		Double param4 = customParameters[3];
+		Double param5 = customParameters[4];
+		Double param6 = customParameters[5];
+
+		return param1 + param2 * Math.exp(-(Math.exp(param6)) * Math.pow(param5 - dose, 2))
+				* (1 / (1 + Math.exp(-(dose - param3) / param4)));
+		// a1 + a2 *exp(- exp(a6) * (a5-dose)^2) * (1/(1+exp(-(dose-a3)/a4).
+
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		return "A[1] + A[2]*exp(- exp(A[6]) * (A[5]-doses)^2)*(1/(1+exp(-(doses-A[3])/A[4])))";

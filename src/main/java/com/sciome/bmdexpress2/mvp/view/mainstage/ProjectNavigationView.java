@@ -124,6 +124,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		IProjectNavigationService service = new ProjectNavigationService();
 		presenter = new ProjectNavigationPresenter(this, service, eventBus);
 		initialize();
+
 	}
 
 	public void initialize()

@@ -41,6 +41,17 @@ public class HillResult extends StatResult
 				"Hill Parameter n", "Hill Parameter k", "Hill Execution Complete", "Hill RSquared"));
 		header.addAll(residualHeader);
 		header.add("Hill Is Step Function Less Than Lowest Dose");
+		header.add("Hill Z-Score");
+		header.add("Hill ABS Z-Score");
+		header.add("Hill Modelled Response BMR Multiples");
+		header.add("Hill ABS Modelled Response BMR Multiples");
+		header.add("Hill Fold Change");
+		header.add("Hill ABS Fold Change");
+		header.add("Hill BMD/Low Dose");
+		header.add("Hill BMD/High Dose");
+		header.add("Hill BMD Response/Low Dose Response");
+		header.add("Hill BMD Response/High Dose Response");
+
 		return header;
 
 	}
@@ -68,6 +79,16 @@ public class HillResult extends StatResult
 		returnList.add(getrSquared());
 		returnList.addAll(getResidualList());
 		returnList.add(isStepWithBMDLessLowest());
+		returnList.add(this.getZscore());
+		returnList.add(this.getAbsZScore());
+		returnList.add(this.getBmrCountsToTop());
+		returnList.add(this.getAbsBmrCountsToTop());
+		returnList.add(this.getFoldChangeToTop());
+		returnList.add(this.getAbsFoldChangeToTop());
+		returnList.add(this.getBmdLowDoseRatio());
+		returnList.add(this.getBmdHighDoseRatio());
+		returnList.add(this.getBmdResponseLowDoseResponseRatio());
+		returnList.add(this.getBmdResponseHighDoseResponseRatio());
 		return returnList;
 
 	}
@@ -97,9 +118,49 @@ public class HillResult extends StatResult
 	}
 
 	@Override
+	public double getResponseAt(double dose, double[] customParameters)
+	{
+		int base = 0;
+		double[] fixedparms = new double[customParameters.length];
+		for (int i = 0; i < customParameters.length; i++)
+			fixedparms[i] = customParameters[i];
+		double tmp = fixedparms[3];
+		fixedparms[3] = fixedparms[2];
+		fixedparms[2] = tmp;
+
+		double theDose = dose; // Math.log(dose + Math.sqrt(dose * dose + 1.0));
+		double nom = fixedparms[base + 1] * Math.pow(theDose, fixedparms[base + 2]);
+		double denom = Math.pow(fixedparms[base + 3], fixedparms[base + 2])
+				+ Math.pow(theDose, fixedparms[base + 2]);
+
+		return fixedparms[base] + nom / denom;
+	}
+
+	@Override
 	public String getFormulaText()
 	{
 		return "intercept + v * dose^n/(k^n + dose^n)";
+	}
+
+	@Override
+	public double[] getAllParameters()
+	{
+		if (curveParameters == null || otherParameters == null)
+			return new double[0];
+
+		int ii = 0;
+		double[] returnval = new double[curveParameters.length + otherParameters.length];
+		for (int i = 0; i < curveParameters.length; i++)
+			returnval[ii++] = curveParameters[i];
+		// this is to get it back in the same
+		// order as it came in. hillfitthread switches the two elements
+		double tmp = returnval[curveParameters.length - 1];
+		returnval[curveParameters.length - 1] = returnval[curveParameters.length - 2];
+		returnval[curveParameters.length - 2] = tmp;
+		for (int i = 0; i < otherParameters.length; i++)
+			returnval[ii++] = otherParameters[i];
+
+		return returnval;
 	}
 
 	@Override

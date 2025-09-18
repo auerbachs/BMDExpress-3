@@ -14,6 +14,7 @@ import com.sciome.bmdexpress2.mvp.viewinterface.visualization.IDataVisualization
 import com.sciome.bmdexpress2.service.VisualizationService;
 import com.sciome.bmdexpress2.serviceInterface.IVisualizationService;
 import com.sciome.bmdexpress2.shared.component.expression.ExpressionQCBarChartComponent;
+import com.sciome.bmdexpress2.shared.component.expression.TissueContaminationChartComponent;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.charts.SciomeChartBase;
 import com.sciome.charts.data.ChartDataPack;
@@ -24,6 +25,7 @@ import com.sciome.filter.DataFilterPack;
 public class ExpressionDataVisualizationView extends DataVisualizationView implements IDataVisualizationView
 {
 	private static final String INTENSITY = "Density Chart";
+	private static final String CONTAMINATION = "Tissue Contamination Chart";
 	private static final String QC_BAR = "QC Bar";
 	private static final String DEFAULT = "DEFAULT";
 
@@ -53,6 +55,7 @@ public class ExpressionDataVisualizationView extends DataVisualizationView imple
 
 		chartCache.put(INTENSITY, new SciomeDensityChartJFree("", new ArrayList<>(),
 				new ChartKey(IntensityResults.RESPONSE, null), this));
+
 	}
 
 	@Override
@@ -77,6 +80,16 @@ public class ExpressionDataVisualizationView extends DataVisualizationView imple
 					intensityResults, dataFilterPack, getUsedChartKeys(), getMathedChartKeys(),
 					new ChartKey(IntensityResults.RESPONSE, null));
 			showCharts(chartDataPacks);
+		}
+		// TODO: set up the contamination chart here
+		else if (chartKey.equals(CONTAMINATION))
+		{
+
+			TissueContaminationChartComponent qcBar = new TissueContaminationChartComponent(
+					(DoseResponseExperiment) results.get(0));
+			chartsList.add(qcBar);
+
+			showCharts(null);
 		}
 		else if (chartKey.equals(QC_BAR))
 		{
@@ -124,6 +137,7 @@ public class ExpressionDataVisualizationView extends DataVisualizationView imple
 		resultList.add(DEFAULT_CHARTS);
 		resultList.add(QC_BAR);
 		resultList.add(INTENSITY);
+		resultList.add(CONTAMINATION);
 
 		return resultList;
 	}
