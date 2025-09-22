@@ -274,7 +274,28 @@ public class DuckDBExportServiceV4 {
                     bmdResultId BIGINT,
                     probeResponseId BIGINT,
                     bestStatResultId BIGINT,
-                    bestPolyStatResultId BIGINT
+                    bestPolyStatResultId BIGINT,
+
+                    -- Calculated BMD values
+                    bestBMD REAL,
+                    bestBMDL REAL,
+                    bestBMDU REAL,
+
+                    -- Statistical fit values
+                    bestFitPValue REAL,
+                    bestFitLogLikelihood REAL,
+
+                    -- Prefilter values
+                    prefilterAdjustedPValue REAL,
+                    prefilterPValue REAL,
+                    bestFoldChange REAL,
+                    bestABSFoldChange REAL,
+                    prefilterNoel REAL,
+                    prefilterLoel REAL,
+
+                    -- Gene information
+                    genes VARCHAR,
+                    geneSymbols VARCHAR
                 )
                 """);
 
@@ -438,6 +459,36 @@ public class DuckDBExportServiceV4 {
                     bmdlTenthPercentileTotalGenes REAL,
                     bmduFifthPercentileTotalGenes REAL,
                     bmduTenthPercentileTotalGenes REAL,
+
+                    -- BMD/BMDL/BMDU Lists (per gene, averaged across probes)
+                    bmdList VARCHAR,
+                    bmdlList VARCHAR,
+                    bmduList VARCHAR,
+
+                    -- Probe and Gene Counts by Direction
+                    probesAdverseUpCount BIGINT,
+                    probesAdverseDownCount BIGINT,
+                    genesAdverseUpCount BIGINT,
+                    genesAdverseDownCount BIGINT,
+                    adverseConflictCount BIGINT,
+
+                    -- Direction-specific gene lists
+                    genesUp VARCHAR,
+                    genesDown VARCHAR,
+                    genesConflictList VARCHAR,
+
+                    -- Direction-specific probe lists
+                    probesUp VARCHAR,
+                    probesDown VARCHAR,
+                    probesConflictList VARCHAR,
+
+                    -- Direction-specific BMD lists
+                    bmdUpList VARCHAR,
+                    bmdlUpList VARCHAR,
+                    bmduUpList VARCHAR,
+                    bmdDownList VARCHAR,
+                    bmdlDownList VARCHAR,
+                    bmduDownList VARCHAR,
 
                     -- Direction-specific statistics (Up genes)
                     genesUpBMDMean REAL,
@@ -1091,8 +1142,11 @@ public class DuckDBExportServiceV4 {
         if (project.getbMDResult() == null) return;
 
         try (PreparedStatement stmt = connection.prepareStatement("""
-            INSERT INTO probeStatResults (id, bmdResultId, probeResponseId, bestStatResultId, bestPolyStatResultId)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO probeStatResults (id, bmdResultId, probeResponseId, bestStatResultId, bestPolyStatResultId,
+                                         bestBMD, bestBMDL, bestBMDU, bestFitPValue, bestFitLogLikelihood,
+                                         prefilterAdjustedPValue, prefilterPValue, bestFoldChange, bestABSFoldChange,
+                                         prefilterNoel, prefilterLoel, genes, geneSymbols)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """)) {
 
             for (BMDResult bmd : project.getbMDResult()) {
@@ -1100,9 +1154,37 @@ public class DuckDBExportServiceV4 {
                 if (bmdIdStr != null && bmd.getProbeStatResults() != null) {
                     long bmdId = Long.parseLong(bmdIdStr);
 
+                    // Build prefilter map for fold change calculation (same logic as BMDResult.fillRowData())
+                    Map<String, PrefilterResult> probeToPrefilterMap = new HashMap<>();
+                    if (bmd.getPrefilterResults() != null && bmd.getPrefilterResults().getPrefilterResults() != null) {
+                        for (PrefilterResult prefilterResult : bmd.getPrefilterResults().getPrefilterResults()) {
+                            probeToPrefilterMap.put(prefilterResult.getProbeID(), prefilterResult);
+                        }
+                    }
+
                     for (ProbeStatResult psr : bmd.getProbeStatResults()) {
                         long psrId = getNextId("probeStatResults");
                         putObjectId(psr, psrId);
+
+                        // Calculate fold change values from prefilter (same logic as BMDResult.fillRowData())
+                        Double adjustedPValue = null;
+                        Double pValue = null;
+                        Double bestFoldChange = null;
+                        Double bestABSFoldChange = null;
+                        Float loel = null;
+                        Float noel = null;
+
+                        PrefilterResult prefilter = probeToPrefilterMap.get(psr.getProbeResponse().getProbe().getId());
+                        if (prefilter != null) {
+                            adjustedPValue = prefilter.getAdjustedPValue();
+                            pValue = prefilter.getpValue();
+                            if (prefilter.getBestFoldChange() != null) {
+                                bestFoldChange = prefilter.getBestFoldChange().doubleValue();
+                                bestABSFoldChange = Math.abs(bestFoldChange);
+                            }
+                            loel = prefilter.getLoelDose();
+                            noel = prefilter.getNoelDose();
+                        }
 
                         stmt.setLong(1, psrId);
                         stmt.setLong(2, bmdId);
@@ -1124,6 +1206,27 @@ public class DuckDBExportServiceV4 {
                         // Best stat results will be linked later
                         stmt.setNull(4, java.sql.Types.BIGINT);
                         stmt.setNull(5, java.sql.Types.BIGINT);
+
+                        // Calculated BMD values
+                        stmt.setObject(6, psr.getBestBMD());
+                        stmt.setObject(7, psr.getBestBMDL());
+                        stmt.setObject(8, psr.getBestBMDU());
+
+                        // Statistical fit values
+                        stmt.setObject(9, psr.getBestFitPValue());
+                        stmt.setObject(10, psr.getBestFitLogLikelihood());
+
+                        // Prefilter values (use calculated values instead of transient getters)
+                        stmt.setObject(11, adjustedPValue);
+                        stmt.setObject(12, pValue);
+                        stmt.setObject(13, bestFoldChange);
+                        stmt.setObject(14, bestABSFoldChange);
+                        stmt.setObject(15, noel);
+                        stmt.setObject(16, loel);
+
+                        // Gene information
+                        stmt.setString(17, psr.getGenes());
+                        stmt.setString(18, psr.getGeneSymbols());
 
                         stmt.executeUpdate();
                     }
@@ -1360,12 +1463,17 @@ public class DuckDBExportServiceV4 {
              bmdTenthPercentile, bmdlTenthPercentile, bmduTenthPercentile,
              fifthPercentileIndex, bmdFifthPercentileTotalGenes, tenthPercentileIndex, bmdTenthPercentileTotalGenes,
              bmdlFifthPercentileTotalGenes, bmdlTenthPercentileTotalGenes, bmduFifthPercentileTotalGenes, bmduTenthPercentileTotalGenes,
+             bmdList, bmdlList, bmduList,
+             probesAdverseUpCount, probesAdverseDownCount, genesAdverseUpCount, genesAdverseDownCount, adverseConflictCount,
+             genesUp, genesDown, genesConflictList,
+             probesUp, probesDown, probesConflictList,
+             bmdUpList, bmdlUpList, bmduUpList, bmdDownList, bmdlDownList, bmduDownList,
              genesUpBMDMean, genesUpBMDMedian, genesUpBMDSD, genesUpBMDLMean, genesUpBMDLMedian, genesUpBMDLSD,
              genesUpBMDUMean, genesUpBMDUMedian, genesUpBMDUSD, genesDownBMDMean, genesDownBMDMedian, genesDownBMDSD,
              genesDownBMDLMean, genesDownBMDLMedian, genesDownBMDLSD, genesDownBMDUMean, genesDownBMDUMedian, genesDownBMDUSD,
              overallDirection, totalFoldChange, meanFoldChange, medianFoldChange, maxFoldChange, minFoldChange, stdDevFoldChange,
              bmdLower95, bmdUpper95, bmdlLower95, bmdlUpper95, bmduLower95, bmduUpper95, statResultCounts, ivive)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """)) {
 
             for (CategoryAnalysisResults car : project.getCategoryAnalysisResults()) {
@@ -1376,6 +1484,12 @@ public class DuckDBExportServiceV4 {
                     for (CategoryAnalysisResult caResult : car.getCategoryAnalsyisResults()) {
                         long caResultId = getNextId("categoryAnalysisResults");
                         putObjectId(caResult, caResultId);
+
+                        // Trigger calculations for transient fields before accessing them
+                        caResult.calculate5and10Percentiles();
+                        caResult.calculateFoldChangeStats();
+                        caResult.calculate95ConfidenceIntervals();
+                        caResult.calculateOverAllDirection();
 
                         // Basic identifiers
                         stmt.setLong(1, caResultId);
@@ -1451,42 +1565,72 @@ public class DuckDBExportServiceV4 {
                         stmt.setObject(61, caResult.getBmduFifthPercentileTotalGenes());
                         stmt.setObject(62, caResult.getBmduTenthPercentileTotalGenes());
 
+                        // BMD/BMDL/BMDU Lists (per gene, averaged across probes)
+                        stmt.setObject(63, caResult.getBMDList());
+                        stmt.setObject(64, caResult.getBMDLList());
+                        stmt.setObject(65, caResult.getBMDUList());
+
+                        // Probe and Gene Counts by Direction
+                        stmt.setObject(66, caResult.getProbesAdversUpCount());
+                        stmt.setObject(67, caResult.getProbesAdverseDownCount());
+                        stmt.setObject(68, caResult.getGenesAdverseUpCount());
+                        stmt.setObject(69, caResult.getGenesAdverseDownCount());
+                        stmt.setObject(70, caResult.getAdverseConflictCount());
+
+                        // Direction-specific gene lists
+                        stmt.setObject(71, caResult.getGenesUp());
+                        stmt.setObject(72, caResult.getGenesDown());
+                        stmt.setObject(73, caResult.getGenesConflictList());
+
+                        // Direction-specific probe lists
+                        stmt.setObject(74, caResult.getProbesUp());
+                        stmt.setObject(75, caResult.getProbesDown());
+                        stmt.setObject(76, caResult.getProbesConflictList());
+
+                        // Direction-specific BMD lists
+                        stmt.setObject(77, caResult.getBMDUp());
+                        stmt.setObject(78, caResult.getBMDLUp());
+                        stmt.setObject(79, caResult.getBMDUUp());
+                        stmt.setObject(80, caResult.getBMDDown());
+                        stmt.setObject(81, caResult.getBMDLDown());
+                        stmt.setObject(82, caResult.getBMDUDown());
+
                         // Direction-specific statistics (Up genes)
-                        stmt.setObject(63, caResult.getGenesUpBMDMean());
-                        stmt.setObject(64, caResult.getGenesUpBMDMedian());
-                        stmt.setObject(65, caResult.getGenesUpBMDSD());
-                        stmt.setObject(66, caResult.getGenesUpBMDLMean());
-                        stmt.setObject(67, caResult.getGenesUpBMDLMedian());
-                        stmt.setObject(68, caResult.getGenesUpBMDLSD());
-                        stmt.setObject(69, caResult.getGenesUpBMDUMean());
-                        stmt.setObject(70, caResult.getGenesUpBMDUMedian());
-                        stmt.setObject(71, caResult.getGenesUpBMDUSD());
+                        stmt.setObject(83, caResult.getGenesUpBMDMean());
+                        stmt.setObject(84, caResult.getGenesUpBMDMedian());
+                        stmt.setObject(85, caResult.getGenesUpBMDSD());
+                        stmt.setObject(86, caResult.getGenesUpBMDLMean());
+                        stmt.setObject(87, caResult.getGenesUpBMDLMedian());
+                        stmt.setObject(88, caResult.getGenesUpBMDLSD());
+                        stmt.setObject(89, caResult.getGenesUpBMDUMean());
+                        stmt.setObject(90, caResult.getGenesUpBMDUMedian());
+                        stmt.setObject(91, caResult.getGenesUpBMDUSD());
 
                         // Direction-specific statistics (Down genes)
-                        stmt.setObject(72, caResult.getGenesDownBMDMean());
-                        stmt.setObject(73, caResult.getGenesDownBMDMedian());
-                        stmt.setObject(74, caResult.getGenesDownBMDSD());
-                        stmt.setObject(75, caResult.getGenesDownBMDLMean());
-                        stmt.setObject(76, caResult.getGenesDownBMDLMedian());
-                        stmt.setObject(77, caResult.getGenesDownBMDLSD());
-                        stmt.setObject(78, caResult.getGenesDownBMDUMean());
-                        stmt.setObject(79, caResult.getGenesDownBMDUMedian());
-                        stmt.setObject(80, caResult.getGenesDownBMDUSD());
+                        stmt.setObject(92, caResult.getGenesDownBMDMean());
+                        stmt.setObject(93, caResult.getGenesDownBMDMedian());
+                        stmt.setObject(94, caResult.getGenesDownBMDSD());
+                        stmt.setObject(95, caResult.getGenesDownBMDLMean());
+                        stmt.setObject(96, caResult.getGenesDownBMDLMedian());
+                        stmt.setObject(97, caResult.getGenesDownBMDLSD());
+                        stmt.setObject(98, caResult.getGenesDownBMDUMean());
+                        stmt.setObject(99, caResult.getGenesDownBMDUMedian());
+                        stmt.setObject(100, caResult.getGenesDownBMDUSD());
 
                         // Additional analysis fields
-                        stmt.setObject(81, caResult.getOverallDirection() != null ? caResult.getOverallDirection().toString() : null);
-                        stmt.setObject(82, caResult.gettotalFoldChange());
-                        stmt.setObject(83, caResult.getmeanFoldChange());
-                        stmt.setObject(84, caResult.getmedianFoldChange());
-                        stmt.setObject(85, caResult.getmaxFoldChange());
-                        stmt.setObject(86, caResult.getminFoldChange());
-                        stmt.setObject(87, caResult.getstdDevFoldChange());
-                        stmt.setObject(88, caResult.getbmdLower95());
-                        stmt.setObject(89, caResult.getbmdUpper95());
-                        stmt.setObject(90, caResult.getbmdlLower95());
-                        stmt.setObject(91, caResult.getbmdlUpper95());
-                        stmt.setObject(92, caResult.getbmduLower95());
-                        stmt.setObject(93, caResult.getbmduUpper95());
+                        stmt.setObject(101, caResult.getOverallDirection() != null ? caResult.getOverallDirection().toString() : null);
+                        stmt.setObject(102, caResult.gettotalFoldChange());
+                        stmt.setObject(103, caResult.getmeanFoldChange());
+                        stmt.setObject(104, caResult.getmedianFoldChange());
+                        stmt.setObject(105, caResult.getmaxFoldChange());
+                        stmt.setObject(106, caResult.getminFoldChange());
+                        stmt.setObject(107, caResult.getstdDevFoldChange());
+                        stmt.setObject(108, caResult.getbmdLower95());
+                        stmt.setObject(109, caResult.getbmdUpper95());
+                        stmt.setObject(110, caResult.getbmdlLower95());
+                        stmt.setObject(111, caResult.getbmdlUpper95());
+                        stmt.setObject(112, caResult.getbmduLower95());
+                        stmt.setObject(113, caResult.getbmduUpper95());
 
                         // Complex data as JSON
                         String statResultCountsJson = null;
@@ -1501,7 +1645,7 @@ public class DuckDBExportServiceV4 {
                             sb.append("}");
                             statResultCountsJson = sb.toString();
                         }
-                        stmt.setObject(94, statResultCountsJson);
+                        stmt.setObject(114, statResultCountsJson);
 
                         String iviveJson = null;
                         if (caResult.getIvive() != null && !caResult.getIvive().isEmpty()) {
@@ -1513,7 +1657,7 @@ public class DuckDBExportServiceV4 {
                             sb.append("]");
                             iviveJson = sb.toString();
                         }
-                        stmt.setObject(95, iviveJson);
+                        stmt.setObject(115, iviveJson);
 
                         stmt.addBatch();
                     }

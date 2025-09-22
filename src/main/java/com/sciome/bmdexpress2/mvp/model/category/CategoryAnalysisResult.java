@@ -1676,7 +1676,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbesConflictList()
+	public String getProbesConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1702,7 +1702,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesConflictList()
+	public String getGenesConflictList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1722,7 +1722,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private Integer getAdverseConflictCount()
+	public Integer getAdverseConflictCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -1740,7 +1740,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private String getBMDLDown()
+	public String getBMDLDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1773,7 +1773,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUDown()
+	public String getBMDUDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1806,7 +1806,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDDown()
+	public String getBMDDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1839,7 +1839,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbesDown()
+	public String getProbesDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1865,7 +1865,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesDown()
+	public String getGenesDown()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1885,7 +1885,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private Integer getGenesAdverseDownCount()
+	public Integer getGenesAdverseDownCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -1903,7 +1903,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private String getBMDLUp()
+	public String getBMDLUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1936,7 +1936,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUUp()
+	public String getBMDUUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -1969,7 +1969,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUp()
+	public String getBMDUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2002,7 +2002,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getProbesUp()
+	public String getProbesUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2028,7 +2028,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getGenesUp()
+	public String getGenesUp()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2048,7 +2048,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private Integer getGenesAdverseUpCount()
+	public Integer getGenesAdverseUpCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -2066,7 +2066,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private Integer getProbesAdverseDownCount()
+	public Integer getProbesAdverseDownCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -2084,7 +2084,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private Integer getProbesAdversUpCount()
+	public Integer getProbesAdversUpCount()
 	{
 		Integer count = 0;
 		if (referenceGeneProbeStatResults == null)
@@ -2102,7 +2102,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return count;
 	}
 
-	private String getBMDLList()
+	public String getBMDLList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2132,7 +2132,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDUList()
+	public String getBMDUList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2162,7 +2162,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return stringBuffer.toString();
 	}
 
-	private String getBMDList()
+	public String getBMDList()
 	{
 		getStringBuffer();
 		stringBuffer.setLength(0);
@@ -2398,7 +2398,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		this.bmduTenthPercentile = bmduTenthPercentile;
 	}
 
-	private void calculateOverAllDirection()
+	public void calculateOverAllDirection()
 	{
 		if (referenceGeneProbeStatResults == null)
 			return;
@@ -2460,7 +2460,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	 * deserialization or prior to being displayed in a table. This should use the maxfold change per
 	 * bestmodel result
 	 */
-	private void calculateFoldChangeStats()
+	public void calculateFoldChangeStats()
 	{
 		if (referenceGeneProbeStatResults == null)
 			return;
@@ -2530,7 +2530,7 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	/*
 	 * method to calculate 95% confidence intervals for bmd, bmdl and bmdu
 	 */
-	private void calculate95ConfidenceIntervals()
+	public void calculate95ConfidenceIntervals()
 	{
 		if (this.referenceGeneProbeStatResults == null)
 			return;
