@@ -1,0 +1,1432 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "doseResponseExperiments": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    },
+                    "@ref": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "treatments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "@type": {
+                                    "type": "string"
+                                },
+                                "@ref": {
+                                    "type": "integer"
+                                },
+                                "name": {
+                                    "type": "string"
+                                },
+                                "dose": {
+                                    "type": "number"
+                                }
+                            },
+                            "required": [
+                                "@ref",
+                                "@type",
+                                "dose",
+                                "name"
+                            ]
+                        }
+                    },
+                    "probeResponses": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "@type": {
+                                    "type": "string"
+                                },
+                                "@ref": {
+                                    "type": "integer"
+                                },
+                                "probe": {
+                                    "type": "object",
+                                    "properties": {
+                                        "@type": {
+                                            "type": "string"
+                                        },
+                                        "@ref": {
+                                            "type": "integer"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "@ref",
+                                        "@type",
+                                        "id"
+                                    ]
+                                },
+                                "responses": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "@ref",
+                                "@type",
+                                "probe",
+                                "responses"
+                            ]
+                        }
+                    },
+                    "referenceGeneAnnotations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "@type": {
+                                    "type": "string"
+                                },
+                                "@ref": {
+                                    "type": "integer"
+                                },
+                                "probe": {
+                                    "type": "integer"
+                                },
+                                "referenceGenes": {
+                                    "type": "array",
+                                    "items": {
+                                        "anyOf": [
+                                            {
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "@type": {
+                                                        "type": "string"
+                                                    },
+                                                    "@ref": {
+                                                        "type": "integer"
+                                                    },
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "geneSymbol": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "@ref",
+                                                    "@type",
+                                                    "geneSymbol",
+                                                    "id"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "@ref",
+                                "@type",
+                                "probe",
+                                "referenceGenes"
+                            ]
+                        }
+                    },
+                    "chip": {
+                        "type": "object",
+                        "properties": {
+                            "@type": {
+                                "type": "string"
+                            },
+                            "@ref": {
+                                "type": "integer"
+                            },
+                            "chipId": {
+                                "type": "null"
+                            },
+                            "provider": {
+                                "type": "string"
+                            },
+                            "species": {
+                                "type": "string"
+                            },
+                            "geoID": {
+                                "type": "string"
+                            },
+                            "geoName": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "@ref",
+                            "@type",
+                            "chipId",
+                            "geoID",
+                            "geoName",
+                            "name",
+                            "provider",
+                            "species"
+                        ]
+                    },
+                    "chipCreationDate": {
+                        "type": "null"
+                    },
+                    "logTransformation": {
+                        "type": "string"
+                    },
+                    "columnHeader2": {
+                        "type": "array",
+                        "items": {
+                            "type": [
+                                "number",
+                                "string"
+                            ]
+                        }
+                    },
+                    "doseGroups": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "dose": {
+                                    "type": "number"
+                                },
+                                "count": {
+                                    "type": "integer"
+                                },
+                                "responseMean": {
+                                    "type": "null"
+                                }
+                            },
+                            "required": [
+                                "count",
+                                "dose",
+                                "responseMean"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "@ref",
+                    "@type",
+                    "chip",
+                    "chipCreationDate",
+                    "columnHeader2",
+                    "doseGroups",
+                    "logTransformation",
+                    "name",
+                    "probeResponses",
+                    "referenceGeneAnnotations",
+                    "treatments"
+                ]
+            }
+        },
+        "oneWayANOVAResults": {
+            "type": "array"
+        },
+        "williamsTrendResults": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    },
+                    "@ref": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "williamsTrendResults": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "@type": {
+                                    "type": "string"
+                                },
+                                "@ref": {
+                                    "type": "integer"
+                                },
+                                "probeResponse": {
+                                    "type": "integer"
+                                },
+                                "pValue": {
+                                    "type": "number"
+                                },
+                                "adjustedPValue": {
+                                    "type": "number"
+                                },
+                                "bestFoldChange": {
+                                    "type": "number"
+                                },
+                                "loelDose": {
+                                    "type": "null"
+                                },
+                                "noelDose": {
+                                    "type": "null"
+                                },
+                                "foldChanges": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                },
+                                "noelLoelPValues": {
+                                    "type": "null"
+                                }
+                            },
+                            "required": [
+                                "@ref",
+                                "@type",
+                                "adjustedPValue",
+                                "bestFoldChange",
+                                "foldChanges",
+                                "loelDose",
+                                "noelDose",
+                                "noelLoelPValues",
+                                "pValue",
+                                "probeResponse"
+                            ]
+                        }
+                    },
+                    "doseResponseExperiement": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "@ref",
+                    "@type",
+                    "doseResponseExperiement",
+                    "name",
+                    "williamsTrendResults"
+                ]
+            }
+        },
+        "curveFitPrefilterResults": {
+            "type": "array"
+        },
+        "oriogenResults": {
+            "type": "array"
+        },
+        "bMDResult": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    },
+                    "@ref": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "probeStatResults": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "@type": {
+                                    "type": "string"
+                                },
+                                "@ref": {
+                                    "type": "integer"
+                                },
+                                "probeResponse": {
+                                    "type": "integer"
+                                },
+                                "bestStatResult": {
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "@type": {
+                                                    "type": "string"
+                                                },
+                                                "@ref": {
+                                                    "type": "integer"
+                                                },
+                                                "fitPValue": {
+                                                    "type": "number"
+                                                },
+                                                "fitLogLikelihood": {
+                                                    "type": "number"
+                                                },
+                                                "adverseDirection": {
+                                                    "type": "integer"
+                                                },
+                                                "success": {
+                                                    "type": "string"
+                                                },
+                                                "residuals": {
+                                                    "type": "null"
+                                                },
+                                                "rSquared": {
+                                                    "type": "number"
+                                                },
+                                                "curveParameters": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "otherParameters": {
+                                                    "type": "null"
+                                                },
+                                                "isStepFunction": {
+                                                    "type": "boolean"
+                                                },
+                                                "covariances": {
+                                                    "type": "null"
+                                                },
+                                                "zscore": {
+                                                    "type": "number"
+                                                },
+                                                "bmrCountsToTop": {
+                                                    "type": "number"
+                                                },
+                                                "foldChangeToTop": {
+                                                    "type": "number"
+                                                },
+                                                "bmdLowDoseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "bmdHighDoseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "bmdResponseLowDoseResponseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "bmdResponseHighDoseResponseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "kFlag": {
+                                                    "type": "integer"
+                                                },
+                                                "allParameters": {
+                                                    "type": "array"
+                                                },
+                                                "aic": {
+                                                    "type": "number"
+                                                },
+                                                "bmdu": {
+                                                    "type": "number"
+                                                },
+                                                "bmdl": {
+                                                    "type": "number"
+                                                },
+                                                "bmd": {
+                                                    "type": "number"
+                                                },
+                                                "stepWithBMDLessLowest": {
+                                                    "type": "boolean"
+                                                },
+                                                "degree": {
+                                                    "type": "integer"
+                                                },
+                                                "vertext": {
+                                                    "type": [
+                                                        "number",
+                                                        "string"
+                                                    ]
+                                                },
+                                                "option": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "required": [
+                                                "@ref",
+                                                "@type",
+                                                "adverseDirection",
+                                                "aic",
+                                                "allParameters",
+                                                "bmd",
+                                                "bmdHighDoseRatio",
+                                                "bmdLowDoseRatio",
+                                                "bmdResponseHighDoseResponseRatio",
+                                                "bmdResponseLowDoseResponseRatio",
+                                                "bmdl",
+                                                "bmdu",
+                                                "bmrCountsToTop",
+                                                "covariances",
+                                                "curveParameters",
+                                                "fitLogLikelihood",
+                                                "fitPValue",
+                                                "foldChangeToTop",
+                                                "isStepFunction",
+                                                "otherParameters",
+                                                "rSquared",
+                                                "residuals",
+                                                "stepWithBMDLessLowest",
+                                                "success",
+                                                "zscore"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "bestPolyStatResult": {
+                                    "anyOf": [
+                                        {
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "@type": {
+                                                    "type": "string"
+                                                },
+                                                "@ref": {
+                                                    "type": "integer"
+                                                },
+                                                "fitPValue": {
+                                                    "type": "number"
+                                                },
+                                                "fitLogLikelihood": {
+                                                    "type": "number"
+                                                },
+                                                "adverseDirection": {
+                                                    "type": "integer"
+                                                },
+                                                "success": {
+                                                    "type": "string"
+                                                },
+                                                "residuals": {
+                                                    "type": "null"
+                                                },
+                                                "rSquared": {
+                                                    "type": "number"
+                                                },
+                                                "curveParameters": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "number"
+                                                    }
+                                                },
+                                                "otherParameters": {
+                                                    "type": "null"
+                                                },
+                                                "isStepFunction": {
+                                                    "type": "boolean"
+                                                },
+                                                "covariances": {
+                                                    "type": "null"
+                                                },
+                                                "zscore": {
+                                                    "type": "number"
+                                                },
+                                                "bmrCountsToTop": {
+                                                    "type": "number"
+                                                },
+                                                "foldChangeToTop": {
+                                                    "type": "number"
+                                                },
+                                                "bmdLowDoseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "bmdHighDoseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "bmdResponseLowDoseResponseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "bmdResponseHighDoseResponseRatio": {
+                                                    "type": "number"
+                                                },
+                                                "degree": {
+                                                    "type": "integer"
+                                                },
+                                                "vertext": {
+                                                    "type": [
+                                                        "number",
+                                                        "string"
+                                                    ]
+                                                },
+                                                "allParameters": {
+                                                    "type": "array"
+                                                },
+                                                "aic": {
+                                                    "type": "number"
+                                                },
+                                                "bmdu": {
+                                                    "type": [
+                                                        "number",
+                                                        "string"
+                                                    ]
+                                                },
+                                                "bmdl": {
+                                                    "type": "number"
+                                                },
+                                                "bmd": {
+                                                    "type": [
+                                                        "number",
+                                                        "string"
+                                                    ]
+                                                },
+                                                "stepWithBMDLessLowest": {
+                                                    "type": "boolean"
+                                                }
+                                            },
+                                            "required": [
+                                                "@ref",
+                                                "@type",
+                                                "adverseDirection",
+                                                "aic",
+                                                "allParameters",
+                                                "bmd",
+                                                "bmdHighDoseRatio",
+                                                "bmdLowDoseRatio",
+                                                "bmdResponseHighDoseResponseRatio",
+                                                "bmdResponseLowDoseResponseRatio",
+                                                "bmdl",
+                                                "bmdu",
+                                                "bmrCountsToTop",
+                                                "covariances",
+                                                "curveParameters",
+                                                "degree",
+                                                "fitLogLikelihood",
+                                                "fitPValue",
+                                                "foldChangeToTop",
+                                                "isStepFunction",
+                                                "otherParameters",
+                                                "rSquared",
+                                                "residuals",
+                                                "stepWithBMDLessLowest",
+                                                "success",
+                                                "vertext",
+                                                "zscore"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "statResults": {
+                                    "type": "array",
+                                    "items": {
+                                        "anyOf": [
+                                            {
+                                                "type": "integer"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "@type": {
+                                                        "type": "string"
+                                                    },
+                                                    "@ref": {
+                                                        "type": "integer"
+                                                    },
+                                                    "fitPValue": {
+                                                        "type": "number"
+                                                    },
+                                                    "fitLogLikelihood": {
+                                                        "type": "number"
+                                                    },
+                                                    "adverseDirection": {
+                                                        "type": "integer"
+                                                    },
+                                                    "success": {
+                                                        "type": "string"
+                                                    },
+                                                    "residuals": {
+                                                        "type": "null"
+                                                    },
+                                                    "rSquared": {
+                                                        "type": "number"
+                                                    },
+                                                    "curveParameters": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "otherParameters": {
+                                                        "type": "null"
+                                                    },
+                                                    "isStepFunction": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "covariances": {
+                                                        "type": "null"
+                                                    },
+                                                    "zscore": {
+                                                        "type": "number"
+                                                    },
+                                                    "bmrCountsToTop": {
+                                                        "type": "number"
+                                                    },
+                                                    "foldChangeToTop": {
+                                                        "type": "number"
+                                                    },
+                                                    "bmdLowDoseRatio": {
+                                                        "type": "number"
+                                                    },
+                                                    "bmdHighDoseRatio": {
+                                                        "type": "number"
+                                                    },
+                                                    "bmdResponseLowDoseResponseRatio": {
+                                                        "type": "number"
+                                                    },
+                                                    "bmdResponseHighDoseResponseRatio": {
+                                                        "type": "number"
+                                                    },
+                                                    "allParameters": {
+                                                        "type": "array"
+                                                    },
+                                                    "aic": {
+                                                        "type": "number"
+                                                    },
+                                                    "bmdu": {
+                                                        "type": [
+                                                            "number",
+                                                            "string"
+                                                        ]
+                                                    },
+                                                    "bmdl": {
+                                                        "type": [
+                                                            "number",
+                                                            "string"
+                                                        ]
+                                                    },
+                                                    "bmd": {
+                                                        "type": [
+                                                            "number",
+                                                            "string"
+                                                        ]
+                                                    },
+                                                    "stepWithBMDLessLowest": {
+                                                        "type": "boolean"
+                                                    },
+                                                    "degree": {
+                                                        "type": "integer"
+                                                    },
+                                                    "vertext": {
+                                                        "type": [
+                                                            "number",
+                                                            "string"
+                                                        ]
+                                                    },
+                                                    "option": {
+                                                        "type": "integer"
+                                                    },
+                                                    "kFlag": {
+                                                        "type": "integer"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "@ref",
+                                                    "@type",
+                                                    "adverseDirection",
+                                                    "aic",
+                                                    "allParameters",
+                                                    "bmd",
+                                                    "bmdHighDoseRatio",
+                                                    "bmdLowDoseRatio",
+                                                    "bmdResponseHighDoseResponseRatio",
+                                                    "bmdResponseLowDoseResponseRatio",
+                                                    "bmdl",
+                                                    "bmdu",
+                                                    "bmrCountsToTop",
+                                                    "covariances",
+                                                    "curveParameters",
+                                                    "fitLogLikelihood",
+                                                    "fitPValue",
+                                                    "foldChangeToTop",
+                                                    "isStepFunction",
+                                                    "otherParameters",
+                                                    "rSquared",
+                                                    "residuals",
+                                                    "stepWithBMDLessLowest",
+                                                    "success",
+                                                    "zscore"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                "chiSquaredResults": {
+                                    "type": "null"
+                                }
+                            },
+                            "required": [
+                                "@ref",
+                                "@type",
+                                "bestPolyStatResult",
+                                "bestStatResult",
+                                "chiSquaredResults",
+                                "probeResponse",
+                                "statResults"
+                            ]
+                        }
+                    },
+                    "doseResponseExperiment": {
+                        "type": "integer"
+                    },
+                    "bmdMethod": {
+                        "type": "string"
+                    },
+                    "prefilterResults": {
+                        "type": "integer"
+                    },
+                    "wAUC": {
+                        "type": "null"
+                    },
+                    "logwAUC": {
+                        "type": "null"
+                    }
+                },
+                "required": [
+                    "@ref",
+                    "@type",
+                    "bmdMethod",
+                    "doseResponseExperiment",
+                    "logwAUC",
+                    "name",
+                    "prefilterResults",
+                    "probeStatResults",
+                    "wAUC"
+                ]
+            }
+        },
+        "categoryAnalysisResults": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "@type": {
+                        "type": "string"
+                    },
+                    "@ref": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "categoryAnalsyisResults": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "@type": {
+                                    "type": "string"
+                                },
+                                "@ref": {
+                                    "type": "integer"
+                                },
+                                "categoryIdentifier": {
+                                    "type": "object",
+                                    "properties": {
+                                        "@type": {
+                                            "type": "string"
+                                        },
+                                        "@ref": {
+                                            "type": "integer"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "goLevel": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "@ref",
+                                        "@type",
+                                        "goLevel",
+                                        "id",
+                                        "title"
+                                    ]
+                                },
+                                "referenceGeneProbeStatResults": {
+                                    "anyOf": [
+                                        {
+                                            "type": "null"
+                                        },
+                                        {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "@type": {
+                                                        "type": "string"
+                                                    },
+                                                    "@ref": {
+                                                        "type": "integer"
+                                                    },
+                                                    "referenceGene": {
+                                                        "type": "integer"
+                                                    },
+                                                    "probeStatResults": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "integer"
+                                                        }
+                                                    },
+                                                    "adverseDirection": {
+                                                        "type": "string"
+                                                    },
+                                                    "conflictMinCorrelation": {
+                                                        "type": [
+                                                            "null",
+                                                            "number"
+                                                        ]
+                                                    }
+                                                },
+                                                "required": [
+                                                    "@ref",
+                                                    "@type",
+                                                    "adverseDirection",
+                                                    "conflictMinCorrelation",
+                                                    "probeStatResults",
+                                                    "referenceGene"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "geneAllCountFromExperiment": {
+                                    "type": "integer"
+                                },
+                                "geneAllCount": {
+                                    "type": "integer"
+                                },
+                                "geneCountSignificantANOVA": {
+                                    "type": "integer"
+                                },
+                                "percentage": {
+                                    "type": "number"
+                                },
+                                "genesWithBMDLessEqualHighDose": {
+                                    "type": "integer"
+                                },
+                                "genesWithBMDpValueGreaterEqualValue": {
+                                    "type": "integer"
+                                },
+                                "genesWithBMDRSquaredValueGreaterEqualValue": {
+                                    "type": "null"
+                                },
+                                "genesWithBMDBMDLRatioBelowValue": {
+                                    "type": "null"
+                                },
+                                "genesWithBMDUBMDLRatioBelowValue": {
+                                    "type": "integer"
+                                },
+                                "genesWithBMDUBMDRatioBelowValue": {
+                                    "type": "null"
+                                },
+                                "genesWithNFoldBelowLowPostiveDoseValue": {
+                                    "type": "null"
+                                },
+                                "genesWithFoldChangeAboveValue": {
+                                    "type": "null"
+                                },
+                                "genesWithPrefilterPValueAboveValue": {
+                                    "type": "null"
+                                },
+                                "genesWithPrefilterAdjustedPValueAboveValue": {
+                                    "type": "null"
+                                },
+                                "genesNotStepFunction": {
+                                    "type": "null"
+                                },
+                                "genesNotStepFunctionWithBMDLower": {
+                                    "type": "null"
+                                },
+                                "genesNotAdverseDirection": {
+                                    "type": "null"
+                                },
+                                "genesWithABSZScoreAboveValue": {
+                                    "type": "null"
+                                },
+                                "genesWithABSModelFCAboveValue": {
+                                    "type": "null"
+                                },
+                                "genesThatPassedAllFilters": {
+                                    "type": "integer"
+                                },
+                                "fishersA": {
+                                    "type": "null"
+                                },
+                                "fishersB": {
+                                    "type": "null"
+                                },
+                                "fishersC": {
+                                    "type": "null"
+                                },
+                                "fishersD": {
+                                    "type": "null"
+                                },
+                                "fishersExactLeftPValue": {
+                                    "type": "number"
+                                },
+                                "fishersExactRightPValue": {
+                                    "type": "number"
+                                },
+                                "fishersExactTwoTailPValue": {
+                                    "type": "number"
+                                },
+                                "genesWithConflictingProbeSets": {
+                                    "type": "string"
+                                },
+                                "bmdMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdMinimum": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdWMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdWSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlMinimum": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlWMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlWSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmduMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmduMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmduMinimum": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmduSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmduWMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmduWSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "fifthPercentileIndex": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdFifthPercentileTotalGenes": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "tenthPercentileIndex": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdTenthPercentileTotalGenes": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "bmdlFifthPercentileTotalGenes": {
+                                    "type": "null"
+                                },
+                                "bmdlTenthPercentileTotalGenes": {
+                                    "type": "null"
+                                },
+                                "bmduFifthPercentileTotalGenes": {
+                                    "type": "null"
+                                },
+                                "bmduTenthPercentileTotalGenes": {
+                                    "type": "null"
+                                },
+                                "genesUpBMDMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDLMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDLMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDLSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDUMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDUMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesUpBMDUSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDLMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDLMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDLSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDUMean": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDUMedian": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "genesDownBMDUSD": {
+                                    "type": [
+                                        "null",
+                                        "number"
+                                    ]
+                                },
+                                "overallDirection": {
+                                    "type": "null"
+                                },
+                                "totalFoldChange": {
+                                    "type": "null"
+                                },
+                                "meanFoldChange": {
+                                    "type": "null"
+                                },
+                                "medianFoldChange": {
+                                    "type": "null"
+                                },
+                                "maxFoldChange": {
+                                    "type": "null"
+                                },
+                                "minFoldChange": {
+                                    "type": "null"
+                                },
+                                "stdDevFoldChange": {
+                                    "type": "null"
+                                },
+                                "bmdLower95": {
+                                    "type": "null"
+                                },
+                                "bmdUpper95": {
+                                    "type": "null"
+                                },
+                                "bmdlLower95": {
+                                    "type": "null"
+                                },
+                                "bmdlUpper95": {
+                                    "type": "null"
+                                },
+                                "bmduUpper95": {
+                                    "type": "null"
+                                },
+                                "bmduLower95": {
+                                    "type": "null"
+                                },
+                                "bmdFifthPercentile": {
+                                    "type": "null"
+                                },
+                                "bmdlFifthPercentile": {
+                                    "type": "null"
+                                },
+                                "bmduFifthPercentile": {
+                                    "type": "null"
+                                },
+                                "bmdTenthPercentile": {
+                                    "type": "null"
+                                },
+                                "bmdlTenthPercentile": {
+                                    "type": "null"
+                                },
+                                "bmduTenthPercentile": {
+                                    "type": "null"
+                                },
+                                "ivive": {
+                                    "type": "null"
+                                }
+                            },
+                            "required": [
+                                "@ref",
+                                "@type",
+                                "bmdFifthPercentile",
+                                "bmdFifthPercentileTotalGenes",
+                                "bmdLower95",
+                                "bmdMean",
+                                "bmdMedian",
+                                "bmdMinimum",
+                                "bmdSD",
+                                "bmdTenthPercentile",
+                                "bmdTenthPercentileTotalGenes",
+                                "bmdUpper95",
+                                "bmdWMean",
+                                "bmdWSD",
+                                "bmdlFifthPercentile",
+                                "bmdlFifthPercentileTotalGenes",
+                                "bmdlLower95",
+                                "bmdlMean",
+                                "bmdlMedian",
+                                "bmdlMinimum",
+                                "bmdlSD",
+                                "bmdlTenthPercentile",
+                                "bmdlTenthPercentileTotalGenes",
+                                "bmdlUpper95",
+                                "bmdlWMean",
+                                "bmdlWSD",
+                                "bmduFifthPercentile",
+                                "bmduFifthPercentileTotalGenes",
+                                "bmduLower95",
+                                "bmduMean",
+                                "bmduMedian",
+                                "bmduMinimum",
+                                "bmduSD",
+                                "bmduTenthPercentile",
+                                "bmduTenthPercentileTotalGenes",
+                                "bmduUpper95",
+                                "bmduWMean",
+                                "bmduWSD",
+                                "categoryIdentifier",
+                                "fifthPercentileIndex",
+                                "fishersA",
+                                "fishersB",
+                                "fishersC",
+                                "fishersD",
+                                "fishersExactLeftPValue",
+                                "fishersExactRightPValue",
+                                "fishersExactTwoTailPValue",
+                                "geneAllCount",
+                                "geneAllCountFromExperiment",
+                                "geneCountSignificantANOVA",
+                                "genesDownBMDLMean",
+                                "genesDownBMDLMedian",
+                                "genesDownBMDLSD",
+                                "genesDownBMDMean",
+                                "genesDownBMDMedian",
+                                "genesDownBMDSD",
+                                "genesDownBMDUMean",
+                                "genesDownBMDUMedian",
+                                "genesDownBMDUSD",
+                                "genesNotAdverseDirection",
+                                "genesNotStepFunction",
+                                "genesNotStepFunctionWithBMDLower",
+                                "genesThatPassedAllFilters",
+                                "genesUpBMDLMean",
+                                "genesUpBMDLMedian",
+                                "genesUpBMDLSD",
+                                "genesUpBMDMean",
+                                "genesUpBMDMedian",
+                                "genesUpBMDSD",
+                                "genesUpBMDUMean",
+                                "genesUpBMDUMedian",
+                                "genesUpBMDUSD",
+                                "genesWithABSModelFCAboveValue",
+                                "genesWithABSZScoreAboveValue",
+                                "genesWithBMDBMDLRatioBelowValue",
+                                "genesWithBMDLessEqualHighDose",
+                                "genesWithBMDRSquaredValueGreaterEqualValue",
+                                "genesWithBMDUBMDLRatioBelowValue",
+                                "genesWithBMDUBMDRatioBelowValue",
+                                "genesWithBMDpValueGreaterEqualValue",
+                                "genesWithConflictingProbeSets",
+                                "genesWithFoldChangeAboveValue",
+                                "genesWithNFoldBelowLowPostiveDoseValue",
+                                "genesWithPrefilterAdjustedPValueAboveValue",
+                                "genesWithPrefilterPValueAboveValue",
+                                "ivive",
+                                "maxFoldChange",
+                                "meanFoldChange",
+                                "medianFoldChange",
+                                "minFoldChange",
+                                "overallDirection",
+                                "percentage",
+                                "referenceGeneProbeStatResults",
+                                "stdDevFoldChange",
+                                "tenthPercentileIndex",
+                                "totalFoldChange"
+                            ]
+                        }
+                    },
+                    "bmdResult": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "@ref",
+                    "@type",
+                    "bmdResult",
+                    "categoryAnalsyisResults",
+                    "name"
+                ]
+            }
+        }
+    },
+    "required": [
+        "bMDResult",
+        "categoryAnalysisResults",
+        "curveFitPrefilterResults",
+        "doseResponseExperiments",
+        "name",
+        "oneWayANOVAResults",
+        "oriogenResults",
+        "williamsTrendResults"
+    ]
+}

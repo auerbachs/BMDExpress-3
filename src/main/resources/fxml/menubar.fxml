@@ -5,7 +5,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:id="menuBar" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.mainstage.MenuBarView">
+<MenuBar fx:id="menuBar" styleClass="bg-default" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.mainstage.MenuBarView">
    <menus>
       <Menu mnemonicParsing="false" text="File">
          <items>
@@ -22,7 +22,8 @@
             <MenuItem mnemonicParsing="false" text="Save Selection As" visible="false" />
             <MenuItem mnemonicParsing="false" onAction="#handle_saveProject" text="Save Project" />
             <MenuItem mnemonicParsing="false" onAction="#handle_saveAs" text="Save Project As" />
-            <MenuItem mnemonicParsing="false" onAction="#handle_exportAsJSON" text="Export as JSON" />
+            <MenuItem mnemonicParsing="false" onAction="#handle_exportAsJSON" text="Export as JSON" styleClass="accent" />
+            <MenuItem mnemonicParsing="false" onAction="#handle_exportAsDuckDB" text="Export as DuckDB" styleClass="success" />
             <MenuItem mnemonicParsing="false" onAction="#handle_closeProject" text="Close Project" />
             <MenuItem mnemonicParsing="false" onAction="#handle_annotationsFromWeb" text="Update Annotations" />
             <MenuItem mnemonicParsing="false" onAction="#handle_exit" text="Exit" />

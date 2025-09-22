@@ -13,7 +13,12 @@ import org.ciit.io.ProjectReader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
+import com.sciome.bmdexpress2.service.DuckDBExportServiceV4;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
 
 import javafx.application.Platform;
@@ -432,6 +437,105 @@ public class DialogWithThreadProcess
 		 */
 		mapper.writerWithDefaultPrettyPrinter().writeValue(theFile, project);
 
+	}
+
+	public void saveDuckDBProject(BMDProject bmdProject, File selectedFile)
+	{
+		Task task = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception
+			{
+				try
+				{
+
+					saveAsDuckDB(bmdProject, selectedFile);
+
+				}
+				catch (Exception e)
+				{
+					Platform.runLater(new Runnable() {
+
+						@Override
+						public void run()
+						{
+							BMDExpressEventBus.getInstance()
+									.post(new ShowErrorEvent("Error saving DuckDB file. " + e.toString()));
+
+						}
+					});
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void succeeded()
+			{
+				super.succeeded();
+				dialog.setResult("finished");
+				dialog.close();
+			}
+
+			@Override
+			protected void cancelled()
+			{
+				super.cancelled();
+				dialog.setResult("finished");
+				dialog.close();
+			}
+
+			@Override
+			protected void failed()
+			{
+				super.failed();
+				dialog.setResult("finished");
+				dialog.close();
+			}
+		};
+
+		new Thread(task).start();
+
+		showWaitDialog("Export DuckDB", "Exporting Project to " + selectedFile.getAbsolutePath());
+
+	}
+
+	private void saveAsDuckDB(BMDProject project, File theFile) throws Exception
+	{
+		// Step 1: Create the V4 database with complete schema
+		DuckDBExportServiceV4 exporter = new DuckDBExportServiceV4();
+		exporter.exportToFile(project, theFile.getAbsolutePath());
+
+		// Step 2: Run metadata enrichment queries
+		runMetadataEnrichment(theFile.getAbsolutePath());
+	}
+
+	private void runMetadataEnrichment(String duckdbPath) throws Exception
+	{
+		// Read the metadata enrichment SQL queries from classpath
+		try (var inputStream = getClass().getResourceAsStream("/metadata_enrichment_queries.sql")) {
+			if (inputStream == null) {
+				throw new Exception("Could not find metadata_enrichment_queries.sql in classpath");
+			}
+
+			String sqlContent = new String(inputStream.readAllBytes());
+
+			// Split into individual statements (separated by semicolons)
+			String[] statements = sqlContent.split(";");
+
+			// Connect to the DuckDB database and execute the queries
+			try (Connection conn = DriverManager.getConnection("jdbc:duckdb:" + duckdbPath);
+			     Statement stmt = conn.createStatement()) {
+
+				for (String sql : statements) {
+					String trimmedSql = sql.trim();
+					// Skip empty statements and comments
+					if (!trimmedSql.isEmpty() && !trimmedSql.startsWith("--")) {
+						stmt.execute(trimmedSql);
+					}
+				}
+			}
+		}
 	}
 
 	public BMDProject importJSONFile(File selectedFile) throws Exception

@@ -81,6 +81,7 @@ import com.sciome.bmdexpress2.shared.eventbus.project.ImportBMDEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.ImportJSONEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.LoadProjectRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.RequestFileNameForProjectSaveEvent;
+import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectAsDuckDBRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectAsJSONRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectAsRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectRequestEvent;
@@ -645,6 +646,17 @@ public class ProjectNavigationPresenter
 		saveJSONProject(selectedFile);
 	}
 
+	@Subscribe
+	public void onSaveProjectAsDuckDBRequest(SaveProjectAsDuckDBRequestEvent event)
+	{
+		File selectedFile = event.GetPayload();
+		if (selectedFile == null)
+		{
+			return;
+		}
+		saveDuckDBProject(selectedFile);
+	}
+
 	private void saveProject(File selectedFile)
 	{
 
@@ -676,6 +688,25 @@ public class ProjectNavigationPresenter
 		DialogWithThreadProcess saveDialog = new DialogWithThreadProcess(
 				((ProjectNavigationView) getView()).getWindow());
 		saveDialog.saveJSONProject(currentProject, selectedFile);
+		currentProject.setName(selectedFile.getName());
+		currentProjectFile = selectedFile;
+
+		this.getEventBus().post(new BMDProjectSavedEvent(currentProject));
+
+	}
+
+	private void saveDuckDBProject(File selectedFile)
+	{
+
+		if (selectedFile == null)
+		{
+			return;
+		}
+
+		// TODO this is a hack. needs to be in the view.
+		DialogWithThreadProcess saveDialog = new DialogWithThreadProcess(
+				((ProjectNavigationView) getView()).getWindow());
+		saveDialog.saveDuckDBProject(currentProject, selectedFile);
 		currentProject.setName(selectedFile.getName());
 		currentProjectFile = selectedFile;
 

@@ -1,0 +1,22 @@
+{
+  "name": "bmdexpress3-wasm-testing",
+  "version": "1.0.0",
+  "description": "Test environment for DuckDB WASM compatibility with BMDExpress databases",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:headless": "vitest run --reporter=verbose test/headless-*.test.js",
+    "test:compatibility": "vitest run test/browser-*.test.js",
+    "test:server": "node test-server.js",
+    "test:browser": "npm run test:server"
+  },
+  "devDependencies": {
+    "@duckdb/duckdb-wasm": "1.30.0",
+    "@vitest/ui": "^1.6.0",
+    "https": "1.0.0",
+    "playwright": "^1.47.0",
+    "vitest": "^1.6.0"
+  }
+}

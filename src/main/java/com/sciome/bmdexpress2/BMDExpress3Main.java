@@ -14,6 +14,8 @@ import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.shared.eventbus.project.CloseApplicationRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
 
+import atlantafx.base.theme.CupertinoLight;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -56,7 +58,11 @@ public class BMDExpress3Main extends Application
 			});
 
 			primaryStage.setResizable(true);
+
+			// Apply AtlantaFX modern theme - Cupertino Light for macOS elegance!
+			Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
 			scene.getStylesheets().add(getClass().getResource("/fxml/application.css").toExternalForm());
+
 			primaryStage.setScene(scene);
 			if (BMDExpressProperties.getInstance().getSizeY() > 50
 					&& BMDExpressProperties.getInstance().getSizeX() > 50)

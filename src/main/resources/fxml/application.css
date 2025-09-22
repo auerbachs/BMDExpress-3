@@ -141,4 +141,206 @@
   -fx-control-inner-background: #F0FFF0;
 }
 
+/* ====== BMD EXPRESS MODERN CUPERTINO STYLING WITH ATLANTAFX =========== */
+
+/* Elegant Cupertino-inspired menu styling */
+.menu-bar {
+    -fx-background-color: linear-gradient(to bottom, #F8F9FA, #E9ECEF);
+    -fx-border-color: #007AFF;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.menu {
+    -fx-text-fill: #1D1D1F;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+}
+
+.menu:hover {
+    -fx-background-color: #007AFF;
+    -fx-background-radius: 6px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,122,255,0.3), 2, 0, 0, 1);
+}
+
+/* Cupertino Export menu items */
+.menu-item.accent {
+    -fx-background-color: #007AFF !important;
+    -fx-text-fill: white !important;
+    -fx-font-weight: 500;
+}
+
+.menu-item.success {
+    -fx-background-color: #34C759 !important;
+    -fx-text-fill: white !important;
+    -fx-font-weight: 500;
+    -fx-font-size: 13px;
+}
+
+.menu-item.success:hover {
+    -fx-background-color: #30D158 !important;
+    -fx-text-fill: white !important;
+    -fx-effect: dropshadow(gaussian, rgba(52,199,89,0.4), 3, 0, 0, 1);
+}
+
+/* Cupertino button styling */
+.button {
+    -fx-background-color: linear-gradient(to bottom, #007AFF, #0056D6);
+    -fx-text-fill: white;
+    -fx-font-weight: 500;
+    -fx-background-radius: 8px;
+    -fx-padding: 10 18 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1);
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-radius: 8px;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(to bottom, #0056D6, #003D99);
+    -fx-effect: dropshadow(gaussian, rgba(0,122,255,0.4), 4, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button:pressed {
+    -fx-background-color: linear-gradient(to bottom, #003D99, #002266);
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.3), 1, 0, 0, 1);
+}
+
+/* DRAMATIC Progress dialog */
+.dialog-pane {
+    -fx-background-color: linear-gradient(to bottom, #3B4252, #2E3440);
+    -fx-background-radius: 20px;
+    -fx-border-color: #88C0D0;
+    -fx-border-width: 3;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+}
+
+.dialog-pane .label {
+    -fx-text-fill: #ECEFF4;
+    -fx-font-weight: bold;
+}
+
+/* OBVIOUS Table styling */
+.table-view {
+    -fx-background-color: #3B4252;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #88C0D0;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #5E81AC, #4C566A);
+    -fx-border-color: #88C0D0;
+    -fx-border-width: 0 0 2 0;
+}
+
+.table-view .column-header {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/* DRAMATIC Tree view */
+.tree-view {
+    -fx-background-color: #3B4252;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: #8FBCBB;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+/* SUPER OBVIOUS titles and labels */
+.title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #88C0D0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 2, 0, 0, 1);
+}
+
+.label {
+    -fx-text-fill: #D8DEE9;
+    -fx-font-weight: normal;
+}
+
+/* ULTRA OBVIOUS DuckDB export styling */
+.duckdb-export {
+    -fx-background-color: linear-gradient(to right, #A3BE8C, #8FBCBB) !important;
+    -fx-text-fill: #2E3440 !important;
+    -fx-font-weight: bold !important;
+    -fx-font-size: 14px !important;
+    -fx-background-radius: 15px;
+    -fx-padding: 15 25 15 25;
+    -fx-effect: dropshadow(gaussian, rgba(163,190,140,0.7), 8, 0, 0, 3);
+    -fx-border-color: #EBCB8B;
+    -fx-border-width: 3;
+    -fx-border-radius: 15px;
+}
+
+/* Main window styling - Cupertino Light */
+.root {
+    -fx-background-color: linear-gradient(to bottom, #FFFFFF, #F8F9FA);
+}
+
+/* Text fields - Cupertino Light */
+.text-field {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #1D1D1F;
+    -fx-background-radius: 6px;
+    -fx-border-color: #C7C7CC;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1;
+}
+
+.text-field:focused {
+    -fx-border-color: #007AFF;
+    -fx-border-width: 2;
+}
+
+/* ControlsFX RangeSlider - Cupertino Light compatible styling */
+.range-slider .track {
+    -fx-background-color: #E5E5EA;
+    -fx-background-radius: 4px;
+}
+
+.range-slider:vertical .track {
+    -fx-background-color: #E5E5EA;
+    -fx-background-radius: 4px;
+}
+
+.range-slider .low-thumb {
+    -fx-background-color: #007AFF;
+    -fx-background-radius: 8px;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1);
+}
+
+.range-slider .high-thumb {
+    -fx-background-color: #007AFF;
+    -fx-background-radius: 8px;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 2, 0, 0, 1);
+}
+
+.range-slider .range-bar {
+    -fx-background-color: #007AFF;
+    -fx-background-radius: 4px;
+}
+
+.range-slider .low-thumb:hover {
+    -fx-background-color: #0056D6;
+}
+
+.range-slider .high-thumb:hover {
+    -fx-background-color: #0056D6;
+}
+
 

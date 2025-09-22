@@ -34,6 +34,7 @@ import com.sciome.bmdexpress2.shared.eventbus.project.ImportBMDEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.ImportJSONEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.LoadProjectRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.RequestFileNameForProjectSaveEvent;
+import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectAsDuckDBRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectAsJSONRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectAsRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.SaveProjectRequestEvent;
@@ -163,6 +164,12 @@ public class MenuBarPresenter extends PresenterBase<IMenuBarView>
 	public void saveProjectAsJSON(File selectedFile)
 	{
 		this.getEventBus().post(new SaveProjectAsJSONRequestEvent(selectedFile));
+
+	}
+
+	public void saveProjectAsDuckDB(File selectedFile)
+	{
+		this.getEventBus().post(new SaveProjectAsDuckDBRequestEvent(selectedFile));
 
 	}
 

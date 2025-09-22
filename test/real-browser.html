@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DuckDB WASM Browser Test</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        .log { font-family: monospace; white-space: pre-wrap; background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        button { margin: 5px; padding: 10px; }
+        input[type="file"] { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>DuckDB WASM Browser Compatibility Test</h1>
+    <p>This page tests whether DuckDB files created by BMDExpress work in a browser environment.</p>
+
+    <div class="test-section">
+        <h2>1. DuckDB WASM Initialization</h2>
+        <button onclick="initializeDuckDB()">Initialize DuckDB WASM</button>
+        <div id="init-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Load Database File</h2>
+        <input type="file" id="db-file" accept=".duckdb" />
+        <button onclick="loadDatabaseFile()">Load Selected File</button>
+        <div id="load-status"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Test Basic Queries</h2>
+        <button onclick="testBasicQueries()" disabled id="query-btn">Test Queries</button>
+        <div id="query-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Test BMDExpress Schema</h2>
+        <button onclick="testBMDExpressSchema()" disabled id="schema-btn">Test Schema</button>
+        <div id="schema-results"></div>
+    </div>
+
+    <div class="log" id="console-log"></div>
+
+    <script type="module">
+        import * as duckdb from 'https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@latest/+esm';
+
+        let db = null;
+        let conn = null;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('console-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : '';
+            logDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        window.initializeDuckDB = async function() {
+            try {
+                log('Initializing DuckDB WASM...');
+                const statusDiv = document.getElementById('init-status');
+                statusDiv.innerHTML = 'Initializing...';
+
+                // Get the latest bundles
+                const JSDELIVR_BUNDLES = duckdb.getJsDelivrBundles();
+                const bundle = await duckdb.selectBundle(JSDELIVR_BUNDLES);
+
+                log(`Selected bundle: ${bundle.mainModule}`);
+
+                // Create worker
+                const worker_url = URL.createObjectURL(
+                    new Blob([`importScripts("${bundle.mainWorker}");`], { type: 'text/javascript' })
+                );
+
+                const worker = new Worker(worker_url);
+                const logger = new duckdb.ConsoleLogger(duckdb.LogLevel.WARNING);
+                db = new duckdb.AsyncDuckDB(logger, worker);
+
+                await db.instantiate(bundle.mainModule);
+                conn = await db.connect();
+
+                statusDiv.innerHTML = '<span class="success">✓ DuckDB WASM initialized successfully</span>';
+                log('DuckDB WASM initialized successfully', 'success');
+
+                // Enable other buttons
+                document.getElementById('query-btn').disabled = false;
+                document.getElementById('schema-btn').disabled = false;
+
+            } catch (error) {
+                const statusDiv = document.getElementById('init-status');
+                statusDiv.innerHTML = `<span class="error">✗ Initialization failed: ${error.message}</span>`;
+                log(`Initialization failed: ${error.message}`, 'error');
+            }
+        };
+
+        window.loadDatabaseFile = async function() {
+            const fileInput = document.getElementById('db-file');
+            const statusDiv = document.getElementById('load-status');
+
+            if (!fileInput.files[0]) {
+                statusDiv.innerHTML = '<span class="warning">Please select a .duckdb file</span>';
+                return;
+            }
+
+            if (!db) {
+                statusDiv.innerHTML = '<span class="error">Please initialize DuckDB first</span>';
+                return;
+            }
+
+            try {
+                const file = fileInput.files[0];
+                log(`Loading database file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`);
+                statusDiv.innerHTML = 'Loading file...';
+
+                const arrayBuffer = await file.arrayBuffer();
+                const uint8Array = new Uint8Array(arrayBuffer);
+
+                // Register the file with DuckDB
+                await db.registerFileBuffer('loaded.duckdb', uint8Array);
+
+                // Try to attach the database
+                await conn.query("ATTACH 'loaded.duckdb' AS loaded_db");
+
+                statusDiv.innerHTML = '<span class="success">✓ Database file loaded successfully</span>';
+                log(`Database file loaded successfully: ${file.name}`, 'success');
+
+            } catch (error) {
+                statusDiv.innerHTML = `<span class="error">✗ Load failed: ${error.message}</span>`;
+                log(`Load failed: ${error.message}`, 'error');
+            }
+        };
+
+        window.testBasicQueries = async function() {
+            const resultsDiv = document.getElementById('query-results');
+
+            if (!conn) {
+                resultsDiv.innerHTML = '<span class="error">Database not connected</span>';
+                return;
+            }
+
+            try {
+                log('Testing basic DuckDB functionality...');
+                resultsDiv.innerHTML = 'Running tests...';
+
+                // Test 1: Basic query
+                await conn.query('CREATE TABLE IF NOT EXISTS test_table (id INTEGER, name TEXT)');
+                await conn.query("INSERT INTO test_table VALUES (1, 'test1'), (2, 'test2')");
+                const result1 = await conn.query('SELECT * FROM test_table ORDER BY id');
+
+                log(`✓ Basic table operations work (${result1.numRows} rows)`, 'success');
+
+                // Test 2: Statistical functions
+                const result2 = await conn.query('SELECT avg(id) as avg_id, count(*) as total FROM test_table');
+                const stats = result2.toArray()[0];
+
+                log(`✓ Statistical functions work (avg: ${stats.avg_id}, count: ${stats.total})`, 'success');
+
+                // Test 3: Try to list tables from loaded database (if any)
+                try {
+                    const tables = await conn.query("SELECT table_name FROM information_schema.tables WHERE table_schema = 'loaded_db'");
+                    const tableList = tables.toArray();
+
+                    if (tableList.length > 0) {
+                        log(`✓ Found ${tableList.length} tables in loaded database:`, 'success');
+                        tableList.forEach(table => log(`  - ${table.table_name}`));
+                    } else {
+                        log('No tables found in loaded database (or no database loaded)', 'warning');
+                    }
+                } catch (e) {
+                    log('Could not list tables from loaded database (normal if no file loaded)', 'warning');
+                }
+
+                resultsDiv.innerHTML = '<span class="success">✓ Basic query tests passed</span>';
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="error">✗ Query tests failed: ${error.message}</span>`;
+                log(`Query tests failed: ${error.message}`, 'error');
+            }
+        };
+
+        window.testBMDExpressSchema = async function() {
+            const resultsDiv = document.getElementById('schema-results');
+
+            if (!conn) {
+                resultsDiv.innerHTML = '<span class="error">Database not connected</span>';
+                return;
+            }
+
+            try {
+                log('Testing BMDExpress schema compatibility...');
+                resultsDiv.innerHTML = 'Testing schema...';
+
+                const expectedTables = [
+                    'projects', 'probes', 'treatments', 'probe_responses',
+                    'bmd_results', 'probe_stat_results', 'category_analysis_results',
+                    'category_results', 'prefilter_results'
+                ];
+
+                let foundTables = [];
+                let missingTables = [];
+
+                for (const table of expectedTables) {
+                    try {
+                        // Try to query the table from the loaded database
+                        const result = await conn.query(`SELECT COUNT(*) as count FROM loaded_db.${table} LIMIT 1`);
+                        const count = result.toArray()[0].count;
+                        foundTables.push({ table, count });
+                        log(`✓ Found table '${table}' with ${count} rows`, 'success');
+                    } catch (e) {
+                        missingTables.push(table);
+                        log(`✗ Table '${table}' not found or inaccessible`, 'warning');
+                    }
+                }
+
+                if (foundTables.length > 0) {
+                    log(`\n✓ Successfully found ${foundTables.length} BMDExpress tables`, 'success');
+
+                    // Test a typical BMDExpress query
+                    try {
+                        const query = `
+                            SELECT COUNT(*) as total_probes
+                            FROM loaded_db.probes
+                            LIMIT 10
+                        `;
+                        const result = await conn.query(query);
+                        const total = result.toArray()[0].total_probes;
+                        log(`✓ Sample query successful: ${total} probes found`, 'success');
+                    } catch (e) {
+                        log(`Sample query failed: ${e.message}`, 'warning');
+                    }
+
+                    resultsDiv.innerHTML = `<span class="success">✓ BMDExpress schema test passed (${foundTables.length}/${expectedTables.length} tables found)</span>`;
+                } else {
+                    resultsDiv.innerHTML = '<span class="warning">⚠ No BMDExpress tables found (load a BMDExpress .duckdb file first)</span>';
+                }
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<span class="error">✗ Schema tests failed: ${error.message}</span>`;
+                log(`Schema tests failed: ${error.message}`, 'error');
+            }
+        };
+
+        // Auto-initialize on page load
+        log('Page loaded. Click "Initialize DuckDB WASM" to begin testing.');
+    </script>
+</body>
+</html>

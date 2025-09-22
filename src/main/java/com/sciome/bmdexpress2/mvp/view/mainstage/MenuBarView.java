@@ -228,6 +228,15 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		}
 	}
 
+	public void handle_exportAsDuckDB(ActionEvent event)
+	{
+		File selectedFile = ViewUtilities.getInstance().getSaveAsDuckDBFile(menuBar.getScene().getWindow());
+		if (selectedFile != null)
+		{
+			presenter.saveProjectAsDuckDB(selectedFile);
+		}
+	}
+
 	/*
 	 * save the project to disk. invoke serialization
 	 */

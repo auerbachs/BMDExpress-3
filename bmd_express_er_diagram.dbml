@@ -1,0 +1,240 @@
+// BMD-Express-3 Database Schema
+// Generated from .bm2 parser data structure
+// Use with dbdiagram.io or similar online ER diagram tools
+
+Table datasets {
+id integer [primary key]
+name varchar
+created timestamp
+dataType varchar
+groupId integer
+groupName varchar
+}
+
+Table chips {
+id integer [primary key]
+name varchar
+provider varchar
+species varchar
+geoID varchar
+}
+
+Table doseResponseExperiments {
+id integer [primary key]
+name varchar
+chipId integer [ref: > chips.id]
+chipCreationDate bigint
+logTransformation varchar
+datasetId integer [ref: > datasets.id]
+sex varchar
+organ varchar
+species varchar
+dataType varchar
+platform varchar
+}
+
+Table doseGroups {
+id integer [primary key]
+dose double
+doseResponseExperimentId integer [ref: > doseResponseExperiments.id]
+}
+
+Table treatments {
+id integer [primary key]
+name varchar
+dose double
+doseResponseExperimentId integer [ref: > doseResponseExperiments.id]
+}
+
+Table prefilterResultSets {
+id integer [primary key]
+name varchar
+prefilterType varchar
+doseResponseExperimentId integer [ref: > doseResponseExperiments.id]
+sex varchar
+organ varchar
+species varchar
+dataType varchar
+platform varchar
+}
+
+Table prefilterResults {
+id integer [primary key]
+probeId varchar [ref: > probes.id]
+prefilterResultSetId integer [ref: > prefilterResultSets.id]
+pValue double
+adjustedPValue double
+foldChange double
+bestFitPValue double
+noelaelLoel double
+noelLoel double
+}
+
+Table bmdResults {
+id integer [primary key]
+name varchar
+doseResponseExperimentId integer [ref: > doseResponseExperiments.id]
+prefilterResultSetId integer [ref: > prefilterResultSets.id]
+datasetId integer [ref: > datasets.id]
+sex varchar
+organ varchar
+species varchar
+dataType varchar
+platform varchar
+}
+
+Table probeStatResults {
+id integer [primary key]
+probeId varchar [ref: > probes.id]
+bmdResultId integer [ref: > bmdResults.id]
+bestModelName varchar
+bestBMD double
+bestBMDL double
+bestBMDU double
+bestAIC double
+bestFitPValue double
+bestFitLogLikelihood double
+}
+
+Table statResults {
+id integer [primary key]
+probeStatResultId integer [ref: > probeStatResults.id]
+modelName varchar
+bmd double
+bmdL double
+bmdU double
+aic double
+fitPValue double
+fitLogLikelihood double
+isDropped boolean
+curveParameters varchar
+}
+
+Table categoryAnalysisResultsSets {
+id integer [primary key]
+name varchar
+bmdResultId integer [ref: > bmdResults.id]
+datasetId integer [ref: > datasets.id]
+sex varchar
+organ varchar
+species varchar
+dataType varchar
+platform varchar
+}
+
+Table categoryAnalysisResults {
+id integer [primary key]
+categoryIdentifierId varchar [ref: > categoryIdentifiers.id]
+categoryAnalysisResultsSetId integer [ref: > categoryAnalysisResultsSets.id]
+categoryBMD double
+categoryBMDL double
+categoryBMDU double
+genesWithBMD integer
+genesInCategory integer
+fishersExactLeftPValue double
+fishersExactRightPValue double
+fishersExactTwoTailPValue double
+}
+
+Table categoryIdentifiers {
+id varchar [primary key]
+categoryId varchar
+categoryDescription varchar
+categoryType varchar
+}
+
+Table probes {
+id varchar [primary key]
+probeId varchar
+}
+
+Table probeResponses {
+id integer [primary key]
+probeId varchar [ref: > probes.id]
+doseResponseExperimentId integer [ref: > doseResponseExperiments.id]
+responses varchar
+}
+
+Table referenceGenes {
+id varchar [primary key]
+geneSymbol varchar
+geneId varchar
+description varchar
+}
+
+Table referenceGeneAnnotations {
+id integer [primary key]
+probeId varchar [ref: > probes.id]
+referenceGeneId varchar [ref: > referenceGenes.id]
+}
+
+Table referenceGeneProbeStatResults {
+id integer [primary key]
+referenceGeneId varchar [ref: > referenceGenes.id]
+categoryAnalysisResultId integer [ref: > categoryAnalysisResults.id]
+bmd double
+bmdL double
+bmdU double
+}
+
+Table refGeneProbeStat_probeStat_join {
+id integer [primary key]
+referenceGeneProbeStatResultId integer [ref: > referenceGeneProbeStatResults.id]
+probeStatResultId integer [ref: > probeStatResults.id]
+}
+
+Table chiSquaredResults {
+id integer [primary key]
+statResultId integer [ref: > statResults.id]
+name varchar
+chiSquaredValue double
+pValue double
+}
+
+Table meta {
+key varchar [primary key]
+value varchar
+}
+
+// Table Groups for better visualization
+TableGroup "Core Data" {
+datasets
+chips
+doseResponseExperiments
+doseGroups
+treatments
+}
+
+TableGroup "Prefiltering" {
+prefilterResultSets
+prefilterResults
+}
+
+TableGroup "BMD Analysis" {
+bmdResults
+probeStatResults
+statResults
+}
+
+TableGroup "Category Analysis" {
+categoryAnalysisResultsSets
+categoryAnalysisResults
+categoryIdentifiers
+}
+
+TableGroup "Probe & Gene Data" {
+probes
+probeResponses
+referenceGenes
+referenceGeneAnnotations
+}
+
+TableGroup "Advanced Results" {
+referenceGeneProbeStatResults
+refGeneProbeStat_probeStat_join
+chiSquaredResults
+}
+
+TableGroup "Metadata" {
+meta
+}

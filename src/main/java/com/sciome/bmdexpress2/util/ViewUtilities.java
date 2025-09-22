@@ -181,6 +181,36 @@ public class ViewUtilities
 
 	}
 
+	public File getSaveAsDuckDBFile(Window window)
+	{
+		// prompt the user to select a file and then tell the presenter to fire off loading the experiment
+
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Export BMDExpress Project As DuckDB");
+		fileChooser.getExtensionFilters()
+				.add(new FileChooser.ExtensionFilter("DuckDB Database(*.duckdb)", "*.duckdb"));
+		try
+		{
+			File initialDirectory = new File(BMDExpressProperties.getInstance().getProjectPath());
+			if (initialDirectory.exists())
+				fileChooser.setInitialDirectory(initialDirectory);
+		}
+		catch (Exception e)
+		{}
+		File selectedFile = fileChooser.showSaveDialog(window);
+		if (selectedFile != null)
+		{
+			BMDExpressProperties.getInstance().setProjectPath(selectedFile.getParent());
+			if (!selectedFile.getName().matches("^.*\\.duckdb$"))
+			{
+				selectedFile = new File(selectedFile.getAbsolutePath() + ".duckdb");
+			}
+
+		}
+		return selectedFile;
+
+	}
+
 	public File getOpenProjectFile(Window window)
 	{
 		// prompt the user to select a file and then tell the presenter to fire off loading the experiment

@@ -49,6 +49,7 @@ public class BMDExpressCommandLine
 	public final static String EXPORT = "export";
 	public final static String DELETE = "delete";
 	public final static String COMBINE = "combine";
+	public final static String EXPORT_DUCKDB = "export-duckdb";
 	public final static String VERSION = "--version";
 	public final static String VERY_VERBOSE = "veryverbose";
 
@@ -68,6 +69,7 @@ public class BMDExpressCommandLine
 
 	Options queryOptions = new Options();
 	Options combineOptions = new Options();
+	Options duckdbExportOptions = new Options();
 
 	public static void main(String[] args)
 	{
@@ -95,6 +97,11 @@ public class BMDExpressCommandLine
 		exportOptions.addOption(
 				Option.builder().longOpt(OUTPUT_FILE_NAME).hasArg().required().argName("OUTPUT").build());
 		exportOptions.addOption(Option.builder().longOpt(VERY_VERBOSE).hasArg(false).required(false).build());
+
+		duckdbExportOptions.addOption(
+				Option.builder().longOpt(INPUT_BM2).hasArg().required().argName("BM2FILE").build());
+		duckdbExportOptions.addOption(
+				Option.builder().longOpt(OUTPUT_FILE_NAME).hasArg().required().argName("DUCKDB_FILE").build());
 
 		deleteOptions.addOption(
 				Option.builder().longOpt(INPUT_BM2).hasArg().required().argName("BM2FILE").build());
@@ -141,6 +148,12 @@ public class BMDExpressCommandLine
 				eRunner.analyze(cmd.getOptionValue(INPUT_BM2), cmd.getOptionValue(OUTPUT_FILE_NAME),
 						cmd.getOptionValue(ANALYSIS_GROUP), cmd.getOptionValue(ANALYSIS_NAME));
 			}
+			else if (args[0].equals(EXPORT_DUCKDB))
+			{
+				CommandLine cmd = parser.parse(duckdbExportOptions, theArgs);
+				DuckDBExportRunnerV4 duckDBRunner = new DuckDBExportRunnerV4();
+				duckDBRunner.main(new String[]{cmd.getOptionValue(INPUT_BM2), cmd.getOptionValue(OUTPUT_FILE_NAME)});
+			}
 			else if (args[0].equals(DELETE))
 			{
 				CommandLine cmd = parser.parse(deleteOptions, theArgs);
@@ -185,6 +198,8 @@ public class BMDExpressCommandLine
 		formatter.printHelp("bmdexpress3-cmd " + ANALYZE, "", analyzeOptions, "", true);
 
 		formatter.printHelp("bmdexpress3-cmd " + EXPORT, "", exportOptions, "", true);
+		
+		formatter.printHelp("bmdexpress3-cmd " + EXPORT_DUCKDB, "", duckdbExportOptions, "", true);
 
 		formatter.printHelp("bmdexpress3-cmd " + DELETE, "", deleteOptions, "", true);
 		formatter.printHelp("bmdexpress3-cmd " + QUERY, "", queryOptions, "", true);
