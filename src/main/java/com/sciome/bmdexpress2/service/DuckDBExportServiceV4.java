@@ -1481,13 +1481,22 @@ public class DuckDBExportServiceV4 {
                 if (carIdStr != null && car.getCategoryAnalsyisResults() != null) {
                     long carId = Long.parseLong(carIdStr);
 
+                    // Build prefilter map for fold change calculation (same logic as ProbeStatResults)
+                    Map<String, PrefilterResult> prefilterMap = new HashMap<>();
+                    if (car.getBmdResult() != null && car.getBmdResult().getPrefilterResults() != null
+                        && car.getBmdResult().getPrefilterResults().getPrefilterResults() != null) {
+                        for (PrefilterResult prefilterResult : car.getBmdResult().getPrefilterResults().getPrefilterResults()) {
+                            prefilterMap.put(prefilterResult.getProbeID(), prefilterResult);
+                        }
+                    }
+
                     for (CategoryAnalysisResult caResult : car.getCategoryAnalsyisResults()) {
                         long caResultId = getNextId("categoryAnalysisResults");
                         putObjectId(caResult, caResultId);
 
                         // Trigger calculations for transient fields before accessing them
                         caResult.calculate5and10Percentiles();
-                        caResult.calculateFoldChangeStats();
+                        caResult.calculateFoldChangeStats(prefilterMap); // Use prefilter-aware method
                         caResult.calculate95ConfidenceIntervals();
                         caResult.calculateOverAllDirection();
 

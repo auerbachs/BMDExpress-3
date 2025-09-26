@@ -9,7 +9,7 @@ BMDExpress-3 is a JavaFX application for dose-response modeling and benchmark do
 ## Architecture
 
 ### Core Structure
-- **Main Entry Point**: `com.sciome.bmdexpress2.BMDExpress3Main` - JavaFX application launcher
+- **Main Entry Point**: `com.sciome.bmdexpress2.BMDExpress3Main` - JavaFX application launcher (note: package is bmdexpress2, not bmdexpress3)
 - **MVP Pattern**: Code follows Model-View-Presenter pattern with clear separation in `src/main/java/com/sciome/bmdexpress2/mvp/`
   - Models: Data structures and business logic
   - Views: FXML-based JavaFX UI components  
@@ -51,21 +51,22 @@ java -jar target/bmdexpress3-3.0.0-SNAPSHOT-jar-with-dependencies.jar [CLI_OPTIO
 No formal test suite is configured - testing appears to be manual through the GUI and CLI.
 
 ### Dependencies
-- **Java 21** (required)
-- **JavaFX 21.0.2** - UI framework
+- **Java 21** (required) - Liberica JDK 21 Full is available and recommended
+- **JavaFX 17.0.13** - UI framework (compatible with Java 21)
 - **JFreeChart** - Charting and visualization
 - **Jackson** - JSON serialization
 - **Apache Commons** - Utilities (Math, Lang, CLI, IO)
 - **Google Guava** - EventBus and utilities
 - **ControlsFX** - Additional JavaFX controls
 - **Sciome Commons Math** - Custom mathematical functions
-- **DuckDB JDBC 0.9.2** - Database export functionality (added)
+- **DuckDB JDBC 1.3.2.0** - Database export functionality (added)
 
 ## Important Notes
 
 - The application supports both GUI and headless command-line operation
 - Data persistence uses custom .bm2 file format (JSON-based)
 - Module system requires specific `--add-exports` flags for ControlsFX integration (configured in pom.xml)
+- Note: DuckDB JDBC dependency is not declared in module-info.java but is available on classpath
 - ToxicR integration provides Bayesian model averaging capabilities
 - Forward toxicokinetic modeling for internal dose estimation
 

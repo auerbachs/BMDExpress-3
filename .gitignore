@@ -11,3 +11,30 @@ DRBMD.dll
 chem_phys_data_combined_with_ice_opera.tsv.gz
 hs_err_*
 rebel.xml
+node_modules/
+
+# DuckDB database files
+*.duckdb
+
+# BMDExpress data files
+*.bm2
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Java compiled files
+*.class
+
+# Package files
+*.jar

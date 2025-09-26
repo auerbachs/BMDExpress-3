@@ -29,6 +29,7 @@ import com.sciome.bmdexpress2.mvp.model.IMarkable;
 import com.sciome.bmdexpress2.mvp.model.category.identifier.CategoryIdentifier;
 import com.sciome.bmdexpress2.mvp.model.category.identifier.GOCategoryIdentifier;
 import com.sciome.bmdexpress2.mvp.model.category.ivive.IVIVEResult;
+import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResult;
 import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
 import com.sciome.bmdexpress2.util.NumberManager;
@@ -2479,6 +2480,40 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		this.stdDevFoldChange = summaryStats.getStandardDeviation();
 		this.medianFoldChange = summaryStats.getPercentile(50);
 
+	}
+
+	/**
+	 * Calculate fold change statistics using prefilter data directly (for DuckDB export)
+	 */
+	public void calculateFoldChangeStats(java.util.Map<String, PrefilterResult> prefilterMap)
+	{
+		if (referenceGeneProbeStatResults == null || prefilterMap == null)
+			return;
+
+		DescriptiveStatistics summaryStats = new DescriptiveStatistics();
+		for (ReferenceGeneProbeStatResult rp : referenceGeneProbeStatResults)
+		{
+			for (ProbeStatResult probeStatResult : rp.getProbeStatResults())
+			{
+				String probeId = probeStatResult.getProbeResponse().getProbe().getId();
+				PrefilterResult prefilter = prefilterMap.get(probeId);
+				if (prefilter != null && prefilter.getBestFoldChange() != null)
+				{
+					Double absFoldChange = Math.abs(prefilter.getBestFoldChange().doubleValue());
+					summaryStats.addValue(absFoldChange);
+				}
+			}
+		}
+
+		if (summaryStats.getN() > 0)
+		{
+			this.meanFoldChange = summaryStats.getGeometricMean();
+			this.totalFoldChange = summaryStats.getSum();
+			this.minFoldChange = summaryStats.getMin();
+			this.maxFoldChange = summaryStats.getMax();
+			this.stdDevFoldChange = summaryStats.getStandardDeviation();
+			this.medianFoldChange = summaryStats.getPercentile(50);
+		}
 	}
 
 	public void calculate5and10Percentiles()
