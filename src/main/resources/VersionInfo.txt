@@ -16,9 +16,11 @@ New Features
 <li>zscore</li>
 <li>model fold change</li>
 <li>latest toxicr</li>
-<li>update mle aic/p-value to use degrees of freedom in line with bmds 2.7</li>
-<li>library updates</li>
+<li>update mle aic/p-value calculation to use degrees of freedom in line with bmds 2.7</li>
+<li>java library updates</li>
 <li>json export additions</li>
+<li>Tissue contamination chart </li>
+<li>QC Bar chart</li>
 
 </ul>
 
@@ -154,3 +156,4 @@ New Features
 
 </body>
 </html>
+
