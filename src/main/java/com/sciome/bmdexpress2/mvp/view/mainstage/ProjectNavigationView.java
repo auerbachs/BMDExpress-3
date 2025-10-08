@@ -49,6 +49,8 @@ import com.sciome.bmdexpress2.util.MatrixData;
 import com.sciome.bmdexpress2.util.ViewUtilities;
 import com.sciome.bmdexpress2.util.annotation.FileAnnotation;
 
+import javafx.animation.Animation.Status;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -79,6 +81,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 //treeViewContainer //Export Best Models
 public class ProjectNavigationView extends VBox implements IProjectNavigationView
@@ -109,6 +112,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private boolean fireSelection = false;
 	private boolean selectionChangeInProgress = false;
 	private boolean visualizationSelected = false;
+
+	PauseTransition debounce = new PauseTransition(Duration.seconds(1.0));
 
 	public ProjectNavigationView()
 	{
@@ -249,7 +254,6 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	@SuppressWarnings("rawtypes")
 	private void handle_navigationTreeViewChecked()
 	{
-
 		List<BMDExpressAnalysisDataSet> datasets = getCheckedItems();
 		BMDExpressAnalysisDataSet selectedItem = null;
 
@@ -1860,11 +1864,47 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 	private List<BMDExpressAnalysisDataSet> getCheckedItems()
 	{
-		List<BMDExpressAnalysisDataSet> datasets = new ArrayList<>();
 
-		for (BMDExpressAnalysisDataSet ds : analysisCheckList.getCheckModel().getCheckedItems())
-			if (ds != null)
-				datasets.add(ds);
+		List<BMDExpressAnalysisDataSet> datasets = new ArrayList<>();
+		int tries = 0;
+		boolean isNeg = true;
+		while (isNeg || tries > 9)
+		{
+			isNeg = false;
+			datasets = new ArrayList<>();
+			List<Integer> indices = new ArrayList<>(analysisCheckList.getCheckModel().getCheckedIndices());
+			for (Integer index : indices)
+			{
+				if (index >= 0)
+				{
+					BMDExpressAnalysisDataSet ds = analysisCheckList.getCheckModel().getItem(index);
+					if (ds != null)
+						datasets.add(ds);
+					else
+						isNeg = true;
+				}
+				else
+				{
+					isNeg = true;
+					// System.out.println("negative index");
+				}
+			}
+			tries++;
+			try
+			{
+				Thread.sleep(500);
+			}
+			catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		// System.out.println(analysisCheckList.getCheckModel().getCheckedItems().size());
+		// for (BMDExpressAnalysisDataSet ds : analysisCheckList.getCheckModel().getCheckedItems())
+		// if (ds != null)
+		// datasets.add(ds);
 
 		return datasets;
 	}
@@ -1882,47 +1922,27 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 	private void delayedCheckBoxReaction()
 	{
-		fireSelection = true;
-
-		if (!selectionChangeInProgress)
+		if (debounce.getStatus().equals(Status.RUNNING))
 		{
-			selectionChangeInProgress = true;
-			if (!analysisCheckList.getStyleClass().contains("textboxfilterchanged"))
-				analysisCheckList.getStyleClass().add("textboxfilterchanged");
-			new Thread(new Runnable() {
-
-				@Override
-				public void run()
-				{
-					while (fireSelection)
-					{
-						fireSelection = false; // set his global variable to false.
-						try
-						{
-							Thread.sleep(1000);
-						}
-						catch (InterruptedException e)
-						{
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run()
-						{
-							analysisCheckList.getStyleClass().remove("textboxfilterchanged");
-							handle_navigationTreeViewChecked();
-							selectionChangeInProgress = false;
-
-						}
-					});
-
-				}
-			}).start();
-
+			debounce.jumpTo(Duration.ZERO);
+			// System.out.println("jump to 0");
+			return;
 		}
+		debounce.play();
+		analysisCheckList.getStyleClass().add("textboxfilterchanged");
+		debounce.setOnFinished(e ->
+		{
+			debounce.stop();
+			Platform.runLater(() ->
+			{
+				// Perform heavy update safely on JavaFX thread
+				Platform.runLater(() ->
+				{
+					handle_navigationTreeViewChecked();
+					analysisCheckList.getStyleClass().remove("textboxfilterchanged");
+				});
+			});
+		});
 
 	}
 
