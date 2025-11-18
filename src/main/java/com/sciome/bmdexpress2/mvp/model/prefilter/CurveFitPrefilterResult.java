@@ -323,7 +323,7 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 	@Override
 	public double getAdjustedPValue()
 	{
-		return pValue;
+		return Double.NaN;
 	}
 
 }

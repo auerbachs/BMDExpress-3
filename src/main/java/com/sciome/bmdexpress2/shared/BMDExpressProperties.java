@@ -12,6 +12,9 @@ import java.lang.management.ManagementFactory;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -998,6 +1003,42 @@ public class BMDExpressProperties
 			e.printStackTrace();
 		}
 		return "";
+	}
+
+	public void dealWithAnnotations()
+	{
+
+		try
+		{
+			InputStream in = this.getClass().getResourceAsStream("/annotations.zip");
+			Path targetDirectory = Paths
+					.get(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "data");
+			Files.createDirectories(targetDirectory);
+			try (ZipInputStream zis = new ZipInputStream(in))
+			{
+				ZipEntry zipEntry;
+				while ((zipEntry = zis.getNextEntry()) != null)
+				{
+					Path filePath = targetDirectory.resolve(zipEntry.getName());
+
+					if (zipEntry.isDirectory())
+					{
+						Files.createDirectories(filePath);
+					}
+					else
+					{
+						Files.createDirectories(filePath.getParent()); // Ensure parent directories exist
+						Files.copy(zis, filePath, StandardCopyOption.REPLACE_EXISTING);
+					}
+					zis.closeEntry();
+				}
+			}
+
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public WilliamsTrendInput getWilliamsInput()
