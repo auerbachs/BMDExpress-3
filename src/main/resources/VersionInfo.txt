@@ -7,20 +7,27 @@
 </h1>
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on August 8, 2025</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on November 26, 2025</h2>
 
 <h3>
 New Features
 </h3>
 <ul>
-<li>zscore</li>
-<li>model fold change</li>
-<li>latest toxicr</li>
-<li>update mle aic/p-value calculation to use degrees of freedom in line with bmds 2.7</li>
-<li>java library updates</li>
-<li>json export additions</li>
-<li>Tissue contamination chart </li>
-<li>QC Bar chart</li>
+<li>Added z-score calculation to BMD Analysis</li>
+
+<li>Added model fold-change metrics to BMD Analysis</li>
+
+<li>Updated to the latest NIEHS ToxiCR database/tools</li>
+
+<li>Updated MLE AIC and p-value calculations to incorporate degrees of freedom consistent with BMDS 2.7</li>
+
+<li>Updated core Java libraries and dependencies</li>
+
+<li>Expanded JSON export with additional fields and data structures</li>
+
+<li>Added Tissue Contamination Chart to QC experiments module</li>
+
+<li>Added QC Bar Chart for improved visualization of experimental quality metrics</li>
 
 </ul>
 
