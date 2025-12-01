@@ -21,6 +21,7 @@ import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
@@ -1709,6 +1710,12 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		return ViewUtilities.getInstance()
 				.getJSONImportFileToImport(analysisCheckList.getScene().getWindow());
+	}
+
+	@Override
+	public ExperimentDescription showExperimentDescriptionDialog(ExperimentDescription parsedDescription, String filename)
+	{
+		return ExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), parsedDescription, filename);
 	}
 
 	@Override

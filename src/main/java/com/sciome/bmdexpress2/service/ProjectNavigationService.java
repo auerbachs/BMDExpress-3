@@ -80,6 +80,23 @@ public class ProjectNavigationService implements IProjectNavigationService
 
 			}
 
+			// Add experiment description metadata if available
+			if (doseResponseExperiment.getExperimentDescription() != null &&
+			    doseResponseExperiment.getExperimentDescription().hasDescription())
+			{
+				notes.add(""); // Blank line for separation
+				notes.add("=== Experiment Description ===");
+				String descString = doseResponseExperiment.getExperimentDescription().getFormattedString();
+				// Split formatted string into individual lines and add each
+				for (String descLine : descString.split("\n"))
+				{
+					if (!descLine.trim().isEmpty())
+					{
+						notes.add(descLine);
+					}
+				}
+			}
+
 			analysisInfo.setNotes(notes);
 			doseResponseExperiment.setAnalysisInfo(analysisInfo);
 

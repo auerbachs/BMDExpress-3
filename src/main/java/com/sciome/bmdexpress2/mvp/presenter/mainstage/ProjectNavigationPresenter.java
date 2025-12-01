@@ -16,6 +16,7 @@ import com.sciome.bmdexpress2.mvp.model.CombinedDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
@@ -184,6 +185,28 @@ public class ProjectNavigationPresenter
 
 		if (experiments == null || experiments.size() == 0)
 			return;
+
+		// Show experiment description dialog for each experiment
+		for (DoseResponseExperiment experiment : experiments)
+		{
+			// Get auto-parsed description from the experiment
+			ExperimentDescription parsedDescription = experiment.getExperimentDescription();
+			if (parsedDescription == null)
+			{
+				parsedDescription = new ExperimentDescription();
+			}
+
+			// Show dialog to review/edit metadata
+			ExperimentDescription finalDescription = getView().showExperimentDescriptionDialog(
+					parsedDescription, experiment.getName());
+
+			// Update experiment with user-edited description
+			if (finalDescription != null)
+			{
+				experiment.setExperimentDescription(finalDescription);
+			}
+		}
+
 		// FileAnnotation uses the probe hash to help find a valid list of chips.
 		Hashtable<String, Integer> probeHash = new Hashtable<>();
 		for (DoseResponseExperiment exp : experiments)

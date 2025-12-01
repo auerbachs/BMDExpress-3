@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Vector;
 
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.probe.Probe;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
@@ -218,6 +219,10 @@ public class ExperimentFileUtil
 					if (fileName.indexOf(".") > 0)
 						fileName = fileName.substring(0, fileName.lastIndexOf("."));
 					doseResponseExperiement.setName(fileName);
+
+					// Parse experimental metadata from filename
+					ExperimentDescription desc = ExperimentDescriptionParser.parseFromFilename(infile);
+					doseResponseExperiement.setExperimentDescription(desc);
 
 					return doseResponseExperiement;
 				}
