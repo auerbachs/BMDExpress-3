@@ -1067,4 +1067,30 @@ public class ProjectNavigationPresenter
 		currentProject.giveBMDAnalysisUniqueName(bmdAnalysisDataSet, newName);
 	}
 
+	/**
+	 * Edit the experimental description metadata for an existing experiment
+	 */
+	public void editExperimentMetadata(DoseResponseExperiment experiment)
+	{
+		if (experiment == null)
+			return;
+
+		// Get current description (or create new if none exists)
+		ExperimentDescription currentDescription = experiment.getExperimentDescription();
+		if (currentDescription == null)
+		{
+			currentDescription = new ExperimentDescription();
+		}
+
+		// Show dialog to edit metadata
+		ExperimentDescription updatedDescription = getView().showExperimentDescriptionDialog(
+				currentDescription, experiment.getName());
+
+		// Update experiment with edited description
+		if (updatedDescription != null)
+		{
+			experiment.setExperimentDescription(updatedDescription);
+		}
+	}
+
 }

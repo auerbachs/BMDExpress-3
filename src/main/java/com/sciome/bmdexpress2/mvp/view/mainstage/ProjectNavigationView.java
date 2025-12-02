@@ -103,6 +103,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private final String EXPORT_BMDANALYSIS = "Export BMD Analysis Data";
 	private final String SPREADSHEET_VIEW = "Spreedsheet View";
 	private final String REMOVE_ALL = "Remove All Selected Items";
+	private final String EDIT_METADATA = "Edit Metadata";
 
 	private Map<String, List<BMDExpressAnalysisDataSet>> dataSetMap = new HashMap<>();
 	private ComboBox<String> dataGroupCombo = new ComboBox<>();
@@ -1239,6 +1240,17 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		ContextMenu ctxMenu = new ContextMenu();
 
+		// Edit Metadata menu item
+		MenuItem editMetadataMenuItem = new MenuItem(EDIT_METADATA);
+		editMetadataMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event)
+			{
+				handle_DoseResponseExperimentEditMetadata(doseResponseExperiment);
+			}
+		});
+		ctxMenu.getItems().add(editMetadataMenuItem);
+
 		Menu showAnnotationMenu = new Menu("Show Annotations");
 		MenuItem probeToGenesMenuItem = new MenuItem("Probe to Genes");
 		MenuItem genesToProbeMenuItem = new MenuItem("Genes to Probe");
@@ -1377,6 +1389,11 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 		presenter.changeAnalysisName(doseResponseExperiment, newName);
 		analysisCheckList.refresh();
+	}
+
+	private void handle_DoseResponseExperimentEditMetadata(DoseResponseExperiment doseResponseExperiment)
+	{
+		presenter.editExperimentMetadata(doseResponseExperiment);
 	}
 
 	private void handle_DoseResponseViewGenesToProbe(DoseResponseExperiment doseResponseExperiment)
