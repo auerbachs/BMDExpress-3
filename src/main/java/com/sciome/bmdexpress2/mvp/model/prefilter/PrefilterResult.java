@@ -41,19 +41,19 @@ public interface PrefilterResult
 
 	public void setNoelLoelPValues(List<Float> pvalues);
 
-	public double getAnovapValue();
+	public Double getAnovapValue();
 
-	public double getAnovaAdjustedPValue();
+	public Double getAnovaAdjustedPValue();
 
-	public double getWilliamspValue();
+	public Double getWilliamspValue();
 
-	public double getWiliamsAdjustedPValue();
+	public Double getWiliamsAdjustedPValue();
 
-	public double getOriogenpValue();
+	public Double getOriogenpValue();
 
-	public double getOriogenAdjustedPValue();
+	public Double getOriogenAdjustedPValue();
 
-	public double getCurveFitGoF();
+	public Double getCurveFitGoF();
 
 	public PrefilterResult getUpstreamPrefilterResult();
 

@@ -297,45 +297,45 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	}
 
 	@Override
-	public double getAnovapValue()
+	public Double getAnovapValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getAnovaAdjustedPValue()
+	public Double getAnovaAdjustedPValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getWilliamspValue()
+	public Double getWilliamspValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getWiliamsAdjustedPValue()
+	public Double getWiliamsAdjustedPValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getOriogenpValue()
+	public Double getOriogenpValue()
 	{
 		return pValue;
 	}
 
 	@Override
-	public double getOriogenAdjustedPValue()
+	public Double getOriogenAdjustedPValue()
 	{
 		return adjustedPValue;
 	}
 
 	@Override
-	public double getCurveFitGoF()
+	public Double getCurveFitGoF()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override

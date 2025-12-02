@@ -577,4 +577,74 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			return Color.blue;
 	}
 
+	public Double getAnovaPrefilterrefilterPvalue()
+	{
+		return anovaPrefilterrefilterPvalue;
+	}
+
+	public void setAnovaPrefilterrefilterPvalue(Double anovaPrefilterrefilterPvalue)
+	{
+		this.anovaPrefilterrefilterPvalue = anovaPrefilterrefilterPvalue;
+	}
+
+	public Double getAnovaPrefilterAdjustedPValue()
+	{
+		return anovaPrefilterAdjustedPValue;
+	}
+
+	public void setAnovaPrefilterAdjustedPValue(Double anovaPrefilterAdjustedPValue)
+	{
+		this.anovaPrefilterAdjustedPValue = anovaPrefilterAdjustedPValue;
+	}
+
+	public Double getWilliamsPrefilterPvalue()
+	{
+		return williamsPrefilterPvalue;
+	}
+
+	public void setWilliamsPrefilterPvalue(Double williamsPrefilterPvalue)
+	{
+		this.williamsPrefilterPvalue = williamsPrefilterPvalue;
+	}
+
+	public Double getWilliamsPrefilterAdjustedPValue()
+	{
+		return williamsPrefilterAdjustedPValue;
+	}
+
+	public void setWilliamsPrefilterAdjustedPValue(Double williamsPrefilterAdjustedPValue)
+	{
+		this.williamsPrefilterAdjustedPValue = williamsPrefilterAdjustedPValue;
+	}
+
+	public Double getOriogenPrefilterPvalue()
+	{
+		return oriogenPrefilterPvalue;
+	}
+
+	public void setOriogenPrefilterPvalue(Double oriogenPrefilterPvalue)
+	{
+		this.oriogenPrefilterPvalue = oriogenPrefilterPvalue;
+	}
+
+	public Double getOriogenPrefilterAdjustedPValue()
+	{
+		return oriogenPrefilterAdjustedPValue;
+	}
+
+	public void setOriogenPrefilterAdjustedPValue(Double oriogenPrefilterAdjustedPValue)
+	{
+		this.oriogenPrefilterAdjustedPValue = oriogenPrefilterAdjustedPValue;
+	}
+
+	public Double getCurveFitPrefilterGoF()
+	{
+		return curveFitPrefilterGoF;
+	}
+
+	public void setCurveFitPrefilterGoF(Double curveFitPrefilterGoF)
+	{
+		this.curveFitPrefilterGoF = curveFitPrefilterGoF;
+	}
+
 }

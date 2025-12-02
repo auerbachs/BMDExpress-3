@@ -44,11 +44,26 @@ public class CategoryAnalysisParameters
 	private boolean userFoldChangeFilter = false;
 	private double maxFoldChange;
 
-	private boolean userPValueFilter = false;
-	private double pValue;
+	private boolean useAnovaPValueFilter = false;
+	private double anovaPValue;
 
-	private boolean userAdjustedPValueFilter = false;
-	private double adjustedPValue;
+	private boolean useAnovaAdjustedPValueFilter = false;
+	private double anovaAdjustedPValue;
+
+	private boolean useWilliamsPValueFilter = false;
+	private double williamsPValue;
+
+	private boolean useWilliamsAdjustedPValueFilter = false;
+	private double williamsAdjustedPValue;
+
+	private boolean useOriogenPValueFilter = false;
+	private double oriogenPValue;
+
+	private boolean useOriogenAdjustedPValueFilter = false;
+	private double oriogenAdjustedPValue;
+
+	private boolean useCurveFitGoFFilter = false;
+	private double curveFitGoF;
 
 	private double minDose;
 	private double maxDose;
@@ -410,44 +425,124 @@ public class CategoryAnalysisParameters
 		this.maxFoldChange = maxFoldChange;
 	}
 
-	public boolean isUserPValueFilter()
+	public boolean isUseAnovaPValueFilter()
 	{
-		return userPValueFilter;
+		return useAnovaPValueFilter;
 	}
 
-	public void setUserPValueFilter(boolean userPValueFilter)
+	public void setUseAnovaPValueFilter(boolean useAnovaPValueFilter)
 	{
-		this.userPValueFilter = userPValueFilter;
+		this.useAnovaPValueFilter = useAnovaPValueFilter;
 	}
 
-	public double getPValue()
+	public double getAnovaPValue()
 	{
-		return pValue;
+		return anovaPValue;
 	}
 
-	public void setPValue(double pValue)
+	public void setAnovaPValue(double anovaPValue)
 	{
-		this.pValue = pValue;
+		this.anovaPValue = anovaPValue;
 	}
 
-	public boolean isUserAdjustedPValueFilter()
+	public boolean isUseAnovaAdjustedPValueFilter()
 	{
-		return userAdjustedPValueFilter;
+		return useAnovaAdjustedPValueFilter;
 	}
 
-	public void setUserAdjustedPValueFilter(boolean userAdjustedPValueFilter)
+	public void setUseAnovaAdjustedPValueFilter(boolean useAnovaAdjustedPValueFilter)
 	{
-		this.userAdjustedPValueFilter = userAdjustedPValueFilter;
+		this.useAnovaAdjustedPValueFilter = useAnovaAdjustedPValueFilter;
 	}
 
-	public double getAdjustedPValue()
+	public double getAnovaAdjustedPValue()
 	{
-		return adjustedPValue;
+		return anovaAdjustedPValue;
 	}
 
-	public void setAdjustedPValue(double adjustedPValue)
+	public void setAnovaAdjustedPValue(double anovaAdjustedPValue)
 	{
-		this.adjustedPValue = adjustedPValue;
+		this.anovaAdjustedPValue = anovaAdjustedPValue;
+	}
+
+	public boolean isUseWilliamsPValueFilter()
+	{
+		return useWilliamsPValueFilter;
+	}
+
+	public void setUseWilliamsPValueFilter(boolean useWilliamsPValueFilter)
+	{
+		this.useWilliamsPValueFilter = useWilliamsPValueFilter;
+	}
+
+	public double getWilliamsPValue()
+	{
+		return williamsPValue;
+	}
+
+	public void setWilliamsPValue(double williamsPValue)
+	{
+		this.williamsPValue = williamsPValue;
+	}
+
+	public boolean isUseWilliamsAdjustedPValueFilter()
+	{
+		return useWilliamsAdjustedPValueFilter;
+	}
+
+	public void setUseWilliamsAdjustedPValueFilter(boolean useWilliamsAdjustedPValueFilter)
+	{
+		this.useWilliamsAdjustedPValueFilter = useWilliamsAdjustedPValueFilter;
+	}
+
+	public double getWilliamsAdjustedPValue()
+	{
+		return williamsAdjustedPValue;
+	}
+
+	public void setWilliamsAdjustedPValue(double williamsAdjustedPValue)
+	{
+		this.williamsAdjustedPValue = williamsAdjustedPValue;
+	}
+
+	public boolean isUseOriogenPValueFilter()
+	{
+		return useOriogenPValueFilter;
+	}
+
+	public void setUseOriogenPValueFilter(boolean useOriogenPValueFilter)
+	{
+		this.useOriogenPValueFilter = useOriogenPValueFilter;
+	}
+
+	public double getOriogenPValue()
+	{
+		return oriogenPValue;
+	}
+
+	public void setOriogenPValue(double oriogenPValue)
+	{
+		this.oriogenPValue = oriogenPValue;
+	}
+
+	public boolean isUseCurveFitGoFFilter()
+	{
+		return useCurveFitGoFFilter;
+	}
+
+	public void setUseCurveFitGoFFilter(boolean useCurveFitGoFFilter)
+	{
+		this.useCurveFitGoFFilter = useCurveFitGoFFilter;
+	}
+
+	public double getCurveFitGoF()
+	{
+		return curveFitGoF;
+	}
+
+	public void setCurveFitGoF(double curveFitGoF)
+	{
+		this.curveFitGoF = curveFitGoF;
 	}
 
 	public void setDeduplicateGeneSets(boolean selected)
@@ -510,6 +605,26 @@ public class CategoryAnalysisParameters
 	public void setRemoveABSModelFC(boolean removeABSModelFC)
 	{
 		this.removeABSModelFC = removeABSModelFC;
+	}
+
+	public boolean isUseOriogenAdjustedPValueFilter()
+	{
+		return useOriogenAdjustedPValueFilter;
+	}
+
+	public void setUseOriogenAdjustedPValueFilter(boolean useOriogenAdjustedPValueFilter)
+	{
+		this.useOriogenAdjustedPValueFilter = useOriogenAdjustedPValueFilter;
+	}
+
+	public double getOriogenAdjustedPValue()
+	{
+		return oriogenAdjustedPValue;
+	}
+
+	public void setOriogenAdjustedPValue(double oriogenAdjustedPValue)
+	{
+		this.oriogenAdjustedPValue = oriogenAdjustedPValue;
 	}
 
 }

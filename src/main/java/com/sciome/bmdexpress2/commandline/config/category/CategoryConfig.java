@@ -27,8 +27,16 @@ public abstract class CategoryConfig
 	private Double bmduBMDLRatioMin;
 	private Double nFoldBelowLowestDose;
 	private Double maxFoldChange;
-	private Double prefilterPValueMin;
-	private Double prefilterAdjustedPValueMin;
+
+	private Double anovaPrefilterPValueMin;
+	private Double anovaPrefilterAdjustedPValueMin;
+	private Double williamsPrefilterPValueMin;
+	private Double williamsPrefilterAdjustedPValueMin;
+
+	private Double oriogenPrefilterPValueMin;
+	private Double oriogenPrefilterAdjustedPValueMin;
+
+	private Double curveFitPrefilterPValueMax;
 
 	private Boolean identifyConflictingProbeSets;
 	private Double correlationCutoffForConflictingProbeSets;
@@ -177,24 +185,74 @@ public abstract class CategoryConfig
 		this.maxFoldChange = maxFoldChange;
 	}
 
-	public Double getPrefilterPValueMin()
+	public Double getAnovaPrefilterPValueMin()
 	{
-		return prefilterPValueMin;
+		return anovaPrefilterPValueMin;
 	}
 
-	public void setPrefilterPValueMin(Double pValueMin)
+	public void setAnovaPrefilterPValueMin(Double anovaPrefilterPValueMin)
 	{
-		this.prefilterPValueMin = pValueMin;
+		this.anovaPrefilterPValueMin = anovaPrefilterPValueMin;
 	}
 
-	public Double getPrefilterAdjustedPValueMin()
+	public Double getAnovaPrefilterAdjustedPValueMin()
 	{
-		return prefilterAdjustedPValueMin;
+		return anovaPrefilterAdjustedPValueMin;
 	}
 
-	public void setPrefilterAdjustedPValueMin(Double adjustedPValueMin)
+	public void setAnovaPrefilterAdjustedPValueMin(Double anovaPrefilterAdjustedPValueMin)
 	{
-		this.prefilterAdjustedPValueMin = adjustedPValueMin;
+		this.anovaPrefilterAdjustedPValueMin = anovaPrefilterAdjustedPValueMin;
+	}
+
+	public Double getWilliamsPrefilterPValueMin()
+	{
+		return williamsPrefilterPValueMin;
+	}
+
+	public void setWilliamsPrefilterPValueMin(Double williamsPrefilterPValueMin)
+	{
+		this.williamsPrefilterPValueMin = williamsPrefilterPValueMin;
+	}
+
+	public Double getWilliamsPrefilterAdjustedPValueMin()
+	{
+		return williamsPrefilterAdjustedPValueMin;
+	}
+
+	public void setWilliamsPrefilterAdjustedPValueMin(Double williamsPrefilterAdjustedPValueMin)
+	{
+		this.williamsPrefilterAdjustedPValueMin = williamsPrefilterAdjustedPValueMin;
+	}
+
+	public Double getOriogenPrefilterPValueMin()
+	{
+		return oriogenPrefilterPValueMin;
+	}
+
+	public void setOriogenPrefilterPValueMin(Double oriogenPrefilterPValueMin)
+	{
+		this.oriogenPrefilterPValueMin = oriogenPrefilterPValueMin;
+	}
+
+	public Double getOriogenPrefilterAdjustedPValueMin()
+	{
+		return oriogenPrefilterAdjustedPValueMin;
+	}
+
+	public void setOriogenPrefilterAdjustedPValueMin(Double oriogenPrefilterAdjustedPValueMin)
+	{
+		this.oriogenPrefilterAdjustedPValueMin = oriogenPrefilterAdjustedPValueMin;
+	}
+
+	public Double getCurveFitPrefilterPValueMax()
+	{
+		return curveFitPrefilterPValueMax;
+	}
+
+	public void setCurveFitPrefilterPValueMax(Double curveFitPrefilterPValueMax)
+	{
+		this.curveFitPrefilterPValueMax = curveFitPrefilterPValueMax;
 	}
 
 	public Boolean getIdentifyConflictingProbeSets()

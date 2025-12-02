@@ -329,45 +329,45 @@ public class OneWayANOVAResult extends BMDExpressAnalysisRow
 	}
 
 	@Override
-	public double getAnovapValue()
+	public Double getAnovapValue()
 	{
 		return pValue;
 	}
 
 	@Override
-	public double getAnovaAdjustedPValue()
+	public Double getAnovaAdjustedPValue()
 	{
 		return adjustedPValue;
 	}
 
 	@Override
-	public double getWilliamspValue()
+	public Double getWilliamspValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getWiliamsAdjustedPValue()
+	public Double getWiliamsAdjustedPValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getOriogenpValue()
+	public Double getOriogenpValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getOriogenAdjustedPValue()
+	public Double getOriogenAdjustedPValue()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getCurveFitGoF()
+	public Double getCurveFitGoF()
 	{
-		return Double.NaN;
+		return null;
 	}
 
 	@Override

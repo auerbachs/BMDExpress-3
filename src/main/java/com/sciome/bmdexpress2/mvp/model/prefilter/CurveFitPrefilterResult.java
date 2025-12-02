@@ -326,55 +326,55 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 	}
 
 	@Override
-	public double getAnovapValue()
+	public Double getAnovapValue()
 	{
 		if (upstreamPrefilterResult instanceof OneWayANOVAResult)
 			return ((OneWayANOVAResult) upstreamPrefilterResult).getAnovapValue();
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getAnovaAdjustedPValue()
+	public Double getAnovaAdjustedPValue()
 	{
 		if (upstreamPrefilterResult instanceof OneWayANOVAResult)
 			return ((OneWayANOVAResult) upstreamPrefilterResult).getAnovaAdjustedPValue();
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getWilliamspValue()
+	public Double getWilliamspValue()
 	{
 		if (upstreamPrefilterResult instanceof WilliamsTrendResult)
 			return ((WilliamsTrendResult) upstreamPrefilterResult).getWilliamspValue();
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getWiliamsAdjustedPValue()
+	public Double getWiliamsAdjustedPValue()
 	{
 		if (upstreamPrefilterResult instanceof WilliamsTrendResult)
 			return ((WilliamsTrendResult) upstreamPrefilterResult).getWiliamsAdjustedPValue();
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getOriogenpValue()
+	public Double getOriogenpValue()
 	{
 		if (upstreamPrefilterResult instanceof OriogenResult)
 			return ((OriogenResult) upstreamPrefilterResult).getpValue();
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getOriogenAdjustedPValue()
+	public Double getOriogenAdjustedPValue()
 	{
 		if (upstreamPrefilterResult instanceof OriogenResult)
 			return ((OriogenResult) upstreamPrefilterResult).getAdjustedPValue();
-		return Double.NaN;
+		return null;
 	}
 
 	@Override
-	public double getCurveFitGoF()
+	public Double getCurveFitGoF()
 	{
 		return pValue;
 	}

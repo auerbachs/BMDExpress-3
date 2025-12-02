@@ -213,14 +213,38 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private CheckBox bmdFilterMaxFoldChangeCheckBox;
 	@FXML
 	private TextField bmdFilterMaxFoldChangeValue;
+
 	@FXML
-	private CheckBox bmdFilterMaxPValueCheckBox;
+	private CheckBox bmdFilterMaxAnovaPValueCheckBox;
 	@FXML
-	private TextField bmdFilterMaxPValueChangeValue;
+	private TextField bmdFilterMaxAnovaPValueChangeValue;
 	@FXML
-	private CheckBox bmdFilterMaxAdjustedPValueCheckBox;
+	private CheckBox bmdFilterMaxAnovaAdjustedPValueCheckBox;
 	@FXML
-	private TextField bmdFilterMaxAdjustedPValueChangeValue;
+	private TextField bmdFilterMaxAnovaAdjustedPValueChangeValue;
+
+	@FXML
+	private CheckBox bmdFilterMaxWilliamsPValueCheckBox;
+	@FXML
+	private TextField bmdFilterMaxWilliamsPValueChangeValue;
+	@FXML
+	private CheckBox bmdFilterMaxWilliamsAdjustedPValueCheckBox;
+	@FXML
+	private TextField bmdFilterMaxWilliamsAdjustedPValueChangeValue;
+
+	@FXML
+	private CheckBox bmdFilterMaxOriogenPValueCheckBox;
+	@FXML
+	private TextField bmdFilterMaxOriogenPValueChangeValue;
+	@FXML
+	private CheckBox bmdFilterMaxOriogenAdjustedPValueCheckBox;
+	@FXML
+	private TextField bmdFilterMaxOriogenAdjustedPValueChangeValue;
+
+	@FXML
+	private CheckBox bmdFilterMaxCurveFitGoFCheckBox;
+	@FXML
+	private TextField bmdFilterMinCurveFitGoFChangeValue;
 
 	// IVIVE
 	@FXML
@@ -366,14 +390,27 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		input.setRemoveGenesWithBMDU_BMDL(this.BMDUBMDLCheckBox.isSelected());
 		input.setRemoveGenesWithBMDValuesGreaterThanNFold(this.bmdFilter4CheckBox.isSelected());
 		input.setRemoveGenesWithMaxFoldChangeLessThan(this.bmdFilterMaxFoldChangeCheckBox.isSelected());
-		input.setRemoveGenesWithPrefilterPValue(this.bmdFilterMaxPValueCheckBox.isSelected());
+		// input.setRemoveGenesWithPrefilterPValue(this.bmdFilterMaxPValueCheckBox.isSelected());
+
+		input.setRemoveGenesWithAnovaPrefilterPValue(this.bmdFilterMaxAnovaPValueCheckBox.isSelected());
+		input.setRemoveGenesWithWilliamsPrefilterPValue(this.bmdFilterMaxWilliamsPValueCheckBox.isSelected());
+		input.setRemoveGenesWithOriogenPrefilterPValue(this.bmdFilterMaxOriogenPValueCheckBox.isSelected());
+		input.setRemoveGenesWithCurveFitPrefilterGoF(this.bmdFilterMaxCurveFitGoFCheckBox.isSelected());
 
 		input.setRemoveGenesWithABSModelFC(this.bmdFilterABSModeFCCheckBox.isSelected());
 		input.setRemoveGenesWithABSZScore(this.bmdFilterABSZScoreCheckBox.isSelected());
 
 		input.setRemoveBMDLessThanRSquared(this.bmdFilterMaxRSquaredCheckBox.isSelected());
 
-		input.setRemoveGenesWithPrefilterAdjustedPValue(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
+		// input.setRemoveGenesWithPrefilterAdjustedPValue(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
+
+		input.setRemoveGenesWithAnovaPrefilterAdjustedPValue(
+				this.bmdFilterMaxAnovaAdjustedPValueCheckBox.isSelected());
+		input.setRemoveGenesWithWilliamsPrefilterAdjustedPValue(
+				this.bmdFilterMaxWilliamsAdjustedPValueCheckBox.isSelected());
+		input.setRemoveGenesWithOriogenPrefilterAdjustedPValue(
+				this.bmdFilterMaxOriogenAdjustedPValueCheckBox.isSelected());
+
 		input.setEliminateGeneSetRedundancy(this.deduplicateGeneSetsCheckBox.isSelected());
 		input.setIdentifyConflictingProbeSets(this.conflictingProbeSetsCheckBox.isSelected());
 
@@ -408,10 +445,28 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 				Double.parseDouble(this.bmdFilter4Value.getText()));
 		input.setRemoveGenesWithMaxFoldChangeLessThanNumber(
 				Double.parseDouble(this.bmdFilterMaxFoldChangeValue.getText()));
-		input.setRemoveGenesWithPrefilterPValueNumber(
-				Double.parseDouble(this.bmdFilterMaxPValueChangeValue.getText()));
-		input.setRemoveGenesWithPrefilterAdjustedPValueNumber(
-				Double.parseDouble(this.bmdFilterMaxAdjustedPValueChangeValue.getText()));
+
+		// input.setRemoveGenesWithPrefilterPValueNumber(
+		// Double.parseDouble(this.bmdFilterMaxPValueChangeValue.getText()));
+		// input.setRemoveGenesWithPrefilterAdjustedPValueNumber(
+		// Double.parseDouble(this.bmdFilterMaxAdjustedPValueChangeValue.getText()));
+
+		input.setRemoveGenesWithAnovaPrefilterPValueNumber(
+				Double.parseDouble(this.bmdFilterMaxAnovaPValueChangeValue.getText()));
+		input.setRemoveGenesWithAnovaPrefilterAdjustedPValueNumber(
+				Double.parseDouble(this.bmdFilterMaxAnovaAdjustedPValueChangeValue.getText()));
+		input.setRemoveGenesWithWilliamsPrefilterPValueNumber(
+				Double.parseDouble(this.bmdFilterMaxWilliamsPValueChangeValue.getText()));
+		input.setRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber(
+				Double.parseDouble(this.bmdFilterMaxWilliamsAdjustedPValueChangeValue.getText()));
+		input.setRemoveGenesWithOriogenPrefilterPValueNumber(
+				Double.parseDouble(this.bmdFilterMaxOriogenPValueChangeValue.getText()));
+		input.setRemoveGenesWithOriogenPrefilterAdjustedPValueNumber(
+				Double.parseDouble(this.bmdFilterMaxOriogenAdjustedPValueChangeValue.getText()));
+
+		input.setRemoveGenesWithCurveFitPrefilterGoFNumber(
+				Double.parseDouble(this.bmdFilterMinCurveFitGoFChangeValue.getText()));
+
 		input.setCorrelationCutoffForConflictingProbeSets(
 				Double.parseDouble(this.correlationCutoffProbeSetsValue.getText()));
 		input.setRemoveGenesWithABSZScoreNumber(Double.parseDouble(this.bmdFilterABSZScoreValue.getText()));
@@ -637,9 +692,25 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		this.bmdFilter3CheckBox.setSelected(input.isRemoveGenesWithBMD_BMDL());
 		this.bmdFilter4CheckBox.setSelected(input.isRemoveGenesWithBMDValuesGreaterThanNFold());
 
-		this.bmdFilterMaxAdjustedPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterAdjustedPValue());
 		this.bmdFilterMaxFoldChangeCheckBox.setSelected(input.isRemoveGenesWithMaxFoldChangeLessThan());
-		this.bmdFilterMaxPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterPValue());
+
+		this.bmdFilterMaxAnovaAdjustedPValueCheckBox
+				.setSelected(input.isRemoveGenesWithAnovaPrefilterAdjustedPValue());
+		this.bmdFilterMaxAnovaPValueCheckBox.setSelected(input.isRemoveGenesWithAnovaPrefilterPValue());
+
+		this.bmdFilterMaxWilliamsAdjustedPValueCheckBox
+				.setSelected(input.isRemoveGenesWithWilliamsPrefilterAdjustedPValue());
+		this.bmdFilterMaxWilliamsPValueCheckBox.setSelected(input.isRemoveGenesWithWilliamsPrefilterPValue());
+
+		this.bmdFilterMaxOriogenAdjustedPValueCheckBox
+				.setSelected(input.isRemoveGenesWithOriogenPrefilterAdjustedPValue());
+		this.bmdFilterMaxOriogenPValueCheckBox.setSelected(input.isRemoveGenesWithOriogenPrefilterPValue());
+
+		// this.bmdFilterMaxAdjustedPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterAdjustedPValue());
+		// this.bmdFilterMaxPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterPValue());
+
+		this.bmdFilterMaxCurveFitGoFCheckBox.setSelected(input.isRemoveGenesWithCurveFitPrefilterGoF());
+
 		this.BMDUBMDCheckBox.setSelected(input.isRemoveGenesWithBMDU_BMD());
 		this.BMDUBMDLCheckBox.setSelected(input.isRemoveGenesWithBMDU_BMDL());
 		this.conflictingProbeSetsCheckBox.setSelected(input.isIdentifyConflictingProbeSets());
@@ -673,9 +744,27 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 		this.bmdFilter4Value.setText("" + input.getRemoveGenesWithBMDValuesGreaterThanNFoldNumber());
 		this.bmdFilterMaxFoldChangeValue.setText("" + input.getRemoveGenesWithMaxFoldChangeLessThanNumber());
-		this.bmdFilterMaxPValueChangeValue.setText("" + input.getRemoveGenesWithPrefilterPValueNumber());
-		this.bmdFilterMaxAdjustedPValueChangeValue
-				.setText("" + input.getRemoveGenesWithPrefilterAdjustedPValueNumber());
+
+		// this.bmdFilterMaxPValueChangeValue.setText("" + input.getRemoveGenesWithPrefilterPValueNumber());
+		// this.bmdFilterMaxAdjustedPValueChangeValue
+		// .setText("" + input.getRemoveGenesWithPrefilterAdjustedPValueNumber());
+
+		this.bmdFilterMaxAnovaPValueChangeValue
+				.setText("" + input.getRemoveGenesWithAnovaPrefilterPValueNumber());
+		this.bmdFilterMaxAnovaAdjustedPValueChangeValue
+				.setText("" + input.getRemoveGenesWithAnovaPrefilterAdjustedPValueNumber());
+		this.bmdFilterMaxWilliamsPValueChangeValue
+				.setText("" + input.getRemoveGenesWithWilliamsPrefilterPValueNumber());
+		this.bmdFilterMaxWilliamsAdjustedPValueChangeValue
+				.setText("" + input.getRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber());
+		this.bmdFilterMaxOriogenPValueChangeValue
+				.setText("" + input.getRemoveGenesWithOriogenPrefilterPValueNumber());
+		this.bmdFilterMaxOriogenAdjustedPValueChangeValue
+				.setText("" + input.getRemoveGenesWithOriogenPrefilterAdjustedPValueNumber());
+
+		this.bmdFilterMinCurveFitGoFChangeValue
+				.setText("" + input.getRemoveGenesWithCurveFitPrefilterGoFNumber());
+
 		this.correlationCutoffProbeSetsValue
 				.setText("" + input.getCorrelationCutoffForConflictingProbeSets());
 		presenter.initData(bmdResults, catAnalysisEnum);
@@ -837,11 +926,36 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		params.setUserFoldChangeFilter(this.bmdFilterMaxFoldChangeCheckBox.isSelected());
 		params.setMaxFoldChange(Double.valueOf(this.bmdFilterMaxFoldChangeValue.getText()));
 
-		params.setUserPValueFilter(this.bmdFilterMaxPValueCheckBox.isSelected());
-		params.setPValue(Double.valueOf(this.bmdFilterMaxPValueChangeValue.getText()));
+		// params.setUserPValueFilter(this.bmdFilterMaxPValueCheckBox.isSelected());
+		// params.setPValue(Double.valueOf(this.bmdFilterMaxPValueChangeValue.getText()));
 
-		params.setUserAdjustedPValueFilter(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
-		params.setAdjustedPValue(Double.valueOf(this.bmdFilterMaxAdjustedPValueChangeValue.getText()));
+		// params.setUserAdjustedPValueFilter(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
+		// params.setAdjustedPValue(Double.valueOf(this.bmdFilterMaxAdjustedPValueChangeValue.getText()));
+
+		params.setUseAnovaPValueFilter(this.bmdFilterMaxAnovaPValueCheckBox.isSelected());
+		params.setAnovaPValue(Double.valueOf(this.bmdFilterMaxAnovaPValueChangeValue.getText()));
+
+		params.setUseAnovaAdjustedPValueFilter(this.bmdFilterMaxAnovaAdjustedPValueCheckBox.isSelected());
+		params.setAnovaAdjustedPValue(
+				Double.valueOf(this.bmdFilterMaxAnovaAdjustedPValueChangeValue.getText()));
+
+		params.setUseWilliamsPValueFilter(this.bmdFilterMaxWilliamsPValueCheckBox.isSelected());
+		params.setWilliamsPValue(Double.valueOf(this.bmdFilterMaxWilliamsPValueChangeValue.getText()));
+
+		params.setUseWilliamsAdjustedPValueFilter(
+				this.bmdFilterMaxWilliamsAdjustedPValueCheckBox.isSelected());
+		params.setWilliamsAdjustedPValue(
+				Double.valueOf(this.bmdFilterMaxWilliamsAdjustedPValueChangeValue.getText()));
+
+		params.setUseOriogenPValueFilter(this.bmdFilterMaxOriogenPValueCheckBox.isSelected());
+		params.setOriogenPValue(Double.valueOf(this.bmdFilterMaxOriogenPValueChangeValue.getText()));
+
+		params.setUseOriogenAdjustedPValueFilter(this.bmdFilterMaxOriogenAdjustedPValueCheckBox.isSelected());
+		params.setOriogenAdjustedPValue(
+				Double.valueOf(this.bmdFilterMaxOriogenAdjustedPValueChangeValue.getText()));
+
+		params.setUseCurveFitGoFFilter(this.bmdFilterMaxCurveFitGoFCheckBox.isSelected());
+		params.setCurveFitGoF(Double.valueOf(this.bmdFilterMinCurveFitGoFChangeValue.getText()));
 
 		params.setRemoveMinGenesInSet(filterMinGenesInSetCheckbox.isSelected());
 		params.setMinGenesInSet(Integer.valueOf(this.minGenesInSetTextBox.getText()));
