@@ -2,6 +2,7 @@ package com.sciome.bmdexpress2.mvp.viewinterface.mainstage;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
@@ -62,6 +63,8 @@ public interface IProjectNavigationView
 			FileAnnotation fileAnnotation);
 
 	public ExperimentDescription showExperimentDescriptionDialog(ExperimentDescription parsedDescription, String filename);
+
+	public Map<DoseResponseExperiment, ExperimentDescription> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments);
 
 	File askForABMDFileToImport();
 

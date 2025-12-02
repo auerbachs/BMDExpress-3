@@ -1093,4 +1093,26 @@ public class ProjectNavigationPresenter
 		}
 	}
 
+	/**
+	 * Edit the experimental description metadata for multiple experiments (batch edit)
+	 */
+	public void editExperimentMetadataBatch(List<DoseResponseExperiment> experiments)
+	{
+		if (experiments == null || experiments.isEmpty())
+			return;
+
+		// Show batch dialog that displays all experiments
+		Map<DoseResponseExperiment, ExperimentDescription> results =
+				getView().showBatchExperimentDescriptionDialog(experiments);
+
+		// Apply updated descriptions to each experiment
+		if (results != null)
+		{
+			for (Map.Entry<DoseResponseExperiment, ExperimentDescription> entry : results.entrySet())
+			{
+				entry.getKey().setExperimentDescription(entry.getValue());
+			}
+		}
+	}
+
 }

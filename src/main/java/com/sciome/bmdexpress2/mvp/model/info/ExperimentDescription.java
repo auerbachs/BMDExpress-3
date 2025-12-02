@@ -2,7 +2,9 @@ package com.sciome.bmdexpress2.mvp.model.info;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -52,6 +54,48 @@ public class ExperimentDescription implements Serializable {
 		"Thyroid",
 		"Uterus"
 	);
+
+	public static final Map<String, List<String>> STRAINS_BY_SPECIES = createStrainMap();
+
+	private static Map<String, List<String>> createStrainMap() {
+		Map<String, List<String>> map = new HashMap<>();
+		map.put("Rat", Arrays.asList(
+			"Sprague-Dawley",
+			"Wistar",
+			"Long-Evans",
+			"Fischer 344",
+			"Brown Norway"
+		));
+		map.put("Mouse", Arrays.asList(
+			"C57BL/6",
+			"BALB/c",
+			"CD-1",
+			"FVB/N",
+			"129",
+			"DBA/2",
+			"NOD",
+			"SCID"
+		));
+		map.put("Human", Arrays.asList());
+		map.put("Rabbit", Arrays.asList());
+		map.put("Dog", Arrays.asList());
+		map.put("Monkey", Arrays.asList());
+		map.put("Zebrafish", Arrays.asList());
+		map.put("Guinea Pig", Arrays.asList());
+		map.put("Hamster", Arrays.asList());
+		map.put("Pig", Arrays.asList());
+		return map;
+	}
+
+	/**
+	 * Get list of strains for a given species
+	 */
+	public static List<String> getStrainsForSpecies(String species) {
+		if (species == null || !STRAINS_BY_SPECIES.containsKey(species)) {
+			return Arrays.asList();
+		}
+		return STRAINS_BY_SPECIES.get(species);
+	}
 
 	private String testArticle;  // Chemical/compound being tested (e.g., "Perfluoro-3-methoxypropanoic acid")
 	private String species;      // Animal species (e.g., "Rat", "Mouse", "Human")

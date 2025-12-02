@@ -54,7 +54,46 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onSelectExperiement(ExpressionDataSelectedEvent event)
 	{
-		getView().updateSelectionLabel(event.GetPayload().getName());
+		String labelText = event.GetPayload().getName();
+
+		// Add experiment metadata if available
+		if (event.GetPayload() instanceof com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment)
+		{
+			com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment experiment =
+					(com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment) event.GetPayload();
+			com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription desc = experiment.getExperimentDescription();
+
+			if (desc != null && desc.hasDescription())
+			{
+				StringBuilder metadata = new StringBuilder();
+				metadata.append(labelText);
+
+				if (desc.getTestArticle() != null && !desc.getTestArticle().isEmpty())
+				{
+					metadata.append(" | Test Article: ").append(desc.getTestArticle());
+				}
+				if (desc.getSpecies() != null && !desc.getSpecies().isEmpty())
+				{
+					metadata.append(" | Species: ").append(desc.getSpecies());
+				}
+				if (desc.getStrain() != null && !desc.getStrain().isEmpty())
+				{
+					metadata.append(" | Strain: ").append(desc.getStrain());
+				}
+				if (desc.getSex() != null && !desc.getSex().isEmpty())
+				{
+					metadata.append(" | Sex: ").append(desc.getSex());
+				}
+				if (desc.getOrgan() != null && !desc.getOrgan().isEmpty())
+				{
+					metadata.append(" | Organ: ").append(desc.getOrgan());
+				}
+
+				labelText = metadata.toString();
+			}
+		}
+
+		getView().updateSelectionLabel(labelText);
 	}
 
 	/*

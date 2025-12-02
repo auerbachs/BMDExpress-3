@@ -1,6 +1,9 @@
 package com.sciome.bmdexpress2.mvp.view.mainstage;
 
+import java.util.List;
+
 import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
+import com.sciome.bmdexpress2.util.ExperimentDescriptionParser;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -25,7 +28,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 
 	private TextField testArticleField;
 	private ComboBox<String> speciesField;
-	private TextField strainField;
+	private ComboBox<String> strainField;
 	private TextField sexField;
 	private ComboBox<String> organField;
 
@@ -36,6 +39,26 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 	 */
 	public ExperimentDescriptionDialog(Window owner, ExperimentDescription parsedDescription, String filename) {
 		this.initialDescription = parsedDescription != null ? parsedDescription : new ExperimentDescription();
+
+		// Parse filename to get defaults for any missing fields
+		ExperimentDescription parsedFromFilename = ExperimentDescriptionParser.parseFromString(filename);
+
+		// Merge: use initialDescription if available, otherwise use parsed values
+		if (initialDescription.getTestArticle() == null && parsedFromFilename.getTestArticle() != null) {
+			initialDescription.setTestArticle(parsedFromFilename.getTestArticle());
+		}
+		if (initialDescription.getSpecies() == null && parsedFromFilename.getSpecies() != null) {
+			initialDescription.setSpecies(parsedFromFilename.getSpecies());
+		}
+		if (initialDescription.getStrain() == null && parsedFromFilename.getStrain() != null) {
+			initialDescription.setStrain(parsedFromFilename.getStrain());
+		}
+		if (initialDescription.getSex() == null && parsedFromFilename.getSex() != null) {
+			initialDescription.setSex(parsedFromFilename.getSex());
+		}
+		if (initialDescription.getOrgan() == null && parsedFromFilename.getOrgan() != null) {
+			initialDescription.setOrgan(parsedFromFilename.getOrgan());
+		}
 
 		initOwner(owner);
 		initModality(Modality.APPLICATION_MODAL);
@@ -73,18 +96,52 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 		speciesField.setPrefWidth(300);
 		if (initialDescription.getSpecies() != null) {
 			speciesField.setValue(initialDescription.getSpecies());
+		} else {
+			speciesField.setValue("Rat");  // Default to Rat
 		}
 		grid.add(speciesLabel, 0, 2);
 		grid.add(speciesField, 1, 2);
 
 		// Strain
 		Label strainLabel = new Label("Strain:");
-		strainField = new TextField();
-		strainField.setPromptText("e.g., Sprague-Dawley, C57BL/6");
+		strainField = new ComboBox<>();
+		strainField.setEditable(true);
+		strainField.setPromptText("Select or enter strain");
 		strainField.setPrefWidth(300);
+
+		// Initialize strain dropdown based on selected species
+		String selectedSpecies = speciesField.getValue();
+		updateStrainOptions(selectedSpecies);
+
+		// Set initial strain value
 		if (initialDescription.getStrain() != null) {
-			strainField.setText(initialDescription.getStrain());
+			strainField.setValue(initialDescription.getStrain());
+		} else if ("Rat".equals(selectedSpecies)) {
+			strainField.setValue("Sprague-Dawley");  // Default to Sprague-Dawley for Rat
 		}
+
+		// Add listener to update strain options when species changes
+		speciesField.valueProperty().addListener((observable, oldValue, newValue) -> {
+			String currentStrain = strainField.getValue();
+			updateStrainOptions(newValue);
+
+			// If current strain is not in the new list and is not a custom value, clear it
+			if (currentStrain != null && !strainField.getItems().contains(currentStrain)) {
+				// Keep custom values, but if it was from old species vocabulary, clear it
+				if (oldValue != null && ExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
+					strainField.setValue(null);
+				}
+			}
+
+			// Set default strain for new species if nothing is selected
+			if (strainField.getValue() == null || strainField.getValue().isEmpty()) {
+				List<String> strains = ExperimentDescription.getStrainsForSpecies(newValue);
+				if (!strains.isEmpty()) {
+					strainField.setValue(strains.get(0));
+				}
+			}
+		});
+
 		grid.add(strainLabel, 0, 3);
 		grid.add(strainField, 1, 3);
 
@@ -95,6 +152,8 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 		sexField.setPrefWidth(300);
 		if (initialDescription.getSex() != null) {
 			sexField.setText(initialDescription.getSex());
+		} else {
+			sexField.setText("Male");  // Default to Male
 		}
 		grid.add(sexLabel, 0, 4);
 		grid.add(sexField, 1, 4);
@@ -108,6 +167,8 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 		organField.setPrefWidth(300);
 		if (initialDescription.getOrgan() != null) {
 			organField.setValue(initialDescription.getOrgan());
+		} else {
+			organField.setValue("Liver");  // Default to Liver
 		}
 		grid.add(organLabel, 0, 5);
 		grid.add(organField, 1, 5);
@@ -132,7 +193,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 				ExperimentDescription result = new ExperimentDescription();
 				result.setTestArticle(getTextOrNull(testArticleField.getText()));
 				result.setSpecies(getTextOrNull(speciesField.getValue()));
-				result.setStrain(getTextOrNull(strainField.getText()));
+				result.setStrain(getTextOrNull(strainField.getValue()));
 				result.setSex(getTextOrNull(sexField.getText()));
 				result.setOrgan(getTextOrNull(organField.getValue()));
 				return result;
@@ -152,6 +213,14 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 			return null;
 		}
 		return text.trim();
+	}
+
+	/**
+	 * Update strain dropdown options based on selected species
+	 */
+	private void updateStrainOptions(String species) {
+		List<String> strains = ExperimentDescription.getStrainsForSpecies(species);
+		strainField.setItems(FXCollections.observableArrayList(strains));
 	}
 
 	/**

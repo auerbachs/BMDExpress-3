@@ -62,6 +62,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
@@ -74,6 +75,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -109,6 +111,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private ComboBox<String> dataGroupCombo = new ComboBox<>();
 	private CheckListView<BMDExpressAnalysisDataSet> analysisCheckList = new CheckListView<>();
 	private VBox checkListVBox;
+	private GridPane metadataPanel;
 
 	ProjectNavigationPresenter presenter;
 	private boolean fireSelection = false;
@@ -149,6 +152,15 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		getChildren().add(hbox);
 		checkListVBox = new VBox();
 		getChildren().add(checkListVBox);
+
+		// Initialize metadata panel
+		metadataPanel = new GridPane();
+		metadataPanel.setHgap(10);
+		metadataPanel.setVgap(5);
+		metadataPanel.setStyle("-fx-padding: 10; -fx-border-color: lightgray; -fx-border-width: 1;");
+		metadataPanel.setVisible(false); // Hidden by default
+		getChildren().add(metadataPanel);
+
 		initializeAnalysisList();
 
 		checkAllButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -262,16 +274,32 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		// if (datasets.size() > 0)
 		// presenter.BMDExpressAnalysisDataSetSelected(datasets.get(0));
 
+		// Update metadata panel for experiments
 		if (datasets.size() == 1 && datasets.get(0) instanceof DoseResponseExperiment)
+		{
+			updateMetadataPanel((DoseResponseExperiment) datasets.get(0));
 			presenter.doseResponseExperimentSelected((DoseResponseExperiment) datasets.get(0));
+		}
 		else if (datasets.size() == 1)
+		{
+			clearMetadataPanel();
 			presenter.BMDExpressAnalysisDataSetSelected(datasets.get(0));
+		}
 		else if (datasets.size() > 1 && datasets.get(0) instanceof DoseResponseExperiment)
+		{
+			clearMetadataPanel();
 			presenter.multipleDataSetsSelected(datasets); // not combining dose response data
+		}
 		else if (datasets.size() > 1)
+		{
+			clearMetadataPanel();
 			presenter.multipleDataSetsSelected(datasets);
+		}
 		else
+		{
+			clearMetadataPanel();
 			presenter.clearMainDataView();
+		}
 
 	}
 
@@ -288,16 +316,32 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		// if (datasets.size() > 0)
 		// presenter.BMDExpressAnalysisDataSetSelected(datasets.get(0));
 
+		// Update metadata panel for experiments
 		if (datasets.size() == 1 && datasets.get(0) instanceof DoseResponseExperiment)
+		{
+			updateMetadataPanel((DoseResponseExperiment) datasets.get(0));
 			presenter.doseResponseExperimentSelectedForProcessing((DoseResponseExperiment) datasets.get(0));
+		}
 		else if (datasets.size() == 1)
+		{
+			clearMetadataPanel();
 			presenter.BMDExpressAnalysisDataSetSelectedForProcessing(datasets.get(0));
+		}
 		else if (datasets.size() > 1 && datasets.get(0) instanceof DoseResponseExperiment)
+		{
+			clearMetadataPanel();
 			presenter.multipleDataSetsSelectedForProcessing(datasets); // not combining dose response data
+		}
 		else if (datasets.size() > 1)
+		{
+			clearMetadataPanel();
 			presenter.multipleDataSetsSelectedForProcessing(datasets);
+		}
 		else
+		{
+			clearMetadataPanel();
 			presenter.clearMenuViewForProcessing();
+		}
 
 	}
 
@@ -1212,6 +1256,37 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		ContextMenu ctxMenu = new ContextMenu();
 
+		// Check if all selected items are DoseResponseExperiments
+		boolean allAreDoseResponseExperiments = true;
+		for (BMDExpressAnalysisDataSet item : selectedItems)
+		{
+			if (!(item instanceof DoseResponseExperiment))
+			{
+				allAreDoseResponseExperiments = false;
+				break;
+			}
+		}
+
+		// Add Edit Metadata option if all selections are DoseResponseExperiments
+		if (allAreDoseResponseExperiments && !selectedItems.isEmpty())
+		{
+			MenuItem editMetadataMenuItem = new MenuItem(EDIT_METADATA);
+			editMetadataMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+				@Override
+				public void handle(ActionEvent event)
+				{
+					// Convert to list of DoseResponseExperiments
+					List<DoseResponseExperiment> experiments = new ArrayList<>();
+					for (BMDExpressAnalysisDataSet item : selectedItems)
+					{
+						experiments.add((DoseResponseExperiment) item);
+					}
+					presenter.editExperimentMetadataBatch(experiments);
+				}
+			});
+			ctxMenu.getItems().add(editMetadataMenuItem);
+		}
+
 		ctxMenu.getItems().addAll(getCommonMultiSelectMenuItems());
 
 		ctxMenu.setOnAction(new EventHandler<ActionEvent>() {
@@ -1735,6 +1810,11 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		return ExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), parsedDescription, filename);
 	}
 
+	public Map<DoseResponseExperiment, ExperimentDescription> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments)
+	{
+		return BatchExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), experiments);
+	}
+
 	@Override
 	public void showMatrixPreview(String header, MatrixData matrixData)
 	{
@@ -1968,6 +2048,79 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 			});
 		});
 
+	}
+
+	/**
+	 * Update metadata panel with experiment description
+	 */
+	private void updateMetadataPanel(DoseResponseExperiment experiment)
+	{
+		metadataPanel.getChildren().clear();
+
+		ExperimentDescription desc = experiment.getExperimentDescription();
+		System.out.println("DEBUG: updateMetadataPanel called for: " + experiment.getName());
+		System.out.println("DEBUG: ExperimentDescription: " + desc);
+		if (desc != null)
+		{
+			System.out.println("DEBUG: hasDescription(): " + desc.hasDescription());
+			System.out.println("DEBUG: TestArticle: " + desc.getTestArticle());
+			System.out.println("DEBUG: Species: " + desc.getSpecies());
+			System.out.println("DEBUG: Strain: " + desc.getStrain());
+			System.out.println("DEBUG: Sex: " + desc.getSex());
+			System.out.println("DEBUG: Organ: " + desc.getOrgan());
+		}
+		if (desc == null || !desc.hasDescription())
+		{
+			System.out.println("DEBUG: No metadata - hiding panel");
+			metadataPanel.setVisible(false);
+			return;
+		}
+
+		int row = 0;
+
+		// Add title
+		Label titleLabel = new Label("Experiment Metadata");
+		titleLabel.setStyle("-fx-font-weight: bold;");
+		metadataPanel.add(titleLabel, 0, row++, 2, 1);
+
+		// Add metadata fields
+		if (desc.getTestArticle() != null && !desc.getTestArticle().isEmpty())
+		{
+			metadataPanel.add(new Label("Test Article:"), 0, row);
+			metadataPanel.add(new Label(desc.getTestArticle()), 1, row++);
+		}
+		if (desc.getSpecies() != null && !desc.getSpecies().isEmpty())
+		{
+			metadataPanel.add(new Label("Species:"), 0, row);
+			metadataPanel.add(new Label(desc.getSpecies()), 1, row++);
+		}
+		if (desc.getStrain() != null && !desc.getStrain().isEmpty())
+		{
+			metadataPanel.add(new Label("Strain:"), 0, row);
+			metadataPanel.add(new Label(desc.getStrain()), 1, row++);
+		}
+		if (desc.getSex() != null && !desc.getSex().isEmpty())
+		{
+			metadataPanel.add(new Label("Sex:"), 0, row);
+			metadataPanel.add(new Label(desc.getSex()), 1, row++);
+		}
+		if (desc.getOrgan() != null && !desc.getOrgan().isEmpty())
+		{
+			metadataPanel.add(new Label("Organ:"), 0, row);
+			metadataPanel.add(new Label(desc.getOrgan()), 1, row++);
+		}
+
+		System.out.println("DEBUG: Showing metadata panel with " + row + " rows");
+		metadataPanel.setVisible(true);
+	}
+
+	/**
+	 * Clear and hide metadata panel
+	 */
+	private void clearMetadataPanel()
+	{
+		metadataPanel.getChildren().clear();
+		metadataPanel.setVisible(false);
 	}
 
 }
