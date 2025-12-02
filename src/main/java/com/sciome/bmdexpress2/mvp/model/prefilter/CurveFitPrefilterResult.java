@@ -45,6 +45,8 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 
 	private List<Float> noelLoelPValues;
 
+	private PrefilterResult upstreamPrefilterResult;
+
 	@JsonIgnore
 	private transient String genes;
 	@JsonIgnore
@@ -73,6 +75,16 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 	public void setID(Long id)
 	{
 		this.id = id;
+	}
+
+	public PrefilterResult getUpstreamPrefilterResult()
+	{
+		return upstreamPrefilterResult;
+	}
+
+	public void setUpstreamPrefilterResult(PrefilterResult upstreamPrefilterResult)
+	{
+		this.upstreamPrefilterResult = upstreamPrefilterResult;
 	}
 
 	public void setProbeResponse(ProbeResponse probeResponse)
@@ -126,12 +138,6 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 	public String getGeneSymbols()
 	{
 		return geneSymbols;
-	}
-
-	@Override
-	public double getpValue()
-	{
-		return pValue;
 	}
 
 	@JsonIgnore
@@ -319,11 +325,58 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 		this.noelDose = noelDose;
 	}
 
-	@JsonIgnore
 	@Override
-	public double getAdjustedPValue()
+	public double getAnovapValue()
 	{
+		if (upstreamPrefilterResult instanceof OneWayANOVAResult)
+			return ((OneWayANOVAResult) upstreamPrefilterResult).getAnovapValue();
 		return Double.NaN;
+	}
+
+	@Override
+	public double getAnovaAdjustedPValue()
+	{
+		if (upstreamPrefilterResult instanceof OneWayANOVAResult)
+			return ((OneWayANOVAResult) upstreamPrefilterResult).getAnovaAdjustedPValue();
+		return Double.NaN;
+	}
+
+	@Override
+	public double getWilliamspValue()
+	{
+		if (upstreamPrefilterResult instanceof WilliamsTrendResult)
+			return ((WilliamsTrendResult) upstreamPrefilterResult).getWilliamspValue();
+		return Double.NaN;
+	}
+
+	@Override
+	public double getWiliamsAdjustedPValue()
+	{
+		if (upstreamPrefilterResult instanceof WilliamsTrendResult)
+			return ((WilliamsTrendResult) upstreamPrefilterResult).getWiliamsAdjustedPValue();
+		return Double.NaN;
+	}
+
+	@Override
+	public double getOriogenpValue()
+	{
+		if (upstreamPrefilterResult instanceof OriogenResult)
+			return ((OriogenResult) upstreamPrefilterResult).getpValue();
+		return Double.NaN;
+	}
+
+	@Override
+	public double getOriogenAdjustedPValue()
+	{
+		if (upstreamPrefilterResult instanceof OriogenResult)
+			return ((OriogenResult) upstreamPrefilterResult).getAdjustedPValue();
+		return Double.NaN;
+	}
+
+	@Override
+	public double getCurveFitGoF()
+	{
+		return pValue;
 	}
 
 }

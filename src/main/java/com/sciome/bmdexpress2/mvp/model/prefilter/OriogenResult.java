@@ -21,32 +21,32 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= -4095025460096134903L;
+	private static final long serialVersionUID = -4095025460096134903L;
 
-	private ProbeResponse				probeResponse;
-	private double						pValue;
-	private double						adjustedPValue;
-	private Float						bestFoldChange;
-	private Float						loelDose;
-	private Float						noelDose;
+	private ProbeResponse probeResponse;
+	private double pValue;
+	private double adjustedPValue;
+	private Float bestFoldChange;
+	private Float loelDose;
+	private Float noelDose;
 
-	private List<Float>					foldChanges;
-	private List<Float>					noelLoelPValues;
+	private List<Float> foldChanges;
+	private List<Float> noelLoelPValues;
 
 	@JsonIgnore
-	private transient String			genes;
+	private transient String genes;
 	@JsonIgnore
-	private transient String			geneSymbols;
+	private transient String geneSymbols;
 	@JsonIgnore
-	private transient Set<String>		geneSymbolSet;
+	private transient Set<String> geneSymbolSet;
 
 	// row data for the table view.
 	@JsonIgnore
-	protected transient List<Object>	row;
+	protected transient List<Object> row;
 
-	private Long						id;
+	private Long id;
 
-	private String						profile;
+	private String profile;
 
 	public ProbeResponse getProbeResponse()
 	{
@@ -294,5 +294,54 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	public void setNoelDose(Float noelDose)
 	{
 		this.noelDose = noelDose;
+	}
+
+	@Override
+	public double getAnovapValue()
+	{
+		return Double.NaN;
+	}
+
+	@Override
+	public double getAnovaAdjustedPValue()
+	{
+		return Double.NaN;
+	}
+
+	@Override
+	public double getWilliamspValue()
+	{
+		return Double.NaN;
+	}
+
+	@Override
+	public double getWiliamsAdjustedPValue()
+	{
+		return Double.NaN;
+	}
+
+	@Override
+	public double getOriogenpValue()
+	{
+		return pValue;
+	}
+
+	@Override
+	public double getOriogenAdjustedPValue()
+	{
+		return adjustedPValue;
+	}
+
+	@Override
+	public double getCurveFitGoF()
+	{
+		return Double.NaN;
+	}
+
+	@Override
+	public PrefilterResult getUpstreamPrefilterResult()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
