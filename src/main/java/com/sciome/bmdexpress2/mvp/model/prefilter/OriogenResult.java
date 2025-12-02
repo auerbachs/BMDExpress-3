@@ -109,11 +109,6 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 		return NumberManager.negLog10(this.adjustedPValue);
 	}
 
-	public double getAdjustedPValue()
-	{
-		return adjustedPValue;
-	}
-
 	public void setAdjustedPValue(double adjustedPValue)
 	{
 		this.adjustedPValue = adjustedPValue;
@@ -343,5 +338,19 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Double getPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.pValue;
+	}
+
+	@Override
+	public Double getAdjustedPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.adjustedPValue;
 	}
 }

@@ -41,6 +41,10 @@ public interface PrefilterResult
 
 	public void setNoelLoelPValues(List<Float> pvalues);
 
+	public Double getPValue();
+
+	public Double getAdjustedPValue();
+
 	public Double getAnovapValue();
 
 	public Double getAnovaAdjustedPValue();

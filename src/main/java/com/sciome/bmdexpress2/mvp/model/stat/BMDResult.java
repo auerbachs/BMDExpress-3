@@ -57,6 +57,9 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public static final String BMDU_BMDL_RATIO = "Best BMDU/BMDL";
 	public static final String BMDU_BMD_RATIO = "Best BMDU/BMD";
 
+	public static final String PREFILTER_PVALUE = "Prefilter P-Value";
+	public static final String PREFILTER_ADJUSTEDPVALUE = "Prefilter Adjusted P-Value";
+
 	public static final String ANOVA_PREFILTER_PVALUE = "One-way ANOVA Prefilter P-Value";
 	public static final String ANOVA_PREFILTER_ADJUSTEDPVALUE = "One-way ANOVA Prefilter Adjusted P-Value";
 	public static final String WILLIAMS_PREFILTER_PVALUE = "Williams Trend Test Prefilter P-Value";
@@ -236,6 +239,10 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 			columnHeader.add(WAUC);
 		// Commenting out for now
 		// columnHeader.add(LOG_WAUC);
+
+		columnHeader.add(PREFILTER_PVALUE);
+		columnHeader.add(PREFILTER_ADJUSTEDPVALUE);
+
 		columnHeader.add(ANOVA_PREFILTER_PVALUE);
 		columnHeader.add(ANOVA_PREFILTER_ADJUSTEDPVALUE);
 
@@ -401,15 +408,15 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 			// if(logwAUCList != null)
 			// logwAUC = logwAUCList.get(index);
 
-			probeStatResult.createRowData(probeToGeneMap,
-
-					prefilter == null ? Double.NaN : prefilter.getAnovaAdjustedPValue(),
-					prefilter == null ? Double.NaN : prefilter.getAnovapValue(),
-					prefilter == null ? Double.NaN : prefilter.getWiliamsAdjustedPValue(),
-					prefilter == null ? Double.NaN : prefilter.getWilliamspValue(),
-					prefilter == null ? Double.NaN : prefilter.getOriogenAdjustedPValue(),
-					prefilter == null ? Double.NaN : prefilter.getOriogenpValue(),
-					prefilter == null ? Double.NaN : prefilter.getCurveFitGoF(),
+			probeStatResult.createRowData(probeToGeneMap, prefilter.getPValue(),
+					prefilter.getAdjustedPValue(),
+					prefilter == null ? null : prefilter.getAnovaAdjustedPValue(),
+					prefilter == null ? null : prefilter.getAnovapValue(),
+					prefilter == null ? null : prefilter.getWiliamsAdjustedPValue(),
+					prefilter == null ? null : prefilter.getWilliamspValue(),
+					prefilter == null ? null : prefilter.getOriogenAdjustedPValue(),
+					prefilter == null ? null : prefilter.getOriogenpValue(),
+					prefilter == null ? null : prefilter.getCurveFitGoF(),
 
 					bestFoldChange, foldChanges, loel, noel, wAUC);
 			index++;

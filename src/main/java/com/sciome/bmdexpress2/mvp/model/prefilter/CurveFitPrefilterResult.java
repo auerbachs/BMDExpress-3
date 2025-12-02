@@ -379,4 +379,17 @@ public class CurveFitPrefilterResult extends BMDExpressAnalysisRow
 		return pValue;
 	}
 
+	@Override
+	public Double getPValue()
+	{
+		return this.pValue;
+	}
+
+	@Override
+	public Double getAdjustedPValue()
+	{
+		return null;
+
+	}
+
 }

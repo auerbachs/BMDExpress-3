@@ -149,11 +149,6 @@ public class OneWayANOVAResult extends BMDExpressAnalysisRow
 		return NumberManager.negLog10(this.adjustedPValue);
 	}
 
-	public double getAdjustedPValue()
-	{
-		return adjustedPValue;
-	}
-
 	public void setAdjustedPValue(double adjustedPValue)
 	{
 		this.adjustedPValue = adjustedPValue;
@@ -376,4 +371,18 @@ public class OneWayANOVAResult extends BMDExpressAnalysisRow
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Double getPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.pValue;
+	}
+
+	@Override
+	public Double getAdjustedPValue()
+	{
+		return adjustedPValue;
+	}
+
 }

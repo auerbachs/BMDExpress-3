@@ -149,9 +149,10 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 	// calculate columns and rows. The purpose of this is to agregate all the results
 	// so the data can be viewed by a table.
 	public void createRowData(Map<String, ReferenceGeneAnnotation> referenceGeneAnnotations,
-			Double anovaAdjustedPValue, Double anovaPValue, Double williamsAdjustedPValue,
-			Double williamsPValue, Double oriogenAdjustedPValue, Double oriogenPValue, Double curveFitGoF,
-			Double bestFoldChange, List<Float> foldChanges, Float loel, Float noel, Float wAUC)
+			Double prefilterPValue, Double prefilterAdjustedPValue, Double anovaAdjustedPValue,
+			Double anovaPValue, Double williamsAdjustedPValue, Double williamsPValue,
+			Double oriogenAdjustedPValue, Double oriogenPValue, Double curveFitGoF, Double bestFoldChange,
+			List<Float> foldChanges, Float loel, Float noel, Float wAUC)
 	{
 		row = new ArrayList<Object>();
 		row.add(probeResponse.getProbe().getId());
@@ -272,6 +273,8 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(wAUC);
 		// row.add(logwAUC);
 
+		row.add(prefilterPValue);
+		row.add(prefilterAdjustedPValue);
 		row.add(anovaPValue);
 		this.anovaPrefilterrefilterPvalue = anovaPValue;
 

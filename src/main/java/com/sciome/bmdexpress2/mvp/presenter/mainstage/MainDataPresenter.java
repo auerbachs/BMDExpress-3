@@ -91,7 +91,14 @@ public class MainDataPresenter extends PresenterBase<IMainDataView>
 	@Subscribe
 	public void onSelectBMDResultAnalysis(BMDAnalysisDataSelectedEvent event)
 	{
-		getView().loadBMDResultAnalysis(event.GetPayload());
+		try
+		{
+			getView().loadBMDResultAnalysis(event.GetPayload());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Subscribe
