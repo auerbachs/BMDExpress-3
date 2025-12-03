@@ -289,7 +289,6 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 
 		row.add(oriogenPValue);
 		this.oriogenPrefilterPvalue = oriogenPValue;
-
 		row.add(oriogenAdjustedPValue);
 		this.oriogenPrefilterAdjustedPValue = oriogenAdjustedPValue;
 

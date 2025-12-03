@@ -301,13 +301,13 @@ public class WilliamsTrendResult extends BMDExpressAnalysisRow
 	@Override
 	public Double getWilliamspValue()
 	{
-		return adjustedPValue;
+		return pValue;
 	}
 
 	@Override
 	public Double getWiliamsAdjustedPValue()
 	{
-		return pValue;
+		return adjustedPValue;
 	}
 
 	@Override
