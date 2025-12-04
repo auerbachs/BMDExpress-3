@@ -21,7 +21,9 @@ import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
+import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
@@ -105,7 +107,6 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private final String EXPORT_BMDANALYSIS = "Export BMD Analysis Data";
 	private final String SPREADSHEET_VIEW = "Spreedsheet View";
 	private final String REMOVE_ALL = "Remove All Selected Items";
-	private final String EDIT_METADATA = "Edit Metadata";
 
 	private Map<String, List<BMDExpressAnalysisDataSet>> dataSetMap = new HashMap<>();
 	private ComboBox<String> dataGroupCombo = new ComboBox<>();
@@ -1256,37 +1257,6 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		ContextMenu ctxMenu = new ContextMenu();
 
-		// Check if all selected items are DoseResponseExperiments
-		boolean allAreDoseResponseExperiments = true;
-		for (BMDExpressAnalysisDataSet item : selectedItems)
-		{
-			if (!(item instanceof DoseResponseExperiment))
-			{
-				allAreDoseResponseExperiments = false;
-				break;
-			}
-		}
-
-		// Add Edit Metadata option if all selections are DoseResponseExperiments
-		if (allAreDoseResponseExperiments && !selectedItems.isEmpty())
-		{
-			MenuItem editMetadataMenuItem = new MenuItem(EDIT_METADATA);
-			editMetadataMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-				@Override
-				public void handle(ActionEvent event)
-				{
-					// Convert to list of DoseResponseExperiments
-					List<DoseResponseExperiment> experiments = new ArrayList<>();
-					for (BMDExpressAnalysisDataSet item : selectedItems)
-					{
-						experiments.add((DoseResponseExperiment) item);
-					}
-					presenter.editExperimentMetadataBatch(experiments);
-				}
-			});
-			ctxMenu.getItems().add(editMetadataMenuItem);
-		}
-
 		ctxMenu.getItems().addAll(getCommonMultiSelectMenuItems());
 
 		ctxMenu.setOnAction(new EventHandler<ActionEvent>() {
@@ -1314,17 +1284,6 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private ContextMenu showDoseExperimentContextMenu(DoseResponseExperiment doseResponseExperiment)
 	{
 		ContextMenu ctxMenu = new ContextMenu();
-
-		// Edit Metadata menu item
-		MenuItem editMetadataMenuItem = new MenuItem(EDIT_METADATA);
-		editMetadataMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event)
-			{
-				handle_DoseResponseExperimentEditMetadata(doseResponseExperiment);
-			}
-		});
-		ctxMenu.getItems().add(editMetadataMenuItem);
 
 		Menu showAnnotationMenu = new Menu("Show Annotations");
 		MenuItem probeToGenesMenuItem = new MenuItem("Probe to Genes");
@@ -1464,11 +1423,6 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 		presenter.changeAnalysisName(doseResponseExperiment, newName);
 		analysisCheckList.refresh();
-	}
-
-	private void handle_DoseResponseExperimentEditMetadata(DoseResponseExperiment doseResponseExperiment)
-	{
-		presenter.editExperimentMetadata(doseResponseExperiment);
 	}
 
 	private void handle_DoseResponseViewGenesToProbe(DoseResponseExperiment doseResponseExperiment)
@@ -1805,12 +1759,12 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	}
 
 	@Override
-	public ExperimentDescription showExperimentDescriptionDialog(ExperimentDescription parsedDescription, String filename)
+	public ExperimentDescriptionBase showExperimentDescriptionDialog(ExperimentDescriptionBase parsedDescription, String filename)
 	{
 		return ExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), parsedDescription, filename);
 	}
 
-	public Map<DoseResponseExperiment, ExperimentDescription> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments)
+	public Map<DoseResponseExperiment, ExperimentDescriptionBase> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments)
 	{
 		return BatchExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), experiments);
 	}
@@ -2057,21 +2011,10 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		metadataPanel.getChildren().clear();
 
-		ExperimentDescription desc = experiment.getExperimentDescription();
-		System.out.println("DEBUG: updateMetadataPanel called for: " + experiment.getName());
-		System.out.println("DEBUG: ExperimentDescription: " + desc);
-		if (desc != null)
-		{
-			System.out.println("DEBUG: hasDescription(): " + desc.hasDescription());
-			System.out.println("DEBUG: TestArticle: " + desc.getTestArticle());
-			System.out.println("DEBUG: Species: " + desc.getSpecies());
-			System.out.println("DEBUG: Strain: " + desc.getStrain());
-			System.out.println("DEBUG: Sex: " + desc.getSex());
-			System.out.println("DEBUG: Organ: " + desc.getOrgan());
-		}
+		ExperimentDescriptionBase desc = experiment.getExperimentDescription();
+
 		if (desc == null || !desc.hasDescription())
 		{
-			System.out.println("DEBUG: No metadata - hiding panel");
 			metadataPanel.setVisible(false);
 			return;
 		}
@@ -2083,34 +2026,68 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		titleLabel.setStyle("-fx-font-weight: bold;");
 		metadataPanel.add(titleLabel, 0, row++, 2, 1);
 
-		// Add metadata fields
-		if (desc.getTestArticle() != null && !desc.getTestArticle().isEmpty())
+		// Add experiment type
+		metadataPanel.add(new Label("Type:"), 0, row);
+		metadataPanel.add(new Label(desc.getExperimentType()), 1, row++);
+
+		// Add test article fields
+		if (desc.getTestArticle() != null && desc.getTestArticle().getPrimaryIdentifier() != null)
 		{
 			metadataPanel.add(new Label("Test Article:"), 0, row);
-			metadataPanel.add(new Label(desc.getTestArticle()), 1, row++);
-		}
-		if (desc.getSpecies() != null && !desc.getSpecies().isEmpty())
-		{
-			metadataPanel.add(new Label("Species:"), 0, row);
-			metadataPanel.add(new Label(desc.getSpecies()), 1, row++);
-		}
-		if (desc.getStrain() != null && !desc.getStrain().isEmpty())
-		{
-			metadataPanel.add(new Label("Strain:"), 0, row);
-			metadataPanel.add(new Label(desc.getStrain()), 1, row++);
-		}
-		if (desc.getSex() != null && !desc.getSex().isEmpty())
-		{
-			metadataPanel.add(new Label("Sex:"), 0, row);
-			metadataPanel.add(new Label(desc.getSex()), 1, row++);
-		}
-		if (desc.getOrgan() != null && !desc.getOrgan().isEmpty())
-		{
-			metadataPanel.add(new Label("Organ:"), 0, row);
-			metadataPanel.add(new Label(desc.getOrgan()), 1, row++);
+			metadataPanel.add(new Label(desc.getTestArticle().getPrimaryIdentifier()), 1, row++);
 		}
 
-		System.out.println("DEBUG: Showing metadata panel with " + row + " rows");
+		// Add type-specific fields
+		if (desc instanceof InVivoExperimentDescription)
+		{
+			InVivoExperimentDescription inVivoDesc = (InVivoExperimentDescription) desc;
+
+			if (inVivoDesc.getSpecies() != null && !inVivoDesc.getSpecies().isEmpty())
+			{
+				metadataPanel.add(new Label("Species:"), 0, row);
+				metadataPanel.add(new Label(inVivoDesc.getSpecies()), 1, row++);
+			}
+			if (inVivoDesc.getStrain() != null && !inVivoDesc.getStrain().isEmpty())
+			{
+				metadataPanel.add(new Label("Strain:"), 0, row);
+				metadataPanel.add(new Label(inVivoDesc.getStrain()), 1, row++);
+			}
+			if (inVivoDesc.getSex() != null && !inVivoDesc.getSex().isEmpty())
+			{
+				metadataPanel.add(new Label("Sex:"), 0, row);
+				metadataPanel.add(new Label(inVivoDesc.getSex()), 1, row++);
+			}
+			if (inVivoDesc.getOrgan() != null && !inVivoDesc.getOrgan().isEmpty())
+			{
+				metadataPanel.add(new Label("Organ:"), 0, row);
+				metadataPanel.add(new Label(inVivoDesc.getOrgan()), 1, row++);
+			}
+		}
+		else if (desc instanceof InVitroExperimentDescription)
+		{
+			InVitroExperimentDescription inVitroDesc = (InVitroExperimentDescription) desc;
+
+			if (inVitroDesc.getCellLine() != null && !inVitroDesc.getCellLine().isEmpty())
+			{
+				metadataPanel.add(new Label("Cell Line:"), 0, row);
+				metadataPanel.add(new Label(inVitroDesc.getCellLine()), 1, row++);
+			}
+		}
+
+		// Add route of administration if present
+		if (desc.getRouteOfAdministration() != null)
+		{
+			metadataPanel.add(new Label("Route:"), 0, row);
+			metadataPanel.add(new Label(desc.getRouteOfAdministration().getFormattedString()), 1, row++);
+		}
+
+		// Add study duration if present
+		if (desc.getStudyDuration() != null && !desc.getStudyDuration().isEmpty())
+		{
+			metadataPanel.add(new Label("Duration:"), 0, row);
+			metadataPanel.add(new Label(desc.getStudyDuration()), 1, row++);
+		}
+
 		metadataPanel.setVisible(true);
 	}
 

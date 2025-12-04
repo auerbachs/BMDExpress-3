@@ -16,7 +16,7 @@ import com.sciome.bmdexpress2.mvp.model.CombinedDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
@@ -190,14 +190,11 @@ public class ProjectNavigationPresenter
 		for (DoseResponseExperiment experiment : experiments)
 		{
 			// Get auto-parsed description from the experiment
-			ExperimentDescription parsedDescription = experiment.getExperimentDescription();
-			if (parsedDescription == null)
-			{
-				parsedDescription = new ExperimentDescription();
-			}
+			ExperimentDescriptionBase parsedDescription = experiment.getExperimentDescription();
+			// Dialog will create default if null
 
 			// Show dialog to review/edit metadata
-			ExperimentDescription finalDescription = getView().showExperimentDescriptionDialog(
+			ExperimentDescriptionBase finalDescription = getView().showExperimentDescriptionDialog(
 					parsedDescription, experiment.getName());
 
 			// Update experiment with user-edited description
@@ -1075,15 +1072,11 @@ public class ProjectNavigationPresenter
 		if (experiment == null)
 			return;
 
-		// Get current description (or create new if none exists)
-		ExperimentDescription currentDescription = experiment.getExperimentDescription();
-		if (currentDescription == null)
-		{
-			currentDescription = new ExperimentDescription();
-		}
+		// Get current description (dialog will create default if none exists)
+		ExperimentDescriptionBase currentDescription = experiment.getExperimentDescription();
 
 		// Show dialog to edit metadata
-		ExperimentDescription updatedDescription = getView().showExperimentDescriptionDialog(
+		ExperimentDescriptionBase updatedDescription = getView().showExperimentDescriptionDialog(
 				currentDescription, experiment.getName());
 
 		// Update experiment with edited description
@@ -1102,13 +1095,13 @@ public class ProjectNavigationPresenter
 			return;
 
 		// Show batch dialog that displays all experiments
-		Map<DoseResponseExperiment, ExperimentDescription> results =
+		Map<DoseResponseExperiment, ExperimentDescriptionBase> results =
 				getView().showBatchExperimentDescriptionDialog(experiments);
 
 		// Apply updated descriptions to each experiment
 		if (results != null)
 		{
-			for (Map.Entry<DoseResponseExperiment, ExperimentDescription> entry : results.entrySet())
+			for (Map.Entry<DoseResponseExperiment, ExperimentDescriptionBase> entry : results.entrySet())
 			{
 				entry.getKey().setExperimentDescription(entry.getValue());
 			}

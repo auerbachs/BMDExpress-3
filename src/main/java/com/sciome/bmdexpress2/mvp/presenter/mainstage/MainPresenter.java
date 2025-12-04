@@ -61,32 +61,51 @@ public class MainPresenter extends PresenterBase<IMainView>
 		{
 			com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment experiment =
 					(com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment) event.GetPayload();
-			com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription desc = experiment.getExperimentDescription();
+			com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase desc = experiment.getExperimentDescription();
 
 			if (desc != null && desc.hasDescription())
 			{
 				StringBuilder metadata = new StringBuilder();
 				metadata.append(labelText);
 
-				if (desc.getTestArticle() != null && !desc.getTestArticle().isEmpty())
+				// Test article identifier
+				if (desc.getTestArticle() != null && desc.getTestArticle().getPrimaryIdentifier() != null)
 				{
-					metadata.append(" | Test Article: ").append(desc.getTestArticle());
+					metadata.append(" | Test Article: ").append(desc.getTestArticle().getPrimaryIdentifier());
 				}
-				if (desc.getSpecies() != null && !desc.getSpecies().isEmpty())
+
+				// Type-specific fields
+				if (desc instanceof com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription)
 				{
-					metadata.append(" | Species: ").append(desc.getSpecies());
+					com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription inVivoDesc =
+							(com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription) desc;
+
+					if (inVivoDesc.getSpecies() != null && !inVivoDesc.getSpecies().isEmpty())
+					{
+						metadata.append(" | Species: ").append(inVivoDesc.getSpecies());
+					}
+					if (inVivoDesc.getStrain() != null && !inVivoDesc.getStrain().isEmpty())
+					{
+						metadata.append(" | Strain: ").append(inVivoDesc.getStrain());
+					}
+					if (inVivoDesc.getSex() != null && !inVivoDesc.getSex().isEmpty())
+					{
+						metadata.append(" | Sex: ").append(inVivoDesc.getSex());
+					}
+					if (inVivoDesc.getOrgan() != null && !inVivoDesc.getOrgan().isEmpty())
+					{
+						metadata.append(" | Organ: ").append(inVivoDesc.getOrgan());
+					}
 				}
-				if (desc.getStrain() != null && !desc.getStrain().isEmpty())
+				else if (desc instanceof com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription)
 				{
-					metadata.append(" | Strain: ").append(desc.getStrain());
-				}
-				if (desc.getSex() != null && !desc.getSex().isEmpty())
-				{
-					metadata.append(" | Sex: ").append(desc.getSex());
-				}
-				if (desc.getOrgan() != null && !desc.getOrgan().isEmpty())
-				{
-					metadata.append(" | Organ: ").append(desc.getOrgan());
+					com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription inVitroDesc =
+							(com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription) desc;
+
+					if (inVitroDesc.getCellLine() != null && !inVitroDesc.getCellLine().isEmpty())
+					{
+						metadata.append(" | Cell Line: ").append(inVitroDesc.getCellLine());
+					}
 				}
 
 				labelText = metadata.toString();

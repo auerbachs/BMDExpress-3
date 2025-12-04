@@ -2,8 +2,9 @@ package com.sciome.bmdexpress2.mvp.view.mainstage;
 
 import java.util.List;
 
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
-import com.sciome.bmdexpress2.util.ExperimentDescriptionParser;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
+import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.TestArticleIdentifier;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -23,8 +24,9 @@ import javafx.stage.Window;
 /**
  * Dialog for entering or editing experimental metadata.
  * Displays auto-parsed values if available and allows user editing.
+ * TODO: Expand to support full hierarchy (In Vivo/In Vitro, routes, etc.)
  */
-public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
+public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBase> {
 
 	private TextField testArticleField;
 	private ComboBox<String> speciesField;
@@ -32,32 +34,21 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 	private TextField sexField;
 	private ComboBox<String> organField;
 
-	private ExperimentDescription initialDescription;
+	private InVivoExperimentDescription initialDescription;
 
 	/**
 	 * Create dialog with auto-parsed description
 	 */
-	public ExperimentDescriptionDialog(Window owner, ExperimentDescription parsedDescription, String filename) {
-		this.initialDescription = parsedDescription != null ? parsedDescription : new ExperimentDescription();
-
-		// Parse filename to get defaults for any missing fields
-		ExperimentDescription parsedFromFilename = ExperimentDescriptionParser.parseFromString(filename);
-
-		// Merge: use initialDescription if available, otherwise use parsed values
-		if (initialDescription.getTestArticle() == null && parsedFromFilename.getTestArticle() != null) {
-			initialDescription.setTestArticle(parsedFromFilename.getTestArticle());
-		}
-		if (initialDescription.getSpecies() == null && parsedFromFilename.getSpecies() != null) {
-			initialDescription.setSpecies(parsedFromFilename.getSpecies());
-		}
-		if (initialDescription.getStrain() == null && parsedFromFilename.getStrain() != null) {
-			initialDescription.setStrain(parsedFromFilename.getStrain());
-		}
-		if (initialDescription.getSex() == null && parsedFromFilename.getSex() != null) {
-			initialDescription.setSex(parsedFromFilename.getSex());
-		}
-		if (initialDescription.getOrgan() == null && parsedFromFilename.getOrgan() != null) {
-			initialDescription.setOrgan(parsedFromFilename.getOrgan());
+	public ExperimentDescriptionDialog(Window owner, ExperimentDescriptionBase parsedDescription, String filename) {
+		// Convert to InVivoExperimentDescription if needed
+		if (parsedDescription instanceof InVivoExperimentDescription) {
+			this.initialDescription = (InVivoExperimentDescription) parsedDescription;
+		} else if (parsedDescription == null) {
+			this.initialDescription = new InVivoExperimentDescription();
+		} else {
+			// If it's InVitro, create a new InVivo for now
+			// TODO: Support InVitro in dialog
+			this.initialDescription = new InVivoExperimentDescription();
 		}
 
 		initOwner(owner);
@@ -81,29 +72,28 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 		testArticleField = new TextField();
 		testArticleField.setPromptText("e.g., Perfluoro-3-methoxypropanoic acid");
 		testArticleField.setPrefWidth(300);
-		if (initialDescription.getTestArticle() != null) {
-			testArticleField.setText(initialDescription.getTestArticle());
+		if (initialDescription.getTestArticle() != null && initialDescription.getTestArticle().getName() != null) {
+			testArticleField.setText(initialDescription.getTestArticle().getName());
 		}
 		grid.add(testArticleLabel, 0, 1);
 		grid.add(testArticleField, 1, 1);
 
 		// Species
-		Label speciesLabel = new Label("Species:");
+		Label speciesLabel = new Label("Species: *");
 		speciesField = new ComboBox<>();
-		speciesField.setItems(FXCollections.observableArrayList(ExperimentDescription.SPECIES_VOCABULARY));
+		speciesField.setItems(FXCollections.observableArrayList(InVivoExperimentDescription.SPECIES_VOCABULARY));
 		speciesField.setEditable(true);
 		speciesField.setPromptText("Select or enter species");
 		speciesField.setPrefWidth(300);
 		if (initialDescription.getSpecies() != null) {
 			speciesField.setValue(initialDescription.getSpecies());
-		} else {
-			speciesField.setValue("Rat");  // Default to Rat
 		}
+		// No default value - user must select
 		grid.add(speciesLabel, 0, 2);
 		grid.add(speciesField, 1, 2);
 
 		// Strain
-		Label strainLabel = new Label("Strain:");
+		Label strainLabel = new Label("Strain: *");
 		strainField = new ComboBox<>();
 		strainField.setEditable(true);
 		strainField.setPromptText("Select or enter strain");
@@ -113,12 +103,11 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 		String selectedSpecies = speciesField.getValue();
 		updateStrainOptions(selectedSpecies);
 
-		// Set initial strain value
+		// Set initial strain value only if from file
 		if (initialDescription.getStrain() != null) {
 			strainField.setValue(initialDescription.getStrain());
-		} else if ("Rat".equals(selectedSpecies)) {
-			strainField.setValue("Sprague-Dawley");  // Default to Sprague-Dawley for Rat
 		}
+		// No default value - user must select
 
 		// Add listener to update strain options when species changes
 		speciesField.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -128,53 +117,44 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 			// If current strain is not in the new list and is not a custom value, clear it
 			if (currentStrain != null && !strainField.getItems().contains(currentStrain)) {
 				// Keep custom values, but if it was from old species vocabulary, clear it
-				if (oldValue != null && ExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
+				if (oldValue != null && InVivoExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
 					strainField.setValue(null);
 				}
 			}
-
-			// Set default strain for new species if nothing is selected
-			if (strainField.getValue() == null || strainField.getValue().isEmpty()) {
-				List<String> strains = ExperimentDescription.getStrainsForSpecies(newValue);
-				if (!strains.isEmpty()) {
-					strainField.setValue(strains.get(0));
-				}
-			}
+			// No auto-filling of default strain - user must select
 		});
 
 		grid.add(strainLabel, 0, 3);
 		grid.add(strainField, 1, 3);
 
 		// Sex
-		Label sexLabel = new Label("Sex:");
+		Label sexLabel = new Label("Sex: *");
 		sexField = new TextField();
 		sexField.setPromptText("e.g., Male, Female, Both");
 		sexField.setPrefWidth(300);
 		if (initialDescription.getSex() != null) {
 			sexField.setText(initialDescription.getSex());
-		} else {
-			sexField.setText("Male");  // Default to Male
 		}
+		// No default value - user must enter
 		grid.add(sexLabel, 0, 4);
 		grid.add(sexField, 1, 4);
 
 		// Organ
-		Label organLabel = new Label("Organ:");
+		Label organLabel = new Label("Organ: *");
 		organField = new ComboBox<>();
-		organField.setItems(FXCollections.observableArrayList(ExperimentDescription.ORGAN_VOCABULARY));
+		organField.setItems(FXCollections.observableArrayList(InVivoExperimentDescription.ORGAN_VOCABULARY));
 		organField.setEditable(true);
 		organField.setPromptText("Select or enter organ");
 		organField.setPrefWidth(300);
 		if (initialDescription.getOrgan() != null) {
 			organField.setValue(initialDescription.getOrgan());
-		} else {
-			organField.setValue("Liver");  // Default to Liver
 		}
+		// No default value - user must select
 		grid.add(organLabel, 0, 5);
 		grid.add(organField, 1, 5);
 
-		// Note about optional fields
-		Label note = new Label("Note: All fields are optional. Leave blank if not applicable.");
+		// Note about required fields
+		Label note = new Label("Note: Fields marked with * are required.");
 		note.setFont(Font.font(null, FontWeight.NORMAL, 11));
 		note.setStyle("-fx-text-fill: gray;");
 		grid.add(note, 0, 6, 2, 1);
@@ -187,11 +167,37 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 		ButtonType cancelButtonType = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 		getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
 
+		// Disable OK button initially if required fields are empty
+		javafx.scene.Node okButton = getDialogPane().lookupButton(okButtonType);
+		okButton.setDisable(!areRequiredFieldsFilled());
+
+		// Add listeners to enable/disable OK button based on field validation
+		speciesField.valueProperty().addListener((obs, old, newVal) -> {
+			okButton.setDisable(!areRequiredFieldsFilled());
+		});
+		strainField.valueProperty().addListener((obs, old, newVal) -> {
+			okButton.setDisable(!areRequiredFieldsFilled());
+		});
+		sexField.textProperty().addListener((obs, old, newVal) -> {
+			okButton.setDisable(!areRequiredFieldsFilled());
+		});
+		organField.valueProperty().addListener((obs, old, newVal) -> {
+			okButton.setDisable(!areRequiredFieldsFilled());
+		});
+
 		// Convert the result when OK is clicked
 		setResultConverter(dialogButton -> {
 			if (dialogButton == okButtonType) {
-				ExperimentDescription result = new ExperimentDescription();
-				result.setTestArticle(getTextOrNull(testArticleField.getText()));
+				InVivoExperimentDescription result = new InVivoExperimentDescription();
+
+				// Set test article
+				String testArticleName = getTextOrNull(testArticleField.getText());
+				if (testArticleName != null) {
+					TestArticleIdentifier testArticle = new TestArticleIdentifier();
+					testArticle.setName(testArticleName);
+					result.setTestArticle(testArticle);
+				}
+
 				result.setSpecies(getTextOrNull(speciesField.getValue()));
 				result.setStrain(getTextOrNull(strainField.getValue()));
 				result.setSex(getTextOrNull(sexField.getText()));
@@ -219,14 +225,24 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 	 * Update strain dropdown options based on selected species
 	 */
 	private void updateStrainOptions(String species) {
-		List<String> strains = ExperimentDescription.getStrainsForSpecies(species);
+		List<String> strains = InVivoExperimentDescription.getStrainsForSpecies(species);
 		strainField.setItems(FXCollections.observableArrayList(strains));
+	}
+
+	/**
+	 * Check if all required fields are filled
+	 */
+	private boolean areRequiredFieldsFilled() {
+		return getTextOrNull(speciesField.getValue()) != null &&
+			   getTextOrNull(strainField.getValue()) != null &&
+			   getTextOrNull(sexField.getText()) != null &&
+			   getTextOrNull(organField.getValue()) != null;
 	}
 
 	/**
 	 * Static method to show dialog and get result
 	 */
-	public static ExperimentDescription showDialog(Window owner, ExperimentDescription parsedDescription, String filename) {
+	public static ExperimentDescriptionBase showDialog(Window owner, ExperimentDescriptionBase parsedDescription, String filename) {
 		ExperimentDescriptionDialog dialog = new ExperimentDescriptionDialog(owner, parsedDescription, filename);
 		return dialog.showAndWait().orElse(null);
 	}

@@ -1,6 +1,5 @@
 package com.sciome.bmdexpress2.mvp.model.info;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +8,11 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
- * Experimental description providing biological context for a dose-response experiment.
- * Can be parsed from filename or entered manually by user.
+ * In vivo experiment description with animal-specific fields.
+ * Includes species, strain, sex, and organ information.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ExperimentDescription implements Serializable {
+public class InVivoExperimentDescription extends ExperimentDescriptionBase {
 
 	private static final long serialVersionUID = 1L;
 
@@ -97,23 +96,30 @@ public class ExperimentDescription implements Serializable {
 		return STRAINS_BY_SPECIES.get(species);
 	}
 
-	private String testArticle;  // Chemical/compound being tested (e.g., "Perfluoro-3-methoxypropanoic acid")
-	private String species;      // Animal species (e.g., "Rat", "Mouse", "Human")
-	private String strain;       // Animal strain (e.g., "Sprague-Dawley", "C57BL/6")
-	private String sex;          // Sex (e.g., "Male", "Female", "Both", "Mixed")
-	private String organ;        // Target organ/tissue (e.g., "Liver", "Kidney", "Brain")
+	// In vivo specific fields
+	private String species;  // Animal species (e.g., "Rat", "Mouse")
+	private String strain;   // Animal strain (e.g., "Sprague-Dawley", "C57BL/6")
+	private String sex;      // Sex (e.g., "Male", "Female", "Both", "Mixed")
+	private String organ;    // Target organ/tissue (e.g., "Liver", "Kidney")
 
 	/**
 	 * Default constructor
 	 */
-	public ExperimentDescription() {
+	public InVivoExperimentDescription() {
+		super();
 	}
 
 	/**
 	 * Constructor with all fields
 	 */
-	public ExperimentDescription(String testArticle, String species, String strain, String sex, String organ) {
-		this.testArticle = testArticle;
+	public InVivoExperimentDescription(TestArticleIdentifier testArticle,
+	                                    RouteOfAdministrationBase routeOfAdministration,
+	                                    String studyDuration,
+	                                    String species,
+	                                    String strain,
+	                                    String sex,
+	                                    String organ) {
+		super(testArticle, routeOfAdministration, studyDuration);
 		this.species = species;
 		this.strain = strain;
 		this.sex = sex;
@@ -121,14 +127,6 @@ public class ExperimentDescription implements Serializable {
 	}
 
 	// Getters and setters
-
-	public String getTestArticle() {
-		return testArticle;
-	}
-
-	public void setTestArticle(String testArticle) {
-		this.testArticle = testArticle;
-	}
 
 	public String getSpecies() {
 		return species;
@@ -162,26 +160,47 @@ public class ExperimentDescription implements Serializable {
 		this.organ = organ;
 	}
 
-	/**
-	 * Check if any description fields are populated
-	 */
+	@Override
+	public String getExperimentType() {
+		return "In Vivo";
+	}
+
+	@Override
 	public boolean hasDescription() {
-		return (testArticle != null && !testArticle.isEmpty()) ||
+		TestArticleIdentifier ta = getTestArticle();
+		RouteOfAdministrationBase route = getRouteOfAdministration();
+		String duration = getStudyDuration();
+
+		return (ta != null && ta.hasIdentifier()) ||
+		       (route != null) ||
+		       (duration != null && !duration.isEmpty()) ||
 		       (species != null && !species.isEmpty()) ||
 		       (strain != null && !strain.isEmpty()) ||
 		       (sex != null && !sex.isEmpty()) ||
 		       (organ != null && !organ.isEmpty());
 	}
 
-	/**
-	 * Get a formatted string representation of the description
-	 */
+	@Override
 	public String getFormattedString() {
 		StringBuilder sb = new StringBuilder();
 
-		if (testArticle != null && !testArticle.isEmpty()) {
-			sb.append("Test Article: ").append(testArticle).append("\n");
+		sb.append("Experiment Type: In Vivo\n");
+
+		TestArticleIdentifier ta = getTestArticle();
+		if (ta != null && ta.hasIdentifier()) {
+			sb.append("Test Article: ").append(ta.getFormattedString()).append("\n");
 		}
+
+		RouteOfAdministrationBase route = getRouteOfAdministration();
+		if (route != null) {
+			sb.append("Route of Administration: ").append(route.getFormattedString()).append("\n");
+		}
+
+		String duration = getStudyDuration();
+		if (duration != null && !duration.isEmpty()) {
+			sb.append("Study Duration: ").append(duration).append("\n");
+		}
+
 		if (species != null && !species.isEmpty()) {
 			sb.append("Species: ").append(species).append("\n");
 		}
@@ -198,15 +217,24 @@ public class ExperimentDescription implements Serializable {
 		return sb.toString();
 	}
 
-	/**
-	 * Create a copy of this description
-	 */
-	public ExperimentDescription copy() {
-		return new ExperimentDescription(testArticle, species, strain, sex, organ);
-	}
-
 	@Override
-	public String toString() {
-		return getFormattedString();
+	public ExperimentDescriptionBase copy() {
+		InVivoExperimentDescription copy = new InVivoExperimentDescription();
+
+		// Copy common fields
+		if (getTestArticle() != null) {
+			TestArticleIdentifier ta = getTestArticle();
+			copy.setTestArticle(new TestArticleIdentifier(ta.getName(), ta.getCasrn(), ta.getDsstox()));
+		}
+		copy.setRouteOfAdministration(getRouteOfAdministration());  // Routes are immutable
+		copy.setStudyDuration(getStudyDuration());
+
+		// Copy in vivo specific fields
+		copy.setSpecies(species);
+		copy.setStrain(strain);
+		copy.setSex(sex);
+		copy.setOrgan(organ);
+
+		return copy;
 	}
 }
