@@ -4,7 +4,7 @@ Software uses the dose-response models from the EPA BMDS software and ToxicR (de
 
 Jason Phillips (jason.phillips@sciome.com) was the software engineer on BMDExpress 3 and Dan Svoboda (daniel.svoboda@sciome.com) was the primary design engineer. Scott Auerbach (auerbachs@niehs.nih.gov) led the project team.
 
-The software is derivation of efforts by Longlong Yang (longlong.yang@nih.gov) that was originally released in 2007. (https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-8-387). It was updated in 2018 through a collaboration involving NTP, Sciome, Health Canada and the US EPA (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6513160/). 
+The software an extension of version 1, created by Longlong Yang (longlong.yang@nih.gov), originally released in 2007. (https://bmcgenomics.biomedcentral.com/articles/10.1186/1471-2164-8-387). It was updated in 2018 through a collaboration involving NTP, Sciome, Health Canada and the US EPA (https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6513160/). 
 
 [BMDExpress 1.0 is available here.](https://sourceforge.net/projects/bmdexpress/)
 
