@@ -223,12 +223,16 @@ public class ExperimentFileUtil
 					// Parse experimental metadata from file header and filename
 					ExperimentDescriptionParser.ParseResult parseResult =
 						ExperimentDescriptionParser.parseFromFile(infile);
-					doseResponseExperiement.setExperimentDescription(parseResult.getDescription());
 
-					// TODO: Handle validation issues if any
-					// if (parseResult.hasIssues()) {
-					//     Show validation dialog
-					// }
+					// Check for validation issues - fail import if any found
+					if (parseResult.hasIssues()) {
+						BMDExpressEventBus.getInstance().post(
+							new com.sciome.bmdexpress2.shared.eventbus.project.ShowValidationErrorEvent(
+								parseResult.getIssues(), infile.getName()));
+						return null;
+					}
+
+					doseResponseExperiement.setExperimentDescription(parseResult.getDescription());
 
 					return doseResponseExperiement;
 				}

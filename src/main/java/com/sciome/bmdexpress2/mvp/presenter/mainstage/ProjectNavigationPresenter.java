@@ -176,6 +176,16 @@ public class ProjectNavigationPresenter
 	}
 
 	/*
+	 * Handle validation errors from file import
+	 */
+	@Subscribe
+	public void onShowValidationError(com.sciome.bmdexpress2.shared.eventbus.project.ShowValidationErrorEvent event)
+	{
+		com.sciome.bmdexpress2.shared.eventbus.project.ShowValidationErrorEvent.ValidationErrorData data = event.GetPayload();
+		getView().showValidationErrorDialog(data.getIssues(), data.getFilename());
+	}
+
+	/*
 	 * load new experiment data into the view.
 	 */
 	@Subscribe
@@ -186,25 +196,10 @@ public class ProjectNavigationPresenter
 		if (experiments == null || experiments.size() == 0)
 			return;
 
-		// Show experiment description dialog for each experiment
-		for (DoseResponseExperiment experiment : experiments)
-		{
-			// Get auto-parsed description from the experiment
-			ExperimentDescriptionBase parsedDescription = experiment.getExperimentDescription();
-			// Dialog will create default if null
+		// Metadata must be present in the file - import fails if missing
+		// No dialog shown - metadata is immutable after successful import
 
-			// Show dialog to review/edit metadata
-			ExperimentDescriptionBase finalDescription = getView().showExperimentDescriptionDialog(
-					parsedDescription, experiment.getName());
-
-			// Update experiment with user-edited description
-			if (finalDescription != null)
-			{
-				experiment.setExperimentDescription(finalDescription);
-			}
-		}
-
-		// FileAnnotation uses the probe hash to help find a valid list of chips.
+		// Find matching chip based on platform metadata
 		Hashtable<String, Integer> probeHash = new Hashtable<>();
 		for (DoseResponseExperiment exp : experiments)
 			for (ProbeResponse probeResponse : exp.getProbeResponses())
@@ -220,7 +215,28 @@ public class ProjectNavigationPresenter
 			choices.add(chips[i]);
 		}
 
-		getView().getAChip(choices, event.GetPayload(), fileAnnotation);
+		// Match chip from metadata platform
+		ChipInfo selectedChip = null;
+		if (!experiments.isEmpty())
+		{
+			ExperimentDescriptionBase desc = experiments.get(0).getExperimentDescription();
+			if (desc != null && desc.getPlatform() != null)
+			{
+				String platformName = desc.getPlatform();
+				// Find matching chip
+				for (ChipInfo chip : choices)
+				{
+					if (chip.getGeoName().equals(platformName))
+					{
+						selectedChip = chip;
+						break;
+					}
+				}
+			}
+		}
+
+		// Ask for log transformation (still needed - not in metadata)
+		getView().askForLogTransformation(experiments, selectedChip, fileAnnotation);
 
 		if (currentProject == null)
 		{

@@ -991,6 +991,99 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 	}
 
+	@Override
+	public void askForLogTransformation(List<DoseResponseExperiment> experiments, ChipInfo selectedChip,
+			FileAnnotation fileAnnotation)
+	{
+		try
+		{
+			// Ask for log transformation (platform already determined from metadata)
+			ChoiceDialog<LogTransformationEnum> logTransFormationDialog = new ChoiceDialog<>(
+					LogTransformationEnum.BASE2, LogTransformationEnum.values());
+
+			logTransFormationDialog.setTitle("How is your data transformed?");
+			logTransFormationDialog.setGraphic(null);
+			logTransFormationDialog.setHeaderText("Log Transformation chooser");
+			logTransFormationDialog.setContentText("Choose a Log Transformation");
+			logTransFormationDialog.initOwner(analysisCheckList.getScene().getWindow());
+			logTransFormationDialog.initModality(Modality.WINDOW_MODAL);
+			Optional<LogTransformationEnum> logtransform = logTransFormationDialog.showAndWait();
+
+			LogTransformationEnum lt = LogTransformationEnum.BASE2;
+			if (logtransform.isPresent())
+				lt = logtransform.get();
+
+			for (DoseResponseExperiment de : experiments)
+				de.setLogTransformation(lt);
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		// Assign annotations using the chip from metadata
+		presenter.assignArrayAnnotations(selectedChip, experiments, fileAnnotation);
+	}
+
+	@Override
+	public void showValidationErrorDialog(List<com.sciome.bmdexpress2.util.ExperimentDescriptionParser.ValidationIssue> issues, String filename)
+	{
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Import Failed");
+		alert.setHeaderText("Missing or Invalid Metadata");
+		alert.setGraphic(null);
+		alert.setResizable(true);  // Make dialog resizable
+		alert.initOwner(analysisCheckList.getScene().getWindow());
+		alert.initModality(Modality.WINDOW_MODAL);
+
+		// Build formatted content
+		StringBuilder content = new StringBuilder();
+		content.append("The data file is missing required metadata or contains invalid values.\n");
+		content.append("Please add the following metadata fields to the file header:\n\n");
+
+		for (com.sciome.bmdexpress2.util.ExperimentDescriptionParser.ValidationIssue issue : issues) {
+			content.append("• ").append(issue.getFieldName()).append(": ");
+
+			if (issue.getProvidedValue() == null) {
+				content.append("MISSING (required)\n");
+			} else {
+				content.append("Invalid value '").append(issue.getProvidedValue()).append("'\n");
+				if (issue.getSuggestedValue() != null) {
+					content.append("   Suggestion: ").append(issue.getSuggestedValue()).append("\n");
+				}
+			}
+
+			if (issue.getValidOptions() != null && !issue.getValidOptions().isEmpty()) {
+				content.append("   Valid options: ");
+				content.append(String.join(", ", issue.getValidOptions())).append("\n");
+			}
+			content.append("\n");
+		}
+
+		content.append("\nFile: \"").append(filename).append("\"");
+
+		// Use TextArea wrapped in ScrollPane for scrollable content
+		javafx.scene.control.TextArea textArea = new javafx.scene.control.TextArea(content.toString());
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		// Wrap in ScrollPane for explicit scrolling control
+		javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane(textArea);
+		scrollPane.setFitToWidth(true);
+		scrollPane.setFitToHeight(true);
+		scrollPane.setPrefWidth(800);
+		scrollPane.setPrefHeight(500);
+		scrollPane.setHbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scrollPane.setVbarPolicy(javafx.scene.control.ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+		alert.getDialogPane().setContent(scrollPane);
+		alert.getDialogPane().setPrefWidth(850);  // Set dialog width
+		alert.getDialogPane().setPrefHeight(600); // Set dialog height
+
+		alert.showAndWait();
+	}
+
 	/*
 	 * set up contextmenus per tree node type.
 	 */

@@ -159,19 +159,18 @@ public class ExperimentDescriptionParser {
 		// Debug: Show what we found
 		System.out.println("[DEBUG] Finished parsing. Found " + metadata.size() + " metadata entries");
 
-		// If no metadata found, return empty
-		if (metadata.isEmpty()) {
-			System.out.println("[DEBUG] No metadata found, returning empty description");
-			return new ParseResult(new InVivoExperimentDescription(), new ArrayList<>());
-		}
-
 		// Debug: Print what metadata was extracted
-		System.out.println("[DEBUG] Parsed metadata from file header:");
-		for (Map.Entry<String, String> entry : metadata.entrySet()) {
-			System.out.println("  " + entry.getKey() + " = " + entry.getValue());
+		if (!metadata.isEmpty()) {
+			System.out.println("[DEBUG] Parsed metadata from file header:");
+			for (Map.Entry<String, String> entry : metadata.entrySet()) {
+				System.out.println("  " + entry.getKey() + " = " + entry.getValue());
+			}
+		} else {
+			System.out.println("[DEBUG] No metadata found in file header");
 		}
 
 		// Build experiment description from metadata and validate
+		// If metadata is empty, validation will create issues for all missing required fields
 		return buildFromMetadata(metadata);
 	}
 
@@ -191,9 +190,11 @@ public class ExperimentDescriptionParser {
 		if (isInVitro) {
 			InVitroExperimentDescription inVitro = new InVitroExperimentDescription();
 
-			// Parse cell line
+			// Parse and validate cell line (REQUIRED)
 			String cellLine = getMetadataValue(metadata, "cell line", "cellline");
-			if (cellLine != null) {
+			if (cellLine == null || cellLine.trim().isEmpty()) {
+				issues.add(new ValidationIssue("Cell Line", null, null, null));
+			} else {
 				inVitro.setCellLine(cellLine);
 			}
 
@@ -201,40 +202,57 @@ public class ExperimentDescriptionParser {
 		} else {
 			InVivoExperimentDescription inVivo = new InVivoExperimentDescription();
 
-			// Parse and validate species
+			// Parse and validate species (REQUIRED)
 			String species = getMetadataValue(metadata, "species");
-			if (species != null) {
+			if (species == null || species.trim().isEmpty()) {
+				issues.add(new ValidationIssue("Species", null, null,
+					InVivoExperimentDescription.SPECIES_VOCABULARY));
+			} else {
 				ValidationResult validation = validateSpecies(species);
 				if (validation.isValid()) {
 					inVivo.setSpecies(validation.getValue());
 				} else {
-					// Set anyway even if validation fails - user can correct in dialog
 					inVivo.setSpecies(species);
 					issues.add(new ValidationIssue("Species", species, validation.getSuggestion(),
 						InVivoExperimentDescription.SPECIES_VOCABULARY));
 				}
 			}
 
-			// Parse and validate strain
+			// Parse and validate strain (REQUIRED)
 			String strain = getMetadataValue(metadata, "strain");
-			if (strain != null) {
+			if (strain == null || strain.trim().isEmpty()) {
+				issues.add(new ValidationIssue("Strain", null, null, null));
+			} else {
+				// Strain validation is context-dependent on species, so just normalize
 				inVivo.setStrain(normalizeStrain(strain));
 			}
 
-			// Parse and validate sex
+			// Parse and validate sex (REQUIRED)
 			String sex = getMetadataValue(metadata, "sex");
-			if (sex != null) {
-				inVivo.setSex(capitalizeFist(sex));
+			if (sex == null || sex.trim().isEmpty()) {
+				issues.add(new ValidationIssue("Sex", null, null,
+					InVivoExperimentDescription.SEX_VOCABULARY));
+			} else {
+				ValidationResult validation = validateSex(sex);
+				if (validation.isValid()) {
+					inVivo.setSex(validation.getValue());
+				} else {
+					inVivo.setSex(capitalizeFist(sex));
+					issues.add(new ValidationIssue("Sex", sex, validation.getSuggestion(),
+						InVivoExperimentDescription.SEX_VOCABULARY));
+				}
 			}
 
-			// Parse and validate organ
+			// Parse and validate organ (REQUIRED)
 			String organ = getMetadataValue(metadata, "organ");
-			if (organ != null) {
+			if (organ == null || organ.trim().isEmpty()) {
+				issues.add(new ValidationIssue("Organ", null, null,
+					InVivoExperimentDescription.ORGAN_VOCABULARY));
+			} else {
 				ValidationResult validation = validateOrgan(organ);
 				if (validation.isValid()) {
 					inVivo.setOrgan(validation.getValue());
 				} else {
-					// Set anyway even if validation fails - user can correct in dialog
 					inVivo.setOrgan(organ);
 					issues.add(new ValidationIssue("Organ", organ, validation.getSuggestion(),
 						InVivoExperimentDescription.ORGAN_VOCABULARY));
@@ -244,39 +262,182 @@ public class ExperimentDescriptionParser {
 			desc = inVivo;
 		}
 
-		// Parse test article (common to both)
-		TestArticleIdentifier testArticle = parseTestArticle(metadata);
-		if (testArticle != null) {
-			desc.setTestArticle(testArticle);
+		// Parse and validate test article (REQUIRED)
+		String articleName = getMetadataValue(metadata, "test article", "chemical", "compound");
+		String casrn = getMetadataValue(metadata, "casrn", "cas", "cas number");
+		String dsstox = getMetadataValue(metadata, "dsstox", "dsstox id");
+
+		// Validate CASRN (REQUIRED with format validation)
+		if (casrn == null || casrn.trim().isEmpty()) {
+			issues.add(new ValidationIssue("CASRN", null, "Expected format: NNNNNN-NN-N (e.g., '13252-13-6')", null));
+		} else {
+			ValidationResult validation = validateCASRN(casrn);
+			if (!validation.isValid()) {
+				issues.add(new ValidationIssue("CASRN", casrn, validation.getSuggestion(), null));
+			} else if (validation.getValue() != null) {
+				casrn = validation.getValue();  // Use validated/normalized value
+			}
 		}
 
-		// Parse route of administration
+		// Validate DSSTOX (REQUIRED with format validation)
+		if (dsstox == null || dsstox.trim().isEmpty()) {
+			issues.add(new ValidationIssue("DSSTOX", null, "Expected format: DTXSID followed by 7-9 digits (e.g., 'DTXSID3027446')", null));
+		} else {
+			ValidationResult validation = validateDSSTOX(dsstox);
+			if (!validation.isValid()) {
+				issues.add(new ValidationIssue("DSSTOX", dsstox, validation.getSuggestion(), null));
+			} else if (validation.getValue() != null) {
+				dsstox = validation.getValue();  // Use validated/normalized value
+			}
+		}
+
+		// Create test article if at least one identifier is present
+		if (articleName != null || casrn != null || dsstox != null) {
+			TestArticleIdentifier testArticle = new TestArticleIdentifier(articleName, casrn, dsstox);
+			if (testArticle.hasIdentifier()) {
+				desc.setTestArticle(testArticle);
+			} else {
+				issues.add(new ValidationIssue("Test Article", null, null, null));
+			}
+		} else {
+			issues.add(new ValidationIssue("Test Article", null, null, null));
+		}
+
+		// Parse route of administration (optional)
 		RouteOfAdministrationBase route = parseRoute(metadata);
 		if (route != null) {
 			desc.setRouteOfAdministration(route);
 		}
 
-		// Parse study duration
+		// Parse and validate study duration (REQUIRED)
 		String duration = getMetadataValue(metadata, "study duration", "duration");
-		if (duration != null) {
-			desc.setStudyDuration(duration);
+		if (duration == null || duration.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Study Duration", null, null,
+				ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY));
+		} else {
+			ValidationResult validation = validateStudyDuration(duration);
+			if (validation.isValid()) {
+				desc.setStudyDuration(validation.getValue());
+			} else {
+				desc.setStudyDuration(duration);
+				issues.add(new ValidationIssue("Study Duration", duration, validation.getSuggestion(),
+					ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY));
+			}
+		}
+
+		// Parse and validate subject type (REQUIRED)
+		String subjectType = getMetadataValue(metadata, "subject type", "subjecttype");
+		if (subjectType == null || subjectType.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Subject Type", null, null,
+				ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY));
+		} else {
+			ValidationResult validation = validateSubjectType(subjectType);
+			if (validation.isValid()) {
+				desc.setSubjectType(validation.getValue());
+			} else {
+				desc.setSubjectType(subjectType);
+				issues.add(new ValidationIssue("Subject Type", subjectType, validation.getSuggestion(),
+					ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY));
+			}
+		}
+
+		// Parse and validate article route (REQUIRED)
+		String articleRoute = getMetadataValue(metadata, "article route", "test article route");
+		if (articleRoute == null || articleRoute.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Article Route", null, null,
+				ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY));
+		} else {
+			ValidationResult validation = validateArticleRoute(articleRoute);
+			if (validation.isValid()) {
+				desc.setArticleRoute(validation.getValue());
+			} else {
+				desc.setArticleRoute(articleRoute);
+				issues.add(new ValidationIssue("Article Route", articleRoute, validation.getSuggestion(),
+					ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY));
+			}
+		}
+
+		// Parse and validate article vehicle (REQUIRED)
+		String articleVehicle = getMetadataValue(metadata, "article vehicle", "test article vehicle", "vehicle");
+		if (articleVehicle == null || articleVehicle.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Article Vehicle", null, null,
+				ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY));
+		} else {
+			ValidationResult validation = validateArticleVehicle(articleVehicle);
+			if (validation.isValid()) {
+				desc.setArticleVehicle(validation.getValue());
+			} else {
+				desc.setArticleVehicle(articleVehicle);
+				issues.add(new ValidationIssue("Article Vehicle", articleVehicle, validation.getSuggestion(),
+					ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY));
+			}
+		}
+
+		// Parse and validate administration means (REQUIRED)
+		String administrationMeans = getMetadataValue(metadata, "administration means", "means of administration");
+		if (administrationMeans == null || administrationMeans.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Administration Means", null, null,
+				ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY));
+		} else {
+			ValidationResult validation = validateAdministrationMeans(administrationMeans);
+			if (validation.isValid()) {
+				desc.setAdministrationMeans(validation.getValue());
+			} else {
+				desc.setAdministrationMeans(administrationMeans);
+				issues.add(new ValidationIssue("Administration Means", administrationMeans, validation.getSuggestion(),
+					ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY));
+			}
+		}
+
+		// Parse and validate article type (REQUIRED)
+		String articleType = getMetadataValue(metadata, "article type", "test article type");
+		if (articleType == null || articleType.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Article Type", null, null,
+				ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY));
+		} else {
+			ValidationResult validation = validateArticleType(articleType);
+			if (validation.isValid()) {
+				desc.setArticleType(validation.getValue());
+			} else {
+				desc.setArticleType(articleType);
+				issues.add(new ValidationIssue("Article Type", articleType, validation.getSuggestion(),
+					ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY));
+			}
+		}
+
+		// Parse and validate platform (REQUIRED)
+		String platform = getMetadataValue(metadata, "platform", "chip");
+		if (platform == null || platform.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Platform", null, null,
+				ExperimentDescriptionBase.PLATFORM_VOCABULARY));
+		} else {
+			ValidationResult validation = validatePlatform(platform);
+			if (validation.isValid()) {
+				desc.setPlatform(validation.getValue());
+			} else {
+				desc.setPlatform(platform);
+				issues.add(new ValidationIssue("Platform", platform, validation.getSuggestion(),
+					ExperimentDescriptionBase.PLATFORM_VOCABULARY));
+			}
+		}
+
+		// Parse and validate provider (REQUIRED)
+		String provider = getMetadataValue(metadata, "provider");
+		if (provider == null || provider.trim().isEmpty()) {
+			issues.add(new ValidationIssue("Provider", null, null,
+				ExperimentDescriptionBase.PROVIDER_VOCABULARY));
+		} else {
+			ValidationResult validation = validateProvider(provider);
+			if (validation.isValid()) {
+				desc.setProvider(validation.getValue());
+			} else {
+				desc.setProvider(provider);
+				issues.add(new ValidationIssue("Provider", provider, validation.getSuggestion(),
+					ExperimentDescriptionBase.PROVIDER_VOCABULARY));
+			}
 		}
 
 		return new ParseResult(desc, issues);
-	}
-
-	/**
-	 * Parse test article from metadata
-	 */
-	private static TestArticleIdentifier parseTestArticle(Map<String, String> metadata) {
-		String name = getMetadataValue(metadata, "test article", "chemical", "compound");
-		String casrn = getMetadataValue(metadata, "casrn", "cas", "cas number");
-		String dsstox = getMetadataValue(metadata, "dsstox", "dsstox id");
-
-		if (name != null || casrn != null || dsstox != null) {
-			return new TestArticleIdentifier(name, casrn, dsstox);
-		}
-		return null;
 	}
 
 	/**
@@ -372,6 +533,192 @@ public class ExperimentDescriptionParser {
 		// Fuzzy match - find closest
 		String suggestion = findClosestMatch(organ, InVivoExperimentDescription.ORGAN_VOCABULARY);
 		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate sex against controlled vocabulary
+	 */
+	private static ValidationResult validateSex(String sex) {
+		// Exact match
+		for (String valid : InVivoExperimentDescription.SEX_VOCABULARY) {
+			if (valid.equalsIgnoreCase(sex)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(sex, InVivoExperimentDescription.SEX_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate platform against controlled vocabulary
+	 */
+	private static ValidationResult validatePlatform(String platform) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.PLATFORM_VOCABULARY) {
+			if (valid.equalsIgnoreCase(platform)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(platform, ExperimentDescriptionBase.PLATFORM_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate provider against controlled vocabulary
+	 */
+	private static ValidationResult validateProvider(String provider) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.PROVIDER_VOCABULARY) {
+			if (valid.equalsIgnoreCase(provider)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(provider, ExperimentDescriptionBase.PROVIDER_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate subject type against controlled vocabulary
+	 */
+	private static ValidationResult validateSubjectType(String subjectType) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY) {
+			if (valid.equalsIgnoreCase(subjectType)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(subjectType, ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate article route against controlled vocabulary
+	 */
+	private static ValidationResult validateArticleRoute(String articleRoute) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY) {
+			if (valid.equalsIgnoreCase(articleRoute)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(articleRoute, ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate article vehicle against controlled vocabulary
+	 */
+	private static ValidationResult validateArticleVehicle(String articleVehicle) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY) {
+			if (valid.equalsIgnoreCase(articleVehicle)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(articleVehicle, ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate administration means against controlled vocabulary
+	 */
+	private static ValidationResult validateAdministrationMeans(String administrationMeans) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY) {
+			if (valid.equalsIgnoreCase(administrationMeans)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(administrationMeans, ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate study duration against controlled vocabulary
+	 */
+	private static ValidationResult validateStudyDuration(String studyDuration) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY) {
+			if (valid.equalsIgnoreCase(studyDuration)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(studyDuration, ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate article type against controlled vocabulary
+	 */
+	private static ValidationResult validateArticleType(String articleType) {
+		// Exact match
+		for (String valid : ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY) {
+			if (valid.equalsIgnoreCase(articleType)) {
+				return new ValidationResult(true, valid, null);
+			}
+		}
+
+		// Fuzzy match - find closest
+		String suggestion = findClosestMatch(articleType, ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY);
+		return new ValidationResult(false, null, suggestion);
+	}
+
+	/**
+	 * Validate CASRN format
+	 * Expected format: NNNNNN-NN-N (e.g., "13252-13-6", "50-00-0")
+	 * Can have 2-10 digits before first hyphen, 2 digits after, and 1 check digit
+	 */
+	private static ValidationResult validateCASRN(String casrn) {
+		if (casrn == null || casrn.trim().isEmpty()) {
+			return new ValidationResult(true, null, null);
+		}
+
+		// Basic CASRN format: digits-digits-digit
+		// Pattern allows flexibility in first segment length (2-10 digits)
+		String casrnPattern = "^\\d{2,10}-\\d{2}-\\d$";
+
+		if (casrn.matches(casrnPattern)) {
+			return new ValidationResult(true, casrn, null);
+		} else {
+			return new ValidationResult(false, null,
+				"Expected format: NNNNNN-NN-N (e.g., '13252-13-6')");
+		}
+	}
+
+	/**
+	 * Validate DSSTOX format
+	 * Expected format: DTXSID followed by 7-9 digits (e.g., "DTXSID3027446", "DTXSID0020573")
+	 */
+	private static ValidationResult validateDSSTOX(String dsstox) {
+		if (dsstox == null || dsstox.trim().isEmpty()) {
+			return new ValidationResult(true, null, null);
+		}
+
+		// DSSTOX format: DTXSID followed by 7-9 digits
+		String dsstoxPattern = "^DTXSID\\d{7,9}$";
+
+		if (dsstox.toUpperCase().matches(dsstoxPattern)) {
+			return new ValidationResult(true, dsstox.toUpperCase(), null);
+		} else {
+			return new ValidationResult(false, null,
+				"Expected format: DTXSID followed by 7-9 digits (e.g., 'DTXSID3027446')");
+		}
 	}
 
 	/**

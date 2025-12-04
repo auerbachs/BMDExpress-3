@@ -62,6 +62,11 @@ public interface IProjectNavigationView
 	public void getAChip(List<ChipInfo> choices, List<DoseResponseExperiment> doseResponseExperiment,
 			FileAnnotation fileAnnotation);
 
+	public void askForLogTransformation(List<DoseResponseExperiment> experiments, ChipInfo selectedChip,
+			FileAnnotation fileAnnotation);
+
+	public void showValidationErrorDialog(List<com.sciome.bmdexpress2.util.ExperimentDescriptionParser.ValidationIssue> issues, String filename);
+
 	public ExperimentDescriptionBase showExperimentDescriptionDialog(ExperimentDescriptionBase parsedDescription, String filename);
 
 	public Map<DoseResponseExperiment, ExperimentDescriptionBase> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments);

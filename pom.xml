@@ -237,7 +237,7 @@
                                 <arg>--add-exports</arg>
                                 <arg>javafx.base/com.sun.javafx.event=org.controlsfx.controls </arg>
                                 </compilerArgs>
-                    <mainClass>com.sciome.bmdexpress3/com.sciome.bmdexpress3.BMDExpress3Main</mainClass>
+                    <mainClass>com.sciome.bmdexpress2/com.sciome.bmdexpress2.BMDExpress3Main</mainClass>
         </configuration>
       </plugin>
 
@@ -254,7 +254,7 @@
       <configuration>
         <archive>
           <manifest>
-            <mainClass>com.sciome.bmdexpress3.BMDExpress3Main</mainClass>
+            <mainClass>com.sciome.bmdexpress2.BMDExpress3Main</mainClass>
           </manifest>
         </archive>
         <descriptorRefs>

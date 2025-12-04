@@ -30,6 +30,14 @@ public class InVivoExperimentDescription extends ExperimentDescriptionBase {
 		"Pig"
 	);
 
+	public static final List<String> SEX_VOCABULARY = Arrays.asList(
+		"Male",
+		"Female",
+		"Both",
+		"Mixed",
+		"NA"
+	);
+
 	public static final List<String> ORGAN_VOCABULARY = Arrays.asList(
 		"Adrenal",
 		"Blood",
@@ -170,10 +178,24 @@ public class InVivoExperimentDescription extends ExperimentDescriptionBase {
 		TestArticleIdentifier ta = getTestArticle();
 		RouteOfAdministrationBase route = getRouteOfAdministration();
 		String duration = getStudyDuration();
+		String platform = getPlatform();
+		String provider = getProvider();
+		String subjectType = getSubjectType();
+		String articleRoute = getArticleRoute();
+		String articleVehicle = getArticleVehicle();
+		String administrationMeans = getAdministrationMeans();
+		String articleType = getArticleType();
 
 		return (ta != null && ta.hasIdentifier()) ||
 		       (route != null) ||
 		       (duration != null && !duration.isEmpty()) ||
+		       (platform != null && !platform.isEmpty()) ||
+		       (provider != null && !provider.isEmpty()) ||
+		       (subjectType != null && !subjectType.isEmpty()) ||
+		       (articleRoute != null && !articleRoute.isEmpty()) ||
+		       (articleVehicle != null && !articleVehicle.isEmpty()) ||
+		       (administrationMeans != null && !administrationMeans.isEmpty()) ||
+		       (articleType != null && !articleType.isEmpty()) ||
 		       (species != null && !species.isEmpty()) ||
 		       (strain != null && !strain.isEmpty()) ||
 		       (sex != null && !sex.isEmpty()) ||
@@ -191,6 +213,26 @@ public class InVivoExperimentDescription extends ExperimentDescriptionBase {
 			sb.append("Test Article: ").append(ta.getFormattedString()).append("\n");
 		}
 
+		String subjectType = getSubjectType();
+		if (subjectType != null && !subjectType.isEmpty()) {
+			sb.append("Subject Type: ").append(subjectType).append("\n");
+		}
+
+		String articleRoute = getArticleRoute();
+		if (articleRoute != null && !articleRoute.isEmpty()) {
+			sb.append("Article Route: ").append(articleRoute).append("\n");
+		}
+
+		String articleVehicle = getArticleVehicle();
+		if (articleVehicle != null && !articleVehicle.isEmpty()) {
+			sb.append("Article Vehicle: ").append(articleVehicle).append("\n");
+		}
+
+		String administrationMeans = getAdministrationMeans();
+		if (administrationMeans != null && !administrationMeans.isEmpty()) {
+			sb.append("Administration Means: ").append(administrationMeans).append("\n");
+		}
+
 		RouteOfAdministrationBase route = getRouteOfAdministration();
 		if (route != null) {
 			sb.append("Route of Administration: ").append(route.getFormattedString()).append("\n");
@@ -199,6 +241,21 @@ public class InVivoExperimentDescription extends ExperimentDescriptionBase {
 		String duration = getStudyDuration();
 		if (duration != null && !duration.isEmpty()) {
 			sb.append("Study Duration: ").append(duration).append("\n");
+		}
+
+		String platform = getPlatform();
+		if (platform != null && !platform.isEmpty()) {
+			sb.append("Platform: ").append(platform).append("\n");
+		}
+
+		String provider = getProvider();
+		if (provider != null && !provider.isEmpty()) {
+			sb.append("Provider: ").append(provider).append("\n");
+		}
+
+		String articleType = getArticleType();
+		if (articleType != null && !articleType.isEmpty()) {
+			sb.append("Article Type: ").append(articleType).append("\n");
 		}
 
 		if (species != null && !species.isEmpty()) {
@@ -228,6 +285,13 @@ public class InVivoExperimentDescription extends ExperimentDescriptionBase {
 		}
 		copy.setRouteOfAdministration(getRouteOfAdministration());  // Routes are immutable
 		copy.setStudyDuration(getStudyDuration());
+		copy.setPlatform(getPlatform());
+		copy.setProvider(getProvider());
+		copy.setSubjectType(getSubjectType());
+		copy.setArticleRoute(getArticleRoute());
+		copy.setArticleVehicle(getArticleVehicle());
+		copy.setAdministrationMeans(getAdministrationMeans());
+		copy.setArticleType(getArticleType());
 
 		// Copy in vivo specific fields
 		copy.setSpecies(species);
