@@ -85,7 +85,7 @@ public class BMDExpress3Main extends Application
 				throwable.printStackTrace();
 				BMDExpressEventBus.getInstance().post(new ShowErrorEvent(throwable.toString()));
 			});
-			showInitDialog();
+			initializeVersionInformationAndSuch();
 
 		}
 		catch (Exception e)
@@ -140,13 +140,18 @@ public class BMDExpress3Main extends Application
 
 	}
 
-	private void showInitDialog()
+	private void initializeVersionInformationAndSuch()
 	{
 		// first check to see if this is a new version. if it is, show the new features instead.
 		String version = BMDExpressProperties.getInstance().getVersion();
 		if (!version.equals(BMDExpressProperties.getInstance().getVersionFromFile()))
 		{
 			// show this version's changes
+			// also, unzip the annotations.
+			// DON'T DO THIS HERE for now.
+			// instead, we can make a menu option to allow a user to just unzip
+			// the annotations to the spot.
+			// BMDExpressProperties.getInstance().dealWithAnnotations();
 
 			BMDExpressProperties.getInstance().writeVersion(version);
 			BMDExpressInformation.getInstance().showVersionDialog(scene, version);

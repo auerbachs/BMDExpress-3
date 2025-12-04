@@ -165,23 +165,23 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 			rowConcentrations.add(
 					catResult.getBmduMinimum() != null ? catResult.getBmduMinimum() * multiplicationFactor
 							: null);
-			rowConcentrations.add(catResult.getBmdFifthPercentile() != null
-					? catResult.getBmdFifthPercentile() * multiplicationFactor
+			rowConcentrations.add(catResult.getBmdFifthPercentileTotalGenes() != null
+					? catResult.getBmdFifthPercentileTotalGenes() * multiplicationFactor
 					: null);
-			rowConcentrations.add(catResult.getBmdlFifthPercentile() != null
-					? catResult.getBmdlFifthPercentile() * multiplicationFactor
+			rowConcentrations.add(catResult.getBmdlFifthPercentileTotalGenes() != null
+					? catResult.getBmdlFifthPercentileTotalGenes() * multiplicationFactor
 					: null);
-			rowConcentrations.add(catResult.getBmduFifthPercentile() != null
-					? catResult.getBmduFifthPercentile() * multiplicationFactor
+			rowConcentrations.add(catResult.getBmduFifthPercentileTotalGenes() != null
+					? catResult.getBmduFifthPercentileTotalGenes() * multiplicationFactor
 					: null);
-			rowConcentrations.add(catResult.getBmdTenthPercentile() != null
-					? catResult.getBmdTenthPercentile() * multiplicationFactor
+			rowConcentrations.add(catResult.getBmdTenthPercentileTotalGenes() != null
+					? catResult.getBmdTenthPercentileTotalGenes() * multiplicationFactor
 					: null);
-			rowConcentrations.add(catResult.getBmdlTenthPercentile() != null
-					? catResult.getBmdlTenthPercentile() * multiplicationFactor
+			rowConcentrations.add(catResult.getBmdlTenthPercentileTotalGenes() != null
+					? catResult.getBmdlTenthPercentileTotalGenes() * multiplicationFactor
 					: null);
-			rowConcentrations.add(catResult.getBmduTenthPercentile() != null
-					? catResult.getBmduTenthPercentile() * multiplicationFactor
+			rowConcentrations.add(catResult.getBmduTenthPercentileTotalGenes() != null
+					? catResult.getBmduTenthPercentileTotalGenes() * multiplicationFactor
 					: null);
 
 			concentrations.add(rowConcentrations);
@@ -248,12 +248,14 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 			rowDoses.add(catResult.getBmdMinimum());
 			rowDoses.add(catResult.getBmdlMinimum());
 			rowDoses.add(catResult.getBmduMinimum());
-			rowDoses.add(catResult.getBmdFifthPercentile());
-			rowDoses.add(catResult.getBmdlFifthPercentile());
-			rowDoses.add(catResult.getBmduFifthPercentile());
-			rowDoses.add(catResult.getBmdTenthPercentile());
-			rowDoses.add(catResult.getBmdlTenthPercentile());
-			rowDoses.add(catResult.getBmduTenthPercentile());
+
+			// get values based on total genes
+			rowDoses.add(catResult.getBmdFifthPercentileTotalGenes());
+			rowDoses.add(catResult.getBmdlFifthPercentileTotalGenes());
+			rowDoses.add(catResult.getBmduFifthPercentileTotalGenes());
+			rowDoses.add(catResult.getBmdTenthPercentileTotalGenes());
+			rowDoses.add(catResult.getBmdlTenthPercentileTotalGenes());
+			rowDoses.add(catResult.getBmduTenthPercentileTotalGenes());
 
 			doses.add(rowDoses);
 		}
