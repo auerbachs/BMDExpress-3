@@ -26,6 +26,7 @@ module com.sciome.bmdexpress2
 	requires com.fasterxml.jackson.databind;
 	requires java.management;
 	requires org.controlsfx.controls;
+	requires org.slf4j;
 
 	opens com.sciome.bmdexpress2 to javafx.fxml;
 	opens com.sciome.bmdexpress2.mvp.view.mainstage to javafx.fxml;

@@ -14,6 +14,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
 import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription;
@@ -45,6 +48,26 @@ import com.sciome.bmdexpress2.mvp.model.info.IntravenousRoute;
  * # Study Duration: 28 days
  */
 public class ExperimentDescriptionParser {
+
+	private static final Logger logger = LoggerFactory.getLogger(ExperimentDescriptionParser.class);
+
+	// Metadata key constants for consistent lookups
+	private static final String[] CELL_LINE_KEYS = {"cell line", "cellline"};
+	private static final String[] SPECIES_KEYS = {"species"};
+	private static final String[] STRAIN_KEYS = {"strain"};
+	private static final String[] SEX_KEYS = {"sex"};
+	private static final String[] ORGAN_KEYS = {"organ"};
+	private static final String[] TEST_ARTICLE_KEYS = {"test article", "chemical", "compound"};
+	private static final String[] CASRN_KEYS = {"casrn", "cas", "cas number"};
+	private static final String[] DSSTOX_KEYS = {"dsstox", "dsstox id"};
+	private static final String[] DURATION_KEYS = {"study duration", "duration"};
+	private static final String[] SUBJECT_TYPE_KEYS = {"subject type", "subjecttype"};
+	private static final String[] ARTICLE_ROUTE_KEYS = {"article route", "test article route"};
+	private static final String[] ARTICLE_VEHICLE_KEYS = {"article vehicle", "test article vehicle", "vehicle"};
+	private static final String[] ADMINISTRATION_MEANS_KEYS = {"administration means", "means of administration"};
+	private static final String[] ARTICLE_TYPE_KEYS = {"article type", "test article type"};
+	private static final String[] PLATFORM_KEYS = {"platform", "chip"};
+	private static final String[] PROVIDER_KEYS = {"provider"};
 
 	// Common sex keywords
 	private static final Set<String> SEX_KEYWORDS = new HashSet<>(Arrays.asList(
@@ -101,7 +124,7 @@ public class ExperimentDescriptionParser {
 		Map<String, String> metadata = new HashMap<>();
 		List<String> dataLines = new ArrayList<>();
 
-		System.out.println("[DEBUG] Starting to parse file: " + file.getName());
+		logger.debug("Starting to parse file: {}", file.getName());
 
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			String line;
@@ -157,16 +180,16 @@ public class ExperimentDescriptionParser {
 		}
 
 		// Debug: Show what we found
-		System.out.println("[DEBUG] Finished parsing. Found " + metadata.size() + " metadata entries");
+		logger.debug("Finished parsing. Found {} metadata entries", metadata.size());
 
 		// Debug: Print what metadata was extracted
 		if (!metadata.isEmpty()) {
-			System.out.println("[DEBUG] Parsed metadata from file header:");
+			logger.debug("Parsed metadata from file header:");
 			for (Map.Entry<String, String> entry : metadata.entrySet()) {
-				System.out.println("  " + entry.getKey() + " = " + entry.getValue());
+				logger.debug("  {} = {}", entry.getKey(), entry.getValue());
 			}
 		} else {
-			System.out.println("[DEBUG] No metadata found in file header");
+			logger.debug("No metadata found in file header");
 		}
 
 		// Build experiment description from metadata and validate
@@ -191,7 +214,7 @@ public class ExperimentDescriptionParser {
 			InVitroExperimentDescription inVitro = new InVitroExperimentDescription();
 
 			// Parse and validate cell line (REQUIRED)
-			String cellLine = getMetadataValue(metadata, "cell line", "cellline");
+			String cellLine = getMetadataValue(metadata, CELL_LINE_KEYS);
 			if (cellLine == null || cellLine.trim().isEmpty()) {
 				issues.add(new ValidationIssue("Cell Line", null, null, null));
 			} else {
@@ -202,70 +225,38 @@ public class ExperimentDescriptionParser {
 		} else {
 			InVivoExperimentDescription inVivo = new InVivoExperimentDescription();
 
-			// Parse and validate species (REQUIRED)
-			String species = getMetadataValue(metadata, "species");
-			if (species == null || species.trim().isEmpty()) {
-				issues.add(new ValidationIssue("Species", null, null,
-					InVivoExperimentDescription.SPECIES_VOCABULARY));
-			} else {
-				ValidationResult validation = validateSpecies(species);
-				if (validation.isValid()) {
-					inVivo.setSpecies(validation.getValue());
-				} else {
-					inVivo.setSpecies(species);
-					issues.add(new ValidationIssue("Species", species, validation.getSuggestion(),
-						InVivoExperimentDescription.SPECIES_VOCABULARY));
-				}
-			}
+			// Parse and validate InVivo-specific fields using helper method
+			parseRequiredVocabularyField(metadata, issues, "Species",
+				InVivoExperimentDescription.SPECIES_VOCABULARY,
+				inVivo::setSpecies,
+				SPECIES_KEYS);
 
 			// Parse and validate strain (REQUIRED)
-			String strain = getMetadataValue(metadata, "strain");
+			// Note: Strain validation is context-dependent on species, so just normalize
+			String strain = getMetadataValue(metadata, STRAIN_KEYS);
 			if (strain == null || strain.trim().isEmpty()) {
 				issues.add(new ValidationIssue("Strain", null, null, null));
 			} else {
-				// Strain validation is context-dependent on species, so just normalize
 				inVivo.setStrain(normalizeStrain(strain));
 			}
 
-			// Parse and validate sex (REQUIRED)
-			String sex = getMetadataValue(metadata, "sex");
-			if (sex == null || sex.trim().isEmpty()) {
-				issues.add(new ValidationIssue("Sex", null, null,
-					InVivoExperimentDescription.SEX_VOCABULARY));
-			} else {
-				ValidationResult validation = validateSex(sex);
-				if (validation.isValid()) {
-					inVivo.setSex(validation.getValue());
-				} else {
-					inVivo.setSex(capitalizeFist(sex));
-					issues.add(new ValidationIssue("Sex", sex, validation.getSuggestion(),
-						InVivoExperimentDescription.SEX_VOCABULARY));
-				}
-			}
+			parseRequiredVocabularyField(metadata, issues, "Sex",
+				InVivoExperimentDescription.SEX_VOCABULARY,
+				inVivo::setSex,
+				SEX_KEYS);
 
-			// Parse and validate organ (REQUIRED)
-			String organ = getMetadataValue(metadata, "organ");
-			if (organ == null || organ.trim().isEmpty()) {
-				issues.add(new ValidationIssue("Organ", null, null,
-					InVivoExperimentDescription.ORGAN_VOCABULARY));
-			} else {
-				ValidationResult validation = validateOrgan(organ);
-				if (validation.isValid()) {
-					inVivo.setOrgan(validation.getValue());
-				} else {
-					inVivo.setOrgan(organ);
-					issues.add(new ValidationIssue("Organ", organ, validation.getSuggestion(),
-						InVivoExperimentDescription.ORGAN_VOCABULARY));
-				}
-			}
+			parseRequiredVocabularyField(metadata, issues, "Organ",
+				InVivoExperimentDescription.ORGAN_VOCABULARY,
+				inVivo::setOrgan,
+				ORGAN_KEYS);
 
 			desc = inVivo;
 		}
 
 		// Parse and validate test article (REQUIRED)
-		String articleName = getMetadataValue(metadata, "test article", "chemical", "compound");
-		String casrn = getMetadataValue(metadata, "casrn", "cas", "cas number");
-		String dsstox = getMetadataValue(metadata, "dsstox", "dsstox id");
+		String articleName = getMetadataValue(metadata, TEST_ARTICLE_KEYS);
+		String casrn = getMetadataValue(metadata, CASRN_KEYS);
+		String dsstox = getMetadataValue(metadata, DSSTOX_KEYS);
 
 		// Validate CASRN (REQUIRED with format validation)
 		if (casrn == null || casrn.trim().isEmpty()) {
@@ -309,133 +300,46 @@ public class ExperimentDescriptionParser {
 			desc.setRouteOfAdministration(route);
 		}
 
-		// Parse and validate study duration (REQUIRED)
-		String duration = getMetadataValue(metadata, "study duration", "duration");
-		if (duration == null || duration.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Study Duration", null, null,
-				ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY));
-		} else {
-			ValidationResult validation = validateStudyDuration(duration);
-			if (validation.isValid()) {
-				desc.setStudyDuration(validation.getValue());
-			} else {
-				desc.setStudyDuration(duration);
-				issues.add(new ValidationIssue("Study Duration", duration, validation.getSuggestion(),
-					ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY));
-			}
-		}
+		// Parse and validate all required common fields using helper method
+		parseRequiredVocabularyField(metadata, issues, "Study Duration",
+			ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY,
+			desc::setStudyDuration,
+			DURATION_KEYS);
 
-		// Parse and validate subject type (REQUIRED)
-		String subjectType = getMetadataValue(metadata, "subject type", "subjecttype");
-		if (subjectType == null || subjectType.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Subject Type", null, null,
-				ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY));
-		} else {
-			ValidationResult validation = validateSubjectType(subjectType);
-			if (validation.isValid()) {
-				desc.setSubjectType(validation.getValue());
-			} else {
-				desc.setSubjectType(subjectType);
-				issues.add(new ValidationIssue("Subject Type", subjectType, validation.getSuggestion(),
-					ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Subject Type",
+			ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY,
+			desc::setSubjectType,
+			SUBJECT_TYPE_KEYS);
 
-		// Parse and validate article route (REQUIRED)
-		String articleRoute = getMetadataValue(metadata, "article route", "test article route");
-		if (articleRoute == null || articleRoute.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Article Route", null, null,
-				ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY));
-		} else {
-			ValidationResult validation = validateArticleRoute(articleRoute);
-			if (validation.isValid()) {
-				desc.setArticleRoute(validation.getValue());
-			} else {
-				desc.setArticleRoute(articleRoute);
-				issues.add(new ValidationIssue("Article Route", articleRoute, validation.getSuggestion(),
-					ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Article Route",
+			ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY,
+			desc::setArticleRoute,
+			ARTICLE_ROUTE_KEYS);
 
-		// Parse and validate article vehicle (REQUIRED)
-		String articleVehicle = getMetadataValue(metadata, "article vehicle", "test article vehicle", "vehicle");
-		if (articleVehicle == null || articleVehicle.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Article Vehicle", null, null,
-				ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY));
-		} else {
-			ValidationResult validation = validateArticleVehicle(articleVehicle);
-			if (validation.isValid()) {
-				desc.setArticleVehicle(validation.getValue());
-			} else {
-				desc.setArticleVehicle(articleVehicle);
-				issues.add(new ValidationIssue("Article Vehicle", articleVehicle, validation.getSuggestion(),
-					ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Article Vehicle",
+			ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY,
+			desc::setArticleVehicle,
+			ARTICLE_VEHICLE_KEYS);
 
-		// Parse and validate administration means (REQUIRED)
-		String administrationMeans = getMetadataValue(metadata, "administration means", "means of administration");
-		if (administrationMeans == null || administrationMeans.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Administration Means", null, null,
-				ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY));
-		} else {
-			ValidationResult validation = validateAdministrationMeans(administrationMeans);
-			if (validation.isValid()) {
-				desc.setAdministrationMeans(validation.getValue());
-			} else {
-				desc.setAdministrationMeans(administrationMeans);
-				issues.add(new ValidationIssue("Administration Means", administrationMeans, validation.getSuggestion(),
-					ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Administration Means",
+			ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY,
+			desc::setAdministrationMeans,
+			ADMINISTRATION_MEANS_KEYS);
 
-		// Parse and validate article type (REQUIRED)
-		String articleType = getMetadataValue(metadata, "article type", "test article type");
-		if (articleType == null || articleType.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Article Type", null, null,
-				ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY));
-		} else {
-			ValidationResult validation = validateArticleType(articleType);
-			if (validation.isValid()) {
-				desc.setArticleType(validation.getValue());
-			} else {
-				desc.setArticleType(articleType);
-				issues.add(new ValidationIssue("Article Type", articleType, validation.getSuggestion(),
-					ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Article Type",
+			ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY,
+			desc::setArticleType,
+			ARTICLE_TYPE_KEYS);
 
-		// Parse and validate platform (REQUIRED)
-		String platform = getMetadataValue(metadata, "platform", "chip");
-		if (platform == null || platform.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Platform", null, null,
-				ExperimentDescriptionBase.PLATFORM_VOCABULARY));
-		} else {
-			ValidationResult validation = validatePlatform(platform);
-			if (validation.isValid()) {
-				desc.setPlatform(validation.getValue());
-			} else {
-				desc.setPlatform(platform);
-				issues.add(new ValidationIssue("Platform", platform, validation.getSuggestion(),
-					ExperimentDescriptionBase.PLATFORM_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Platform",
+			ExperimentDescriptionBase.PLATFORM_VOCABULARY,
+			desc::setPlatform,
+			PLATFORM_KEYS);
 
-		// Parse and validate provider (REQUIRED)
-		String provider = getMetadataValue(metadata, "provider");
-		if (provider == null || provider.trim().isEmpty()) {
-			issues.add(new ValidationIssue("Provider", null, null,
-				ExperimentDescriptionBase.PROVIDER_VOCABULARY));
-		} else {
-			ValidationResult validation = validateProvider(provider);
-			if (validation.isValid()) {
-				desc.setProvider(validation.getValue());
-			} else {
-				desc.setProvider(provider);
-				issues.add(new ValidationIssue("Provider", provider, validation.getSuggestion(),
-					ExperimentDescriptionBase.PROVIDER_VOCABULARY));
-			}
-		}
+		parseRequiredVocabularyField(metadata, issues, "Provider",
+			ExperimentDescriptionBase.PROVIDER_VOCABULARY,
+			desc::setProvider,
+			PROVIDER_KEYS);
 
 		return new ParseResult(desc, issues);
 	}
@@ -504,178 +408,60 @@ public class ExperimentDescriptionParser {
 	}
 
 	/**
-	 * Validate species against controlled vocabulary
+	 * Helper method to parse and validate a required field with controlled vocabulary.
+	 * Eliminates code duplication for the common pattern of field validation.
+	 *
+	 * @param metadata The metadata map to read from
+	 * @param issues The list to add validation issues to
+	 * @param displayName Display name for error messages
+	 * @param vocabulary The controlled vocabulary
+	 * @param setter Lambda to set the validated value on the description object
+	 * @param metadataKeys Possible metadata keys to look for
 	 */
-	private static ValidationResult validateSpecies(String species) {
-		// Exact match
-		for (String valid : InVivoExperimentDescription.SPECIES_VOCABULARY) {
-			if (valid.equalsIgnoreCase(species)) {
-				return new ValidationResult(true, valid, null);
+	private static void parseRequiredVocabularyField(
+			Map<String, String> metadata,
+			List<ValidationIssue> issues,
+			String displayName,
+			List<String> vocabulary,
+			java.util.function.Consumer<String> setter,
+			String... metadataKeys) {
+
+		String value = getMetadataValue(metadata, metadataKeys);
+		if (value == null || value.trim().isEmpty()) {
+			issues.add(new ValidationIssue(displayName, null, null, vocabulary));
+		} else {
+			ValidationResult validation = validateAgainstVocabulary(value, vocabulary);
+			if (validation.isValid()) {
+				setter.accept(validation.getValue());
+			} else {
+				setter.accept(value);
+				issues.add(new ValidationIssue(displayName, value, validation.getSuggestion(), vocabulary));
 			}
 		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(species, InVivoExperimentDescription.SPECIES_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
 	}
 
 	/**
-	 * Validate organ against controlled vocabulary
+	 * Generic validation method for any field with a controlled vocabulary.
+	 * Performs exact match (case-insensitive) and provides fuzzy match suggestions if no exact match found.
+	 *
+	 * @param value The value to validate
+	 * @param vocabulary The controlled vocabulary to validate against
+	 * @return ValidationResult with valid flag, normalized value, and suggestion if invalid
 	 */
-	private static ValidationResult validateOrgan(String organ) {
-		// Exact match
-		for (String valid : InVivoExperimentDescription.ORGAN_VOCABULARY) {
-			if (valid.equalsIgnoreCase(organ)) {
+	private static ValidationResult validateAgainstVocabulary(String value, List<String> vocabulary) {
+		if (value == null || vocabulary == null) {
+			return new ValidationResult(false, null, null);
+		}
+
+		// Exact match (case-insensitive)
+		for (String valid : vocabulary) {
+			if (valid.equalsIgnoreCase(value)) {
 				return new ValidationResult(true, valid, null);
 			}
 		}
 
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(organ, InVivoExperimentDescription.ORGAN_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate sex against controlled vocabulary
-	 */
-	private static ValidationResult validateSex(String sex) {
-		// Exact match
-		for (String valid : InVivoExperimentDescription.SEX_VOCABULARY) {
-			if (valid.equalsIgnoreCase(sex)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(sex, InVivoExperimentDescription.SEX_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate platform against controlled vocabulary
-	 */
-	private static ValidationResult validatePlatform(String platform) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.PLATFORM_VOCABULARY) {
-			if (valid.equalsIgnoreCase(platform)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(platform, ExperimentDescriptionBase.PLATFORM_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate provider against controlled vocabulary
-	 */
-	private static ValidationResult validateProvider(String provider) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.PROVIDER_VOCABULARY) {
-			if (valid.equalsIgnoreCase(provider)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(provider, ExperimentDescriptionBase.PROVIDER_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate subject type against controlled vocabulary
-	 */
-	private static ValidationResult validateSubjectType(String subjectType) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY) {
-			if (valid.equalsIgnoreCase(subjectType)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(subjectType, ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate article route against controlled vocabulary
-	 */
-	private static ValidationResult validateArticleRoute(String articleRoute) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY) {
-			if (valid.equalsIgnoreCase(articleRoute)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(articleRoute, ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate article vehicle against controlled vocabulary
-	 */
-	private static ValidationResult validateArticleVehicle(String articleVehicle) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY) {
-			if (valid.equalsIgnoreCase(articleVehicle)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(articleVehicle, ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate administration means against controlled vocabulary
-	 */
-	private static ValidationResult validateAdministrationMeans(String administrationMeans) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY) {
-			if (valid.equalsIgnoreCase(administrationMeans)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(administrationMeans, ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate study duration against controlled vocabulary
-	 */
-	private static ValidationResult validateStudyDuration(String studyDuration) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY) {
-			if (valid.equalsIgnoreCase(studyDuration)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(studyDuration, ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY);
-		return new ValidationResult(false, null, suggestion);
-	}
-
-	/**
-	 * Validate article type against controlled vocabulary
-	 */
-	private static ValidationResult validateArticleType(String articleType) {
-		// Exact match
-		for (String valid : ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY) {
-			if (valid.equalsIgnoreCase(articleType)) {
-				return new ValidationResult(true, valid, null);
-			}
-		}
-
-		// Fuzzy match - find closest
-		String suggestion = findClosestMatch(articleType, ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY);
+		// No exact match - find closest match for suggestion
+		String suggestion = findClosestMatch(value, vocabulary);
 		return new ValidationResult(false, null, suggestion);
 	}
 
@@ -815,17 +601,17 @@ public class ExperimentDescriptionParser {
 
 			// Check for sex
 			if (desc.getSex() == null && SEX_KEYWORDS.contains(part)) {
-				desc.setSex(capitalizeFist(part));
+				desc.setSex(capitalizeFirst(part));
 			}
 
 			// Check for organ
 			if (desc.getOrgan() == null && ORGAN_KEYWORDS.contains(part)) {
-				desc.setOrgan(capitalizeFist(part));
+				desc.setOrgan(capitalizeFirst(part));
 			}
 
 			// Check for species
 			if (desc.getSpecies() == null && SPECIES_KEYWORDS.contains(part)) {
-				desc.setSpecies(capitalizeFist(part));
+				desc.setSpecies(capitalizeFirst(part));
 			}
 
 			// Check for strain
@@ -871,7 +657,7 @@ public class ExperimentDescriptionParser {
 			if (testArticle.length() > 0) {
 				testArticle.append(" ");
 			}
-			testArticle.append(capitalizeFist(part));
+			testArticle.append(capitalizeFirst(part));
 		}
 
 		return testArticle.toString().trim();
@@ -880,7 +666,7 @@ public class ExperimentDescriptionParser {
 	/**
 	 * Capitalize first letter of a word
 	 */
-	private static String capitalizeFist(String word) {
+	private static String capitalizeFirst(String word) {
 		if (word == null || word.isEmpty()) {
 			return word;
 		}
@@ -912,7 +698,7 @@ public class ExperimentDescriptionParser {
 			case "cd-1":
 				return "CD-1";
 			default:
-				return capitalizeFist(strain);
+				return capitalizeFirst(strain);
 		}
 	}
 

@@ -247,14 +247,99 @@ public abstract class ExperimentDescriptionBase implements Serializable {
 	public abstract boolean hasDescription();
 
 	/**
+	 * Check if any base (common) description fields are populated
+	 * This method is called by subclasses to avoid code duplication
+	 */
+	protected boolean hasBaseDescription() {
+		return (testArticle != null && testArticle.hasIdentifier()) ||
+		       (routeOfAdministration != null) ||
+		       (studyDuration != null && !studyDuration.isEmpty()) ||
+		       (platform != null && !platform.isEmpty()) ||
+		       (provider != null && !provider.isEmpty()) ||
+		       (subjectType != null && !subjectType.isEmpty()) ||
+		       (articleRoute != null && !articleRoute.isEmpty()) ||
+		       (articleVehicle != null && !articleVehicle.isEmpty()) ||
+		       (administrationMeans != null && !administrationMeans.isEmpty()) ||
+		       (articleType != null && !articleType.isEmpty());
+	}
+
+	/**
 	 * Get a formatted string representation of the description
 	 */
 	public abstract String getFormattedString();
 
 	/**
+	 * Append base (common) fields to formatted string
+	 * This method is called by subclasses to avoid code duplication
+	 */
+	protected void appendBaseFormattedString(StringBuilder sb) {
+		if (testArticle != null && testArticle.hasIdentifier()) {
+			sb.append("Test Article: ").append(testArticle.getFormattedString()).append("\n");
+		}
+
+		if (subjectType != null && !subjectType.isEmpty()) {
+			sb.append("Subject Type: ").append(subjectType).append("\n");
+		}
+
+		if (articleRoute != null && !articleRoute.isEmpty()) {
+			sb.append("Article Route: ").append(articleRoute).append("\n");
+		}
+
+		if (articleVehicle != null && !articleVehicle.isEmpty()) {
+			sb.append("Article Vehicle: ").append(articleVehicle).append("\n");
+		}
+
+		if (administrationMeans != null && !administrationMeans.isEmpty()) {
+			sb.append("Administration Means: ").append(administrationMeans).append("\n");
+		}
+
+		if (routeOfAdministration != null) {
+			sb.append("Route of Administration: ").append(routeOfAdministration.getFormattedString()).append("\n");
+		}
+
+		if (studyDuration != null && !studyDuration.isEmpty()) {
+			sb.append("Study Duration: ").append(studyDuration).append("\n");
+		}
+
+		if (platform != null && !platform.isEmpty()) {
+			sb.append("Platform: ").append(platform).append("\n");
+		}
+
+		if (provider != null && !provider.isEmpty()) {
+			sb.append("Provider: ").append(provider).append("\n");
+		}
+
+		if (articleType != null && !articleType.isEmpty()) {
+			sb.append("Article Type: ").append(articleType).append("\n");
+		}
+	}
+
+	/**
 	 * Create a copy of this description
 	 */
 	public abstract ExperimentDescriptionBase copy();
+
+	/**
+	 * Copy base (common) fields to target description
+	 * This method is called by subclasses to avoid code duplication
+	 */
+	protected void copyBaseFields(ExperimentDescriptionBase target) {
+		if (testArticle != null) {
+			target.setTestArticle(new TestArticleIdentifier(
+				testArticle.getName(),
+				testArticle.getCasrn(),
+				testArticle.getDsstox()));
+		}
+		target.setRouteOfAdministration(routeOfAdministration);  // Routes are immutable
+		target.setStudyDuration(studyDuration);
+		target.setPlatform(platform);
+		target.setProvider(provider);
+		target.setSubjectType(subjectType);
+		target.setArticleRoute(articleRoute);
+		target.setArticleVehicle(articleVehicle);
+		target.setAdministrationMeans(administrationMeans);
+		target.setArticleType(articleType);
+	}
 
 	@Override
 	public String toString() {
