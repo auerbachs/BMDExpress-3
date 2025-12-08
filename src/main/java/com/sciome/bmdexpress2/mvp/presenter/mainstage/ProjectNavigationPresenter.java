@@ -16,7 +16,7 @@ import com.sciome.bmdexpress2.mvp.model.CombinedDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
@@ -219,7 +219,7 @@ public class ProjectNavigationPresenter
 		ChipInfo selectedChip = null;
 		if (!experiments.isEmpty())
 		{
-			ExperimentDescriptionBase desc = experiments.get(0).getExperimentDescription();
+			ExperimentDescription desc = experiments.get(0).getExperimentDescription();
 			if (desc != null && desc.getPlatform() != null)
 			{
 				String platformName = desc.getPlatform();
@@ -1089,10 +1089,10 @@ public class ProjectNavigationPresenter
 			return;
 
 		// Get current description (dialog will create default if none exists)
-		ExperimentDescriptionBase currentDescription = experiment.getExperimentDescription();
+		ExperimentDescription currentDescription = experiment.getExperimentDescription();
 
 		// Show dialog to edit metadata
-		ExperimentDescriptionBase updatedDescription = getView().showExperimentDescriptionDialog(
+		ExperimentDescription updatedDescription = getView().showExperimentDescriptionDialog(
 				currentDescription, experiment.getName());
 
 		// Update experiment with edited description
@@ -1111,13 +1111,13 @@ public class ProjectNavigationPresenter
 			return;
 
 		// Show batch dialog that displays all experiments
-		Map<DoseResponseExperiment, ExperimentDescriptionBase> results =
+		Map<DoseResponseExperiment, ExperimentDescription> results =
 				getView().showBatchExperimentDescriptionDialog(experiments);
 
 		// Apply updated descriptions to each experiment
 		if (results != null)
 		{
-			for (Map.Entry<DoseResponseExperiment, ExperimentDescriptionBase> entry : results.entrySet())
+			for (Map.Entry<DoseResponseExperiment, ExperimentDescription> entry : results.entrySet())
 			{
 				entry.getKey().setExperimentDescription(entry.getValue());
 			}

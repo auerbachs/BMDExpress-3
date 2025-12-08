@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
-import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.info.TestArticleIdentifier;
 
 import javafx.collections.FXCollections;
@@ -29,9 +28,9 @@ import javafx.stage.Window;
 /**
  * Dialog for batch editing experimental metadata for multiple experiments.
  * Shows all experiments with their individual fields in a scrollable view.
- * TODO: Expand to support full hierarchy (In Vivo/In Vitro, routes, etc.)
+ * Uses the unified ExperimentDescription class.
  */
-public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExperiment, ExperimentDescriptionBase>> {
+public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExperiment, ExperimentDescription>> {
 
 	private List<DoseResponseExperiment> experiments;
 	private Map<DoseResponseExperiment, ExperimentFields> fieldMap;
@@ -45,7 +44,7 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 		ComboBox<String> strainField;
 		TextField sexField;
 		ComboBox<String> organField;
-		InVivoExperimentDescription initialDescription;
+		ExperimentDescription initialDescription;
 	}
 
 	/**
@@ -107,10 +106,11 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 		// Convert the result when OK is clicked
 		setResultConverter(dialogButton -> {
 			if (dialogButton == okButtonType) {
-				Map<DoseResponseExperiment, ExperimentDescriptionBase> results = new HashMap<>();
+				Map<DoseResponseExperiment, ExperimentDescription> results = new HashMap<>();
 				for (DoseResponseExperiment exp : experiments) {
 					ExperimentFields fields = fieldMap.get(exp);
-					InVivoExperimentDescription result = new InVivoExperimentDescription();
+					ExperimentDescription result = new ExperimentDescription();
+					result.setSubjectType("in vivo"); // Default to in vivo
 
 					// Set test article
 					String testArticleName = getTextOrNull(fields.testArticleField.getText());
@@ -139,13 +139,13 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 		ExperimentFields fields = new ExperimentFields();
 		fieldMap.put(experiment, fields);
 
-		// Get current description, convert to InVivo if needed
-		ExperimentDescriptionBase currentDesc = experiment.getExperimentDescription();
-		if (currentDesc instanceof InVivoExperimentDescription) {
-			fields.initialDescription = (InVivoExperimentDescription) currentDesc;
+		// Get current description or create a new one
+		ExperimentDescription currentDesc = experiment.getExperimentDescription();
+		if (currentDesc != null) {
+			fields.initialDescription = currentDesc;
 		} else {
-			// If it's InVitro or null, create a new InVivo
-			fields.initialDescription = new InVivoExperimentDescription();
+			fields.initialDescription = new ExperimentDescription();
+			fields.initialDescription.setSubjectType("in vivo");
 		}
 
 		GridPane grid = new GridPane();
@@ -174,7 +174,7 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 		// Species
 		grid.add(new Label("Species: *"), 0, row);
 		fields.speciesField = new ComboBox<>();
-		fields.speciesField.setItems(FXCollections.observableArrayList(InVivoExperimentDescription.SPECIES_VOCABULARY));
+		fields.speciesField.setItems(FXCollections.observableArrayList(ExperimentDescription.SPECIES_VOCABULARY));
 		fields.speciesField.setEditable(true);
 		fields.speciesField.setPrefWidth(400);
 		if (fields.initialDescription.getSpecies() != null) {
@@ -206,7 +206,7 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 
 			// If current strain is not in the new list and is not a custom value, clear it
 			if (currentStrain != null && !fields.strainField.getItems().contains(currentStrain)) {
-				if (oldValue != null && InVivoExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
+				if (oldValue != null && ExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
 					fields.strainField.setValue(null);
 				}
 			}
@@ -229,7 +229,7 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 		// Organ
 		grid.add(new Label("Organ: *"), 0, row);
 		fields.organField = new ComboBox<>();
-		fields.organField.setItems(FXCollections.observableArrayList(InVivoExperimentDescription.ORGAN_VOCABULARY));
+		fields.organField.setItems(FXCollections.observableArrayList(ExperimentDescription.ORGAN_VOCABULARY));
 		fields.organField.setEditable(true);
 		fields.organField.setPrefWidth(400);
 		if (fields.initialDescription.getOrgan() != null) {
@@ -255,7 +255,7 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 	 * Update strain dropdown options based on selected species
 	 */
 	private void updateStrainOptions(ComboBox<String> strainField, String species) {
-		List<String> strains = InVivoExperimentDescription.getStrainsForSpecies(species);
+		List<String> strains = ExperimentDescription.getStrainsForSpecies(species);
 		strainField.setItems(FXCollections.observableArrayList(strains));
 	}
 
@@ -277,7 +277,7 @@ public class BatchExperimentDescriptionDialog extends Dialog<Map<DoseResponseExp
 	/**
 	 * Static method to show dialog and get results
 	 */
-	public static Map<DoseResponseExperiment, ExperimentDescriptionBase> showDialog(
+	public static Map<DoseResponseExperiment, ExperimentDescription> showDialog(
 			Window owner, List<DoseResponseExperiment> experiments) {
 		BatchExperimentDescriptionDialog dialog = new BatchExperimentDescriptionDialog(owner, experiments);
 		return dialog.showAndWait().orElse(null);

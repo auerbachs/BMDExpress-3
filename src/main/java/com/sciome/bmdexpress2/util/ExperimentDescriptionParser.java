@@ -17,15 +17,10 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
-import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
-import com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.info.TestArticleIdentifier;
-import com.sciome.bmdexpress2.mvp.model.info.RouteOfAdministrationBase;
-import com.sciome.bmdexpress2.mvp.model.info.InhalationRoute;
-import com.sciome.bmdexpress2.mvp.model.info.OralRoute;
-import com.sciome.bmdexpress2.mvp.model.info.TransdermalRoute;
-import com.sciome.bmdexpress2.mvp.model.info.IntravenousRoute;
+import com.sciome.bmdexpress2.mvp.model.info.rules.MetadataFacts;
+import com.sciome.bmdexpress2.mvp.model.info.rules.MetadataValidator;
 
 /**
  * Utility class to parse experimental metadata from filenames and file headers.
@@ -99,7 +94,7 @@ public class ExperimentDescriptionParser {
 	 */
 	public static ParseResult parseFromFile(File file) {
 		if (file == null) {
-			return new ParseResult(new InVivoExperimentDescription(), new ArrayList<>());
+			return new ParseResult(new ExperimentDescription(), new ArrayList<>());
 		}
 
 		// Parse file header only - no filename fallback
@@ -176,7 +171,7 @@ public class ExperimentDescriptionParser {
 			}
 		} catch (IOException e) {
 			// If we can't read the file, return empty result
-			return new ParseResult(new InVivoExperimentDescription(), new ArrayList<>());
+			return new ParseResult(new ExperimentDescription(), new ArrayList<>());
 		}
 
 		// Debug: Show what we found
@@ -198,200 +193,220 @@ public class ExperimentDescriptionParser {
 	}
 
 	/**
-	 * Build experiment description from parsed metadata and validate
+	 * Build experiment description from parsed metadata and validate using Easy Rules.
+	 *
+	 * This method:
+	 * 1. Parses all metadata fields into the description object
+	 * 2. Validates format and vocabulary (for suggestions)
+	 * 3. Runs Easy Rules validation for dependency and applicability rules
+	 * 4. Combines all validation issues
 	 */
 	private static ParseResult buildFromMetadata(Map<String, String> metadata) {
 		List<ValidationIssue> issues = new ArrayList<>();
 
-		// Determine if in vitro or in vivo
-		boolean isInVitro = metadata.containsKey("cell line") ||
-		                    metadata.containsKey("cellline") ||
-		                    (metadata.containsKey("type") && metadata.get("type").toLowerCase().contains("vitro"));
+		// Determine subject type from metadata
+		String subjectType = getMetadataValue(metadata, SUBJECT_TYPE_KEYS);
+		boolean isInVitro = "in vitro".equalsIgnoreCase(subjectType) ||
+		                    metadata.containsKey("cell line") ||
+		                    metadata.containsKey("cellline");
 
-		ExperimentDescriptionBase desc;
+		// Create unified experiment description
+		ExperimentDescription desc = new ExperimentDescription();
+		String cellLine = null;
+		String species = null;
+		String strain = null;
+		String sex = null;
+		String organ = null;
 
 		if (isInVitro) {
-			InVitroExperimentDescription inVitro = new InVitroExperimentDescription();
+			// Set subject type for in vitro
+			desc.setSubjectType("in vitro");
 
-			// Parse and validate cell line (REQUIRED)
-			String cellLine = getMetadataValue(metadata, CELL_LINE_KEYS);
-			if (cellLine == null || cellLine.trim().isEmpty()) {
-				issues.add(new ValidationIssue("Cell Line", null, null, null));
-			} else {
-				inVitro.setCellLine(cellLine);
+			// Parse cell line
+			cellLine = getMetadataValue(metadata, CELL_LINE_KEYS);
+			if (cellLine != null && !cellLine.isEmpty()) {
+				desc.setCellLine(cellLine);
+			}
+		} else {
+			// Set subject type for in vivo (default)
+			if (subjectType == null || subjectType.isEmpty()) {
+				desc.setSubjectType("in vivo");
 			}
 
-			desc = inVitro;
-		} else {
-			InVivoExperimentDescription inVivo = new InVivoExperimentDescription();
-
-			// Parse and validate InVivo-specific fields using helper method
-			parseRequiredVocabularyField(metadata, issues, "Species",
-				InVivoExperimentDescription.SPECIES_VOCABULARY,
-				inVivo::setSpecies,
+			// Parse species with vocabulary validation
+			species = parseVocabularyField(metadata, issues, "Species",
+				ExperimentDescription.SPECIES_VOCABULARY,
+				desc::setSpecies,
 				SPECIES_KEYS);
 
-			// Parse and validate strain (REQUIRED)
-			// Note: Strain validation is context-dependent on species, so just normalize
-			String strain = getMetadataValue(metadata, STRAIN_KEYS);
-			if (strain == null || strain.trim().isEmpty()) {
-				issues.add(new ValidationIssue("Strain", null, null, null));
-			} else {
-				inVivo.setStrain(normalizeStrain(strain));
+			// Parse strain (normalize but don't require - Easy Rules will check)
+			strain = getMetadataValue(metadata, STRAIN_KEYS);
+			if (strain != null && !strain.isEmpty()) {
+				strain = normalizeStrain(strain);
+				desc.setStrain(strain);
 			}
 
-			parseRequiredVocabularyField(metadata, issues, "Sex",
-				InVivoExperimentDescription.SEX_VOCABULARY,
-				inVivo::setSex,
+			// Parse sex with vocabulary validation
+			sex = parseVocabularyField(metadata, issues, "Sex",
+				ExperimentDescription.SEX_VOCABULARY,
+				desc::setSex,
 				SEX_KEYS);
 
-			parseRequiredVocabularyField(metadata, issues, "Organ",
-				InVivoExperimentDescription.ORGAN_VOCABULARY,
-				inVivo::setOrgan,
+			// Parse organ with vocabulary validation
+			organ = parseVocabularyField(metadata, issues, "Organ",
+				ExperimentDescription.ORGAN_VOCABULARY,
+				desc::setOrgan,
 				ORGAN_KEYS);
-
-			desc = inVivo;
 		}
 
-		// Parse and validate test article (REQUIRED)
+		// Parse test article identifiers
 		String articleName = getMetadataValue(metadata, TEST_ARTICLE_KEYS);
 		String casrn = getMetadataValue(metadata, CASRN_KEYS);
 		String dsstox = getMetadataValue(metadata, DSSTOX_KEYS);
 
-		// Validate CASRN (REQUIRED with format validation)
-		if (casrn == null || casrn.trim().isEmpty()) {
-			issues.add(new ValidationIssue("CASRN", null, "Expected format: NNNNNN-NN-N (e.g., '13252-13-6')", null));
-		} else {
+		// Validate CASRN format if provided
+		if (casrn != null && !casrn.isEmpty()) {
 			ValidationResult validation = validateCASRN(casrn);
 			if (!validation.isValid()) {
 				issues.add(new ValidationIssue("CASRN", casrn, validation.getSuggestion(), null));
 			} else if (validation.getValue() != null) {
-				casrn = validation.getValue();  // Use validated/normalized value
+				casrn = validation.getValue();
 			}
 		}
 
-		// Validate DSSTOX (REQUIRED with format validation)
-		if (dsstox == null || dsstox.trim().isEmpty()) {
-			issues.add(new ValidationIssue("DSSTOX", null, "Expected format: DTXSID followed by 7-9 digits (e.g., 'DTXSID3027446')", null));
-		} else {
+		// Validate DSSTOX format if provided
+		if (dsstox != null && !dsstox.isEmpty()) {
 			ValidationResult validation = validateDSSTOX(dsstox);
 			if (!validation.isValid()) {
 				issues.add(new ValidationIssue("DSSTOX", dsstox, validation.getSuggestion(), null));
 			} else if (validation.getValue() != null) {
-				dsstox = validation.getValue();  // Use validated/normalized value
+				dsstox = validation.getValue();
 			}
 		}
 
-		// Create test article if at least one identifier is present
+		// Create test article if any identifier is present
 		if (articleName != null || casrn != null || dsstox != null) {
 			TestArticleIdentifier testArticle = new TestArticleIdentifier(articleName, casrn, dsstox);
-			if (testArticle.hasIdentifier()) {
-				desc.setTestArticle(testArticle);
-			} else {
-				issues.add(new ValidationIssue("Test Article", null, null, null));
-			}
-		} else {
-			issues.add(new ValidationIssue("Test Article", null, null, null));
+			desc.setTestArticle(testArticle);
 		}
 
-		// Parse route of administration (optional)
-		RouteOfAdministrationBase route = parseRoute(metadata);
-		if (route != null) {
-			desc.setRouteOfAdministration(route);
-		}
-
-		// Parse and validate all required common fields using helper method
-		parseRequiredVocabularyField(metadata, issues, "Study Duration",
-			ExperimentDescriptionBase.STUDY_DURATION_VOCABULARY,
+		// Parse common fields with vocabulary validation
+		String studyDuration = parseVocabularyField(metadata, issues, "Study Duration",
+			ExperimentDescription.STUDY_DURATION_VOCABULARY,
 			desc::setStudyDuration,
 			DURATION_KEYS);
 
-		parseRequiredVocabularyField(metadata, issues, "Subject Type",
-			ExperimentDescriptionBase.SUBJECT_TYPE_VOCABULARY,
-			desc::setSubjectType,
-			SUBJECT_TYPE_KEYS);
+		// Set subject type if provided in metadata (override the default set above)
+		if (subjectType != null && !subjectType.isEmpty()) {
+			ValidationResult validation = validateAgainstVocabulary(subjectType, ExperimentDescription.SUBJECT_TYPE_VOCABULARY);
+			if (validation.isValid()) {
+				subjectType = validation.getValue();
+				desc.setSubjectType(subjectType);
+			} else {
+				desc.setSubjectType(subjectType);
+				if (validation.getSuggestion() != null) {
+					issues.add(new ValidationIssue("Subject Type", subjectType, validation.getSuggestion(),
+						ExperimentDescription.SUBJECT_TYPE_VOCABULARY));
+				}
+			}
+		}
 
-		parseRequiredVocabularyField(metadata, issues, "Article Route",
-			ExperimentDescriptionBase.ARTICLE_ROUTE_VOCABULARY,
+		// Parse article route, type, vehicle, and administration means
+		String articleRoute = parseVocabularyField(metadata, issues, "Article Route",
+			ExperimentDescription.ARTICLE_ROUTE_VOCABULARY,
 			desc::setArticleRoute,
 			ARTICLE_ROUTE_KEYS);
 
-		parseRequiredVocabularyField(metadata, issues, "Article Vehicle",
-			ExperimentDescriptionBase.ARTICLE_VEHICLE_VOCABULARY,
-			desc::setArticleVehicle,
-			ARTICLE_VEHICLE_KEYS);
-
-		parseRequiredVocabularyField(metadata, issues, "Administration Means",
-			ExperimentDescriptionBase.ADMINISTRATION_MEANS_VOCABULARY,
-			desc::setAdministrationMeans,
-			ADMINISTRATION_MEANS_KEYS);
-
-		parseRequiredVocabularyField(metadata, issues, "Article Type",
-			ExperimentDescriptionBase.ARTICLE_TYPE_VOCABULARY,
+		String articleType = parseVocabularyField(metadata, issues, "Article Type",
+			ExperimentDescription.ARTICLE_TYPE_VOCABULARY,
 			desc::setArticleType,
 			ARTICLE_TYPE_KEYS);
 
-		parseRequiredVocabularyField(metadata, issues, "Platform",
-			ExperimentDescriptionBase.PLATFORM_VOCABULARY,
+		String articleVehicle = parseVocabularyField(metadata, issues, "Article Vehicle",
+			ExperimentDescription.ARTICLE_VEHICLE_VOCABULARY,
+			desc::setArticleVehicle,
+			ARTICLE_VEHICLE_KEYS);
+
+		String administrationMeans = parseVocabularyField(metadata, issues, "Administration Means",
+			ExperimentDescription.ADMINISTRATION_MEANS_VOCABULARY,
+			desc::setAdministrationMeans,
+			ADMINISTRATION_MEANS_KEYS);
+
+		String platform = parseVocabularyField(metadata, issues, "Platform",
+			ExperimentDescription.PLATFORM_VOCABULARY,
 			desc::setPlatform,
 			PLATFORM_KEYS);
 
-		parseRequiredVocabularyField(metadata, issues, "Provider",
-			ExperimentDescriptionBase.PROVIDER_VOCABULARY,
+		String provider = parseVocabularyField(metadata, issues, "Provider",
+			ExperimentDescription.PROVIDER_VOCABULARY,
 			desc::setProvider,
 			PROVIDER_KEYS);
+
+		// === Run Easy Rules validation for dependencies and applicability ===
+		MetadataFacts facts = new MetadataFacts()
+			.subjectType(subjectType)
+			.species(species)
+			.strain(strain)
+			.sex(sex)
+			.organ(organ)
+			.cellLine(cellLine)
+			.testArticle(articleName)
+			.casrn(casrn)
+			.dsstox(dsstox)
+			.studyDuration(studyDuration)
+			.articleType(articleType)
+			.articleRoute(articleRoute)
+			.articleVehicle(articleVehicle)
+			.administrationMeans(administrationMeans)
+			.platform(platform)
+			.provider(provider);
+
+		// Run the rules engine
+		MetadataValidator.validateMetadata(facts);
+
+		// Convert Easy Rules errors to ValidationIssue objects
+		// Put the error message in providedValue so it's displayed prominently
+		for (String error : facts.getErrors()) {
+			issues.add(new ValidationIssue("Incompatibility", error, null, null));
+		}
+
+		// Add warnings as lower-priority issues (they don't block import)
+		for (String warning : facts.getWarnings()) {
+			logger.warn("Metadata warning: {}", warning);
+		}
 
 		return new ParseResult(desc, issues);
 	}
 
 	/**
-	 * Parse route of administration from metadata
+	 * Parse a field with vocabulary validation, returning the parsed value.
+	 * Does NOT add missing field errors - that's handled by Easy Rules.
 	 */
-	private static RouteOfAdministrationBase parseRoute(Map<String, String> metadata) {
-		String route = getMetadataValue(metadata, "route", "route of administration");
-		if (route == null) {
-			return null;
+	private static String parseVocabularyField(
+			Map<String, String> metadata,
+			List<ValidationIssue> issues,
+			String displayName,
+			List<String> vocabulary,
+			java.util.function.Consumer<String> setter,
+			String... metadataKeys) {
+
+		String value = getMetadataValue(metadata, metadataKeys);
+		if (value == null || value.trim().isEmpty()) {
+			return null;  // Let Easy Rules handle missing required fields
 		}
 
-		String routeLower = route.toLowerCase();
-		String vehicle = getMetadataValue(metadata, "vehicle");
-
-		if (routeLower.contains("inhalation")) {
-			InhalationRoute inhalation = new InhalationRoute();
-			if (routeLower.contains("aerosol")) {
-				inhalation.setInhalationType(InhalationRoute.InhalationType.AEROSOL);
-			} else if (routeLower.contains("gas")) {
-				inhalation.setInhalationType(InhalationRoute.InhalationType.GAS);
+		ValidationResult validation = validateAgainstVocabulary(value, vocabulary);
+		if (validation.isValid()) {
+			setter.accept(validation.getValue());
+			return validation.getValue();
+		} else {
+			setter.accept(value);
+			// Only add vocabulary mismatch issue if we have a suggestion
+			if (validation.getSuggestion() != null) {
+				issues.add(new ValidationIssue(displayName, value, validation.getSuggestion(), vocabulary));
 			}
-			return inhalation;
-		} else if (routeLower.contains("oral")) {
-			OralRoute oral = new OralRoute();
-			if (routeLower.contains("gavage")) {
-				oral.setOralType(OralRoute.OralType.GAVAGE);
-				if (vehicle != null) {
-					oral.setVehicle(vehicle);
-				}
-			} else if (routeLower.contains("feed") || routeLower.contains("diet")) {
-				oral.setOralType(OralRoute.OralType.FEED);
-			} else if (routeLower.contains("water")) {
-				oral.setOralType(OralRoute.OralType.WATER);
-			}
-			return oral;
-		} else if (routeLower.contains("transdermal") || routeLower.contains("dermal")) {
-			TransdermalRoute transdermal = new TransdermalRoute();
-			if (vehicle != null) {
-				transdermal.setVehicle(vehicle);
-			}
-			return transdermal;
-		} else if (routeLower.contains("iv") || routeLower.contains("intravenous")) {
-			IntravenousRoute iv = new IntravenousRoute();
-			if (vehicle != null) {
-				iv.setVehicle(vehicle);
-			}
-			return iv;
+			return value;
 		}
-
-		return null;
 	}
 
 	/**
@@ -405,39 +420,6 @@ public class ExperimentDescriptionParser {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Helper method to parse and validate a required field with controlled vocabulary.
-	 * Eliminates code duplication for the common pattern of field validation.
-	 *
-	 * @param metadata The metadata map to read from
-	 * @param issues The list to add validation issues to
-	 * @param displayName Display name for error messages
-	 * @param vocabulary The controlled vocabulary
-	 * @param setter Lambda to set the validated value on the description object
-	 * @param metadataKeys Possible metadata keys to look for
-	 */
-	private static void parseRequiredVocabularyField(
-			Map<String, String> metadata,
-			List<ValidationIssue> issues,
-			String displayName,
-			List<String> vocabulary,
-			java.util.function.Consumer<String> setter,
-			String... metadataKeys) {
-
-		String value = getMetadataValue(metadata, metadataKeys);
-		if (value == null || value.trim().isEmpty()) {
-			issues.add(new ValidationIssue(displayName, null, null, vocabulary));
-		} else {
-			ValidationResult validation = validateAgainstVocabulary(value, vocabulary);
-			if (validation.isValid()) {
-				setter.accept(validation.getValue());
-			} else {
-				setter.accept(value);
-				issues.add(new ValidationIssue(displayName, value, validation.getSuggestion(), vocabulary));
-			}
-		}
 	}
 
 	/**
@@ -561,11 +543,11 @@ public class ExperimentDescriptionParser {
 	 * Parse filename to extract experimental metadata (fallback when no header)
 	 *
 	 * @param file The input file
-	 * @return InVivoExperimentDescription with parsed fields, or empty description if parsing fails
+	 * @return ExperimentDescription with parsed fields, or empty description if parsing fails
 	 */
-	public static InVivoExperimentDescription parseFromFilename(File file) {
+	public static ExperimentDescription parseFromFilename(File file) {
 		if (file == null) {
-			return new InVivoExperimentDescription();
+			return new ExperimentDescription();
 		}
 
 		String filename = file.getName();
@@ -582,14 +564,15 @@ public class ExperimentDescriptionParser {
 	 * Parse a string (filename without extension) to extract experimental metadata
 	 *
 	 * @param input The input string to parse
-	 * @return InVivoExperimentDescription with parsed fields
+	 * @return ExperimentDescription with parsed fields
 	 */
-	public static InVivoExperimentDescription parseFromString(String input) {
+	public static ExperimentDescription parseFromString(String input) {
 		if (input == null || input.isEmpty()) {
-			return new InVivoExperimentDescription();
+			return new ExperimentDescription();
 		}
 
-		InVivoExperimentDescription desc = new InVivoExperimentDescription();
+		ExperimentDescription desc = new ExperimentDescription();
+		desc.setSubjectType("in vivo"); // Default to in vivo for filename parsing
 
 		// Normalize: replace underscores, hyphens, and periods with spaces, convert to lowercase
 		String normalized = input.replaceAll("[_\\-.]", " ").toLowerCase();
@@ -633,7 +616,7 @@ public class ExperimentDescriptionParser {
 	/**
 	 * Extract test article name by removing known metadata terms
 	 */
-	private static String extractTestArticleName(String[] parts, InVivoExperimentDescription desc) {
+	private static String extractTestArticleName(String[] parts, ExperimentDescription desc) {
 		StringBuilder testArticle = new StringBuilder();
 
 		for (String part : parts) {
@@ -705,7 +688,7 @@ public class ExperimentDescriptionParser {
 	/**
 	 * Check if the description has any parsed content
 	 */
-	public static boolean hasAnyParsedData(ExperimentDescriptionBase desc) {
+	public static boolean hasAnyParsedData(ExperimentDescription desc) {
 		return desc != null && desc.hasDescription();
 	}
 
@@ -713,15 +696,15 @@ public class ExperimentDescriptionParser {
 	 * Result of parsing with validation issues
 	 */
 	public static class ParseResult {
-		private final ExperimentDescriptionBase description;
+		private final ExperimentDescription description;
 		private final List<ValidationIssue> issues;
 
-		public ParseResult(ExperimentDescriptionBase description, List<ValidationIssue> issues) {
+		public ParseResult(ExperimentDescription description, List<ValidationIssue> issues) {
 			this.description = description;
 			this.issues = issues;
 		}
 
-		public ExperimentDescriptionBase getDescription() {
+		public ExperimentDescription getDescription() {
 			return description;
 		}
 

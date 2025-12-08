@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.Vector;
 
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
 import com.sciome.bmdexpress2.mvp.model.probe.Probe;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;

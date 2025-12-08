@@ -21,9 +21,7 @@ import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
-import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
-import com.sciome.bmdexpress2.mvp.model.info.InVitroExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
@@ -1852,12 +1850,12 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	}
 
 	@Override
-	public ExperimentDescriptionBase showExperimentDescriptionDialog(ExperimentDescriptionBase parsedDescription, String filename)
+	public ExperimentDescription showExperimentDescriptionDialog(ExperimentDescription parsedDescription, String filename)
 	{
 		return ExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), parsedDescription, filename);
 	}
 
-	public Map<DoseResponseExperiment, ExperimentDescriptionBase> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments)
+	public Map<DoseResponseExperiment, ExperimentDescription> showBatchExperimentDescriptionDialog(List<DoseResponseExperiment> experiments)
 	{
 		return BatchExperimentDescriptionDialog.showDialog(analysisCheckList.getScene().getWindow(), experiments);
 	}
@@ -2104,7 +2102,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 		metadataPanel.getChildren().clear();
 
-		ExperimentDescriptionBase desc = experiment.getExperimentDescription();
+		ExperimentDescription desc = experiment.getExperimentDescription();
 
 		if (desc == null || !desc.hasDescription())
 		{
@@ -2128,50 +2126,56 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		{
 			metadataPanel.add(new Label("Test Article:"), 0, row);
 			metadataPanel.add(new Label(desc.getTestArticle().getPrimaryIdentifier()), 1, row++);
-		}
 
-		// Add type-specific fields
-		if (desc instanceof InVivoExperimentDescription)
-		{
-			InVivoExperimentDescription inVivoDesc = (InVivoExperimentDescription) desc;
+			// Add CASRN if present
+			if (desc.getTestArticle().getCasrn() != null && !desc.getTestArticle().getCasrn().isEmpty())
+			{
+				metadataPanel.add(new Label("CASRN:"), 0, row);
+				metadataPanel.add(new Label(desc.getTestArticle().getCasrn()), 1, row++);
+			}
 
-			if (inVivoDesc.getSpecies() != null && !inVivoDesc.getSpecies().isEmpty())
+			// Add DSSTOX if present
+			if (desc.getTestArticle().getDsstox() != null && !desc.getTestArticle().getDsstox().isEmpty())
 			{
-				metadataPanel.add(new Label("Species:"), 0, row);
-				metadataPanel.add(new Label(inVivoDesc.getSpecies()), 1, row++);
-			}
-			if (inVivoDesc.getStrain() != null && !inVivoDesc.getStrain().isEmpty())
-			{
-				metadataPanel.add(new Label("Strain:"), 0, row);
-				metadataPanel.add(new Label(inVivoDesc.getStrain()), 1, row++);
-			}
-			if (inVivoDesc.getSex() != null && !inVivoDesc.getSex().isEmpty())
-			{
-				metadataPanel.add(new Label("Sex:"), 0, row);
-				metadataPanel.add(new Label(inVivoDesc.getSex()), 1, row++);
-			}
-			if (inVivoDesc.getOrgan() != null && !inVivoDesc.getOrgan().isEmpty())
-			{
-				metadataPanel.add(new Label("Organ:"), 0, row);
-				metadataPanel.add(new Label(inVivoDesc.getOrgan()), 1, row++);
-			}
-		}
-		else if (desc instanceof InVitroExperimentDescription)
-		{
-			InVitroExperimentDescription inVitroDesc = (InVitroExperimentDescription) desc;
-
-			if (inVitroDesc.getCellLine() != null && !inVitroDesc.getCellLine().isEmpty())
-			{
-				metadataPanel.add(new Label("Cell Line:"), 0, row);
-				metadataPanel.add(new Label(inVitroDesc.getCellLine()), 1, row++);
+				metadataPanel.add(new Label("DSSTOX:"), 0, row);
+				metadataPanel.add(new Label(desc.getTestArticle().getDsstox()), 1, row++);
 			}
 		}
 
-		// Add route of administration if present
-		if (desc.getRouteOfAdministration() != null)
+		// Add article type if present
+		if (desc.getArticleType() != null && !desc.getArticleType().isEmpty())
 		{
-			metadataPanel.add(new Label("Route:"), 0, row);
-			metadataPanel.add(new Label(desc.getRouteOfAdministration().getFormattedString()), 1, row++);
+			metadataPanel.add(new Label("Article Type:"), 0, row);
+			metadataPanel.add(new Label(desc.getArticleType()), 1, row++);
+		}
+
+		// Add in vivo specific fields
+		if (desc.getSpecies() != null && !desc.getSpecies().isEmpty())
+		{
+			metadataPanel.add(new Label("Species:"), 0, row);
+			metadataPanel.add(new Label(desc.getSpecies()), 1, row++);
+		}
+		if (desc.getStrain() != null && !desc.getStrain().isEmpty())
+		{
+			metadataPanel.add(new Label("Strain:"), 0, row);
+			metadataPanel.add(new Label(desc.getStrain()), 1, row++);
+		}
+		if (desc.getSex() != null && !desc.getSex().isEmpty())
+		{
+			metadataPanel.add(new Label("Sex:"), 0, row);
+			metadataPanel.add(new Label(desc.getSex()), 1, row++);
+		}
+		if (desc.getOrgan() != null && !desc.getOrgan().isEmpty())
+		{
+			metadataPanel.add(new Label("Organ:"), 0, row);
+			metadataPanel.add(new Label(desc.getOrgan()), 1, row++);
+		}
+
+		// Add in vitro specific field
+		if (desc.getCellLine() != null && !desc.getCellLine().isEmpty())
+		{
+			metadataPanel.add(new Label("Cell Line:"), 0, row);
+			metadataPanel.add(new Label(desc.getCellLine()), 1, row++);
 		}
 
 		// Add study duration if present
@@ -2179,6 +2183,41 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		{
 			metadataPanel.add(new Label("Duration:"), 0, row);
 			metadataPanel.add(new Label(desc.getStudyDuration()), 1, row++);
+		}
+
+		// Add article route if present
+		if (desc.getArticleRoute() != null && !desc.getArticleRoute().isEmpty())
+		{
+			metadataPanel.add(new Label("Route:"), 0, row);
+			metadataPanel.add(new Label(desc.getArticleRoute()), 1, row++);
+		}
+
+		// Add article vehicle if present
+		if (desc.getArticleVehicle() != null && !desc.getArticleVehicle().isEmpty())
+		{
+			metadataPanel.add(new Label("Vehicle:"), 0, row);
+			metadataPanel.add(new Label(desc.getArticleVehicle()), 1, row++);
+		}
+
+		// Add administration means if present
+		if (desc.getAdministrationMeans() != null && !desc.getAdministrationMeans().isEmpty())
+		{
+			metadataPanel.add(new Label("Admin Means:"), 0, row);
+			metadataPanel.add(new Label(desc.getAdministrationMeans()), 1, row++);
+		}
+
+		// Add platform if present
+		if (desc.getPlatform() != null && !desc.getPlatform().isEmpty())
+		{
+			metadataPanel.add(new Label("Platform:"), 0, row);
+			metadataPanel.add(new Label(desc.getPlatform()), 1, row++);
+		}
+
+		// Add provider if present
+		if (desc.getProvider() != null && !desc.getProvider().isEmpty())
+		{
+			metadataPanel.add(new Label("Provider:"), 0, row);
+			metadataPanel.add(new Label(desc.getProvider()), 1, row++);
 		}
 
 		metadataPanel.setVisible(true);

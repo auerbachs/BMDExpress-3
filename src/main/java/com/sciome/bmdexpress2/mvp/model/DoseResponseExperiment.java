@@ -12,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.chip.ChipInfo;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
@@ -38,7 +38,7 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 	private ChipInfo chip;
 	private Long chipCreationDate;
 	private AnalysisInfo analysisInfo;
-	private ExperimentDescriptionBase experimentDescription;
+	private ExperimentDescription experimentDescription;
 
 	// default to logTransformation of base2
 	// this defines how the data was log transformed before being input into bmdexpress
@@ -144,12 +144,12 @@ public class DoseResponseExperiment extends BMDExpressAnalysisDataSet
 		return this.analysisInfo;
 	}
 
-	public ExperimentDescriptionBase getExperimentDescription()
+	public ExperimentDescription getExperimentDescription()
 	{
 		return experimentDescription;
 	}
 
-	public void setExperimentDescription(ExperimentDescriptionBase experimentDescription)
+	public void setExperimentDescription(ExperimentDescription experimentDescription)
 	{
 		this.experimentDescription = experimentDescription;
 	}

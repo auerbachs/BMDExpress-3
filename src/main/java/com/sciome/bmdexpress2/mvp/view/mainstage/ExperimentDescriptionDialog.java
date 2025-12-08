@@ -2,8 +2,7 @@ package com.sciome.bmdexpress2.mvp.view.mainstage;
 
 import java.util.List;
 
-import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescriptionBase;
-import com.sciome.bmdexpress2.mvp.model.info.InVivoExperimentDescription;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.info.TestArticleIdentifier;
 
 import javafx.collections.FXCollections;
@@ -24,9 +23,9 @@ import javafx.stage.Window;
 /**
  * Dialog for entering or editing experimental metadata.
  * Displays auto-parsed values if available and allows user editing.
- * TODO: Expand to support full hierarchy (In Vivo/In Vitro, routes, etc.)
+ * Uses the unified ExperimentDescription class for all experiment types.
  */
-public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBase> {
+public class ExperimentDescriptionDialog extends Dialog<ExperimentDescription> {
 
 	private TextField testArticleField;
 	private ComboBox<String> speciesField;
@@ -34,21 +33,18 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 	private TextField sexField;
 	private ComboBox<String> organField;
 
-	private InVivoExperimentDescription initialDescription;
+	private ExperimentDescription initialDescription;
 
 	/**
 	 * Create dialog with auto-parsed description
 	 */
-	public ExperimentDescriptionDialog(Window owner, ExperimentDescriptionBase parsedDescription, String filename) {
-		// Convert to InVivoExperimentDescription if needed
-		if (parsedDescription instanceof InVivoExperimentDescription) {
-			this.initialDescription = (InVivoExperimentDescription) parsedDescription;
-		} else if (parsedDescription == null) {
-			this.initialDescription = new InVivoExperimentDescription();
+	public ExperimentDescriptionDialog(Window owner, ExperimentDescription parsedDescription, String filename) {
+		// Use the description directly or create a new one
+		if (parsedDescription != null) {
+			this.initialDescription = parsedDescription;
 		} else {
-			// If it's InVitro, create a new InVivo for now
-			// TODO: Support InVitro in dialog
-			this.initialDescription = new InVivoExperimentDescription();
+			this.initialDescription = new ExperimentDescription();
+			this.initialDescription.setSubjectType("in vivo");
 		}
 
 		initOwner(owner);
@@ -81,7 +77,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 		// Species
 		Label speciesLabel = new Label("Species: *");
 		speciesField = new ComboBox<>();
-		speciesField.setItems(FXCollections.observableArrayList(InVivoExperimentDescription.SPECIES_VOCABULARY));
+		speciesField.setItems(FXCollections.observableArrayList(ExperimentDescription.SPECIES_VOCABULARY));
 		speciesField.setEditable(true);
 		speciesField.setPromptText("Select or enter species");
 		speciesField.setPrefWidth(300);
@@ -117,7 +113,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 			// If current strain is not in the new list and is not a custom value, clear it
 			if (currentStrain != null && !strainField.getItems().contains(currentStrain)) {
 				// Keep custom values, but if it was from old species vocabulary, clear it
-				if (oldValue != null && InVivoExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
+				if (oldValue != null && ExperimentDescription.getStrainsForSpecies(oldValue).contains(currentStrain)) {
 					strainField.setValue(null);
 				}
 			}
@@ -142,7 +138,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 		// Organ
 		Label organLabel = new Label("Organ: *");
 		organField = new ComboBox<>();
-		organField.setItems(FXCollections.observableArrayList(InVivoExperimentDescription.ORGAN_VOCABULARY));
+		organField.setItems(FXCollections.observableArrayList(ExperimentDescription.ORGAN_VOCABULARY));
 		organField.setEditable(true);
 		organField.setPromptText("Select or enter organ");
 		organField.setPrefWidth(300);
@@ -188,7 +184,8 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 		// Convert the result when OK is clicked
 		setResultConverter(dialogButton -> {
 			if (dialogButton == okButtonType) {
-				InVivoExperimentDescription result = new InVivoExperimentDescription();
+				ExperimentDescription result = new ExperimentDescription();
+				result.setSubjectType("in vivo"); // Default to in vivo
 
 				// Set test article
 				String testArticleName = getTextOrNull(testArticleField.getText());
@@ -225,7 +222,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 	 * Update strain dropdown options based on selected species
 	 */
 	private void updateStrainOptions(String species) {
-		List<String> strains = InVivoExperimentDescription.getStrainsForSpecies(species);
+		List<String> strains = ExperimentDescription.getStrainsForSpecies(species);
 		strainField.setItems(FXCollections.observableArrayList(strains));
 	}
 
@@ -242,7 +239,7 @@ public class ExperimentDescriptionDialog extends Dialog<ExperimentDescriptionBas
 	/**
 	 * Static method to show dialog and get result
 	 */
-	public static ExperimentDescriptionBase showDialog(Window owner, ExperimentDescriptionBase parsedDescription, String filename) {
+	public static ExperimentDescription showDialog(Window owner, ExperimentDescription parsedDescription, String filename) {
 		ExperimentDescriptionDialog dialog = new ExperimentDescriptionDialog(owner, parsedDescription, filename);
 		return dialog.showAndWait().orElse(null);
 	}
