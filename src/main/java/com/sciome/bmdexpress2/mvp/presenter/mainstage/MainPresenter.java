@@ -65,39 +65,7 @@ public class MainPresenter extends PresenterBase<IMainView>
 
 			if (desc != null && desc.hasDescription())
 			{
-				StringBuilder metadata = new StringBuilder();
-				metadata.append(labelText);
-
-				// Test article identifier
-				if (desc.getTestArticle() != null && desc.getTestArticle().getPrimaryIdentifier() != null)
-				{
-					metadata.append(" | Test Article: ").append(desc.getTestArticle().getPrimaryIdentifier());
-				}
-
-				// In vivo fields
-				if (desc.getSpecies() != null && !desc.getSpecies().isEmpty())
-				{
-					metadata.append(" | Species: ").append(desc.getSpecies());
-				}
-				if (desc.getStrain() != null && !desc.getStrain().isEmpty())
-				{
-					metadata.append(" | Strain: ").append(desc.getStrain());
-				}
-				if (desc.getSex() != null && !desc.getSex().isEmpty())
-				{
-					metadata.append(" | Sex: ").append(desc.getSex());
-				}
-				if (desc.getOrgan() != null && !desc.getOrgan().isEmpty())
-				{
-					metadata.append(" | Organ: ").append(desc.getOrgan());
-				}
-				// In vitro fields
-				if (desc.getCellLine() != null && !desc.getCellLine().isEmpty())
-				{
-					metadata.append(" | Cell Line: ").append(desc.getCellLine());
-				}
-
-				labelText = metadata.toString();
+				labelText = labelText + desc.getStatusBarString();
 			}
 		}
 
@@ -310,13 +278,11 @@ public class MainPresenter extends PresenterBase<IMainView>
 	public void onProjectLoadedEvent(BMDProjectLoadedEvent event)
 	{
 		getView().updateSelectionLabel("");
-		getView().updateSelectionLabel("");
 	}
 
 	@Subscribe
 	public void onProjectClosedEvent(CloseProjectRequestEvent event)
 	{
-		getView().updateSelectionLabel("");
 		getView().updateSelectionLabel("");
 	}
 

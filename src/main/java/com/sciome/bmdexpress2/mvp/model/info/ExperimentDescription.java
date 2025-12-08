@@ -388,6 +388,39 @@ public class ExperimentDescription implements Serializable {
 	}
 
 	/**
+	 * Get a single-line string suitable for status bar display.
+	 * Fields are separated by " | " delimiter.
+	 */
+	public String getStatusBarString() {
+		StringBuilder sb = new StringBuilder();
+
+		if (testArticle != null && testArticle.getPrimaryIdentifier() != null) {
+			sb.append(" | Test Article: ").append(testArticle.getPrimaryIdentifier());
+		}
+
+		// In vivo fields
+		if (species != null && !species.isEmpty()) {
+			sb.append(" | Species: ").append(species);
+		}
+		if (strain != null && !strain.isEmpty()) {
+			sb.append(" | Strain: ").append(strain);
+		}
+		if (sex != null && !sex.isEmpty()) {
+			sb.append(" | Sex: ").append(sex);
+		}
+		if (organ != null && !organ.isEmpty()) {
+			sb.append(" | Organ: ").append(organ);
+		}
+
+		// In vitro field
+		if (cellLine != null && !cellLine.isEmpty()) {
+			sb.append(" | Cell Line: ").append(cellLine);
+		}
+
+		return sb.toString();
+	}
+
+	/**
 	 * Get a formatted string representation of the description
 	 */
 	public String getFormattedString() {
