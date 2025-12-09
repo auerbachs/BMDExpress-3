@@ -24,9 +24,16 @@ module com.sciome.bmdexpress2
 	requires org.apache.commons.io;
 	requires com.fasterxml.jackson.core;
 	requires com.fasterxml.jackson.databind;
+	requires com.fasterxml.jackson.dataformat.yaml;
 	requires java.management;
 	requires org.controlsfx.controls;
 	requires org.slf4j;
+
+	// Easy Rules - metadata validation
+	requires easy.rules.core;
+	requires easy.rules.support;
+
+	opens com.sciome.bmdexpress2.mvp.model.info.rules to easy.rules.core;
 
 	opens com.sciome.bmdexpress2 to javafx.fxml;
 	opens com.sciome.bmdexpress2.mvp.view.mainstage to javafx.fxml;

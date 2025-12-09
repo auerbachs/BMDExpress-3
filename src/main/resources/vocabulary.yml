@@ -1,0 +1,154 @@
+# Vocabulary Configuration for BMDExpress-3
+# These values can be extended or overridden for custom deployments
+
+providers:
+  - Affymetrix
+  - Agilent
+  - BioSpyder
+  - RefSeq
+  - Ensembl
+  - Clinical Endpoint
+  - Generic
+
+platforms:
+  # Affymetrix platforms
+  - Affymetrix Drosophila Genome Array
+  - Affymetrix Drosophila Genome 2.0 Array
+  - Affymetrix Human HG-Focus Target Array
+  - Affymetrix Human Genome U133A Array
+  - Affymetrix Human Genome U133 Plus 2.0 Array
+  - Affymetrix Human Genome U133A 2.0 Array
+  - Affymetrix HT HG-U133+ PM Array Plate
+  - Affymetrix HT MG-430 PM Array Plate
+  - Affymetrix HT RG-230 PM Array Plate
+  - Affymetrix Murine Genome U74A Array
+  - Affymetrix Murine Genome U74A Version 2 Array
+  - Affymetrix Mouse Expression 430A Array
+  - Affymetrix Mouse Expression 430B Array
+  - Affymetrix Mouse Genome 430A 2.0 Array
+  - Affymetrix Mouse Genome 430 2.0 Array
+  - Affymetrix Rat Expression 230A Array
+  - Affymetrix Rat Expression 230B Array
+  - Affymetrix Rat Genome 230 2.0 Array
+  - Affymetrix Rat Genome U34 Array
+  - Affymetrix Zebrafish Genome Array
+  # Agilent platforms
+  - Agilent Drosophila Oligo Microarray
+  - Agilent Whole Human Genome Microarray 4x44K
+  - Agilent Whole Mouse Genome Microarray 4x44K
+  - Agilent Whole Rat Genome Microarray 4x44K
+  - Agilent Zebrafish Oligo Microarray
+  # BioSpyder platforms
+  - BioSpyder S1500+ Rat
+  - BioSpyder S1500+ Human
+  # Genomic reference platforms
+  - Ensembl hg19
+  - Ensembl mm10
+  - Ensembl rn6
+  - RefSeq hg19
+  - RefSeq mm10
+  - RefSeq rn6
+  # Clinical endpoints
+  - Clinical Chemistry
+  - Hematology
+  - Organ Weight
+  - Generic
+
+subjectTypes:
+  - in vivo
+  - in vitro
+
+articleRoutes:
+  - oral
+  - inhaled
+  - transdermal
+
+articleVehicles:
+  - corn oil
+  - feed
+  - water
+  - aerosol
+  - gas
+
+administrationMeans:
+  - gavage
+  - drinking water
+  - dietary
+
+inVitroDurations:
+  - 3h
+  - 6h
+  - 9h
+  - 24h
+
+inVivoDurations:
+  - 1d
+  - 3d
+  - 5d
+  - 7d
+  - 14d
+  - 28d
+
+articleTypes:
+  - chemical
+  - mixture
+  - electromagnetic radiation
+
+species:
+  - rat
+  - mouse
+  - human
+  - rabbit
+  - dog
+  - monkey
+  - zebrafish
+  - guinea pig
+  - hamster
+  - pig
+
+sexes:
+  - male
+  - female
+  - both
+  - mixed
+  - NA
+
+organs:
+  - adrenal
+  - blood
+  - bone
+  - brain
+  - colon
+  - heart
+  - intestine
+  - kidney
+  - liver
+  - lung
+  - muscle
+  - ovary
+  - pancreas
+  - prostate
+  - skin
+  - spleen
+  - stomach
+  - testes
+  - thymus
+  - thyroid
+  - uterus
+
+strains:
+  rat:
+    - Sprague-Dawley
+    - Wistar
+    - Long-Evans
+    - Fischer 344
+    - Brown Norway
+  mouse:
+    - C57BL/6
+    - BALB/c
+    - CD-1
+    - FVB/N
+    - "129"
+    - DBA/2
+    - NOD
+    - SCID

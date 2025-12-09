@@ -1,8 +1,6 @@
 package com.sciome.bmdexpress2.mvp.model.info;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,198 +9,94 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 /**
  * Experiment description containing all metadata fields.
  * Supports both in vivo and in vitro experiments with different applicable fields.
+ *
+ * Vocabulary values are loaded from vocabulary.yml via VocabularyConfig.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExperimentDescription implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	// Controlled vocabularies for platform providers
-	public static final List<String> PROVIDER_VOCABULARY = Arrays.asList(
-		"Affymetrix",
-		"Agilent",
-		"BioSpyder",
-		"RefSeq",
-		"Ensembl",
-		"Clinical Endpoint",
-		"Generic"
-	);
-
-	// Controlled vocabulary for array platforms
-	public static final List<String> PLATFORM_VOCABULARY = Arrays.asList(
-		// Affymetrix platforms
-		"Affymetrix Drosophila Genome Array",
-		"Affymetrix Drosophila Genome 2.0 Array",
-		"Affymetrix Human HG-Focus Target Array",
-		"Affymetrix Human Genome U133A Array",
-		"Affymetrix Human Genome U133 Plus 2.0 Array",
-		"Affymetrix Human Genome U133A 2.0 Array",
-		"Affymetrix HT HG-U133+ PM Array Plate",
-		"Affymetrix HT MG-430 PM Array Plate",
-		"Affymetrix HT RG-230 PM Array Plate",
-		"Affymetrix Murine Genome U74A Array",
-		"Affymetrix Murine Genome U74A Version 2 Array",
-		"Affymetrix Mouse Expression 430A Array",
-		"Affymetrix Mouse Expression 430B Array",
-		"Affymetrix Mouse Genome 430A 2.0 Array",
-		"Affymetrix Mouse Genome 430 2.0 Array",
-		"Affymetrix Rat Expression 230A Array",
-		"Affymetrix Rat Expression 230B Array",
-		"Affymetrix Rat Genome 230 2.0 Array",
-		"Affymetrix Rat Genome U34 Array",
-		"Affymetrix Zebrafish Genome Array",
-		// Agilent platforms
-		"Agilent Drosophila Oligo Microarray",
-		"Agilent Whole Human Genome Microarray 4x44K",
-		"Agilent Whole Mouse Genome Microarray 4x44K",
-		"Agilent Whole Rat Genome Microarray 4x44K",
-		"Agilent Zebrafish Oligo Microarray",
-		// BioSpyder platforms
-		"BioSpyder S1500+ Rat",
-		"BioSpyder S1500+ Human",
-		// Genomic reference platforms
-		"Ensembl hg19",
-		"Ensembl mm10",
-		"Ensembl rn6",
-		"RefSeq hg19",
-		"RefSeq mm10",
-		"RefSeq rn6",
-		// Clinical endpoints
-		"Clinical Chemistry",
-		"Hematology",
-		"Organ Weight",
-		"Generic"
-	);
-
-	// Test subject type vocabulary
-	public static final List<String> SUBJECT_TYPE_VOCABULARY = Arrays.asList(
-		"in vivo",
-		"in vitro"
-	);
-
-	// Test article route vocabulary
-	public static final List<String> ARTICLE_ROUTE_VOCABULARY = Arrays.asList(
-		"oral",
-		"inhaled",
-		"transdermal"
-	);
-
-	// Test article vehicle vocabulary
-	public static final List<String> ARTICLE_VEHICLE_VOCABULARY = Arrays.asList(
-		"corn oil",
-		"feed",
-		"water",
-		"aerosol",
-		"gas"
-	);
-
-	// Test article means of administration vocabulary
-	public static final List<String> ADMINISTRATION_MEANS_VOCABULARY = Arrays.asList(
-		"gavage",
-		"drinking water",
-		"dietary"
-	);
-
-	// Study duration vocabulary - In Vitro (hours)
-	public static final List<String> IN_VITRO_DURATION_VOCABULARY = Arrays.asList(
-		"3h",
-		"6h",
-		"9h",
-		"24h"
-	);
-
-	// Study duration vocabulary - In Vivo (days)
-	public static final List<String> IN_VIVO_DURATION_VOCABULARY = Arrays.asList(
-		"1d",
-		"3d",
-		"5d",
-		"7d",
-		"14d",
-		"28d"
-	);
-
-	// Study duration vocabulary - All (for backwards compatibility)
-	public static final List<String> STUDY_DURATION_VOCABULARY = Arrays.asList(
-		"3h",
-		"6h",
-		"9h",
-		"24h",
-		"1d",
-		"3d",
-		"5d",
-		"7d",
-		"14d",
-		"28d"
-	);
-
-	// Test article type vocabulary
-	public static final List<String> ARTICLE_TYPE_VOCABULARY = Arrays.asList(
-		"chemical",
-		"mixture",
-		"electromagnetic radiation"
-	);
-
-	// Species vocabulary
-	public static final List<String> SPECIES_VOCABULARY = Arrays.asList(
-		"rat",
-		"mouse",
-		"human",
-		"rabbit",
-		"dog",
-		"monkey",
-		"zebrafish",
-		"guinea pig",
-		"hamster",
-		"pig"
-	);
-
-	// Sex vocabulary
-	public static final List<String> SEX_VOCABULARY = Arrays.asList(
-		"male",
-		"female",
-		"both",
-		"mixed",
-		"NA"
-	);
-
-	// Organ vocabulary
-	public static final List<String> ORGAN_VOCABULARY = Arrays.asList(
-		"adrenal",
-		"blood",
-		"bone",
-		"brain",
-		"colon",
-		"heart",
-		"intestine",
-		"kidney",
-		"liver",
-		"lung",
-		"muscle",
-		"ovary",
-		"pancreas",
-		"prostate",
-		"skin",
-		"spleen",
-		"stomach",
-		"testes",
-		"thymus",
-		"thyroid",
-		"uterus"
-	);
-
-	// Strains by species
-	public static final Map<String, List<String>> STRAINS_BY_SPECIES = createStrainMap();
-
-	private static Map<String, List<String>> createStrainMap() {
-		Map<String, List<String>> map = new HashMap<>();
-		map.put("rat", Arrays.asList(
-			"Sprague-Dawley", "Wistar", "Long-Evans", "Fischer 344", "Brown Norway"
-		));
-		map.put("mouse", Arrays.asList(
-			"C57BL/6", "BALB/c", "CD-1", "FVB/N", "129", "DBA/2", "NOD", "SCID"
-		));
-		return map;
+	// Vocabulary accessors - delegate to VocabularyConfig for externalized values
+	public static List<String> getProviderVocabulary() {
+		return VocabularyConfig.getInstance().getProviders();
 	}
+
+	public static List<String> getPlatformVocabulary() {
+		return VocabularyConfig.getInstance().getPlatforms();
+	}
+
+	public static List<String> getSubjectTypeVocabulary() {
+		return VocabularyConfig.getInstance().getSubjectTypes();
+	}
+
+	public static List<String> getArticleRouteVocabulary() {
+		return VocabularyConfig.getInstance().getArticleRoutes();
+	}
+
+	public static List<String> getArticleVehicleVocabulary() {
+		return VocabularyConfig.getInstance().getArticleVehicles();
+	}
+
+	public static List<String> getAdministrationMeansVocabulary() {
+		return VocabularyConfig.getInstance().getAdministrationMeans();
+	}
+
+	public static List<String> getInVitroDurationVocabulary() {
+		return VocabularyConfig.getInstance().getInVitroDurations();
+	}
+
+	public static List<String> getInVivoDurationVocabulary() {
+		return VocabularyConfig.getInstance().getInVivoDurations();
+	}
+
+	public static List<String> getStudyDurationVocabulary() {
+		return VocabularyConfig.getInstance().getAllDurations();
+	}
+
+	public static List<String> getArticleTypeVocabulary() {
+		return VocabularyConfig.getInstance().getArticleTypes();
+	}
+
+	public static List<String> getSpeciesVocabulary() {
+		return VocabularyConfig.getInstance().getSpecies();
+	}
+
+	public static List<String> getSexVocabulary() {
+		return VocabularyConfig.getInstance().getSexes();
+	}
+
+	public static List<String> getOrganVocabulary() {
+		return VocabularyConfig.getInstance().getOrgans();
+	}
+
+	public static Map<String, List<String>> getStrainsBySpecies() {
+		return VocabularyConfig.getInstance().getStrains();
+	}
+
+	/**
+	 * Get strains for a specific species
+	 */
+	public static List<String> getStrainsForSpecies(String species) {
+		return VocabularyConfig.getInstance().getStrainsForSpecies(species);
+	}
+
+	// Legacy constants - delegate to methods for backward compatibility
+	// These are kept for existing code that references them directly
+	public static final List<String> PROVIDER_VOCABULARY = getProviderVocabulary();
+	public static final List<String> PLATFORM_VOCABULARY = getPlatformVocabulary();
+	public static final List<String> SUBJECT_TYPE_VOCABULARY = getSubjectTypeVocabulary();
+	public static final List<String> ARTICLE_ROUTE_VOCABULARY = getArticleRouteVocabulary();
+	public static final List<String> ARTICLE_VEHICLE_VOCABULARY = getArticleVehicleVocabulary();
+	public static final List<String> ADMINISTRATION_MEANS_VOCABULARY = getAdministrationMeansVocabulary();
+	public static final List<String> IN_VITRO_DURATION_VOCABULARY = getInVitroDurationVocabulary();
+	public static final List<String> IN_VIVO_DURATION_VOCABULARY = getInVivoDurationVocabulary();
+	public static final List<String> STUDY_DURATION_VOCABULARY = getStudyDurationVocabulary();
+	public static final List<String> ARTICLE_TYPE_VOCABULARY = getArticleTypeVocabulary();
+	public static final List<String> SPECIES_VOCABULARY = getSpeciesVocabulary();
+	public static final List<String> SEX_VOCABULARY = getSexVocabulary();
+	public static final List<String> ORGAN_VOCABULARY = getOrganVocabulary();
+	public static final Map<String, List<String>> STRAINS_BY_SPECIES = getStrainsBySpecies();
 
 	// Common fields
 	private TestArticleIdentifier testArticle;
@@ -513,16 +407,6 @@ public class ExperimentDescription implements Serializable {
 		copy.setCellLine(cellLine);
 
 		return copy;
-	}
-
-	/**
-	 * Get list of strains for a given species
-	 */
-	public static List<String> getStrainsForSpecies(String species) {
-		if (species == null || !STRAINS_BY_SPECIES.containsKey(species)) {
-			return Arrays.asList();
-		}
-		return STRAINS_BY_SPECIES.get(species);
 	}
 
 	@Override
