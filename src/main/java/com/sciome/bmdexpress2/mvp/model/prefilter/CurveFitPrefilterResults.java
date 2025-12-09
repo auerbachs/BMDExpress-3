@@ -71,6 +71,11 @@ public class CurveFitPrefilterResults extends BMDExpressAnalysisDataSet
 		this.prefilterResults = prefilterResults;
 	}
 
+	public PrefilterResults getUpstreamPrefilterResults()
+	{
+		return this.prefilterResults;
+	}
+
 	@Override
 	public String getName()
 	{

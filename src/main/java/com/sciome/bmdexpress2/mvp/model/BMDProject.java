@@ -5,13 +5,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResult;
+import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 
@@ -171,6 +176,40 @@ public class BMDProject implements Serializable
 			giveBMDAnalysisUniqueName(data, data.getName(), 1);
 		for (CategoryAnalysisResults data : categoryAnalysisResults)
 			giveBMDAnalysisUniqueName(data, data.getName(), 1);
+
+		/*
+		 * we added pvalue/gof columns for the downstream analyses.
+		 * let's make this backwards compatible
+		 */
+
+		for (BMDResult data : bMDResult)
+		{
+			PrefilterResults pf = data.getPrefilterResults();
+			if (pf == null)
+				continue;
+
+			if (pf instanceof CurveFitPrefilterResults)
+			{
+				System.out.println();
+
+				PrefilterResults upstreamPreFilterResults = ((CurveFitPrefilterResults) pf)
+						.getUpstreamPrefilterResults();
+				if (upstreamPreFilterResults == null)
+					continue;
+
+				Map<String, PrefilterResult> probePrefilterResultMap = upstreamPreFilterResults
+						.getPrefilterResults().stream()
+						.collect(Collectors.toMap(PrefilterResult::getProbeID, p -> p));
+
+				for (PrefilterResult prr : pf.getPrefilterResults())
+				{
+					CurveFitPrefilterResult cfpr = (CurveFitPrefilterResult) prr;
+					if (cfpr.getUpstreamPrefilterResult() == null)
+						cfpr.setUpstreamPrefilterResult(probePrefilterResultMap.get(cfpr.getProbeID()));
+
+				}
+			}
+		}
 
 	}
 
