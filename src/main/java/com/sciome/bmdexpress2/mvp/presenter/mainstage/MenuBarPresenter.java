@@ -66,10 +66,14 @@ public class MenuBarPresenter extends PresenterBase<IMenuBarView>
 		{
 			DoseResponseExperiment doseResponseExperiment = ExperimentFileUtil.getInstance()
 					.readFile(selectedFile, getView().getWindow());
-			experiements.add(doseResponseExperiment);
-
+			// Only add successfully loaded experiments (validation failures return null)
+			if (doseResponseExperiment != null)
+			{
+				experiements.add(doseResponseExperiment);
+			}
 		}
-		if (experiements != null)
+		// Only post event if we have at least one valid experiment
+		if (!experiements.isEmpty())
 		{
 			getEventBus().post(new ExpressionDataLoadedEvent(experiements));
 		}
