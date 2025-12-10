@@ -931,6 +931,24 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	public void getAChip(List<ChipInfo> choices, List<DoseResponseExperiment> doseResponseExperiment,
 			FileAnnotation fileAnnotation)
 	{
+		// Check if a chip is pre-selected based on metadata platform
+		ChipInfo preselected = null;
+		if (!doseResponseExperiment.isEmpty())
+		{
+			ExperimentDescription desc = doseResponseExperiment.get(0).getExperimentDescription();
+			if (desc != null && desc.getPlatform() != null)
+			{
+				String platformName = desc.getPlatform();
+				for (ChipInfo chip : choices)
+				{
+					if (chip.getGeoName() != null && chip.getGeoName().equals(platformName))
+					{
+						preselected = chip;
+						break;
+					}
+				}
+			}
+		}
 
 		Collections.sort(choices, new Comparator<ChipInfo>() {
 
@@ -946,7 +964,10 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		genericChip.setProvider("generic");
 		genericChip.setSpecies("generic");
 		choices.add(genericChip);
-		ChoiceDialog<ChipInfo> annationDialog = new ChoiceDialog<>(choices.get(0), choices);
+
+		// Use pre-selected chip as default if found, otherwise first in list
+		ChipInfo defaultChip = (preselected != null) ? preselected : choices.get(0);
+		ChoiceDialog<ChipInfo> annationDialog = new ChoiceDialog<>(defaultChip, choices);
 
 		annationDialog.setTitle("Choose");
 		annationDialog.setGraphic(null);

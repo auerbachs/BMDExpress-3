@@ -11,43 +11,40 @@ providers:
   - Generic
 
 platforms:
-  # Affymetrix platforms
+  # Affymetrix platforms (values match ChipInfo.getGeoName())
   - Affymetrix Drosophila Genome Array
-  - Affymetrix Drosophila Genome 2.0 Array
-  - Affymetrix Human HG-Focus Target Array
-  - Affymetrix Human Genome U133A Array
-  - Affymetrix Human Genome U133 Plus 2.0 Array
-  - Affymetrix Human Genome U133A 2.0 Array
-  - Affymetrix HT HG-U133+ PM Array Plate
-  - Affymetrix HT MG-430 PM Array Plate
-  - Affymetrix HT RG-230 PM Array Plate
-  - Affymetrix Murine Genome U74A Array
-  - Affymetrix Murine Genome U74A Version 2 Array
-  - Affymetrix Mouse Expression 430A Array
-  - Affymetrix Mouse Expression 430B Array
-  - Affymetrix Mouse Genome 430A 2.0 Array
-  - Affymetrix Mouse Genome 430 2.0 Array
-  - Affymetrix Rat Expression 230A Array
-  - Affymetrix Rat Expression 230B Array
-  - Affymetrix Rat Genome 230 2.0 Array
-  - Affymetrix Rat Genome U34 Array
-  - Affymetrix Zebrafish Genome Array
-  # Agilent platforms
-  - Agilent Drosophila Oligo Microarray
-  - Agilent Whole Human Genome Microarray 4x44K
-  - Agilent Whole Mouse Genome Microarray 4x44K
-  - Agilent Whole Rat Genome Microarray 4x44K
-  - Agilent Zebrafish Oligo Microarray
-  # BioSpyder platforms
-  - BioSpyder S1500+ Rat
-  - BioSpyder S1500+ Human
-  # Genomic reference platforms
-  - Ensembl hg19
-  - Ensembl mm10
-  - Ensembl rn6
-  - RefSeq hg19
-  - RefSeq mm10
-  - RefSeq rn6
+  - Drosophila Genome 2.0 Array
+  - Human HG-Focus Target Array
+  - Human Genome U133A Array
+  - Human Genome U133 Plus 2.0 Array
+  - Human Genome U133A 2.0 Array
+  - HT HG-U133+ PM Array Plate
+  - HT MG-430 PM Array Plate
+  - HT RG-230 PM Array Plate
+  - Murine Genome U74A Array
+  - Murine Genome U74A Version 2 Array
+  - Mouse Expression 430A Array
+  - Mouse Expression 430B Array
+  - Mouse Genome 430A 2.0 Array
+  - Mouse Genome 430 2.0 Array
+  - Rat Expression 230A Array
+  - Rat Expression 230B Array
+  - Rat Genome 230 2.0 Array
+  - Rat Genome U34 Array
+  - Zebrafish Genome Array
+  # Agilent platforms (values match ChipInfo.getGeoName())
+  - Agilent-021791 D. melanogaster (FruitFly) Oligo Microarray - V2
+  - Agilent-014850 Whole Human Genome Microarray 4x44K G4112F
+  - Agilent-014868 Whole Mouse Genome Microarray 4x44K G4122F
+  - Agilent-024196 Whole Rat Genome Microarray 4x44K
+  - Agilent-026437 D. rerio (Zebrafish) Oligo Microarray V3
+  # BioSpyder platforms (values match ChipInfo.getGeoName())
+  - S1500+_rat
+  - S1500+_human
+  # Genomic reference platforms (values match ChipInfo.getGeoName())
+  - hg19_ensembl
+  - mm10_ensembl
+  - rn6_ensembl
   # Clinical endpoints
   - Clinical Chemistry
   - Hematology

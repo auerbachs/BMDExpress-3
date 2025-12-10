@@ -215,28 +215,9 @@ public class ProjectNavigationPresenter
 			choices.add(chips[i]);
 		}
 
-		// Match chip from metadata platform
-		ChipInfo selectedChip = null;
-		if (!experiments.isEmpty())
-		{
-			ExperimentDescription desc = experiments.get(0).getExperimentDescription();
-			if (desc != null && desc.getPlatform() != null)
-			{
-				String platformName = desc.getPlatform();
-				// Find matching chip
-				for (ChipInfo chip : choices)
-				{
-					if (chip.getGeoName().equals(platformName))
-					{
-						selectedChip = chip;
-						break;
-					}
-				}
-			}
-		}
-
-		// Ask for log transformation (still needed - not in metadata)
-		getView().askForLogTransformation(experiments, selectedChip, fileAnnotation);
+		// Show platform chooser and log transformation dialogs
+		// (pre-selection from metadata platform is handled in the view)
+		getView().getAChip(choices, experiments, fileAnnotation);
 
 		if (currentProject == null)
 		{
