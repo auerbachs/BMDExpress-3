@@ -16,6 +16,7 @@ import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
@@ -165,6 +166,19 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 	public void setDoseResponseExperiment(DoseResponseExperiment doseResponseExperiment)
 	{
 		this.doseResponseExperiment = doseResponseExperiment;
+	}
+
+	/**
+	 * Convenience method to get the ExperimentDescription from the analysis chain.
+	 * Traverses: BMDResult -> DoseResponseExperiment -> ExperimentDescription
+	 */
+	public ExperimentDescription getExperimentDescription()
+	{
+		if (doseResponseExperiment != null)
+		{
+			return doseResponseExperiment.getExperimentDescription();
+		}
+		return null;
 	}
 
 	public PrefilterResults getPrefilterResults()

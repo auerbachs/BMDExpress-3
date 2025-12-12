@@ -55,6 +55,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 				processableData.getProcessableDoseResponseExperiment().getTreatments().size());
 		DoseResponseExperiment doseResponseExperiment = processableData
 				.getProcessableDoseResponseExperiment();
+
 		bMDSTool = new BMDSTool(processableData.getProcessableProbeResponses(),
 				processableData.getProcessableDoseResponseExperiment().getTreatments(), inputParameters,
 				modelSelectionParameters, modelsToRun, progressUpdater, processableData, tmpFolder,
@@ -83,6 +84,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			return null;
 
 		bMDResults.setDoseResponseExperiment(doseResponseExperiment);
+
 		if (processableData instanceof PrefilterResults)
 			bMDResults.setPrefilterResults((PrefilterResults) processableData);
 
@@ -226,7 +228,9 @@ public class BMDAnalysisService implements IBMDAnalysisService
 
 		DoseResponseExperiment doseResponseExperiment = processableData
 				.getProcessableDoseResponseExperiment();
+
 		bMDResults.setDoseResponseExperiment(doseResponseExperiment);
+
 		if (processableData instanceof PrefilterResults)
 			bMDResults.setPrefilterResults((PrefilterResults) processableData);
 
@@ -396,6 +400,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 			bMDResults.setPrefilterResults((PrefilterResults) processableData);
 
 		bMDResults.setDoseResponseExperiment(processableData.getProcessableDoseResponseExperiment());
+
 		bMDResults.setwAUC(null);
 		bMDResults.setLogwAUC(null);
 
@@ -540,6 +545,7 @@ public class BMDAnalysisService implements IBMDAnalysisService
 		}
 
 		bMDResults.setDoseResponseExperiment(doseResponseExperiment);
+
 		if (processableData instanceof PrefilterResults)
 			bMDResults.setPrefilterResults((PrefilterResults) processableData);
 

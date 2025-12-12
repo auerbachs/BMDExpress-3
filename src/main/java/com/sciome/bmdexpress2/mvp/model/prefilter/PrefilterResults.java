@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = OneWayANOVAResults.class, name = "onewayanovaresults") })
@@ -34,5 +35,17 @@ public interface PrefilterResults
 	public DoseResponseExperiment getDoseResponseExperiement();
 
 	public List<AnalysisInfo> getPrefilterAnalysisInfo(boolean getParents);
+
+	/**
+	 * Convenience method to get the ExperimentDescription from the analysis chain.
+	 * Traverses: PrefilterResults -> DoseResponseExperiment -> ExperimentDescription
+	 */
+	default ExperimentDescription getExperimentDescription() {
+		DoseResponseExperiment experiment = getDoseResponseExperiement();
+		if (experiment != null) {
+			return experiment.getExperimentDescription();
+		}
+		return null;
+	}
 
 }

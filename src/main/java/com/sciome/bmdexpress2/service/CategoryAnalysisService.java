@@ -41,6 +41,7 @@ public class CategoryAnalysisService implements ICategoryAnalysisService
 		CategoryMapTool catMapTool = new CategoryMapTool(params, bmdResult, catAnalysisEnum, me,
 				analysisInfo);
 		CategoryAnalysisResults categoryAnalysisResults = catMapTool.startAnalyses();
+
 		categoryAnalysisResults.setBmdResult(bmdResult);
 		categoryAnalysisResults.setAnalysisInfo(analysisInfo);
 

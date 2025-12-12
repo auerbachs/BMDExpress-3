@@ -15,7 +15,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
+import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
+import com.sciome.bmdexpress2.mvp.model.info.ExperimentDescription;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
@@ -163,6 +165,33 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 	public void setBmdResult(BMDResult bmdResult)
 	{
 		this.bmdResult = bmdResult;
+	}
+
+	/**
+	 * Convenience method to get the DoseResponseExperiment from the analysis chain.
+	 * Traverses: CategoryAnalysisResults -> BMDResult -> DoseResponseExperiment
+	 */
+	public DoseResponseExperiment getDoseResponseExperiment()
+	{
+		if (bmdResult != null)
+		{
+			return bmdResult.getDoseResponseExperiment();
+		}
+		return null;
+	}
+
+	/**
+	 * Convenience method to get the ExperimentDescription from the analysis chain.
+	 * Traverses: CategoryAnalysisResults -> BMDResult -> DoseResponseExperiment -> ExperimentDescription
+	 */
+	public ExperimentDescription getExperimentDescription()
+	{
+		DoseResponseExperiment experiment = getDoseResponseExperiment();
+		if (experiment != null)
+		{
+			return experiment.getExperimentDescription();
+		}
+		return null;
 	}
 
 	@Override

@@ -711,6 +711,7 @@ public class PrefilterService implements IPrefilterService
 		CurveFitPrefilterResults curveFitPrefilterResults = new CurveFitPrefilterResults();
 		curveFitPrefilterResults.setDoseResponseExperiement(doseResponseExperiment);
 		curveFitPrefilterResults.setCurveFitPrefilterResults(curveFitResultList);
+
 		if (processableData instanceof PrefilterResults)
 		{
 			curveFitPrefilterResults.setPrefilterResults((PrefilterResults) processableData);
