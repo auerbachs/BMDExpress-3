@@ -22,6 +22,7 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
@@ -709,6 +710,7 @@ public class PrefilterService implements IPrefilterService
 
 		// create a new curve fit prefilter object and put it on the Event BuS
 		CurveFitPrefilterResults curveFitPrefilterResults = new CurveFitPrefilterResults();
+
 		curveFitPrefilterResults.setDoseResponseExperiement(doseResponseExperiment);
 		curveFitPrefilterResults.setCurveFitPrefilterResults(curveFitResultList);
 		if (processableData instanceof PrefilterResults)
@@ -781,6 +783,16 @@ public class PrefilterService implements IPrefilterService
 		}
 
 		curveFitPrefilterResults.setCurveFitPrefilterResults(nextcurveFitResultList);
+
+		if (processableData instanceof PrefilterResults)
+		{
+			Map<String, PrefilterResult> upstreamPrefilterMap = new HashMap<>();
+			for (PrefilterResult prefiterResult : ((PrefilterResults) processableData).getPrefilterResults())
+				upstreamPrefilterMap.put(prefiterResult.getProbeID(), prefiterResult);
+
+			for (CurveFitPrefilterResult result : curveFitPrefilterResults.getCurveFitPrefilterResults())
+				result.setUpstreamPrefilterResult(upstreamPrefilterMap.get(result.getProbeID()));
+		}
 
 		DecimalFormat df = new DecimalFormat("#.####");
 		String name = doseResponseExperiment.getName() + "_curvefitprefilter";

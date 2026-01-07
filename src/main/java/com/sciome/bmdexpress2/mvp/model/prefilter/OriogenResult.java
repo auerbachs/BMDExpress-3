@@ -21,32 +21,32 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= -4095025460096134903L;
+	private static final long serialVersionUID = -4095025460096134903L;
 
-	private ProbeResponse				probeResponse;
-	private double						pValue;
-	private double						adjustedPValue;
-	private Float						bestFoldChange;
-	private Float						loelDose;
-	private Float						noelDose;
+	private ProbeResponse probeResponse;
+	private double pValue;
+	private double adjustedPValue;
+	private Float bestFoldChange;
+	private Float loelDose;
+	private Float noelDose;
 
-	private List<Float>					foldChanges;
-	private List<Float>					noelLoelPValues;
+	private List<Float> foldChanges;
+	private List<Float> noelLoelPValues;
 
 	@JsonIgnore
-	private transient String			genes;
+	private transient String genes;
 	@JsonIgnore
-	private transient String			geneSymbols;
+	private transient String geneSymbols;
 	@JsonIgnore
-	private transient Set<String>		geneSymbolSet;
+	private transient Set<String> geneSymbolSet;
 
 	// row data for the table view.
 	@JsonIgnore
-	protected transient List<Object>	row;
+	protected transient List<Object> row;
 
-	private Long						id;
+	private Long id;
 
-	private String						profile;
+	private String profile;
 
 	public ProbeResponse getProbeResponse()
 	{
@@ -107,11 +107,6 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	public double getNegativeLogAdjustedPValue()
 	{
 		return NumberManager.negLog10(this.adjustedPValue);
-	}
-
-	public double getAdjustedPValue()
-	{
-		return adjustedPValue;
 	}
 
 	public void setAdjustedPValue(double adjustedPValue)
@@ -294,5 +289,68 @@ public class OriogenResult extends BMDExpressAnalysisRow implements Serializable
 	public void setNoelDose(Float noelDose)
 	{
 		this.noelDose = noelDose;
+	}
+
+	@Override
+	public Double getAnovapValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getAnovaAdjustedPValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getWilliamspValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getWiliamsAdjustedPValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getOriogenpValue()
+	{
+		return pValue;
+	}
+
+	@Override
+	public Double getOriogenAdjustedPValue()
+	{
+		return adjustedPValue;
+	}
+
+	@Override
+	public Double getCurveFitGoF()
+	{
+		return null;
+	}
+
+	@Override
+	public PrefilterResult getUpstreamPrefilterResult()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Double getPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.pValue;
+	}
+
+	@Override
+	public Double getAdjustedPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.adjustedPValue;
 	}
 }

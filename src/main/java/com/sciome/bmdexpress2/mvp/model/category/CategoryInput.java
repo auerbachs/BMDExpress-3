@@ -11,8 +11,19 @@ public class CategoryInput
 	private boolean removeGenesWithBMDU_BMDL;
 	private boolean removeGenesWithBMDValuesGreaterThanNFold;
 	private boolean removeGenesWithMaxFoldChangeLessThan;
+
 	private boolean removeGenesWithPrefilterPValue;
 	private boolean removeGenesWithPrefilterAdjustedPValue;
+
+	private boolean removeGenesWithAnovaPrefilterPValue;
+	private boolean removeGenesWithAnovaPrefilterAdjustedPValue;
+	private boolean removeGenesWithWilliamsPrefilterPValue;
+	private boolean removeGenesWithWilliamsPrefilterAdjustedPValue;
+	private boolean removeGenesWithOriogenPrefilterPValue;
+	private boolean removeGenesWithOriogenPrefilterAdjustedPValue;
+
+	private boolean removeGenesWithCurveFitPrefilterGoF;
+
 	private boolean eliminateGeneSetRedundancy;
 	private boolean identifyConflictingProbeSets;
 	private boolean minGenesInGeneset;
@@ -31,8 +42,19 @@ public class CategoryInput
 	private double removeGenesWithBMDU_BMDLNumber;
 	private double removeGenesWithBMDValuesGreaterThanNFoldNumber;
 	private double removeGenesWithMaxFoldChangeLessThanNumber;
+
 	private double removeGenesWithPrefilterPValueNumber;
 	private double removeGenesWithPrefilterAdjustedPValueNumber;
+
+	private double removeGenesWithAnovaPrefilterPValueNumber;
+	private double removeGenesWithAnovaPrefilterAdjustedPValueNumber;
+	private double removeGenesWithWilliamsPrefilterPValueNumber;
+	private double removeGenesWithWilliamsPrefilterAdjustedPValueNumber;
+	private double removeGenesWithOriogenPrefilterPValueNumber;
+	private double removeGenesWithOriogenPrefilterAdjustedPValueNumber;
+
+	private double removeGenesWithCurveFitPrefilterGoFNumber;
+
 	private double correlationCutoffForConflictingProbeSets;
 	private double removeGenesWithABSModelFCNumber;
 	private double removeGenesWithABSZScoreNumber;
@@ -74,8 +96,19 @@ public class CategoryInput
 		this.removeGenesWithBMDU_BMDLNumber = 40;
 		this.removeGenesWithBMDValuesGreaterThanNFoldNumber = 10;
 		this.removeGenesWithMaxFoldChangeLessThanNumber = 1.2;
+
 		this.removeGenesWithPrefilterPValueNumber = 0.05;
 		this.removeGenesWithPrefilterAdjustedPValueNumber = 0.5;
+
+		this.removeGenesWithAnovaPrefilterPValueNumber = 0.05;
+		this.removeGenesWithAnovaPrefilterAdjustedPValueNumber = 0.5;
+		this.removeGenesWithWilliamsPrefilterPValueNumber = 0.05;
+		this.removeGenesWithWilliamsPrefilterAdjustedPValueNumber = 0.5;
+		this.removeGenesWithOriogenPrefilterPValueNumber = 0.05;
+		this.removeGenesWithOriogenPrefilterAdjustedPValueNumber = 0.5;
+
+		this.removeGenesWithCurveFitPrefilterGoFNumber = 0.5;
+
 		this.correlationCutoffForConflictingProbeSets = 0.5;
 		this.removeGenesWithABSZScoreNumber = 2.0;
 		this.removeGenesWithABSModelFCNumber = 3.0;
@@ -436,6 +469,154 @@ public class CategoryInput
 	public void setRemoveGenesWithABSZScoreNumber(double removeGenesWithABSZScoreNumber)
 	{
 		this.removeGenesWithABSZScoreNumber = removeGenesWithABSZScoreNumber;
+	}
+
+	public boolean isRemoveGenesWithAnovaPrefilterPValue()
+	{
+		return removeGenesWithAnovaPrefilterPValue;
+	}
+
+	public void setRemoveGenesWithAnovaPrefilterPValue(boolean removeGenesWithAnovaPrefilterPValue)
+	{
+		this.removeGenesWithAnovaPrefilterPValue = removeGenesWithAnovaPrefilterPValue;
+	}
+
+	public boolean isRemoveGenesWithAnovaPrefilterAdjustedPValue()
+	{
+		return removeGenesWithAnovaPrefilterAdjustedPValue;
+	}
+
+	public void setRemoveGenesWithAnovaPrefilterAdjustedPValue(
+			boolean removeGenesWithAnovaPrefilterAdjustedPValue)
+	{
+		this.removeGenesWithAnovaPrefilterAdjustedPValue = removeGenesWithAnovaPrefilterAdjustedPValue;
+	}
+
+	public boolean isRemoveGenesWithWilliamsPrefilterPValue()
+	{
+		return removeGenesWithWilliamsPrefilterPValue;
+	}
+
+	public void setRemoveGenesWithWilliamsPrefilterPValue(boolean removeGenesWithWilliamsPrefilterPValue)
+	{
+		this.removeGenesWithWilliamsPrefilterPValue = removeGenesWithWilliamsPrefilterPValue;
+	}
+
+	public boolean isRemoveGenesWithWilliamsPrefilterAdjustedPValue()
+	{
+		return removeGenesWithWilliamsPrefilterAdjustedPValue;
+	}
+
+	public void setRemoveGenesWithWilliamsPrefilterAdjustedPValue(
+			boolean removeGenesWithWilliamsPrefilterAdjustedPValue)
+	{
+		this.removeGenesWithWilliamsPrefilterAdjustedPValue = removeGenesWithWilliamsPrefilterAdjustedPValue;
+	}
+
+	public boolean isRemoveGenesWithOriogenPrefilterPValue()
+	{
+		return removeGenesWithOriogenPrefilterPValue;
+	}
+
+	public void setRemoveGenesWithOriogenPrefilterPValue(boolean removeGenesWithOriogenPrefilterPValue)
+	{
+		this.removeGenesWithOriogenPrefilterPValue = removeGenesWithOriogenPrefilterPValue;
+	}
+
+	public boolean isRemoveGenesWithOriogenPrefilterAdjustedPValue()
+	{
+		return removeGenesWithOriogenPrefilterAdjustedPValue;
+	}
+
+	public void setRemoveGenesWithOriogenPrefilterAdjustedPValue(
+			boolean removeGenesWithOriogenPrefilterAdjustedPValue)
+	{
+		this.removeGenesWithOriogenPrefilterAdjustedPValue = removeGenesWithOriogenPrefilterAdjustedPValue;
+	}
+
+	public boolean isRemoveGenesWithCurveFitPrefilterGoF()
+	{
+		return removeGenesWithCurveFitPrefilterGoF;
+	}
+
+	public void setRemoveGenesWithCurveFitPrefilterGoF(boolean removeGenesWithCurveFitPrefilterGoF)
+	{
+		this.removeGenesWithCurveFitPrefilterGoF = removeGenesWithCurveFitPrefilterGoF;
+	}
+
+	public double getRemoveGenesWithAnovaPrefilterPValueNumber()
+	{
+		return removeGenesWithAnovaPrefilterPValueNumber;
+	}
+
+	public void setRemoveGenesWithAnovaPrefilterPValueNumber(double removeGenesWithAnovaPrefilterPValueNumber)
+	{
+		this.removeGenesWithAnovaPrefilterPValueNumber = removeGenesWithAnovaPrefilterPValueNumber;
+	}
+
+	public double getRemoveGenesWithAnovaPrefilterAdjustedPValueNumber()
+	{
+		return removeGenesWithAnovaPrefilterAdjustedPValueNumber;
+	}
+
+	public void setRemoveGenesWithAnovaPrefilterAdjustedPValueNumber(
+			double removeGenesWithAnovaPrefilterAdjustedPValueNumber)
+	{
+		this.removeGenesWithAnovaPrefilterAdjustedPValueNumber = removeGenesWithAnovaPrefilterAdjustedPValueNumber;
+	}
+
+	public double getRemoveGenesWithWilliamsPrefilterPValueNumber()
+	{
+		return removeGenesWithWilliamsPrefilterPValueNumber;
+	}
+
+	public void setRemoveGenesWithWilliamsPrefilterPValueNumber(
+			double removeGenesWithWilliamsPrefilterPValueNumber)
+	{
+		this.removeGenesWithWilliamsPrefilterPValueNumber = removeGenesWithWilliamsPrefilterPValueNumber;
+	}
+
+	public double getRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber()
+	{
+		return removeGenesWithWilliamsPrefilterAdjustedPValueNumber;
+	}
+
+	public void setRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber(
+			double removeGenesWithWilliamsPrefilterAdjustedPValueNumber)
+	{
+		this.removeGenesWithWilliamsPrefilterAdjustedPValueNumber = removeGenesWithWilliamsPrefilterAdjustedPValueNumber;
+	}
+
+	public double getRemoveGenesWithOriogenPrefilterPValueNumber()
+	{
+		return removeGenesWithOriogenPrefilterPValueNumber;
+	}
+
+	public void setRemoveGenesWithOriogenPrefilterPValueNumber(
+			double removeGenesWithOriogenPrefilterPValueNumber)
+	{
+		this.removeGenesWithOriogenPrefilterPValueNumber = removeGenesWithOriogenPrefilterPValueNumber;
+	}
+
+	public double getRemoveGenesWithOriogenPrefilterAdjustedPValueNumber()
+	{
+		return removeGenesWithOriogenPrefilterAdjustedPValueNumber;
+	}
+
+	public void setRemoveGenesWithOriogenPrefilterAdjustedPValueNumber(
+			double removeGenesWithOriogenPrefilterAdjustedPValueNumber)
+	{
+		this.removeGenesWithOriogenPrefilterAdjustedPValueNumber = removeGenesWithOriogenPrefilterAdjustedPValueNumber;
+	}
+
+	public double getRemoveGenesWithCurveFitPrefilterGoFNumber()
+	{
+		return removeGenesWithCurveFitPrefilterGoFNumber;
+	}
+
+	public void setRemoveGenesWithCurveFitPrefilterGoFNumber(double removeGenesWithCurveFitPrefilterGoFNumber)
+	{
+		this.removeGenesWithCurveFitPrefilterGoFNumber = removeGenesWithCurveFitPrefilterGoFNumber;
 	}
 
 }

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
-import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonSubTypes({ @Type(value = OneWayANOVAResult.class, name = "onewayanovaresult"),
@@ -18,10 +18,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
 public interface PrefilterResult
 {
-
-	public double getpValue();
-
-	public double getAdjustedPValue();
 
 	public Float getBestFoldChange();
 
@@ -44,5 +40,25 @@ public interface PrefilterResult
 	public void setFoldChanges(List<Float> foldChanges);
 
 	public void setNoelLoelPValues(List<Float> pvalues);
+
+	public Double getPValue();
+
+	public Double getAdjustedPValue();
+
+	public Double getAnovapValue();
+
+	public Double getAnovaAdjustedPValue();
+
+	public Double getWilliamspValue();
+
+	public Double getWiliamsAdjustedPValue();
+
+	public Double getOriogenpValue();
+
+	public Double getOriogenAdjustedPValue();
+
+	public Double getCurveFitGoF();
+
+	public PrefilterResult getUpstreamPrefilterResult();
 
 }

@@ -99,7 +99,14 @@ public class MainPresenter extends PresenterBase<IMainView>
 	@Subscribe
 	public void onSelectBMDAnalysisResults(BMDAnalysisDataSelectedEvent event)
 	{
-		getView().updateSelectionLabel(event.GetPayload().getName());
+		try
+		{
+			getView().updateSelectionLabel(event.GetPayload().getName());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	/*

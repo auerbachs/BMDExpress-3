@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.function.Function;
 
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.AdverseDirectionEnum;
@@ -1379,7 +1380,8 @@ public class BMDStatatistics
 	}
 
 	public Vector<String> checkPValueBelowDose(Vector<String> vectGenes, double pValue,
-			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes)
+			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes,
+			Function<ProbeStatResult, Double> pValueExtractor)
 	{
 		Vector<String> pcGenes = new Vector<String>();
 
@@ -1400,8 +1402,8 @@ public class BMDStatatistics
 						if (probeStatResult == null)
 							continue;
 
-						if (probeStatResult.getPrefilterPValue() != null
-								&& Math.abs(probeStatResult.getPrefilterPValue()) > pValue)
+						Double extracted = pValueExtractor.apply(probeStatResult);
+						if (extracted != null && Math.abs(extracted) > pValue)
 						{
 							probes.remove(st);
 							removedProbes.add(st);
@@ -1423,8 +1425,9 @@ public class BMDStatatistics
 		return pcGenes;
 	}
 
-	public Vector<String> checkAdjustedPValueBelowDose(Vector<String> vectGenes, double adjustedPValue,
-			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes)
+	public Vector<String> checkGoFAbove(Vector<String> vectGenes, double pValue,
+			Hashtable<String, Vector> subHashG2Ids, Set<String> removedProbes,
+			Function<ProbeStatResult, Double> pValueExtractor)
 	{
 		Vector<String> pcGenes = new Vector<String>();
 
@@ -1445,8 +1448,8 @@ public class BMDStatatistics
 						if (probeStatResult == null)
 							continue;
 
-						if (probeStatResult.getPrefilterAdjustedPValue() != null
-								&& Math.abs(probeStatResult.getPrefilterAdjustedPValue()) > adjustedPValue)
+						Double extracted = pValueExtractor.apply(probeStatResult);
+						if (extracted != null && Math.abs(extracted) > pValue)
 						{
 							probes.remove(st);
 							removedProbes.add(st);

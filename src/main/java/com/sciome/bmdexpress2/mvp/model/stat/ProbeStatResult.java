@@ -46,8 +46,8 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 	private transient Set<String> geneSet = new HashSet<>();
 	private transient Set<String> geneSymbolSet = new HashSet<>();
 
-	private transient Double prefilterAdjustedPValue;
-	private transient Double prefilterPvalue;
+	// private transient Double prefilterAdjustedPValue;
+	// private transient Double prefilterPvalue;
 	private transient Double prefilterBestFoldChange;
 	private transient Double prefilterBestABSFoldChange;
 
@@ -55,6 +55,20 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 	private transient Float prefilterLoel;
 
 	private Long id;
+
+	private Double anovaPrefilterrefilterPvalue;
+
+	private Double anovaPrefilterAdjustedPValue;
+
+	private Double williamsPrefilterPvalue;
+
+	private Double williamsPrefilterAdjustedPValue;
+
+	private Double oriogenPrefilterPvalue;
+
+	private Double oriogenPrefilterAdjustedPValue;
+
+	private Double curveFitPrefilterGoF;
 
 	// clone probestatresult. but this is really for
 	// reselecting best models. so keep the beststat/bestpolystatresults empty
@@ -135,8 +149,10 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 	// calculate columns and rows. The purpose of this is to agregate all the results
 	// so the data can be viewed by a table.
 	public void createRowData(Map<String, ReferenceGeneAnnotation> referenceGeneAnnotations,
-			Double adjustedPValue, Double pValue, Double bestFoldChange, List<Float> foldChanges, Float loel,
-			Float noel, Float wAUC)
+			Double prefilterPValue, Double prefilterAdjustedPValue, Double anovaAdjustedPValue,
+			Double anovaPValue, Double williamsAdjustedPValue, Double williamsPValue,
+			Double oriogenAdjustedPValue, Double oriogenPValue, Double curveFitGoF, Double bestFoldChange,
+			List<Float> foldChanges, Float loel, Float noel, Float wAUC)
 	{
 		row = new ArrayList<Object>();
 		row.add(probeResponse.getProbe().getId());
@@ -257,11 +273,27 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			row.add(wAUC);
 		// row.add(logwAUC);
 
-		row.add(pValue);
-		this.prefilterPvalue = pValue;
+		row.add(prefilterPValue);
+		row.add(prefilterAdjustedPValue);
+		row.add(anovaPValue);
+		this.anovaPrefilterrefilterPvalue = anovaPValue;
 
-		row.add(adjustedPValue);
-		this.prefilterAdjustedPValue = adjustedPValue;
+		row.add(anovaAdjustedPValue);
+		this.anovaPrefilterAdjustedPValue = anovaAdjustedPValue;
+
+		row.add(williamsPValue);
+		this.williamsPrefilterPvalue = williamsPValue;
+
+		row.add(williamsAdjustedPValue);
+		this.williamsPrefilterAdjustedPValue = williamsAdjustedPValue;
+
+		row.add(oriogenPValue);
+		this.oriogenPrefilterPvalue = oriogenPValue;
+		row.add(oriogenAdjustedPValue);
+		this.oriogenPrefilterAdjustedPValue = oriogenAdjustedPValue;
+
+		row.add(curveFitGoF);
+		this.curveFitPrefilterGoF = curveFitGoF;
 
 		row.add(bestFoldChange);
 		this.prefilterBestFoldChange = bestFoldChange;
@@ -456,15 +488,15 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 		return bestStatResult.getBMDU();
 	}
 
-	public Double getPrefilterAdjustedPValue()
-	{
-		return prefilterAdjustedPValue;
-	}
+	// public Double getPrefilterAdjustedPValue()
+	// {
+	// return prefilterAdjustedPValue;
+	// }
 
-	public Double getPrefilterPValue()
-	{
-		return prefilterPvalue;
-	}
+	// public Double getPrefilterPValue()
+	// {
+	// return prefilterPvalue;
+	// }
 
 	public Double getBestFoldChange()
 	{
@@ -545,6 +577,76 @@ public class ProbeStatResult extends BMDExpressAnalysisRow implements Serializab
 			return Color.yellow;
 		else
 			return Color.blue;
+	}
+
+	public Double getAnovaPrefilterrefilterPvalue()
+	{
+		return anovaPrefilterrefilterPvalue;
+	}
+
+	public void setAnovaPrefilterrefilterPvalue(Double anovaPrefilterrefilterPvalue)
+	{
+		this.anovaPrefilterrefilterPvalue = anovaPrefilterrefilterPvalue;
+	}
+
+	public Double getAnovaPrefilterAdjustedPValue()
+	{
+		return anovaPrefilterAdjustedPValue;
+	}
+
+	public void setAnovaPrefilterAdjustedPValue(Double anovaPrefilterAdjustedPValue)
+	{
+		this.anovaPrefilterAdjustedPValue = anovaPrefilterAdjustedPValue;
+	}
+
+	public Double getWilliamsPrefilterPvalue()
+	{
+		return williamsPrefilterPvalue;
+	}
+
+	public void setWilliamsPrefilterPvalue(Double williamsPrefilterPvalue)
+	{
+		this.williamsPrefilterPvalue = williamsPrefilterPvalue;
+	}
+
+	public Double getWilliamsPrefilterAdjustedPValue()
+	{
+		return williamsPrefilterAdjustedPValue;
+	}
+
+	public void setWilliamsPrefilterAdjustedPValue(Double williamsPrefilterAdjustedPValue)
+	{
+		this.williamsPrefilterAdjustedPValue = williamsPrefilterAdjustedPValue;
+	}
+
+	public Double getOriogenPrefilterPvalue()
+	{
+		return oriogenPrefilterPvalue;
+	}
+
+	public void setOriogenPrefilterPvalue(Double oriogenPrefilterPvalue)
+	{
+		this.oriogenPrefilterPvalue = oriogenPrefilterPvalue;
+	}
+
+	public Double getOriogenPrefilterAdjustedPValue()
+	{
+		return oriogenPrefilterAdjustedPValue;
+	}
+
+	public void setOriogenPrefilterAdjustedPValue(Double oriogenPrefilterAdjustedPValue)
+	{
+		this.oriogenPrefilterAdjustedPValue = oriogenPrefilterAdjustedPValue;
+	}
+
+	public Double getCurveFitPrefilterGoF()
+	{
+		return curveFitPrefilterGoF;
+	}
+
+	public void setCurveFitPrefilterGoF(Double curveFitPrefilterGoF)
+	{
+		this.curveFitPrefilterGoF = curveFitPrefilterGoF;
 	}
 
 }

@@ -12,13 +12,13 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 import com.sciome.bmdexpress2.mvp.model.IMarkable;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.util.NumberManager;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@ref")
@@ -29,31 +29,31 @@ public class WilliamsTrendResult extends BMDExpressAnalysisRow
 	/**
 	 * 
 	 */
-	private static final long			serialVersionUID	= -465506000834082809L;
+	private static final long serialVersionUID = -465506000834082809L;
 
-	private ProbeResponse				probeResponse;
-	private double						pValue;
-	private double						adjustedPValue;
-	private Float						bestFoldChange;
-	private Float						loelDose;
-	private Float						noelDose;
+	private ProbeResponse probeResponse;
+	private double pValue;
+	private double adjustedPValue;
+	private Float bestFoldChange;
+	private Float loelDose;
+	private Float noelDose;
 
-	private List<Float>					foldChanges;
+	private List<Float> foldChanges;
 
-	private List<Float>					noelLoelPValues;
+	private List<Float> noelLoelPValues;
 
 	@JsonIgnore
-	private transient String			genes;
+	private transient String genes;
 	@JsonIgnore
-	private transient String			geneSymbols;
+	private transient String geneSymbols;
 	@JsonIgnore
-	private transient Set<String>		geneSymbolSet;
+	private transient Set<String> geneSymbolSet;
 
 	// row data for the table view.
 	@JsonIgnore
-	protected transient List<Object>	row;
+	protected transient List<Object> row;
 
-	private Long						id;
+	private Long id;
 
 	public ProbeResponse getProbeResponse()
 	{
@@ -114,11 +114,6 @@ public class WilliamsTrendResult extends BMDExpressAnalysisRow
 	public double getNegativeLogAdjustedPValue()
 	{
 		return NumberManager.negLog10(this.adjustedPValue);
-	}
-
-	public double getAdjustedPValue()
-	{
-		return adjustedPValue;
 	}
 
 	public void setAdjustedPValue(double adjustedPValue)
@@ -289,6 +284,69 @@ public class WilliamsTrendResult extends BMDExpressAnalysisRow
 	public void setNoelDose(Float noelDose)
 	{
 		this.noelDose = noelDose;
+	}
+
+	@Override
+	public Double getAnovapValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getAnovaAdjustedPValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getWilliamspValue()
+	{
+		return pValue;
+	}
+
+	@Override
+	public Double getWiliamsAdjustedPValue()
+	{
+		return adjustedPValue;
+	}
+
+	@Override
+	public Double getOriogenpValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getOriogenAdjustedPValue()
+	{
+		return null;
+	}
+
+	@Override
+	public Double getCurveFitGoF()
+	{
+		return null;
+	}
+
+	@Override
+	public PrefilterResult getUpstreamPrefilterResult()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Double getPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.pValue;
+	}
+
+	@Override
+	public Double getAdjustedPValue()
+	{
+		// TODO Auto-generated method stub
+		return this.adjustedPValue;
 	}
 
 }

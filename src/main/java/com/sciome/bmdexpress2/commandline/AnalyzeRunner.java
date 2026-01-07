@@ -334,20 +334,60 @@ public class AnalyzeRunner
 			params.setUserFoldChangeFilter(true);
 		}
 
-		if (catConfig.getPrefilterPValueMin() == null)
-			params.setUserPValueFilter(false);
+		if (catConfig.getAnovaPrefilterPValueMin() == null)
+			params.setUseAnovaPValueFilter(false);
 		else
 		{
-			params.setPValue(catConfig.getPrefilterPValueMin());
-			params.setUserPValueFilter(true);
+			params.setAnovaPValue(catConfig.getAnovaPrefilterPValueMin());
+			params.setUseAnovaPValueFilter(true);
 		}
 
-		if (catConfig.getPrefilterAdjustedPValueMin() == null)
-			params.setUserAdjustedPValueFilter(false);
+		if (catConfig.getWilliamsPrefilterPValueMin() == null)
+			params.setUseWilliamsPValueFilter(false);
 		else
 		{
-			params.setAdjustedPValue(catConfig.getPrefilterAdjustedPValueMin());
-			params.setUserAdjustedPValueFilter(true);
+			params.setWilliamsPValue(catConfig.getWilliamsPrefilterPValueMin());
+			params.setUseWilliamsPValueFilter(true);
+		}
+
+		if (catConfig.getOriogenPrefilterPValueMin() == null)
+			params.setUseOriogenPValueFilter(false);
+		else
+		{
+			params.setOriogenPValue(catConfig.getOriogenPrefilterPValueMin());
+			params.setUseOriogenPValueFilter(true);
+		}
+
+		if (catConfig.getCurveFitPrefilterPValueMax() == null)
+			params.setUseCurveFitGoFFilter(false);
+		else
+		{
+			params.setCurveFitGoF(catConfig.getCurveFitPrefilterPValueMax());
+			params.setUseCurveFitGoFFilter(true);
+		}
+
+		if (catConfig.getAnovaPrefilterAdjustedPValueMin() == null)
+			params.setUseAnovaAdjustedPValueFilter(false);
+		else
+		{
+			params.setAnovaAdjustedPValue(catConfig.getAnovaPrefilterAdjustedPValueMin());
+			params.setUseAnovaAdjustedPValueFilter(true);
+		}
+
+		if (catConfig.getWilliamsPrefilterAdjustedPValueMin() == null)
+			params.setUseWilliamsAdjustedPValueFilter(false);
+		else
+		{
+			params.setWilliamsAdjustedPValue(catConfig.getWilliamsPrefilterAdjustedPValueMin());
+			params.setUseWilliamsAdjustedPValueFilter(true);
+		}
+
+		if (catConfig.getOriogenPrefilterAdjustedPValueMin() == null)
+			params.setUseOriogenAdjustedPValueFilter(false);
+		else
+		{
+			params.setOriogenAdjustedPValue(catConfig.getOriogenPrefilterAdjustedPValueMin());
+			params.setUseOriogenAdjustedPValueFilter(true);
 		}
 
 		if (catConfig.getCorrelationCutoffForConflictingProbeSets() != null)

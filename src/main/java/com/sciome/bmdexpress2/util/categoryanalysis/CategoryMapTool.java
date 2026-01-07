@@ -38,6 +38,7 @@ import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGene;
 import com.sciome.bmdexpress2.mvp.model.refgene.ReferenceGeneAnnotation;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.stat.ProbeStatResult;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
@@ -301,17 +302,47 @@ public class CategoryMapTool
 			rstName += "_foldchange" + df1.format(params.getMaxFoldChange());
 		}
 
-		if (params.isUserPValueFilter())
-		{
-			analysisInfo.getNotes().add("Remove Genes With Prefilter P Value >: " + params.getPValue());
-			rstName += "_pvalue" + df1.format(params.getPValue());
-		}
-
-		if (params.isUserAdjustedPValueFilter())
+		if (params.isUseAnovaPValueFilter())
 		{
 			analysisInfo.getNotes()
-					.add("Remove Genes With Prefilter Adjusted P Value >: " + params.getAdjustedPValue());
-			rstName += "_adjustedpvalue" + df1.format(params.getAdjustedPValue());
+					.add("Remove Genes With Anova Prefilter P Value >: " + params.getAnovaPValue());
+		}
+
+		if (params.isUseAnovaAdjustedPValueFilter())
+		{
+			analysisInfo.getNotes().add("Remove Genes With Anova Prefilter Adjusted P Value >: "
+					+ params.getAnovaAdjustedPValue());
+		}
+
+		if (params.isUseWilliamsPValueFilter())
+		{
+			analysisInfo.getNotes()
+					.add("Remove Genes With Williams Prefilter P Value >: " + params.getWilliamsPValue());
+
+		}
+
+		if (params.isUseWilliamsAdjustedPValueFilter())
+		{
+			analysisInfo.getNotes().add("Remove Genes With Williams Prefilter Adjusted P Value >: "
+					+ params.getWilliamsAdjustedPValue());
+		}
+
+		if (params.isUseOriogenPValueFilter())
+		{
+			analysisInfo.getNotes()
+					.add("Remove Genes With Oriogen Prefilter P Value >: " + params.getOriogenPValue());
+		}
+
+		if (params.isUseOriogenAdjustedPValueFilter())
+		{
+			analysisInfo.getNotes().add("Remove Genes With Oriogen Prefilter Adjusted P Value >: "
+					+ params.getOriogenAdjustedPValue());
+		}
+
+		if (params.isUseCurveFitGoFFilter())
+		{
+			analysisInfo.getNotes()
+					.add("Remove Genes With Curve FIt Prefilter GoF <: " + params.getCurveFitGoF());
 		}
 
 		if (params.isIdentifyConflictingProbeSets())
@@ -691,19 +722,58 @@ public class CategoryMapTool
 				categoryAnalysisResult.setGenesWithFoldChangeAboveValue(sub);
 			}
 
-			if (params.isUserPValueFilter())
+			// prefilter p-value/adjust p-value/GoF filters
+
+			if (params.isUseAnovaPValueFilter())
 			{
-				sub = bmdStats.checkPValueBelowDose(subList, params.getPValue(), subHashG2Ids, removedProbes)
-						.size();
-				categoryAnalysisResult.setGenesWithPrefilterPValueAboveValue(sub);
+				sub = bmdStats.checkPValueBelowDose(subList, params.getAnovaPValue(), subHashG2Ids,
+						removedProbes, ProbeStatResult::getAnovaPrefilterrefilterPvalue).size();
+				categoryAnalysisResult.setGenesWithAnovaPrefilterPValueBelowValue(sub);
 			}
 
-			if (params.isUserAdjustedPValueFilter())
+			if (params.isUseAnovaAdjustedPValueFilter())
 			{
-				sub = bmdStats.checkAdjustedPValueBelowDose(subList, params.getAdjustedPValue(), subHashG2Ids,
-						removedProbes).size();
-				categoryAnalysisResult.setGenesWithPrefilterAdjustedPValueAboveValue(sub);
+				sub = bmdStats.checkPValueBelowDose(subList, params.getAnovaAdjustedPValue(), subHashG2Ids,
+						removedProbes, ProbeStatResult::getAnovaPrefilterAdjustedPValue).size();
+				categoryAnalysisResult.setGenesWithAnovaPrefilterAdjustedPValueBelowValue(sub);
 			}
+
+			if (params.isUseWilliamsPValueFilter())
+			{
+				sub = bmdStats.checkPValueBelowDose(subList, params.getWilliamsPValue(), subHashG2Ids,
+						removedProbes, ProbeStatResult::getWilliamsPrefilterPvalue).size();
+				categoryAnalysisResult.setGenesWithWilliamsPrefilterPValueBelowValue(sub);
+			}
+
+			if (params.isUseWilliamsAdjustedPValueFilter())
+			{
+				sub = bmdStats.checkPValueBelowDose(subList, params.getWilliamsAdjustedPValue(), subHashG2Ids,
+						removedProbes, ProbeStatResult::getWilliamsPrefilterAdjustedPValue).size();
+				categoryAnalysisResult.setGenesWithWilliamsPrefilterAdjustedPValueBelowValue(sub);
+			}
+
+			if (params.isUseOriogenPValueFilter())
+			{
+				sub = bmdStats.checkPValueBelowDose(subList, params.getOriogenPValue(), subHashG2Ids,
+						removedProbes, ProbeStatResult::getOriogenPrefilterPvalue).size();
+				categoryAnalysisResult.setGenesWithOriogenPrefilterPValueBelowValue(sub);
+			}
+
+			if (params.isUseOriogenAdjustedPValueFilter())
+			{
+				sub = bmdStats.checkPValueBelowDose(subList, params.getOriogenAdjustedPValue(), subHashG2Ids,
+						removedProbes, ProbeStatResult::getOriogenPrefilterAdjustedPValue).size();
+				categoryAnalysisResult.setGenesWithOriogenPrefilterAdjustedPValueBelowValue(sub);
+			}
+
+			if (params.isUseCurveFitGoFFilter())
+			{
+				sub = bmdStats.checkGoFAbove(subList, params.getCurveFitGoF(), subHashG2Ids, removedProbes,
+						ProbeStatResult::getCurveFitPrefilterGoF).size();
+				categoryAnalysisResult.setGenesWithCurveFitPrefilterGoFAboveValue(sub);
+			}
+
+			// end of prefilter filters
 
 			if (params.isRemoveABSModelFC())
 			{

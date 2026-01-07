@@ -68,8 +68,15 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	private Integer genesWithBMDUBMDRatioBelowValue;
 	private Integer genesWithNFoldBelowLowPostiveDoseValue;
 	private Integer genesWithFoldChangeAboveValue;
-	private Integer genesWithPrefilterPValueAboveValue;
-	private Integer genesWithPrefilterAdjustedPValueAboveValue;
+
+	private Integer genesWithAnovaPrefilterPValueBelowValue;
+	private Integer genesWithAnovaPrefilterAdjustedPValueBelowValue;
+	private Integer genesWithWilliamsPrefilterPValueBelowValue;
+	private Integer genesWithWilliamsPrefilterAdjustedPValueBelowValue;
+	private Integer genesWithOriogenPrefilterPValueBelowValue;
+	private Integer genesWithOriogenPrefilterAdjustedPValueBelowValue;
+	private Integer genesWithCurveFitPrefilterGoFAboveValue;
+
 	private Integer genesNotStepFunction;
 	private Integer genesNotStepFunctionWithBMDLower;
 	private Integer genesNotAdverseDirection;
@@ -288,6 +295,76 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		return NumberManager.negLog10(fishersExactTwoTailPValue);
 	}
 
+	public Integer getGenesWithAnovaPrefilterPValueBelowValue()
+	{
+		return genesWithAnovaPrefilterPValueBelowValue;
+	}
+
+	public void setGenesWithAnovaPrefilterPValueBelowValue(Integer genesWithAnovaPrefilterPValueAboveValue)
+	{
+		this.genesWithAnovaPrefilterPValueBelowValue = genesWithAnovaPrefilterPValueAboveValue;
+	}
+
+	public Integer getGenesWithAnovaPrefilterAdjustedPValueBelowValue()
+	{
+		return genesWithAnovaPrefilterAdjustedPValueBelowValue;
+	}
+
+	public void setGenesWithAnovaPrefilterAdjustedPValueBelowValue(Integer gc)
+	{
+		this.genesWithAnovaPrefilterAdjustedPValueBelowValue = gc;
+	}
+
+	public Integer getGenesWithWilliamsPrefilterPValueBelowValue()
+	{
+		return genesWithWilliamsPrefilterPValueBelowValue;
+	}
+
+	public void setGenesWithWilliamsPrefilterPValueBelowValue(Integer gc)
+	{
+		this.genesWithWilliamsPrefilterPValueBelowValue = gc;
+	}
+
+	public Integer getGenesWithWilliamsPrefilterAdjustedPValueBelowValue()
+	{
+		return genesWithWilliamsPrefilterAdjustedPValueBelowValue;
+	}
+
+	public void setGenesWithWilliamsPrefilterAdjustedPValueBelowValue(Integer gc)
+	{
+		this.genesWithWilliamsPrefilterAdjustedPValueBelowValue = gc;
+	}
+
+	public Integer getGenesWithOriogenPrefilterPValueBelowValue()
+	{
+		return genesWithOriogenPrefilterPValueBelowValue;
+	}
+
+	public void setGenesWithOriogenPrefilterPValueBelowValue(Integer gc)
+	{
+		this.genesWithOriogenPrefilterPValueBelowValue = gc;
+	}
+
+	public Integer getGenesWithOriogenPrefilterAdjustedPValueBelowValue()
+	{
+		return genesWithOriogenPrefilterAdjustedPValueBelowValue;
+	}
+
+	public void setGenesWithOriogenPrefilterAdjustedPValueBelowValue(Integer gc)
+	{
+		this.genesWithOriogenPrefilterAdjustedPValueBelowValue = gc;
+	}
+
+	public Integer getGenesWithCurveFitPrefilterGoFAboveValue()
+	{
+		return genesWithCurveFitPrefilterGoFAboveValue;
+	}
+
+	public void setGenesWithCurveFitPrefilterGoFAboveValue(Integer gc)
+	{
+		this.genesWithCurveFitPrefilterGoFAboveValue = gc;
+	}
+
 	public Integer getGeneCountSignificantANOVA()
 	{
 		return geneCountSignificantANOVA;
@@ -346,26 +423,6 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 	public void setGenesWithFoldChangeAboveValue(Integer genesWithFoldChangeAboveValue)
 	{
 		this.genesWithFoldChangeAboveValue = genesWithFoldChangeAboveValue;
-	}
-
-	public Integer getGenesWithPrefilterPValueAboveValue()
-	{
-		return genesWithPrefilterPValueAboveValue;
-	}
-
-	public void setGenesWithPrefilterPValueAboveValue(Integer genesWithPValueAboveValue)
-	{
-		this.genesWithPrefilterPValueAboveValue = genesWithPValueAboveValue;
-	}
-
-	public Integer getGenesWithPrefilterAdjustedPValueAboveValue()
-	{
-		return genesWithPrefilterAdjustedPValueAboveValue;
-	}
-
-	public void setGenesWithPrefilterAdjustedPValueAboveValue(Integer genesWithAdjustedPValueAboveValue)
-	{
-		this.genesWithPrefilterAdjustedPValueAboveValue = genesWithAdjustedPValueAboveValue;
 	}
 
 	public Integer getGenesNotStepFunction()
@@ -1238,11 +1295,27 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		if (genesWithFoldChangeAboveValue != null)
 			headers.add("Genes with max Fold Change >=");
 
-		if (genesWithPrefilterPValueAboveValue != null)
-			headers.add("Genes with Prefilter P-Value <=");
+		if (genesWithAnovaPrefilterPValueBelowValue != null)
+			headers.add("Genes with Anova Prefilter P-Value <=");
 
-		if (genesWithPrefilterAdjustedPValueAboveValue != null)
-			headers.add("Genes with Prefilter Adjusted P-Value <=");
+		if (genesWithAnovaPrefilterAdjustedPValueBelowValue != null)
+			headers.add("Genes with Anova Prefilter Adjusted P-Value <=");
+
+		if (genesWithWilliamsPrefilterPValueBelowValue != null)
+			headers.add("Genes with Williams Prefilter P-Value <=");
+
+		if (genesWithWilliamsPrefilterAdjustedPValueBelowValue != null)
+			headers.add("Genes with Williams Prefilter Adjusted P-Value <=");
+
+		if (genesWithOriogenPrefilterPValueBelowValue != null)
+			headers.add("Genes with Oriogen  Prefilter P-Value <=");
+
+		if (genesWithOriogenPrefilterAdjustedPValueBelowValue != null)
+			headers.add("Genes with Oriogen Prefilter Adjusted P-Value <=");
+
+		if (genesWithCurveFitPrefilterGoFAboveValue != null)
+			headers.add("Genes with Curve Fit Prefilter GoF >=");
+
 		if (genesNotStepFunction != null)
 			headers.add("Genes Not Step Function");
 
@@ -1414,11 +1487,25 @@ public abstract class CategoryAnalysisResult extends BMDExpressAnalysisRow
 		if (genesWithFoldChangeAboveValue != null)
 			row.add(genesWithFoldChangeAboveValue);
 
-		if (genesWithPrefilterPValueAboveValue != null)
-			row.add(genesWithPrefilterPValueAboveValue);
+		if (genesWithAnovaPrefilterPValueBelowValue != null)
+			row.add(genesWithAnovaPrefilterPValueBelowValue);
 
-		if (genesWithPrefilterAdjustedPValueAboveValue != null)
-			row.add(genesWithPrefilterAdjustedPValueAboveValue);
+		if (genesWithAnovaPrefilterAdjustedPValueBelowValue != null)
+			row.add(genesWithAnovaPrefilterAdjustedPValueBelowValue);
+
+		if (genesWithWilliamsPrefilterPValueBelowValue != null)
+			row.add(genesWithWilliamsPrefilterPValueBelowValue);
+
+		if (genesWithWilliamsPrefilterAdjustedPValueBelowValue != null)
+			row.add(genesWithWilliamsPrefilterAdjustedPValueBelowValue);
+
+		if (genesWithOriogenPrefilterPValueBelowValue != null)
+			row.add(genesWithOriogenPrefilterPValueBelowValue);
+		if (genesWithOriogenPrefilterAdjustedPValueBelowValue != null)
+			row.add(genesWithOriogenPrefilterAdjustedPValueBelowValue);
+
+		if (genesWithCurveFitPrefilterGoFAboveValue != null)
+			row.add(genesWithCurveFitPrefilterGoFAboveValue);
 
 		if (genesNotStepFunction != null)
 			row.add(genesNotStepFunction);
