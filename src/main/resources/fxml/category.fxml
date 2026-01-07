@@ -66,6 +66,14 @@
       																		<CheckBox id="bmdFilter4CheckBox" fx:id="doIVIVECheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="499.0" text="Load Toxicokinetic Parameters" wrapText="true" />
       																	</children>
       																</HBox>
+                                                      <HBox fx:id="selectionHBox1" alignment="CENTER" minHeight="25.0" prefHeight="25.0" spacing="15.0">
+                                                         <children>
+                                                            <Label fx:id="selectionLabel1" alignment="CENTER_RIGHT" minHeight="25.0" prefHeight="25.0" prefWidth="109.0" text="Show Parameters" />
+                                                            <ComboBox fx:id="showParametersComboBox" minHeight="25.0" prefHeight="25.0" prefWidth="150.0" />
+                                                            <Label fx:id="selectionLabel11" alignment="CENTER_RIGHT" minHeight="25.0" prefHeight="25.0" prefWidth="109.0" text="Hide Parameters" />
+                                                            <ComboBox fx:id="hideParametersComboBox" minHeight="25.0" prefHeight="25.0" prefWidth="150.0" />
+                                                         </children>
+                                                      </HBox>
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="130.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                          <children>
                                                             <CheckBox id="bmdFilter4CheckBox" fx:id="removePromiscuousProbesCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="499.0" selected="true" text="Remove Promiscuous Probes" wrapText="true" />
@@ -172,12 +180,6 @@
                                                             <TextField fx:id="bmdFilterABSZScoreValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="2" />
                                                          </children>
                                                       </HBox>
-                                                      <HBox alignment="CENTER" layoutX="10.0" layoutY="566.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
-                                                         <children>
-                                                            <CheckBox fx:id="bmdFilterABSModeFCCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="400.0" selected="false" text="Remove Genes With |Model Fold Change| &lt;" wrapText="true" />
-                                                            <TextField fx:id="bmdFilterABSModelFCValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="3" />
-                                                         </children>
-                                                      </HBox>
                                                       <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                          <children>
                                                             <CheckBox fx:id="removeStepFunctionCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="495.0" selected="false" text="Remove Genes With Step Function Detected" wrapText="true" />
@@ -186,6 +188,12 @@
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="527.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
                                                          <children>
                                                             <CheckBox fx:id="removeStepFunctionWithBMDLowerCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="498.0" selected="false" text="Remove Genes With Step Function Lower Than First Dose" wrapText="true" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" layoutX="10.0" layoutY="566.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
+                                                         <children>
+                                                            <CheckBox fx:id="bmdFilterABSModeFCCheckBox" mnemonicParsing="false" prefHeight="18.0" prefWidth="400.0" selected="false" text="Remove Genes With |Model Fold Change| &lt;" wrapText="true" />
+                                                            <TextField fx:id="bmdFilterABSModelFCValue" maxWidth="-Infinity" minHeight="25.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="96.0" text="3" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">
