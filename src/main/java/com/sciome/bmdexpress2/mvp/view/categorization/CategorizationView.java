@@ -16,8 +16,7 @@ import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.AutoCompletionBinding.ISuggestionRequest;
 import org.controlsfx.control.textfield.TextFields;
 
-import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisInput;
-import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisInputsToShow;
+import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisInputToShowOrHide;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryInput;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.presenter.categorization.CategorizationPresenter;
@@ -301,9 +300,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private ComboBox speciesComboBox;
 
 	@FXML
-	private ComboBox<CategoryAnalysisInput> showParametersComboBox;
+	private ComboBox<CategoryAnalysisInputToShowOrHide> showParametersComboBox;
 	@FXML
-	private ComboBox<CategoryAnalysisInput> hideParametersComboBox;
+	private ComboBox<CategoryAnalysisInputToShowOrHide> hideParametersComboBox;
 
 	@FXML
 	private Label inputUnitsLabel;
@@ -319,13 +318,11 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private final String MGPERKGPERDAY = "mg/kg/day";
 	private final String UMOLPERKGPERDAY = "mmol/kg/day";
 
-	private Map<String, Node> labelToNode = new HashMap<>();
+	private Map<String, CheckBox> labelToNode = new HashMap<>();
 
-	private CategoryAnalysisInputsToShow analysisInputsToShow;
+	private ObservableList<CategoryAnalysisInputToShowOrHide> showParametersList;
 
-	private ObservableList<CategoryAnalysisInput> showParametersList;
-
-	private ObservableList<CategoryAnalysisInput> hideParametersList;
+	private ObservableList<CategoryAnalysisInputToShowOrHide> hideParametersList;
 
 	public CategorizationView()
 	{
@@ -355,7 +352,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 		showParametersComboBox.setOnAction(e ->
 		{
-			CategoryAnalysisInput selected = showParametersComboBox.getValue();
+			CategoryAnalysisInputToShowOrHide selected = showParametersComboBox.getValue();
 			if (selected == null)
 				return;
 			Platform.runLater(() ->
@@ -371,7 +368,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 		hideParametersComboBox.setOnAction(e ->
 		{
-			CategoryAnalysisInput selected = hideParametersComboBox.getValue();
+			CategoryAnalysisInputToShowOrHide selected = hideParametersComboBox.getValue();
 			if (selected == null)
 				return;
 
@@ -398,24 +395,24 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	{
 
 		showParametersList = FXCollections.observableArrayList();
-		SortedList<CategoryAnalysisInput> sortedShow = new SortedList<>(showParametersList);
+		SortedList<CategoryAnalysisInputToShowOrHide> sortedShow = new SortedList<>(showParametersList);
 		hideParametersList = FXCollections.observableArrayList();
-		SortedList<CategoryAnalysisInput> sortedHidden = new SortedList<>(hideParametersList);
+		SortedList<CategoryAnalysisInputToShowOrHide> sortedHidden = new SortedList<>(hideParametersList);
 
 		showParametersComboBox.setItems(sortedShow);
 		hideParametersComboBox.setItems(sortedHidden);
 
-		for (CategoryAnalysisInput input : this.analysisInputsToShow.getCategoryInputs())
+		for (CategoryAnalysisInputToShowOrHide inputParam : this.input.getCategoryInputsToShowOrHide())
 		{
-			if (!input.isShowMe())
+			if (!inputParam.isShowMe())
 			{
-				showParametersList.add(input);
-				hideParameter(input.getName());
+				showParametersList.add(inputParam);
+				hideParameter(inputParam.getName());
 			}
 			else
 			{
-				hideParametersList.add(input);
-				showParameter(input.getName());
+				hideParametersList.add(inputParam);
+				showParameter(inputParam.getName());
 			}
 
 		}
@@ -562,6 +559,20 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 				Double.parseDouble(this.correlationCutoffProbeSetsValue.getText()));
 		input.setRemoveGenesWithABSZScoreNumber(Double.parseDouble(this.bmdFilterABSZScoreValue.getText()));
 		input.setRemoveGenesWithABSModelFCNumber(Double.parseDouble(this.bmdFilterABSModelFCValue.getText()));
+
+		List<CategoryAnalysisInputToShowOrHide> showAndHideList = new ArrayList<>();
+		for (String key : this.labelToNode.keySet())
+		{
+			Node node = labelToNode.get(key);
+
+			CategoryAnalysisInputToShowOrHide showHide = new CategoryAnalysisInputToShowOrHide();
+
+			showHide.setName(key);
+			showHide.setShowMe(node.getParent().isVisible());
+			showAndHideList.add(showHide);
+
+		}
+		input.setCategoryInputsToShowOrHide(showAndHideList);
 
 		BMDExpressProperties.getInstance().saveCategoryInput(input);
 
@@ -1299,7 +1310,10 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	 */
 	private void hideParameter(String parameterLabel)
 	{
-		Node node2Hide = labelToNode.get(parameterLabel);
+		CheckBox node2Hide = labelToNode.get(parameterLabel);
+		if (node2Hide == null)
+			return;
+		node2Hide.setSelected(false);
 		node2Hide.getParent().setVisible(false);
 		node2Hide.getParent().setManaged(false);
 	}
@@ -1312,6 +1326,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private void showParameter(String parameterLabel)
 	{
 		Node node2Hide = labelToNode.get(parameterLabel);
+		if (node2Hide == null)
+			return;
 		node2Hide.getParent().setVisible(true);
 		node2Hide.getParent().setManaged(true);
 	}
@@ -1322,24 +1338,35 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private void storeParametersInMap()
 	{
 
-		// labelToNode.put(BMDUBMDCheckBox.getText(), BMDUBMDCheckBox);
-		// labelToNode.put(BMDUBMDLCheckBox.getText(), BMDUBMDLCheckBox);
 		// labelToNode.put(bmdFilterMaxRSquaredCheckBox.getText(), bmdFilterMaxRSquaredCheckBox);
-		// labelToNode.put(bmdFilter4CheckBox.getText(), bmdFilter4CheckBox);
-		// labelToNode.put(bmdFilter3CheckBox.getText(), bmdFilter3CheckBox);
-		// labelToNode.put(bmdFilter2CheckBox.getText(), bmdFilter2CheckBox);
-		// labelToNode.put(bmdFilter1CheckBox.getText(), bmdFilter1CheckBox);
 		// labelToNode.put(conflictingProbeSetsCheckBox.getText(), conflictingProbeSetsCheckBox);
 		// labelToNode.put(doIVIVECheckBox.getText(), doIVIVECheckBox);
 		// labelToNode.put(removePromiscuousProbesCheckBox.getText(), removePromiscuousProbesCheckBox);
+
+		// keep bmd/bmdl no matter
+		// labelToNode.put(bmdFilter3CheckBox.getText(), bmdFilter3CheckBox);
+
+		// keep curve gof p-value no matter
+		// labelToNode.put(bmdFilter2CheckBox.getText(), bmdFilter2CheckBox);
+
+		// labelToNode.put(removeStepFunctionWithBMDLowerCheckBox.getText(),
+		// removeStepFunctionWithBMDLowerCheckBox);
+
+		labelToNode.put(deduplicateGeneSetsCheckBox.getText(), deduplicateGeneSetsCheckBox);
+
+		labelToNode.put(BMDUBMDCheckBox.getText(), BMDUBMDCheckBox);
+		labelToNode.put(BMDUBMDLCheckBox.getText(), BMDUBMDLCheckBox);
+		labelToNode.put(bmdFilter4CheckBox.getText(), bmdFilter4CheckBox);
+
+		labelToNode.put(bmdFilter1CheckBox.getText(), bmdFilter1CheckBox);
+
 		labelToNode.put(bmdFilterABSModeFCCheckBox.getText(), bmdFilterABSModeFCCheckBox);
 		labelToNode.put(bmdFilterABSZScoreCheckBox.getText(), bmdFilterABSZScoreCheckBox);
 		labelToNode.put(filterMinGenesInSetCheckbox.getText(), filterMinGenesInSetCheckbox);
 		labelToNode.put(filterMaxGenesInSetCheckbox.getText(), filterMaxGenesInSetCheckbox);
-		// labelToNode.put(deduplicateGeneSetsCheckBox.getText(), deduplicateGeneSetsCheckBox);
+
 		labelToNode.put(removeStepFunctionCheckBox.getText(), removeStepFunctionCheckBox);
-		labelToNode.put(removeStepFunctionWithBMDLowerCheckBox.getText(),
-				removeStepFunctionWithBMDLowerCheckBox);
+
 		labelToNode.put(bmdFilterAdverseDirectionCheckBox.getText(), bmdFilterAdverseDirectionCheckBox);
 		labelToNode.put(bmdFilterMaxFoldChangeCheckBox.getText(), bmdFilterMaxFoldChangeCheckBox);
 		labelToNode.put(bmdFilterMaxAnovaPValueCheckBox.getText(), bmdFilterMaxAnovaPValueCheckBox);
@@ -1353,16 +1380,29 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 				bmdFilterMaxOriogenAdjustedPValueCheckBox);
 		labelToNode.put(bmdFilterMaxCurveFitGoFCheckBox.getText(), bmdFilterMaxCurveFitGoFCheckBox);
 
-		analysisInputsToShow = new CategoryAnalysisInputsToShow();
-		List<CategoryAnalysisInput> categoryInputList = new ArrayList<>();
-		for (String key : labelToNode.keySet())
+		// if empty list, hide all.
+		if (input.getCategoryInputsToShowOrHide() == null || input.getCategoryInputsToShowOrHide().isEmpty())
 		{
-			CategoryAnalysisInput cInput = new CategoryAnalysisInput();
-			cInput.setName(key);
-			cInput.setShowMe(false);
-			categoryInputList.add(cInput);
+			List<CategoryAnalysisInputToShowOrHide> categoryInputList = new ArrayList<>();
+			for (String key : labelToNode.keySet())
+			{
+				CategoryAnalysisInputToShowOrHide cInput = new CategoryAnalysisInputToShowOrHide();
+				cInput.setName(key);
+				cInput.setShowMe(false);
+				categoryInputList.add(cInput);
+			}
+			input.setCategoryInputsToShowOrHide(categoryInputList);
 		}
-		analysisInputsToShow.setCategoryInputs(categoryInputList);
+		else // otherwise they are stored, so use settings.
+		{
+			for (CategoryAnalysisInputToShowOrHide showHide : input.getCategoryInputsToShowOrHide())
+			{
+				if (showHide.isShowMe())
+					showParameter(showHide.getName());
+				else
+					hideParameter(showHide.getName());
+			}
+		}
 
 	}
 

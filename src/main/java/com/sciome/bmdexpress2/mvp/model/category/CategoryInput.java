@@ -1,5 +1,8 @@
 package com.sciome.bmdexpress2.mvp.model.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CategoryInput
 {
 	private boolean removePromiscuousProbes;
@@ -64,6 +67,8 @@ public class CategoryInput
 	private int removeMinGenesInGeneset;
 	private int removeMaxGenesInGeneset;
 
+	List<CategoryAnalysisInputToShowOrHide> categoryInputsToShowOrHide = new ArrayList();
+
 	public CategoryInput()
 	{
 		super();
@@ -116,6 +121,17 @@ public class CategoryInput
 		removeMinGenesInGeneset = 20;
 		removeMaxGenesInGeneset = 500;
 
+	}
+
+	public List<CategoryAnalysisInputToShowOrHide> getCategoryInputsToShowOrHide()
+	{
+		return categoryInputsToShowOrHide;
+	}
+
+	public void setCategoryInputsToShowOrHide(
+			List<CategoryAnalysisInputToShowOrHide> categoryInputsToShowOrHide)
+	{
+		this.categoryInputsToShowOrHide = categoryInputsToShowOrHide;
 	}
 
 	public boolean isRemoveGenesWithAdverseDirection()

@@ -1,12 +1,12 @@
 package com.sciome.bmdexpress2.mvp.model.category;
 
-public class CategoryAnalysisInput
+public class CategoryAnalysisInputToShowOrHide
 {
 
 	private String name;
 	private boolean showMe = false;
 
-	public CategoryAnalysisInput()
+	public CategoryAnalysisInputToShowOrHide()
 	{
 		// TODO Auto-generated constructor stub
 	}

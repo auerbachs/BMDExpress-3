@@ -361,6 +361,22 @@ public class BMDExpressProperties
 		}
 	}
 
+	public void saveVisibleCategoryInput(CategoryInput input)
+	{
+		File categoryInputFile = new File(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator
+				+ "categoryVisibleInputs.json");
+		ObjectMapper mapper = new ObjectMapper();
+		this.categoryInput = input;
+		try
+		{
+			mapper.writerWithDefaultPrettyPrinter().writeValue(categoryInputFile, categoryInput);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	private void loadDefaultFilters()
 	{
 		// BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + name + ".DEFAULTFILTER"),
