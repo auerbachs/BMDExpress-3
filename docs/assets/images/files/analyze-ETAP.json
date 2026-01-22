@@ -1,0 +1,84 @@
+{
+   "bm2FileName":"/path/to/myfile.bm2",
+   "jsonExportFileName":"/path/to/myfile.json",
+   "overwrite":true,
+   "expressionDataConfigs":[
+      {
+         "inputFileName":"/path/to/data/",
+         "hasHeaders":true,
+         "logTransformation":"BASE2",
+         "platform":"S1500_Plus_Human"
+      }
+   ],
+   "preFilterConfigs":[
+      {
+         "@type":"williams",
+         "pValueCutoff":0.05,
+         "useMultipleTestingCorrection":false,
+         "filterOutControlGenes":true,
+         "useFoldChange":true,
+         "numberOfPermutations":10000,
+         "foldChange":1.5,
+         "foldChangeLotel":2.0,
+         "pValueLotel":0.05,
+         "lotelTest":2,
+         "numberOfThreads":4
+      }
+   ],
+   "bmdsConfigs":[
+      {
+         "modelConfigs":[
+            {
+               "@type":"hill"
+            },
+            {
+               "@type":"power"
+            },
+            {
+               "@type":"poly",
+               "degree":1
+            },
+            {
+               "@type":"poly",
+               "degree":2
+            },
+            {
+               "@type":"exp",
+               "expModel":3
+            },
+            {
+               "@type":"exp",
+               "expModel":5
+            }
+         ],
+         "bmdsBestModelSelection":{
+            "bestPolyTest":2,
+            "bmdlBMDUUse": 1,
+            "flagHillWithKParameter":true,
+            "kParameterValue":3,
+            "bestModelSelectionWithFlaggedHill":2
+         },
+         "bmdsInputConfig":{
+            "constantVariance":true,
+            "bmrType": 1,
+            "bmdUBmdLEstimationMethod": 1,
+            "restrictPolyToMonotonic": false,
+            "bmrFactor":1.349
+         },
+         "inputCategory":"williams",
+         "numberOfThreads":4
+      }
+   ],
+   "categoryAnalysisConfigs":[
+      {
+         "@type":"go",
+         "removePromiscuousProbes":true,
+         "removeBMDGreaterHighDose":true,
+         "bmdPValueCutoff": 0.1,
+         "bmdBMDLRatioMin":20.0,
+         "identifyConflictingProbeSets":true,
+         "correlationCutoffForConflictingProbeSets": 0.5,
+         "goCategory":"biological_process"
+      }
+   ]
+}
