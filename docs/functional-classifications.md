@@ -100,7 +100,7 @@ Defined category analyses require two tab-delimited input files from the user:
 
 ### Functional Classification Setup
 
-<img src="assets/images/workflow/functional-classification/popup-fc-go.png" alt="Popup FC GO" width="70%" align="left" style="margin-right: 30px; margin-bottom: 10px;">
+<img src="assets/images/workflow/functional-classification/popup-fc-go-options.png" alt="Popup FC GO" width="70%" align="left" style="margin-right: 30px; margin-bottom: 10px;">
 
 **Note:**<span style="display: block; margin-bottom: 0.3em;"></span>
 The setup screen for a Gene Ontology Analysis is shown here, but Individual Gene, Signaling Pathway and Defined Category Analysis use the same options below. The only difference is selecting which categories to use.
@@ -129,6 +129,7 @@ The setup screen for a Gene Ontology Analysis is shown here, but Individual Gene
   <li><strong>Remove Genes with Williams Prefilter Adjusted p-value ></strong> Allows for filtering of probes based on the Williams Trend Test adjusted prefilter p-value if the prefilter was run at a lower threshold</li>NOTE: If the prefilter was applied previously in the analysis workflow which removed probes, the probes can not be restored by using a higher threshold at this step</li>
 <li><strong>Remove Genes with Oriogen Prefilter p-value ></strong> Allows for filtering of probes based on the Oriogen prefilter p-value if the prefilter was run at a lower threshold</li>NOTE: If the prefilter was applied previously in the analysis workflow which removed probes, the probes can not be restored by using a higher threshold at this step</li>
 <li><strong>Remove Genes with Oriogen Prefilter Adjusted p-value ></strong> Allows for filtering of probes based on the Oriogen adjusted prefilter p-value if the prefilter was run at a lower threshold</li>NOTE: If the prefilter was applied previously in the analysis workflow which removed probes, the probes can not be restored by using a higher threshold at this step</li>
+<li><strong>Remove Genes With Curve Fit Prefilter GoF <</strong> Allows for filtering of probes based on the goodness-of-fit p-value from the Curve Fit Prefilter.</li>
 <li><strong>Remove Genes With |Z-Score| <</strong> Allows for filtering of probes based on the absolute Z-score</li>
 <li><strong>Remove Genes With Step Function Detected</strong> When selected, genes are not included if they were flagged for having a step function-like response (i.e.the rapid change).</li>
 <li><strong>Remove Genes With Step Function Lower Than First Dose</strong> When selected, genes are not included if they were flagged for having a step function-like response (i.e. the rapid change) that occurs at a dose below the lowest tested dose.</li>
@@ -320,25 +321,25 @@ These three classification types are all very similar in their output parameters
 </details>
 
 <details>
-  <summary style="color: #228B22; font-weight: bold;">Toggle carat to show/hide Forward TK results.</summary>
+ <summary style="color: #228B22; font-weight: bold;">Toggle carat to show/hide Forward TK results.</summary>
 
 <ul style="padding-left: 1.2em; margin-left: 0;">
-  <li><strong>Forward PK BMD Mean Dose:</strong></li>
-  <li><strong>Forward PK BMDL Mean Dose:</strong></li>
-  <li><strong>Forward PK BMDU Mean Dose:</strong></li>
-  <li><strong>Forward PK BMD Median Dose:</strong></li>
-  <li><strong>Forward PK BMDL Median Dose:</strong></li>
-  <li><strong>Forward PK BMDU Median Dose:</strong></li>
-  <li><strong>Forward PK BMD Minimum Dose:</strong></li>
-  <li><strong>Forward PK BMDL Minimum Dose:</strong></li>
-  <li><strong>Forward PK BMDU Minimum Dose:</strong></li>
-  <li><strong>Forward PK BMD Fifth Percentile Dose:</strong></li>
-  <li><strong>Forward PK BMDL Fifth Percentile Dose:</strong></li>
-  <li><strong>Forward PK BMDU Fifth Percentile Dose:</strong></li>
-  <li><strong>Forward PK BMD Tenth Percentile Dose:</strong></li>
-  <li><strong>Forward PK BMDL Tenth Percentile Dose:</strong></li>
-  <li><strong>Forward PK BMDU Tenth Percentile Dose:</strong></li>
-</ul> 
+ <li><strong>Forward PK BMD Mean Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the mean benchmark dose (BMD) for the genes in the category.
+ <li><strong>Forward PK BMDL Mean Dose:</strong></li>Blood concentration (internal dose, cMax) corresponding to the mean benchmark dose lower confidence limit (BMDL) for the genes in the category.
+ <li><strong>Forward PK BMDU Mean Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the mean benchmark dose upper confidence limit (BMDU) for the genes in the category.
+ <li><strong>Forward PK BMD Median Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the median benchmark dose (BMD) for the genes in the category.
+ <li><strong>Forward PK BMDL Median Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the median benchmark dose lower confidence limit (BMDL) for the genes in the category.
+ <li><strong>Forward PK BMDU Median Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the median benchmark dose upper confidence limit (BMDU) for the genes in the category.
+ <li><strong>Forward PK BMD Minimum Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose (BMD) for the genes in the category.
+ <li><strong>Forward PK BMDL Minimum Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose lower confidence limit (BMDL) for the genes in the category.
+ <li><strong>Forward PK BMDU Minimum Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose upper confidence limit (BMDU) for the genes in the category.
+ <li><strong>Forward PK BMD Fifth Percentile Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the benchmark dose (BMD) at the 5th percentile for all genes in the GO category (including genes with no significant dose response). Note that the quantile chosen for the FTK calculation is in addition to the fifth percentile used for the BMD calculation.
+ <li><strong>Forward PK BMDL Fifth Percentile Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose lower confidence limit (BMDL) at the 5th percentile for all genes in the GO category (including genes with no significant dose response). Note that the quantile chosen for the FTK calculation is in addition to the fifth percentile used for the BMD calculation.
+ <li><strong>Forward PK BMDU Fifth Percentile Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose upper confidence limit (BMDL) at the 5th percentile for all genes in the GO category (including genes with no significant dose response). Note that the quantile chosen for the FTK calculation is in addition to the fifth percentile used for the BMD calculation.
+ <li><strong>Forward PK BMD Tenth Percentile Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the benchmark dose (BMD) at the 10th percentile for all genes in the GO category (including genes with no significant dose response). Note that the quantile chosen for the FTK calculation is in addition to the tenth percentile used for the BMD calculation.
+ <li><strong>Forward PK BMDL Tenth Percentile Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose lower confidence limit (BMDL) at the 10th percentile for all genes in the GO category (including genes with no significant dose response). Note that the quantile chosen for the FTK calculation is in addition to the tenth percentile used for the BMD calculation.
+ <li><strong>Forward PK BMDU Tenth Percentile Dose:</strong></li> Blood concentration (internal dose, cMax) corresponding to the minimum benchmark dose upper confidence limit (BMDL) at the 10th percentile for all genes in the GO category (including genes with no significant dose response). Note that the quantile chosen for the FTK calculation is in addition to the tenth percentile used for the BMD calculation.
+</ul>
 </details>
 
 ### Functional Classification Visualizations  

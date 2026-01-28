@@ -44,11 +44,11 @@ Main Toolbar
 
 <img src="assets/images/menu-select/select-tools-prefilter-menu.png" alt="Select tool menu" width="37%" align="left" style="margin-right: 30px; margin-top: 4px; margin-bottom: 50px;">
 
-<strong>Prefilter:</strong> <a href="Statistical-and-Fold-Change-Prior-to-BMD-modeling">Reduce the number of data items for BMD computation based on statistical significance of a response to increasing dose.</a>
+<strong>Prefilter:</strong> <a href="prefiltering">Reduce the number of data items for BMD computation based on statistical significance of a response to increasing dose.</a>
 
-<strong>Benchmark Dose Analysis:</strong> <a href="Benchmark-Dose-Analysis">Configure and execute benchmark dose computation.</a>
+<strong>Benchmark Dose Analysis:</strong> <a href="benchmark-dose-analysis">Configure and execute benchmark dose computation.</a>
 
-<strong>Category Analysis:</strong> Configure and execute functional classification based on <a href="Functional-Classifications">GO terms</a>, <a href="Functional-Classifications">Reactome categories</a>, or <a href="Functional-Classifications#defined-category-analysis">user-defined gene categories</a>.
+<strong>Category Analysis:</strong> Configure and execute functional classification based on <a href="functional-classifications">GO terms</a>, <a href="functional-classifications">Reactome categories</a>, or <a href="functional-classifications#defined-category-analysis">user-defined gene categories</a>.
 
 <br clear="both">
 
@@ -92,7 +92,7 @@ Right-click on an individual data set, then click `Export` to export the analysi
 ### Spreadsheet View
 
 
-Right-click on an individual data set in either [One-way ANOVA](Statistical-and-Fold-Change-Prefiltering#one-way-anova-options), [Williams Trend](Statistical-and-Fold-Change-Prefiltering#williams-trend-test-options), [Oriogen](Statistical-and-Fold-Change-Prefiltering#oriogen-options), [Benchmark Dose Analysis](benchmark-dose-analysis), or [Functional Classification](functional-classifications) sections, and select `Spreadsheet View`.
+Right-click on an individual data set in either [One-way ANOVA](prefiltering#one-way-anova-options), [Williams Trend](prefiltering#williams-trend-test-options), [Oriogen](prefiltering#oriogen-options), [Benchmark Dose Analysis](benchmark-dose-analysis), or [Functional Classification](functional-classifications) sections, and select `Spreadsheet View`.
 
 <img src="assets/images/overview/popup-spreadsheet-view.png" alt="Popup spreadsheet view" width="50%" align="left" style="margin-right: 30px; margin-bottom: 10px;">
 
@@ -138,7 +138,7 @@ Results Table
 
 The columns of the results table differ based on the current analysis.
 
-- [Pre-filter Results](Statistical-and-fold-change-prefiltering#Prefilter-results)
+- [Pre-filter Results](prefiltering#prefilter-results)
 - [Benchmark Dose Results](benchmark-dose-analysis#benchmark-dose-results)
 - [Functional Classification Results](functional-classifications#functional-classification-results)
 
@@ -151,7 +151,7 @@ The central panel containing all visualizations for selected analyses.
 
 The available visualizations differ for each analysis type:
 
-- [Pre-filter Visualizations](Statistical-and-fold-change-prefiltering#Prefilter-visualizations)
+- [Pre-filter Visualizations](prefiltering#prefilter-visualizations)
 - [Benchmark Dose Visualizations](benchmark-dose-analysis#benchmark-dose-visualizations)
 - [Functional Classification Visualizations](functional-classifications#functional-classification-visualizations)
 

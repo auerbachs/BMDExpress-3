@@ -161,8 +161,8 @@ The full list of fields for each section can be found below:
   * ``removeAdverseDirection`` - Choice between (``1`` | ``-1`` | ``0`` | ``null``) [1 for UP; -1 for DOWN; 0 or null both directions;]
   * ``maxFoldChange`` - Numeric value
   * ``prefilterPValueMin`` - Numeric value
-  * ``probeFilepath`` - File path to probe to gene mapping [Only for defined]
-  * ``categoryFilepath`` - File path to the gene to category mapping [Only for defined]
+  * ``probeFilePath`` - File path to probe to gene mapping [Only for defined]
+  * ``categoryFilePath`` - File path to the gene to category mapping [Only for defined]
   * ``deduplicateGeneSets`` - Choice between (``true`` | ``false``)
   * ``goCategory`` - Choice between (``universal`` | ``biological_process`` | ``molecular_function`` | ``cellular components``) [Only for GO]
   * ``signalingPathway`` - Choice between (``REACTOME`` | ``BIOPLANET``) [Only for pathway]
