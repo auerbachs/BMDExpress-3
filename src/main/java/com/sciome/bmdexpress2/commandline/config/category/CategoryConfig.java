@@ -28,15 +28,15 @@ public abstract class CategoryConfig
 	private Double nFoldBelowLowestDose;
 	private Double maxFoldChange;
 
-	private Double anovaPrefilterPValueMin;
-	private Double anovaPrefilterAdjustedPValueMin;
-	private Double williamsPrefilterPValueMin;
-	private Double williamsPrefilterAdjustedPValueMin;
+	private Double anovaPrefilterPValueMaxValue;
+	private Double anovaPrefilterAdjustedPValueMaxValue;
+	private Double williamsPrefilterPValueMaxValue;
+	private Double williamsPrefilterAdjustedPValueMaxValue;
 
-	private Double oriogenPrefilterPValueMin;
-	private Double oriogenPrefilterAdjustedPValueMin;
+	private Double oriogenPrefilterPValueMaxValue;
+	private Double oriogenPrefilterAdjustedPValueMaxValue;
 
-	private Double curveFitPrefilterPValueMax;
+	private Double curveFitPrefilterGoFMinValue;
 
 	private Boolean identifyConflictingProbeSets;
 	private Double correlationCutoffForConflictingProbeSets;
@@ -187,72 +187,72 @@ public abstract class CategoryConfig
 
 	public Double getAnovaPrefilterPValueMin()
 	{
-		return anovaPrefilterPValueMin;
+		return anovaPrefilterPValueMaxValue;
 	}
 
-	public void setAnovaPrefilterPValueMin(Double anovaPrefilterPValueMin)
+	public void setAnovaPrefilterPValueMaxValue(Double anovaPrefilterPValue)
 	{
-		this.anovaPrefilterPValueMin = anovaPrefilterPValueMin;
+		this.anovaPrefilterPValueMaxValue = anovaPrefilterPValue;
 	}
 
-	public Double getAnovaPrefilterAdjustedPValueMin()
+	public Double getAnovaPrefilterAdjustedPValueMaxValue()
 	{
-		return anovaPrefilterAdjustedPValueMin;
+		return anovaPrefilterAdjustedPValueMaxValue;
 	}
 
-	public void setAnovaPrefilterAdjustedPValueMin(Double anovaPrefilterAdjustedPValueMin)
+	public void setAnovaPrefilterAdjustedPValueMaxValue(Double anovaPrefilterAdjustedPValue)
 	{
-		this.anovaPrefilterAdjustedPValueMin = anovaPrefilterAdjustedPValueMin;
+		this.anovaPrefilterAdjustedPValueMaxValue = anovaPrefilterAdjustedPValue;
 	}
 
-	public Double getWilliamsPrefilterPValueMin()
+	public Double getWilliamsPrefilterPValueMaxValue()
 	{
-		return williamsPrefilterPValueMin;
+		return williamsPrefilterPValueMaxValue;
 	}
 
-	public void setWilliamsPrefilterPValueMin(Double williamsPrefilterPValueMin)
+	public void setWilliamsPrefilterPValueMaxValue(Double williamsPrefilterPValue)
 	{
-		this.williamsPrefilterPValueMin = williamsPrefilterPValueMin;
+		this.williamsPrefilterPValueMaxValue = williamsPrefilterPValue;
 	}
 
-	public Double getWilliamsPrefilterAdjustedPValueMin()
+	public Double getWilliamsPrefilterAdjustedPValueMaxValue()
 	{
-		return williamsPrefilterAdjustedPValueMin;
+		return williamsPrefilterAdjustedPValueMaxValue;
 	}
 
-	public void setWilliamsPrefilterAdjustedPValueMin(Double williamsPrefilterAdjustedPValueMin)
+	public void setWilliamsPrefilterAdjustedPValueMaxValue(Double williamsPrefilterAdjustedPValue)
 	{
-		this.williamsPrefilterAdjustedPValueMin = williamsPrefilterAdjustedPValueMin;
+		this.williamsPrefilterAdjustedPValueMaxValue = williamsPrefilterAdjustedPValue;
 	}
 
-	public Double getOriogenPrefilterPValueMin()
+	public Double getOriogenPrefilterPValueMaxValue()
 	{
-		return oriogenPrefilterPValueMin;
+		return oriogenPrefilterPValueMaxValue;
 	}
 
-	public void setOriogenPrefilterPValueMin(Double oriogenPrefilterPValueMin)
+	public void setOriogenPrefilterPValueMaxValue(Double oriogenPrefilterPValue)
 	{
-		this.oriogenPrefilterPValueMin = oriogenPrefilterPValueMin;
+		this.oriogenPrefilterPValueMaxValue = oriogenPrefilterPValue;
 	}
 
-	public Double getOriogenPrefilterAdjustedPValueMin()
+	public Double getOriogenPrefilterAdjustedPValueMaxValue()
 	{
-		return oriogenPrefilterAdjustedPValueMin;
+		return oriogenPrefilterAdjustedPValueMaxValue;
 	}
 
-	public void setOriogenPrefilterAdjustedPValueMin(Double oriogenPrefilterAdjustedPValueMin)
+	public void setOriogenPrefilterAdjustedPValueMaxValue(Double oriogenPrefilterAdjustedPValue)
 	{
-		this.oriogenPrefilterAdjustedPValueMin = oriogenPrefilterAdjustedPValueMin;
+		this.oriogenPrefilterAdjustedPValueMaxValue = oriogenPrefilterAdjustedPValue;
 	}
 
-	public Double getCurveFitPrefilterPValueMax()
+	public Double getCurveFitPrefilterGoFMinValue()
 	{
-		return curveFitPrefilterPValueMax;
+		return curveFitPrefilterGoFMinValue;
 	}
 
-	public void setCurveFitPrefilterPValueMax(Double curveFitPrefilterPValueMax)
+	public void setCurveFitPrefilterGoFMinValue(Double curveFitPrefilterGoF)
 	{
-		this.curveFitPrefilterPValueMax = curveFitPrefilterPValueMax;
+		this.curveFitPrefilterGoFMinValue = curveFitPrefilterGoF;
 	}
 
 	public Boolean getIdentifyConflictingProbeSets()

@@ -18,6 +18,10 @@ import org.controlsfx.control.textfield.TextFields;
 
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisInputToShowOrHide;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.DefinedCategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.GOCategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.GeneCategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.PathwayCategoryInput;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.presenter.categorization.CategorizationPresenter;
 import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
@@ -314,7 +318,12 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	CompoundTable compoundTable = null;
 	Compound compound = null;
 
-	private CategoryInput input;
+	private GOCategoryInput goInput;
+	private PathwayCategoryInput pathwayInput;
+	private GeneCategoryInput geneInput;
+	private DefinedCategoryInput definedInput;
+	private CategoryInput categoryInput;
+
 	private final String MGPERKGPERDAY = "mg/kg/day";
 	private final String UMOLPERKGPERDAY = "mmol/kg/day";
 
@@ -337,7 +346,11 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		super();
 		ICategoryAnalysisService service = new CategoryAnalysisService();
 		presenter = new CategorizationPresenter(this, service, eventBus);
-		input = BMDExpressProperties.getInstance().getCategoryInput();
+		goInput = BMDExpressProperties.getInstance().getGOCategoryInput();
+		definedInput = BMDExpressProperties.getInstance().getDefinedCategoryInput();
+		geneInput = BMDExpressProperties.getInstance().getGeneCategoryInput();
+		pathwayInput = BMDExpressProperties.getInstance().getPathwayCategoryInput();
+
 		inVivoGroup = new ToggleGroup();
 
 	}
@@ -345,43 +358,6 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		storeParametersInMap();
-
-		fillUpShowHideParameters();
-		initializeInputParameterVisibility();
-
-		showParametersComboBox.setOnAction(e ->
-		{
-			CategoryAnalysisInputToShowOrHide selected = showParametersComboBox.getValue();
-			if (selected == null)
-				return;
-			Platform.runLater(() ->
-			{
-				showParametersComboBox.getSelectionModel().clearSelection();
-				hideParametersList.add(selected);
-				showParametersList.remove(selected);
-				showParameter(selected.getName());
-
-			});
-
-		});
-
-		hideParametersComboBox.setOnAction(e ->
-		{
-			CategoryAnalysisInputToShowOrHide selected = hideParametersComboBox.getValue();
-			if (selected == null)
-				return;
-
-			Platform.runLater(() ->
-			{
-				hideParametersComboBox.getSelectionModel().clearSelection();
-				hideParametersList.remove(selected);
-				showParametersList.add(selected);
-				hideParameter(selected.getName());
-
-			});
-
-		});
 
 	}
 
@@ -402,7 +378,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		showParametersComboBox.setItems(sortedShow);
 		hideParametersComboBox.setItems(sortedHidden);
 
-		for (CategoryAnalysisInputToShowOrHide inputParam : this.input.getCategoryInputsToShowOrHide())
+		for (CategoryAnalysisInputToShowOrHide inputParam : this.categoryInput
+				.getCategoryInputsToShowOrHide())
 		{
 			if (!inputParam.isShowMe())
 			{
@@ -470,68 +447,75 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	@Override
 	public void handle_saveSettingsButtonPressed(ActionEvent event)
 	{
-		input.setRemovePromiscuousProbes(this.removePromiscuousProbesCheckBox.isSelected());
-		input.setRemoveBMDGreaterThanHighestDose(this.bmdFilter1CheckBox.isSelected());
-		input.setRemoveBMDLessThanPValue(this.bmdFilter2CheckBox.isSelected());
-		input.setRemoveGenesWithBMD_BMDL(this.bmdFilter3CheckBox.isSelected());
-		input.setRemoveGenesWithBMDU_BMD(this.BMDUBMDCheckBox.isSelected());
-		input.setRemoveGenesWithBMDU_BMDL(this.BMDUBMDLCheckBox.isSelected());
-		input.setRemoveGenesWithBMDValuesGreaterThanNFold(this.bmdFilter4CheckBox.isSelected());
-		input.setRemoveGenesWithMaxFoldChangeLessThan(this.bmdFilterMaxFoldChangeCheckBox.isSelected());
+		categoryInput.setRemovePromiscuousProbes(this.removePromiscuousProbesCheckBox.isSelected());
+		categoryInput.setRemoveBMDGreaterThanHighestDose(this.bmdFilter1CheckBox.isSelected());
+		categoryInput.setRemoveBMDLessThanPValue(this.bmdFilter2CheckBox.isSelected());
+		categoryInput.setRemoveGenesWithBMD_BMDL(this.bmdFilter3CheckBox.isSelected());
+		categoryInput.setRemoveGenesWithBMDU_BMD(this.BMDUBMDCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithBMDU_BMDL(this.BMDUBMDLCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithBMDValuesGreaterThanNFold(this.bmdFilter4CheckBox.isSelected());
+		categoryInput
+				.setRemoveGenesWithMaxFoldChangeLessThan(this.bmdFilterMaxFoldChangeCheckBox.isSelected());
 		// input.setRemoveGenesWithPrefilterPValue(this.bmdFilterMaxPValueCheckBox.isSelected());
 
-		input.setRemoveGenesWithAnovaPrefilterPValue(this.bmdFilterMaxAnovaPValueCheckBox.isSelected());
-		input.setRemoveGenesWithWilliamsPrefilterPValue(this.bmdFilterMaxWilliamsPValueCheckBox.isSelected());
-		input.setRemoveGenesWithOriogenPrefilterPValue(this.bmdFilterMaxOriogenPValueCheckBox.isSelected());
-		input.setRemoveGenesWithCurveFitPrefilterGoF(this.bmdFilterMaxCurveFitGoFCheckBox.isSelected());
+		categoryInput
+				.setRemoveGenesWithAnovaPrefilterPValue(this.bmdFilterMaxAnovaPValueCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithWilliamsPrefilterPValue(
+				this.bmdFilterMaxWilliamsPValueCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithOriogenPrefilterPValue(
+				this.bmdFilterMaxOriogenPValueCheckBox.isSelected());
+		categoryInput
+				.setRemoveGenesWithCurveFitPrefilterGoF(this.bmdFilterMaxCurveFitGoFCheckBox.isSelected());
 
-		input.setRemoveGenesWithABSModelFC(this.bmdFilterABSModeFCCheckBox.isSelected());
-		input.setRemoveGenesWithABSZScore(this.bmdFilterABSZScoreCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithABSModelFC(this.bmdFilterABSModeFCCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithABSZScore(this.bmdFilterABSZScoreCheckBox.isSelected());
 
-		input.setRemoveBMDLessThanRSquared(this.bmdFilterMaxRSquaredCheckBox.isSelected());
+		categoryInput.setRemoveBMDLessThanRSquared(this.bmdFilterMaxRSquaredCheckBox.isSelected());
 
 		// input.setRemoveGenesWithPrefilterAdjustedPValue(this.bmdFilterMaxAdjustedPValueCheckBox.isSelected());
 
-		input.setRemoveGenesWithAnovaPrefilterAdjustedPValue(
+		categoryInput.setRemoveGenesWithAnovaPrefilterAdjustedPValue(
 				this.bmdFilterMaxAnovaAdjustedPValueCheckBox.isSelected());
-		input.setRemoveGenesWithWilliamsPrefilterAdjustedPValue(
+		categoryInput.setRemoveGenesWithWilliamsPrefilterAdjustedPValue(
 				this.bmdFilterMaxWilliamsAdjustedPValueCheckBox.isSelected());
-		input.setRemoveGenesWithOriogenPrefilterAdjustedPValue(
+		categoryInput.setRemoveGenesWithOriogenPrefilterAdjustedPValue(
 				this.bmdFilterMaxOriogenAdjustedPValueCheckBox.isSelected());
 
-		input.setEliminateGeneSetRedundancy(this.deduplicateGeneSetsCheckBox.isSelected());
-		input.setIdentifyConflictingProbeSets(this.conflictingProbeSetsCheckBox.isSelected());
+		categoryInput.setEliminateGeneSetRedundancy(this.deduplicateGeneSetsCheckBox.isSelected());
+		categoryInput.setIdentifyConflictingProbeSets(this.conflictingProbeSetsCheckBox.isSelected());
 
-		input.setMinGenesInGeneset(this.filterMinGenesInSetCheckbox.isSelected());
-		input.setMaxGenesInGeneset(this.filterMaxGenesInSetCheckbox.isSelected());
+		categoryInput.setMinGenesInGeneset(this.filterMinGenesInSetCheckbox.isSelected());
+		categoryInput.setMaxGenesInGeneset(this.filterMaxGenesInSetCheckbox.isSelected());
 		try
 		{
-			input.setRemoveMaxGenesInGeneset(Integer.valueOf(this.maxGenesInSetTextBox.getText()));
+			categoryInput.setRemoveMaxGenesInGeneset(Integer.valueOf(this.maxGenesInSetTextBox.getText()));
 		}
 		catch (Exception e)
 		{}
 		try
 		{
-			input.setRemoveMinGenesInGeneset(Integer.valueOf(this.minGenesInSetTextBox.getText()));
+			categoryInput.setRemoveMinGenesInGeneset(Integer.valueOf(this.minGenesInSetTextBox.getText()));
 		}
 		catch (Exception e)
 		{}
-		input.setRemoveWithStepFunction(this.removeStepFunctionCheckBox.isSelected());
+		categoryInput.setRemoveWithStepFunction(this.removeStepFunctionCheckBox.isSelected());
 
-		input.setRemoveWithStepFunctionWithBMDLower(removeStepFunctionWithBMDLowerCheckBox.isSelected());
-		input.setRemoveGenesWithAdverseDirection(this.bmdFilterAdverseDirectionCheckBox.isSelected());
-		input.setRemoveGenesWithAdverseDirectionValue(
+		categoryInput
+				.setRemoveWithStepFunctionWithBMDLower(removeStepFunctionWithBMDLowerCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithAdverseDirection(this.bmdFilterAdverseDirectionCheckBox.isSelected());
+		categoryInput.setRemoveGenesWithAdverseDirectionValue(
 				this.bmdFilterAdverseDirectionComboBox.getValue().toString());
 
-		input.setRemoveBMDLessThanRSquaredNumber(Double.parseDouble(this.rSquaredFilterValue.getText()));
+		categoryInput
+				.setRemoveBMDLessThanRSquaredNumber(Double.parseDouble(this.rSquaredFilterValue.getText()));
 
-		input.setRemoveBMDLessThanPValueNumber(Double.parseDouble(this.bmdFilter2Value.getText()));
-		input.setRemoveGenesWithBMD_BMDLNumber(Double.parseDouble(this.bmdFilter3Value.getText()));
-		input.setRemoveGenesWithBMDU_BMDNumber(Double.parseDouble(this.BMDUBMDTextbox.getText()));
-		input.setRemoveGenesWithBMDU_BMDLNumber(Double.parseDouble(this.BMDUBMDLTextbox.getText()));
-		input.setRemoveGenesWithBMDValuesGreaterThanNFoldNumber(
+		categoryInput.setRemoveBMDLessThanPValueNumber(Double.parseDouble(this.bmdFilter2Value.getText()));
+		categoryInput.setRemoveGenesWithBMD_BMDLNumber(Double.parseDouble(this.bmdFilter3Value.getText()));
+		categoryInput.setRemoveGenesWithBMDU_BMDNumber(Double.parseDouble(this.BMDUBMDTextbox.getText()));
+		categoryInput.setRemoveGenesWithBMDU_BMDLNumber(Double.parseDouble(this.BMDUBMDLTextbox.getText()));
+		categoryInput.setRemoveGenesWithBMDValuesGreaterThanNFoldNumber(
 				Double.parseDouble(this.bmdFilter4Value.getText()));
-		input.setRemoveGenesWithMaxFoldChangeLessThanNumber(
+		categoryInput.setRemoveGenesWithMaxFoldChangeLessThanNumber(
 				Double.parseDouble(this.bmdFilterMaxFoldChangeValue.getText()));
 
 		// input.setRemoveGenesWithPrefilterPValueNumber(
@@ -539,26 +523,39 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		// input.setRemoveGenesWithPrefilterAdjustedPValueNumber(
 		// Double.parseDouble(this.bmdFilterMaxAdjustedPValueChangeValue.getText()));
 
-		input.setRemoveGenesWithAnovaPrefilterPValueNumber(
+		categoryInput.setRemoveGenesWithAnovaPrefilterPValueNumber(
 				Double.parseDouble(this.bmdFilterMaxAnovaPValueChangeValue.getText()));
-		input.setRemoveGenesWithAnovaPrefilterAdjustedPValueNumber(
+		categoryInput.setRemoveGenesWithAnovaPrefilterAdjustedPValueNumber(
 				Double.parseDouble(this.bmdFilterMaxAnovaAdjustedPValueChangeValue.getText()));
-		input.setRemoveGenesWithWilliamsPrefilterPValueNumber(
+		categoryInput.setRemoveGenesWithWilliamsPrefilterPValueNumber(
 				Double.parseDouble(this.bmdFilterMaxWilliamsPValueChangeValue.getText()));
-		input.setRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber(
+		categoryInput.setRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber(
 				Double.parseDouble(this.bmdFilterMaxWilliamsAdjustedPValueChangeValue.getText()));
-		input.setRemoveGenesWithOriogenPrefilterPValueNumber(
+		categoryInput.setRemoveGenesWithOriogenPrefilterPValueNumber(
 				Double.parseDouble(this.bmdFilterMaxOriogenPValueChangeValue.getText()));
-		input.setRemoveGenesWithOriogenPrefilterAdjustedPValueNumber(
+		categoryInput.setRemoveGenesWithOriogenPrefilterAdjustedPValueNumber(
 				Double.parseDouble(this.bmdFilterMaxOriogenAdjustedPValueChangeValue.getText()));
 
-		input.setRemoveGenesWithCurveFitPrefilterGoFNumber(
+		categoryInput.setRemoveGenesWithCurveFitPrefilterGoFNumber(
 				Double.parseDouble(this.bmdFilterMinCurveFitGoFChangeValue.getText()));
 
-		input.setCorrelationCutoffForConflictingProbeSets(
+		categoryInput.setCorrelationCutoffForConflictingProbeSets(
 				Double.parseDouble(this.correlationCutoffProbeSetsValue.getText()));
-		input.setRemoveGenesWithABSZScoreNumber(Double.parseDouble(this.bmdFilterABSZScoreValue.getText()));
-		input.setRemoveGenesWithABSModelFCNumber(Double.parseDouble(this.bmdFilterABSModelFCValue.getText()));
+		categoryInput.setRemoveGenesWithABSZScoreNumber(
+				Double.parseDouble(this.bmdFilterABSZScoreValue.getText()));
+		categoryInput.setRemoveGenesWithABSModelFCNumber(
+				Double.parseDouble(this.bmdFilterABSModelFCValue.getText()));
+
+		if (categoryInput instanceof GOCategoryInput)
+		{
+			this.goInput.setGoCategory((String) this.categoryComboBox.getSelectionModel().getSelectedItem());
+		}
+
+		if (categoryInput instanceof PathwayCategoryInput)
+		{
+			this.pathwayInput
+					.setPathwayPlatform((String) this.categoryComboBox.getSelectionModel().getSelectedItem());
+		}
 
 		List<CategoryAnalysisInputToShowOrHide> showAndHideList = new ArrayList<>();
 		for (String key : this.labelToNode.keySet())
@@ -572,9 +569,9 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 			showAndHideList.add(showHide);
 
 		}
-		input.setCategoryInputsToShowOrHide(showAndHideList);
+		categoryInput.setCategoryInputsToShowOrHide(showAndHideList);
 
-		BMDExpressProperties.getInstance().saveCategoryInput(input);
+		BMDExpressProperties.getInstance().saveCategoryInput(categoryInput);
 
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Saved Settings");
@@ -758,6 +755,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		// Render the view based on the Category Analysis style.
 		if (catAnalysisEnum == CategoryAnalysisEnum.PATHWAY)
 		{
+			this.categoryInput = this.pathwayInput;
 			selectionLabel.setText("Select Pathway Database:");
 			categoryComboBox.getItems().addAll("REACTOME", "BioPlanet");
 			categoryComboBox.getSelectionModel().select(0);
@@ -767,6 +765,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		}
 		else if (catAnalysisEnum == CategoryAnalysisEnum.GO)
 		{
+			this.categoryInput = this.goInput;
 			selectionLabel.setText("GO Categories");
 			categoryComboBox.getItems().addAll(BMDExpressConstants.getInstance().GO_CATEGORIES);
 			categoryComboBox.getSelectionModel().select(0);
@@ -775,100 +774,122 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		}
 		else if (catAnalysisEnum == CategoryAnalysisEnum.DEFINED)
 		{
+			this.categoryInput = this.definedInput;
 			mainVBox.getChildren().remove(selectionHBox);
 		}
 		else if (catAnalysisEnum == CategoryAnalysisEnum.GENE_LEVEL)
 		{
+			this.categoryInput = this.geneInput;
 			mainVBox.getChildren().remove(probeFileHBox);
 			mainVBox.getChildren().remove(categoryFileHBox);
 			mainVBox.getChildren().remove(selectionHBox);
 		}
 
 		// Initalize fields using saved settings
-		this.removePromiscuousProbesCheckBox.setSelected(input.isRemovePromiscuousProbes());
-		this.bmdFilter1CheckBox.setSelected(input.isRemoveBMDGreaterThanHighestDose());
-		this.bmdFilter2CheckBox.setSelected(input.isRemoveBMDLessThanPValue());
+		this.removePromiscuousProbesCheckBox.setSelected(categoryInput.isRemovePromiscuousProbes());
+		this.bmdFilter1CheckBox.setSelected(categoryInput.isRemoveBMDGreaterThanHighestDose());
+		this.bmdFilter2CheckBox.setSelected(categoryInput.isRemoveBMDLessThanPValue());
 
-		this.bmdFilterMaxRSquaredCheckBox.setSelected(input.isRemoveBMDLessThanRSquared());
+		this.bmdFilterMaxRSquaredCheckBox.setSelected(categoryInput.isRemoveBMDLessThanRSquared());
 
-		this.bmdFilter3CheckBox.setSelected(input.isRemoveGenesWithBMD_BMDL());
-		this.bmdFilter4CheckBox.setSelected(input.isRemoveGenesWithBMDValuesGreaterThanNFold());
+		this.bmdFilter3CheckBox.setSelected(categoryInput.isRemoveGenesWithBMD_BMDL());
+		this.bmdFilter4CheckBox.setSelected(categoryInput.isRemoveGenesWithBMDValuesGreaterThanNFold());
 
-		this.bmdFilterMaxFoldChangeCheckBox.setSelected(input.isRemoveGenesWithMaxFoldChangeLessThan());
+		this.bmdFilterMaxFoldChangeCheckBox
+				.setSelected(categoryInput.isRemoveGenesWithMaxFoldChangeLessThan());
 
 		this.bmdFilterMaxAnovaAdjustedPValueCheckBox
-				.setSelected(input.isRemoveGenesWithAnovaPrefilterAdjustedPValue());
-		this.bmdFilterMaxAnovaPValueCheckBox.setSelected(input.isRemoveGenesWithAnovaPrefilterPValue());
+				.setSelected(categoryInput.isRemoveGenesWithAnovaPrefilterAdjustedPValue());
+		this.bmdFilterMaxAnovaPValueCheckBox
+				.setSelected(categoryInput.isRemoveGenesWithAnovaPrefilterPValue());
 
 		this.bmdFilterMaxWilliamsAdjustedPValueCheckBox
-				.setSelected(input.isRemoveGenesWithWilliamsPrefilterAdjustedPValue());
-		this.bmdFilterMaxWilliamsPValueCheckBox.setSelected(input.isRemoveGenesWithWilliamsPrefilterPValue());
+				.setSelected(categoryInput.isRemoveGenesWithWilliamsPrefilterAdjustedPValue());
+		this.bmdFilterMaxWilliamsPValueCheckBox
+				.setSelected(categoryInput.isRemoveGenesWithWilliamsPrefilterPValue());
 
 		this.bmdFilterMaxOriogenAdjustedPValueCheckBox
-				.setSelected(input.isRemoveGenesWithOriogenPrefilterAdjustedPValue());
-		this.bmdFilterMaxOriogenPValueCheckBox.setSelected(input.isRemoveGenesWithOriogenPrefilterPValue());
+				.setSelected(categoryInput.isRemoveGenesWithOriogenPrefilterAdjustedPValue());
+		this.bmdFilterMaxOriogenPValueCheckBox
+				.setSelected(categoryInput.isRemoveGenesWithOriogenPrefilterPValue());
 
 		// this.bmdFilterMaxAdjustedPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterAdjustedPValue());
 		// this.bmdFilterMaxPValueCheckBox.setSelected(input.isRemoveGenesWithPrefilterPValue());
 
-		this.bmdFilterMaxCurveFitGoFCheckBox.setSelected(input.isRemoveGenesWithCurveFitPrefilterGoF());
+		this.bmdFilterMaxCurveFitGoFCheckBox
+				.setSelected(categoryInput.isRemoveGenesWithCurveFitPrefilterGoF());
 
-		this.BMDUBMDCheckBox.setSelected(input.isRemoveGenesWithBMDU_BMD());
-		this.BMDUBMDLCheckBox.setSelected(input.isRemoveGenesWithBMDU_BMDL());
-		this.conflictingProbeSetsCheckBox.setSelected(input.isIdentifyConflictingProbeSets());
-		this.deduplicateGeneSetsCheckBox.setSelected(input.isEliminateGeneSetRedundancy());
-		this.bmdFilterABSZScoreCheckBox.setSelected(input.isRemoveGenesWithABSZScore());
-		this.bmdFilterABSModeFCCheckBox.setSelected(input.isRemoveGenesWithABSModelFC());
+		this.BMDUBMDCheckBox.setSelected(categoryInput.isRemoveGenesWithBMDU_BMD());
+		this.BMDUBMDLCheckBox.setSelected(categoryInput.isRemoveGenesWithBMDU_BMDL());
+		this.conflictingProbeSetsCheckBox.setSelected(categoryInput.isIdentifyConflictingProbeSets());
+		this.deduplicateGeneSetsCheckBox.setSelected(categoryInput.isEliminateGeneSetRedundancy());
+		this.bmdFilterABSZScoreCheckBox.setSelected(categoryInput.isRemoveGenesWithABSZScore());
+		this.bmdFilterABSModeFCCheckBox.setSelected(categoryInput.isRemoveGenesWithABSModelFC());
 
-		this.minGenesInSetTextBox.setText(String.valueOf(input.getRemoveMinGenesInGeneset()));
-		this.maxGenesInSetTextBox.setText(String.valueOf(input.getRemoveMaxGenesInGeneset()));
+		this.minGenesInSetTextBox.setText(String.valueOf(categoryInput.getRemoveMinGenesInGeneset()));
+		this.maxGenesInSetTextBox.setText(String.valueOf(categoryInput.getRemoveMaxGenesInGeneset()));
 
-		this.filterMinGenesInSetCheckbox.setSelected(input.isMinGenesInGeneset());
-		this.filterMaxGenesInSetCheckbox.setSelected(input.isMaxGenesInGeneset());
+		this.filterMinGenesInSetCheckbox.setSelected(categoryInput.isMinGenesInGeneset());
+		this.filterMaxGenesInSetCheckbox.setSelected(categoryInput.isMaxGenesInGeneset());
 
-		this.removeStepFunctionCheckBox.setSelected(input.isRemoveWithStepFunction());
+		this.removeStepFunctionCheckBox.setSelected(categoryInput.isRemoveWithStepFunction());
 
-		this.removeStepFunctionWithBMDLowerCheckBox.setSelected(input.isRemoveWithStepFunctionWithBMDLower());
+		this.removeStepFunctionWithBMDLowerCheckBox
+				.setSelected(categoryInput.isRemoveWithStepFunctionWithBMDLower());
 
-		this.bmdFilterAdverseDirectionCheckBox.setSelected(input.isRemoveGenesWithAdverseDirection());
-		if (input.getRemoveGenesWithAdverseDirectionValue() != null)
-			this.bmdFilterAdverseDirectionComboBox.setValue(input.getRemoveGenesWithAdverseDirectionValue());
+		this.bmdFilterAdverseDirectionCheckBox.setSelected(categoryInput.isRemoveGenesWithAdverseDirection());
+		if (categoryInput.getRemoveGenesWithAdverseDirectionValue() != null)
+			this.bmdFilterAdverseDirectionComboBox
+					.setValue(categoryInput.getRemoveGenesWithAdverseDirectionValue());
 
-		this.rSquaredFilterValue.setText("" + input.getRemoveBMDLessThanRSquaredNumber());
+		this.rSquaredFilterValue.setText("" + categoryInput.getRemoveBMDLessThanRSquaredNumber());
 
-		this.bmdFilter2Value.setText("" + input.getRemoveBMDLessThanPValueNumber());
-		this.bmdFilter3Value.setText("" + input.getRemoveGenesWithBMD_BMDLNumber());
-		this.BMDUBMDTextbox.setText("" + input.getRemoveGenesWithBMDU_BMDNumber());
-		this.BMDUBMDLTextbox.setText("" + input.getRemoveGenesWithBMDU_BMDLNumber());
+		this.bmdFilter2Value.setText("" + categoryInput.getRemoveBMDLessThanPValueNumber());
+		this.bmdFilter3Value.setText("" + categoryInput.getRemoveGenesWithBMD_BMDLNumber());
+		this.BMDUBMDTextbox.setText("" + categoryInput.getRemoveGenesWithBMDU_BMDNumber());
+		this.BMDUBMDLTextbox.setText("" + categoryInput.getRemoveGenesWithBMDU_BMDLNumber());
 
-		this.bmdFilterABSModelFCValue.setText("" + input.getRemoveGenesWithABSModelFCNumber());
-		this.bmdFilterABSZScoreValue.setText("" + input.getRemoveGenesWithABSZScoreNumber());
+		this.bmdFilterABSModelFCValue.setText("" + categoryInput.getRemoveGenesWithABSModelFCNumber());
+		this.bmdFilterABSZScoreValue.setText("" + categoryInput.getRemoveGenesWithABSZScoreNumber());
 
-		this.bmdFilter4Value.setText("" + input.getRemoveGenesWithBMDValuesGreaterThanNFoldNumber());
-		this.bmdFilterMaxFoldChangeValue.setText("" + input.getRemoveGenesWithMaxFoldChangeLessThanNumber());
+		this.bmdFilter4Value.setText("" + categoryInput.getRemoveGenesWithBMDValuesGreaterThanNFoldNumber());
+		this.bmdFilterMaxFoldChangeValue
+				.setText("" + categoryInput.getRemoveGenesWithMaxFoldChangeLessThanNumber());
+
+		if (this.categoryInput instanceof GOCategoryInput)
+		{
+			if (goInput.getGoCategory() != null && !goInput.getGoCategory().equals(""))
+				this.categoryComboBox.getSelectionModel().select(goInput.getGoCategory());
+		}
+
+		if (this.categoryInput instanceof PathwayCategoryInput)
+		{
+			if (pathwayInput.getPathwayPlatform() != null && !pathwayInput.getPathwayPlatform().equals(""))
+				this.categoryComboBox.getSelectionModel().select(pathwayInput.getPathwayPlatform());
+		}
 
 		// this.bmdFilterMaxPValueChangeValue.setText("" + input.getRemoveGenesWithPrefilterPValueNumber());
 		// this.bmdFilterMaxAdjustedPValueChangeValue
 		// .setText("" + input.getRemoveGenesWithPrefilterAdjustedPValueNumber());
 
 		this.bmdFilterMaxAnovaPValueChangeValue
-				.setText("" + input.getRemoveGenesWithAnovaPrefilterPValueNumber());
+				.setText("" + categoryInput.getRemoveGenesWithAnovaPrefilterPValueNumber());
 		this.bmdFilterMaxAnovaAdjustedPValueChangeValue
-				.setText("" + input.getRemoveGenesWithAnovaPrefilterAdjustedPValueNumber());
+				.setText("" + categoryInput.getRemoveGenesWithAnovaPrefilterAdjustedPValueNumber());
 		this.bmdFilterMaxWilliamsPValueChangeValue
-				.setText("" + input.getRemoveGenesWithWilliamsPrefilterPValueNumber());
+				.setText("" + categoryInput.getRemoveGenesWithWilliamsPrefilterPValueNumber());
 		this.bmdFilterMaxWilliamsAdjustedPValueChangeValue
-				.setText("" + input.getRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber());
+				.setText("" + categoryInput.getRemoveGenesWithWilliamsPrefilterAdjustedPValueNumber());
 		this.bmdFilterMaxOriogenPValueChangeValue
-				.setText("" + input.getRemoveGenesWithOriogenPrefilterPValueNumber());
+				.setText("" + categoryInput.getRemoveGenesWithOriogenPrefilterPValueNumber());
 		this.bmdFilterMaxOriogenAdjustedPValueChangeValue
-				.setText("" + input.getRemoveGenesWithOriogenPrefilterAdjustedPValueNumber());
+				.setText("" + categoryInput.getRemoveGenesWithOriogenPrefilterAdjustedPValueNumber());
 
 		this.bmdFilterMinCurveFitGoFChangeValue
-				.setText("" + input.getRemoveGenesWithCurveFitPrefilterGoFNumber());
+				.setText("" + categoryInput.getRemoveGenesWithCurveFitPrefilterGoFNumber());
 
 		this.correlationCutoffProbeSetsValue
-				.setText("" + input.getCorrelationCutoffForConflictingProbeSets());
+				.setText("" + categoryInput.getCorrelationCutoffForConflictingProbeSets());
 		presenter.initData(bmdResults, catAnalysisEnum);
 
 		// Initialize IVIVE check box listeners
@@ -951,6 +972,45 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		});
 
 		toggleInvivo(false);
+
+		storeParametersInMap();
+
+		fillUpShowHideParameters();
+		initializeInputParameterVisibility();
+
+		showParametersComboBox.setOnAction(e ->
+		{
+			CategoryAnalysisInputToShowOrHide selected = showParametersComboBox.getValue();
+			if (selected == null)
+				return;
+			Platform.runLater(() ->
+			{
+				showParametersComboBox.getSelectionModel().clearSelection();
+				hideParametersList.add(selected);
+				showParametersList.remove(selected);
+				showParameter(selected.getName());
+
+			});
+
+		});
+
+		hideParametersComboBox.setOnAction(e ->
+		{
+			CategoryAnalysisInputToShowOrHide selected = hideParametersComboBox.getValue();
+			if (selected == null)
+				return;
+
+			Platform.runLater(() ->
+			{
+				hideParametersComboBox.getSelectionModel().clearSelection();
+				hideParametersList.remove(selected);
+				showParametersList.add(selected);
+				hideParameter(selected.getName());
+
+			});
+
+		});
+
 	}
 
 	@Override
@@ -1381,7 +1441,8 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		labelToNode.put(bmdFilterMaxCurveFitGoFCheckBox.getText(), bmdFilterMaxCurveFitGoFCheckBox);
 
 		// if empty list, hide all.
-		if (input.getCategoryInputsToShowOrHide() == null || input.getCategoryInputsToShowOrHide().isEmpty())
+		if (categoryInput.getCategoryInputsToShowOrHide() == null
+				|| categoryInput.getCategoryInputsToShowOrHide().isEmpty())
 		{
 			List<CategoryAnalysisInputToShowOrHide> categoryInputList = new ArrayList<>();
 			for (String key : labelToNode.keySet())
@@ -1391,11 +1452,11 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 				cInput.setShowMe(false);
 				categoryInputList.add(cInput);
 			}
-			input.setCategoryInputsToShowOrHide(categoryInputList);
+			categoryInput.setCategoryInputsToShowOrHide(categoryInputList);
 		}
 		else // otherwise they are stored, so use settings.
 		{
-			for (CategoryAnalysisInputToShowOrHide showHide : input.getCategoryInputsToShowOrHide())
+			for (CategoryAnalysisInputToShowOrHide showHide : categoryInput.getCategoryInputsToShowOrHide())
 			{
 				if (showHide.isShowMe())
 					showParameter(showHide.getName());

@@ -342,51 +342,51 @@ public class AnalyzeRunner
 			params.setUseAnovaPValueFilter(true);
 		}
 
-		if (catConfig.getWilliamsPrefilterPValueMin() == null)
+		if (catConfig.getWilliamsPrefilterPValueMaxValue() == null)
 			params.setUseWilliamsPValueFilter(false);
 		else
 		{
-			params.setWilliamsPValue(catConfig.getWilliamsPrefilterPValueMin());
+			params.setWilliamsPValue(catConfig.getWilliamsPrefilterPValueMaxValue());
 			params.setUseWilliamsPValueFilter(true);
 		}
 
-		if (catConfig.getOriogenPrefilterPValueMin() == null)
+		if (catConfig.getOriogenPrefilterPValueMaxValue() == null)
 			params.setUseOriogenPValueFilter(false);
 		else
 		{
-			params.setOriogenPValue(catConfig.getOriogenPrefilterPValueMin());
+			params.setOriogenPValue(catConfig.getOriogenPrefilterPValueMaxValue());
 			params.setUseOriogenPValueFilter(true);
 		}
 
-		if (catConfig.getCurveFitPrefilterPValueMax() == null)
+		if (catConfig.getCurveFitPrefilterGoFMinValue() == null)
 			params.setUseCurveFitGoFFilter(false);
 		else
 		{
-			params.setCurveFitGoF(catConfig.getCurveFitPrefilterPValueMax());
+			params.setCurveFitGoF(catConfig.getCurveFitPrefilterGoFMinValue());
 			params.setUseCurveFitGoFFilter(true);
 		}
 
-		if (catConfig.getAnovaPrefilterAdjustedPValueMin() == null)
+		if (catConfig.getAnovaPrefilterAdjustedPValueMaxValue() == null)
 			params.setUseAnovaAdjustedPValueFilter(false);
 		else
 		{
-			params.setAnovaAdjustedPValue(catConfig.getAnovaPrefilterAdjustedPValueMin());
+			params.setAnovaAdjustedPValue(catConfig.getAnovaPrefilterAdjustedPValueMaxValue());
 			params.setUseAnovaAdjustedPValueFilter(true);
 		}
 
-		if (catConfig.getWilliamsPrefilterAdjustedPValueMin() == null)
+		if (catConfig.getWilliamsPrefilterAdjustedPValueMaxValue() == null)
 			params.setUseWilliamsAdjustedPValueFilter(false);
 		else
 		{
-			params.setWilliamsAdjustedPValue(catConfig.getWilliamsPrefilterAdjustedPValueMin());
+			params.setWilliamsAdjustedPValue(catConfig.getWilliamsPrefilterAdjustedPValueMaxValue());
 			params.setUseWilliamsAdjustedPValueFilter(true);
 		}
 
-		if (catConfig.getOriogenPrefilterAdjustedPValueMin() == null)
+		if (catConfig.getOriogenPrefilterAdjustedPValueMaxValue() == null)
 			params.setUseOriogenAdjustedPValueFilter(false);
 		else
 		{
-			params.setOriogenAdjustedPValue(catConfig.getOriogenPrefilterAdjustedPValueMin());
+			params.setOriogenAdjustedPValue(catConfig.getOriogenPrefilterAdjustedPValueMaxValue());
 			params.setUseOriogenAdjustedPValueFilter(true);
 		}
 

@@ -37,6 +37,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sciome.bmdexpress2.mvp.model.TableInformation;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.DefinedCategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.GOCategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.GeneCategoryInput;
+import com.sciome.bmdexpress2.mvp.model.category.PathwayCategoryInput;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterInput;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAInput;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenInput;
@@ -84,7 +88,10 @@ public class BMDExpressProperties
 
 	private GCurvePInput gCurvePInput;
 
-	private CategoryInput categoryInput;
+	private GOCategoryInput goCategoryInput;
+	private PathwayCategoryInput pathwayCategoryInput;
+	private DefinedCategoryInput definedCategoryInput;
+	private GeneCategoryInput geneCategoryInput;
 
 	private String processInformation;
 
@@ -147,8 +154,14 @@ public class BMDExpressProperties
 				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "bmdInput.json");
 		File bmdMAInputFile = new File(
 				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "bmdMAInput.json");
-		File categoryInputFile = new File(
-				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "categoryInput.json");
+		File goCategoryInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "GOcategoryInput.json");
+		File definedCategoryInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "DEFINEDcategoryInput.json");
+		File geneCategoryInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "GENEcategoryInput.json");
+		File pathwayCategoryInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "PATHWAYcategoryInput.json");
 		File gCurvePInputFile = new File(
 				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "gCurveP.json");
 
@@ -210,14 +223,46 @@ public class BMDExpressProperties
 			bmdMAInput = new BMDMAInput();
 			mapper.writerWithDefaultPrettyPrinter().writeValue(bmdMAInputFile, bmdMAInput);
 		}
-		if (categoryInputFile.exists())
+		if (goCategoryInputFile.exists())
 		{
-			categoryInput = mapper.readValue(categoryInputFile, CategoryInput.class);
+			goCategoryInput = mapper.readValue(goCategoryInputFile, GOCategoryInput.class);
 		}
 		else
 		{
-			categoryInput = new CategoryInput();
-			mapper.writerWithDefaultPrettyPrinter().writeValue(categoryInputFile, categoryInput);
+			goCategoryInput = new GOCategoryInput();
+			mapper.writerWithDefaultPrettyPrinter().writeValue(goCategoryInputFile, goCategoryInput);
+		}
+
+		if (geneCategoryInputFile.exists())
+		{
+			geneCategoryInput = mapper.readValue(geneCategoryInputFile, GeneCategoryInput.class);
+		}
+		else
+		{
+			geneCategoryInput = new GeneCategoryInput();
+			mapper.writerWithDefaultPrettyPrinter().writeValue(goCategoryInputFile, geneCategoryInput);
+		}
+
+		if (definedCategoryInputFile.exists())
+		{
+			definedCategoryInput = mapper.readValue(definedCategoryInputFile, DefinedCategoryInput.class);
+		}
+		else
+		{
+			definedCategoryInput = new DefinedCategoryInput();
+			mapper.writerWithDefaultPrettyPrinter().writeValue(definedCategoryInputFile,
+					definedCategoryInput);
+		}
+
+		if (pathwayCategoryInputFile.exists())
+		{
+			pathwayCategoryInput = mapper.readValue(pathwayCategoryInputFile, PathwayCategoryInput.class);
+		}
+		else
+		{
+			pathwayCategoryInput = new PathwayCategoryInput();
+			mapper.writerWithDefaultPrettyPrinter().writeValue(pathwayCategoryInputFile,
+					pathwayCategoryInput);
 		}
 
 		if (gCurvePInputFile.exists())
@@ -347,13 +392,16 @@ public class BMDExpressProperties
 
 	public void saveCategoryInput(CategoryInput input)
 	{
-		File categoryInputFile = new File(
-				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "categoryInput.json");
+
+		String prefix = getCategoryInputPrefixAndAssignProperty(input);
+
+		File categoryInputFile = new File(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator
+				+ prefix + "categoryInput.json");
 		ObjectMapper mapper = new ObjectMapper();
-		this.categoryInput = input;
+
 		try
 		{
-			mapper.writerWithDefaultPrettyPrinter().writeValue(categoryInputFile, categoryInput);
+			mapper.writerWithDefaultPrettyPrinter().writeValue(categoryInputFile, input);
 		}
 		catch (IOException e)
 		{
@@ -363,18 +411,46 @@ public class BMDExpressProperties
 
 	public void saveVisibleCategoryInput(CategoryInput input)
 	{
+		String prefix = getCategoryInputPrefixAndAssignProperty(input);
+
 		File categoryInputFile = new File(BMDExpressConstants.getInstance().BMDBASEPATH + File.separator
-				+ "categoryVisibleInputs.json");
+				+ prefix + "categoryVisibleInputs.json");
 		ObjectMapper mapper = new ObjectMapper();
-		this.categoryInput = input;
 		try
 		{
-			mapper.writerWithDefaultPrettyPrinter().writeValue(categoryInputFile, categoryInput);
+			mapper.writerWithDefaultPrettyPrinter().writeValue(categoryInputFile, input);
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
+	}
+
+	private String getCategoryInputPrefixAndAssignProperty(CategoryInput categoryInput)
+	{
+		if (categoryInput instanceof GOCategoryInput)
+		{
+			this.goCategoryInput = (GOCategoryInput) categoryInput;
+			return "GO";
+		}
+		else if (categoryInput instanceof DefinedCategoryInput)
+		{
+			this.definedCategoryInput = (DefinedCategoryInput) categoryInput;
+			return "DEFINED";
+		}
+		else if (categoryInput instanceof GeneCategoryInput)
+		{
+			this.geneCategoryInput = (GeneCategoryInput) categoryInput;
+			return "GENE";
+		}
+		else if (categoryInput instanceof PathwayCategoryInput)
+		{
+			this.pathwayCategoryInput = (PathwayCategoryInput) categoryInput;
+			return "PATHWAY";
+		}
+
+		else
+			return "";
 	}
 
 	private void loadDefaultFilters()
@@ -1092,9 +1168,24 @@ public class BMDExpressProperties
 		return gCurvePInput;
 	}
 
-	public CategoryInput getCategoryInput()
+	public GOCategoryInput getGOCategoryInput()
 	{
-		return categoryInput;
+		return goCategoryInput;
+	}
+
+	public DefinedCategoryInput getDefinedCategoryInput()
+	{
+		return definedCategoryInput;
+	}
+
+	public GeneCategoryInput getGeneCategoryInput()
+	{
+		return geneCategoryInput;
+	}
+
+	public PathwayCategoryInput getPathwayCategoryInput()
+	{
+		return pathwayCategoryInput;
 	}
 
 	public TableInformation getTableInformation()

@@ -1449,7 +1449,7 @@ public class BMDStatatistics
 							continue;
 
 						Double extracted = pValueExtractor.apply(probeStatResult);
-						if (extracted != null && Math.abs(extracted) > pValue)
+						if (extracted != null && Math.abs(extracted) < pValue)
 						{
 							probes.remove(st);
 							removedProbes.add(st);
