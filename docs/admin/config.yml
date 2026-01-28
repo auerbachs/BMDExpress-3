@@ -1,0 +1,91 @@
+backend:
+  name: github
+  repo: auerbachs/BMDExpress-3
+  branch: main
+media_folder: "docs/assets/images"
+public_folder: "assets/images"
+site_url: https://auerbachs.github.io/BMDExpress-3
+
+collections:
+  - name: "pages"
+    label: "Documentation Pages"
+    files:
+      - label: "Home"
+        name: "index"
+        file: "docs/index.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "Overview of the Main View"
+        name: "overview"
+        file: "docs/overview.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "How to Use the Application"
+        name: "how-to-use"
+        file: "docs/how-to-use-the-application.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "Statistical Prefiltering"
+        name: "prefiltering"
+        file: "docs/prefiltering.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "Benchmark Dose Analysis"
+        name: "benchmark-dose"
+        file: "docs/benchmark-dose-analysis.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "Functional Classifications"
+        name: "functional-classifications"
+        file: "docs/functional-classifications.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "GCurveP"
+        name: "gcurvep"
+        file: "docs/gcurvep.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "Additional Information"
+        name: "additional-info"
+        file: "docs/additional-information.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "Command Line"
+        name: "command-line"
+        file: "docs/command-line.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }
+
+      - label: "IVIVE"
+        name: "ivive"
+        file: "docs/ivive.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Navigation Order", name: "nav_order", widget: "number" }
+          - { label: "Content", name: "body", widget: "markdown" }

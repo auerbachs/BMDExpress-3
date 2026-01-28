@@ -1,0 +1,26 @@
+analyze-config1.json  
+--------------------
+analyze an entire directory of files containing expression data.
+run anova,williams and curvefit prefilters
+then run 2 different BMDS MLE analyses
+then run go, pathway and defined category analysis on each bmd analysis output
+
+
+analyze-config2.json
+--------------------
+
+analyze an entire directory of files containing expression data.
+run curvefit prefilters
+then run 2 different BMDS MLE analyses
+then run 2 different ToxicR Model Averaging analyses (1 laplace and 1 mcmc)
+then run go, pathway and defined category analysis on each bmd analysis output
+
+
+
+analyze-config3.json
+--------------------
+analyace individual files using the configuration to control the naming.
+
+
+
+

@@ -1,0 +1,122 @@
+{
+   "bm2FileName": "/path/to/myfile.bm2",
+   "jsonExportFileName": "/path/to/myfile.json",
+   "overwrite": true,
+   "expressionDataConfigs": [
+      {
+         "inputFileName": "/path/to/data/",
+         "hasHeaders":true,
+         "logTransformation":"BASE2",
+         "platform":"S1500_Plus_Rat"
+      }
+   ],
+   "preFilterConfigs":[
+      {
+         "@type":"williams",
+         "pValueCutoff":0.05,
+         "useMultipleTestingCorrection":false,
+         "filterOutControlGenes":true,
+         "useFoldChange":false,
+         "numberOfPermutations":10000,
+         "foldChange":0,
+         "foldChangeLotel":2,
+         "pValueLotel":0.05,
+         "lotelTest":2,
+         "numberOfThreads":4
+      },
+      {
+         "@type":"curvefit",
+         "inputCategory": "williams",
+         "pValueCutoff":0.05,
+         "useMultipleTestingCorrection":false,
+         "filterOutControlGenes":true,
+         "useFoldChange":false,
+         "foldChange":0,
+         "foldChangeLotel":2.0,
+         "pValueLotel":0.05,
+         "lotelTest":2,
+         "bmrFactor":1.581,
+         "poly2BmrFactor":null,
+         "constantVariance":true,
+         "numberOfThreads":4,
+         "modelConfigs":[
+            {
+               "@type":"hill"
+            },
+            {
+               "@type":"power"
+            },
+            {
+               "@type":"poly",
+               "degree":1
+            },
+            {
+               "@type":"exp",
+               "expModel":3
+            },
+            {
+               "@type":"exp",
+               "expModel":5
+            }
+         ]
+      }
+   ],
+   "maConfigs":[
+      {
+         "method":1,
+         "modelConfigs":[
+            {
+               "@type":"hill"
+            },
+            {
+               "@type":"power"
+            },
+            {
+               "@type":"exp",
+               "expModel":3
+            },
+            {
+               "@type":"exp",
+               "expModel":5
+            }
+         ],
+         "bmdsInputConfig":{
+            "constantVariance":true,
+            "bmrType": 2,
+            "bmrFactor":0.25,
+			"stepFunctionThreshold": 0.5
+         },
+         "inputCategory":"curvefit_prefilter",
+         "numberOfThreads":4
+      }
+   ],
+
+
+   "categoryAnalysisConfigs":[
+      {
+         "@type":"go",
+         "removePromiscuousProbes":false,
+         "removeBMDGreaterHighDose":true,
+         "bmdRSquaredCutoff":0.6,
+         "bmdBMDLRatioMin":10.0,
+         "removeStepFunction":false,
+		 "removeStepFunctionWithBMDLower":true,
+         "minGenesInSet":40,
+		 "maxGenesInSet": 500, 
+         "identifyConflictingProbeSets":true,
+         "correlationCutoffForConflictingProbeSets":0.5,
+         "goCategory":"biological_process"
+      },
+	  {
+         "@type":"gene",
+         "removePromiscuousProbes":false,
+         "removeBMDGreaterHighDose":true,
+         "bmdRSquaredCutoff":0.6,
+         "bmdBMDLRatioMin":10.0,
+         "removeStepFunction":false,
+		 "removeStepFunctionWithBMDLower":true,
+         "identifyConflictingProbeSets":true,
+         "correlationCutoffForConflictingProbeSets":0.5
+      }
+   ]
+}
