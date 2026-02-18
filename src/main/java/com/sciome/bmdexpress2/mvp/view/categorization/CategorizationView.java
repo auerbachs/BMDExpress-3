@@ -376,7 +376,6 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		CategoryFilterPopup popup = new CategoryFilterPopup(showParametersList);
 		popup.setOnHidden(e ->
 		{
-			System.out.println(showParametersList);
 
 			showParametersList.forEach(item ->
 			{
@@ -1431,6 +1430,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 				CategoryAnalysisInputToShowOrHide cInput = new CategoryAnalysisInputToShowOrHide();
 				cInput.setName(key);
 				cInput.setShowMe(false);
+				hideParameter(cInput.getName());
 				categoryInputList.add(cInput);
 			}
 			categoryInput.setCategoryInputsToShowOrHide(categoryInputList);
