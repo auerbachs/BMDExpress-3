@@ -186,6 +186,12 @@
 		    <version>3.6.1</version>
 		</dependency>
 		
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-csv</artifactId>
+		    <version>1.10.0</version>
+		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.controlsfx/controlsfx -->
 		<dependency>
 		    <groupId>org.controlsfx</groupId>

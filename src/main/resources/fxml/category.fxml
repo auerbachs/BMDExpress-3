@@ -68,10 +68,7 @@
       																</HBox>
                                                       <HBox fx:id="selectionHBox1" alignment="CENTER" minHeight="25.0" prefHeight="25.0" spacing="15.0">
                                                          <children>
-                                                            <Label fx:id="selectionLabel1" alignment="CENTER_RIGHT" minHeight="25.0" prefHeight="25.0" prefWidth="109.0" text="Show Parameters" />
-                                                            <ComboBox fx:id="showParametersComboBox" minHeight="25.0" prefHeight="25.0" prefWidth="150.0" />
-                                                            <Label fx:id="selectionLabel11" alignment="CENTER_RIGHT" minHeight="25.0" prefHeight="25.0" prefWidth="109.0" text="Hide Parameters" />
-                                                            <ComboBox fx:id="hideParametersComboBox" minHeight="25.0" prefHeight="25.0" prefWidth="150.0" />
+                                                            <Button fx:id="parameterVisibilityButton" mnemonicParsing="false" text="Set Parameter Visibility" />
                                                          </children>
                                                       </HBox>
                                                       <HBox alignment="CENTER" layoutX="10.0" layoutY="130.0" maxHeight="-Infinity" minHeight="27.0" prefHeight="27.0" prefWidth="627.0">

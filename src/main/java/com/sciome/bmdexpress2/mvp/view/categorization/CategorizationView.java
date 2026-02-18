@@ -32,6 +32,7 @@ import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
 import com.sciome.bmdexpress2.shared.CompoundTableLoader;
+import com.sciome.bmdexpress2.shared.component.CategoryFilterPopup;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.categoryanalysis.CategoryAnalysisParameters;
 import com.sciome.bmdexpress2.util.categoryanalysis.IVIVEParameters;
@@ -45,12 +46,10 @@ import com.sciome.commons.math.httk.model.Compound.Source;
 import com.sciome.commons.math.httk.model.CompoundTable;
 import com.sciome.commons.math.httk.model.InVitroData;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -304,9 +303,7 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private ComboBox speciesComboBox;
 
 	@FXML
-	private ComboBox<CategoryAnalysisInputToShowOrHide> showParametersComboBox;
-	@FXML
-	private ComboBox<CategoryAnalysisInputToShowOrHide> hideParametersComboBox;
+	private Button parameterVisibilityButton;
 
 	@FXML
 	private Label inputUnitsLabel;
@@ -330,8 +327,6 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 	private Map<String, CheckBox> labelToNode = new HashMap<>();
 
 	private ObservableList<CategoryAnalysisInputToShowOrHide> showParametersList;
-
-	private ObservableList<CategoryAnalysisInputToShowOrHide> hideParametersList;
 
 	public CategorizationView()
 	{
@@ -369,30 +364,31 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 
 	private void fillUpShowHideParameters()
 	{
-
-		showParametersList = FXCollections.observableArrayList();
-		SortedList<CategoryAnalysisInputToShowOrHide> sortedShow = new SortedList<>(showParametersList);
-		hideParametersList = FXCollections.observableArrayList();
-		SortedList<CategoryAnalysisInputToShowOrHide> sortedHidden = new SortedList<>(hideParametersList);
-
-		showParametersComboBox.setItems(sortedShow);
-		hideParametersComboBox.setItems(sortedHidden);
+		showParametersList = FXCollections.observableArrayList();;
 
 		for (CategoryAnalysisInputToShowOrHide inputParam : this.categoryInput
 				.getCategoryInputsToShowOrHide())
 		{
-			if (!inputParam.isShowMe())
-			{
-				showParametersList.add(inputParam);
-				hideParameter(inputParam.getName());
-			}
-			else
-			{
-				hideParametersList.add(inputParam);
-				showParameter(inputParam.getName());
-			}
+			showParametersList.add(inputParam);
 
 		}
+
+		CategoryFilterPopup popup = new CategoryFilterPopup(showParametersList);
+		popup.setOnHidden(e ->
+		{
+			System.out.println(showParametersList);
+
+			showParametersList.forEach(item ->
+			{
+				if (item.isShowMe())
+					this.showParameter(item.getName());
+				else
+					this.hideParameter(item.getName());
+			});
+
+		});
+
+		this.parameterVisibilityButton.setOnAction(e -> popup.show(parameterVisibilityButton));
 
 	}
 
@@ -978,39 +974,6 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		fillUpShowHideParameters();
 		initializeInputParameterVisibility();
 
-		showParametersComboBox.setOnAction(e ->
-		{
-			CategoryAnalysisInputToShowOrHide selected = showParametersComboBox.getValue();
-			if (selected == null)
-				return;
-			Platform.runLater(() ->
-			{
-				showParametersComboBox.getSelectionModel().clearSelection();
-				hideParametersList.add(selected);
-				showParametersList.remove(selected);
-				showParameter(selected.getName());
-
-			});
-
-		});
-
-		hideParametersComboBox.setOnAction(e ->
-		{
-			CategoryAnalysisInputToShowOrHide selected = hideParametersComboBox.getValue();
-			if (selected == null)
-				return;
-
-			Platform.runLater(() ->
-			{
-				hideParametersComboBox.getSelectionModel().clearSelection();
-				hideParametersList.remove(selected);
-				showParametersList.add(selected);
-				hideParameter(selected.getName());
-
-			});
-
-		});
-
 	}
 
 	@Override
@@ -1418,8 +1381,6 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		labelToNode.put(BMDUBMDLCheckBox.getText(), BMDUBMDLCheckBox);
 		labelToNode.put(bmdFilter4CheckBox.getText(), bmdFilter4CheckBox);
 
-		labelToNode.put(bmdFilter1CheckBox.getText(), bmdFilter1CheckBox);
-
 		labelToNode.put(bmdFilterABSModeFCCheckBox.getText(), bmdFilterABSModeFCCheckBox);
 		labelToNode.put(bmdFilterABSZScoreCheckBox.getText(), bmdFilterABSZScoreCheckBox);
 		labelToNode.put(filterMinGenesInSetCheckbox.getText(), filterMinGenesInSetCheckbox);
@@ -1439,6 +1400,26 @@ public class CategorizationView extends BMDExpressViewBase implements ICategoriz
 		labelToNode.put(bmdFilterMaxOriogenAdjustedPValueCheckBox.getText(),
 				bmdFilterMaxOriogenAdjustedPValueCheckBox);
 		labelToNode.put(bmdFilterMaxCurveFitGoFCheckBox.getText(), bmdFilterMaxCurveFitGoFCheckBox);
+
+		if (catAnalysisEnum == CategoryAnalysisEnum.PATHWAY)
+		{
+			labelToNode.remove(filterMinGenesInSetCheckbox.getText());
+			labelToNode.remove(filterMaxGenesInSetCheckbox.getText());
+		}
+		else if (catAnalysisEnum == CategoryAnalysisEnum.GO)
+		{
+			labelToNode.remove(filterMinGenesInSetCheckbox.getText());
+			labelToNode.remove(filterMaxGenesInSetCheckbox.getText());
+		}
+		else if (catAnalysisEnum == CategoryAnalysisEnum.DEFINED)
+		{
+			labelToNode.remove(filterMinGenesInSetCheckbox.getText());
+			labelToNode.remove(filterMaxGenesInSetCheckbox.getText());
+		}
+		else if (catAnalysisEnum == CategoryAnalysisEnum.GENE_LEVEL)
+		{
+			labelToNode.remove(bmdFilter1CheckBox.getText());
+		}
 
 		// if empty list, hide all.
 		if (categoryInput.getCategoryInputsToShowOrHide() == null

@@ -58,7 +58,9 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.presenter.visualization to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.mainstage to com.google.common;
+	opens com.sciome.bmdexpress2.shared to javafx.fxml;
 
+	exports com.sciome.bmdexpress2.shared to javafx.fxml;
 	exports com.sciome.bmdexpress2;
 	exports com.sciome.filter;
 	exports com.sciome.bmdexpress2.mvp.view.mainstage;
