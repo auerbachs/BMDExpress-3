@@ -7,7 +7,23 @@
 </h1>
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on November 26, 2025</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on March 9, 2026</h2>
+
+<h3>
+New Features
+</h3>
+<ul>
+<li>Decluttered Category Analysis input view allowing users to select parameters to show on screen</li>
+
+<li>Refined Category Analysis input settings persistence to be specific to category analysis type</li>
+
+
+
+</ul>
+
+
+
+<h2>Released on November 26, 2025</h2>
 
 <h3>
 New Features
