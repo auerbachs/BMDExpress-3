@@ -408,8 +408,8 @@ public class BMDResult extends BMDExpressAnalysisDataSet implements Serializable
 			// if(logwAUCList != null)
 			// logwAUC = logwAUCList.get(index);
 
-			probeStatResult.createRowData(probeToGeneMap, prefilter.getPValue(),
-					prefilter.getAdjustedPValue(),
+			probeStatResult.createRowData(probeToGeneMap, prefilter == null ? null : prefilter.getPValue(),
+					prefilter == null ? null : prefilter.getAdjustedPValue(),
 					prefilter == null ? null : prefilter.getAnovaAdjustedPValue(),
 					prefilter == null ? null : prefilter.getAnovapValue(),
 					prefilter == null ? null : prefilter.getWiliamsAdjustedPValue(),
