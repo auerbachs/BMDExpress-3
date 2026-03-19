@@ -17,11 +17,12 @@ public class PriorsMA
 	// intialialize priors
 	public PriorsMA(boolean ln, double variance)
 	{
-		this(ln, 1, variance);
+		this(ln, variance, 0.0, 0.0, 0.0, 0.0);
 
 	}
 
-	public PriorsMA(boolean ln, double powerrestrict, double logVariance)
+	public PriorsMA(boolean ln, double logVariance, double powerrestrict, double hillRestrict,
+			double exp3Restrict, double exp5Restrict)
 	{
 
 		isNCV = ln;

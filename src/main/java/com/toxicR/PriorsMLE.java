@@ -22,17 +22,17 @@ public class PriorsMLE
 	// intialialize priors
 	public PriorsMLE(boolean ln)
 	{
-		this(ln, 1, null, false);
+		this(ln, null, false, 1);
 
 	}
 
-	public PriorsMLE(boolean ln, Boolean isIncreasing, boolean ispolymonotonic)
+	public PriorsMLE(boolean isNcv, Boolean isIncreasing, boolean ispolymonotonic)
 	{
-		this(ln, 1, isIncreasing, ispolymonotonic);
+		this(isNcv, isIncreasing, ispolymonotonic, 1);
 
 	}
 
-	public PriorsMLE(boolean ln, double powerrestrict, Boolean isIncreasing, boolean ispolymonotonic)
+	public PriorsMLE(boolean ln, Boolean isIncreasing, boolean ispolymonotonic, double powerrestrict)
 	{
 
 		this.isPolyMonotonic = ispolymonotonic;

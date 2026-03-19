@@ -40,17 +40,28 @@ public class BMDSToxicRUtils
 	}
 
 	public static List<double[]> calculateToxicR(int model, double[] Y, double[] doses, int bmdType,
+			double BMR, boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast,
+			boolean isPolyMonotonic, LogTransformationEnum transform)
+			throws JsonMappingException, JsonProcessingException
+	{
+		return calculateToxicR(model, Y, doses, bmdType, BMR, isNCV, isIncreasing, deviance, isFast,
+				isPolyMonotonic, transform, 1, 1, 1, 0);
+	}
+
+	public static List<double[]> calculateToxicR(int model, double[] Y, double[] doses, int bmdType,
 			double BMR, boolean isNCV, NormalDeviance deviance, boolean isFast, boolean isPolyMonotonic,
 			LogTransformationEnum transform) throws JsonMappingException, JsonProcessingException
 	{
 		boolean isIncreasing = ToxicRUtils.calculateDirection(doses, Y) > 0;
+		// default power constraints...pow 1, hill 1, exp3 1, exp5 constant variance(0), non-constant(1)
 		return calculateToxicR(model, Y, doses, bmdType, BMR, isNCV, isIncreasing, deviance, isFast,
-				isPolyMonotonic, transform);
+				isPolyMonotonic, transform, 1, 1, 1, 0);
 	}
 
 	public static List<double[]> calculateToxicR(int model, double[] Y, double[] doses, int bmdType,
 			double BMR, boolean isNCV, boolean isIncreasing, NormalDeviance deviance, boolean isFast,
-			boolean isPolyMonotonic, LogTransformationEnum transform)
+			boolean isPolyMonotonic, LogTransformationEnum transform, double powerConstraint,
+			double hillConstraint, double exp3Constraint, double exp5Constraint)
 			throws JsonMappingException, JsonProcessingException
 	{
 
@@ -81,7 +92,8 @@ public class BMDSToxicRUtils
 
 		ToxicRJNI tRJNI = new ToxicRJNI();
 		ContinuousResult continousResult = tRJNI.runContinuous(model, Y, doses, bmdType, BMR, true, isNCV,
-				isIncreasing, isFast, isPolyMonotonic);
+				isIncreasing, isFast, isPolyMonotonic, powerConstraint, hillConstraint, exp3Constraint,
+				exp5Constraint);
 
 		Double maxconstant = doses.length * Math.log((1 / Math.sqrt(2 * Math.PI)));
 
@@ -185,12 +197,14 @@ public class BMDSToxicRUtils
 			int bmdType, double BMR, boolean isNCV, boolean useMCMC, LogTransformationEnum transform)
 			throws JsonMappingException, JsonProcessingException
 	{
-		return calculateToxicRMA(models, Y, doses, bmdType, BMR, isNCV, useMCMC, false, transform);
+		return calculateToxicRMA(models, Y, doses, bmdType, BMR, isNCV, useMCMC, false, transform, 0, 0, 0,
+				0);
 	}
 
 	public static ModelAveragingResult calculateToxicRMA(int[] models, double[] Y, double[] doses,
 			int bmdType, double BMR, boolean isNCV, boolean useMCMC, boolean isFast,
-			LogTransformationEnum transform) throws JsonMappingException, JsonProcessingException
+			LogTransformationEnum transform, double powerConstraint, double hillConstraint,
+			double exp3Constraint, double exp5Constraint) throws JsonMappingException, JsonProcessingException
 	{
 		boolean isIncreasing = ToxicRUtils.calculateDirection(doses, Y) > 0;
 		ModelAveragingResult maResult = new ModelAveragingResult();
@@ -226,10 +240,11 @@ public class BMDSToxicRUtils
 
 		if (!useMCMC)
 			continousResultMA = tRJNI.runContinuousMA(models, Y, doses, bmdType, BMR, false, isNCV,
-					isIncreasing, isFast);
+					isIncreasing, isFast, powerConstraint, hillConstraint, exp3Constraint, exp5Constraint);
 		else
 			continousResultMA = tRJNI.runContinuousMCMCMA(models, Y, doses, bmdType, BMR, 25000, 1000, false,
-					isNCV, isIncreasing, isFast).getResult();
+					isNCV, isIncreasing, isFast, powerConstraint, hillConstraint, exp3Constraint,
+					exp5Constraint).getResult();
 
 		Double maxconstant = doses.length * Math.log((1 / Math.sqrt(2 * Math.PI)));
 
