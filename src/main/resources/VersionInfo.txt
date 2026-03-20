@@ -7,7 +7,21 @@
 </h1>
 
 
-<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on March 9, 2026</h2>
+<h2>Version <MAJOR_VERSION> BUILD <SUBVERSION_VERSION_NUMBER> released on March 20, 2026</h2>
+
+<h3>
+Bug Fixes
+</h3>
+<ul>
+<li>Fixed bug when flag ratio below lowest non-zero dose is incorrect.</li>
+
+
+
+</ul>
+
+
+
+<h2>Released on March 9, 2026</h2>
 
 <h3>
 New Features
@@ -20,6 +34,8 @@ New Features
 
 
 </ul>
+
+
 
 
 
