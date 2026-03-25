@@ -131,7 +131,9 @@ public class ExponentialFitThread extends Thread implements IFitThread
 				List<double[]> resultsList = BMDSToxicRUtils.calculateToxicR(expModel, responsesD, dosesd,
 						inputParameters.getBmrType(), inputParameters.getBmrLevel(),
 						inputParameters.getConstantVariance() != 1, dev, inputParameters.isFast(), false,
-						transform);
+						transform, 1.0, inputParameters.isRestrictHill() ? 1.0 : 0.0,
+						inputParameters.isRestrictExp3() ? 1.0 : 0.0,
+						inputParameters.isRestrictExp5() ? 1.0 : 0.0);
 				double[] results = resultsList.get(0);
 				double[] results1 = resultsList.get(1);
 				double[] covariates = resultsList.get(2);

@@ -24,13 +24,16 @@ public class ModelInputParameters
 	private int restrictN = 1;
 	private int restrictBetas = 1;
 	private int restirctPower = 1;
-	private int restrictHill = 1;
 	private int append = 0;
 	private int smooth = 0;
 	private int bmrType = 1;
 	private int constantVariance = 0;
 	private int riskType = 0;
 	private int initialParams = 0;
+
+	private boolean restrictHill = false;
+	private boolean restrictExp3 = false;
+	private boolean restrictExp5 = false;
 
 	private boolean polyMonotonic = false;
 
@@ -77,6 +80,36 @@ public class ModelInputParameters
 	private boolean isFast = false;
 
 	private double stepFunctionThreshold = 0.75;
+
+	public boolean isRestrictHill()
+	{
+		return restrictHill;
+	}
+
+	public void setRestrictHill(boolean restrictHill)
+	{
+		this.restrictHill = restrictHill;
+	}
+
+	public boolean isRestrictExp3()
+	{
+		return restrictExp3;
+	}
+
+	public void setRestrictExp3(boolean restrictExp3)
+	{
+		this.restrictExp3 = restrictExp3;
+	}
+
+	public boolean isRestrictExp5()
+	{
+		return restrictExp5;
+	}
+
+	public void setRestrictExp5(boolean restrictExp5)
+	{
+		this.restrictExp5 = restrictExp5;
+	}
 
 	public double getStepFunctionThreshold()
 	{
@@ -236,16 +269,6 @@ public class ModelInputParameters
 	public void setRestirctPower(int restirctPower)
 	{
 		this.restirctPower = restirctPower;
-	}
-
-	public int getRestrictHill()
-	{
-		return restrictHill;
-	}
-
-	public void setRestrictHill(int restirctHill)
-	{
-		this.restrictHill = restirctHill;
 	}
 
 	public int getAppend()

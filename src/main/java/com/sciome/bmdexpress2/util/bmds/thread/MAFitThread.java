@@ -136,7 +136,10 @@ public class MAFitThread extends Thread implements IFitThread
 
 				ModelAveragingResult statResult = BMDSToxicRUtils.calculateToxicRMA(models, responsesD,
 						dosesd, inputParameters.getBmrType(), inputParameters.getBmrLevel(),
-						inputParameters.getConstantVariance() != 1, useMCMC, transform);
+						inputParameters.getConstantVariance() != 1, useMCMC, false, transform, 1.0,
+						inputParameters.isRestrictHill() ? 1.0 : 0.0,
+						inputParameters.isRestrictExp3() ? 1.0 : 0.0,
+						inputParameters.isRestrictExp5() ? 1.0 : 0.0);
 
 				maResults.set(probeIndex, statResult);
 

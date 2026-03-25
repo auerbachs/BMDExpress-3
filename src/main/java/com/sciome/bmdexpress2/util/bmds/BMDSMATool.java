@@ -100,6 +100,10 @@ public class BMDSMATool implements IModelProgressUpdater, IProbeIndexGetter
 		notes.add("BMDS Major Version: " + inputParameters.getBMDSMajorVersion());
 		notes.add("Model Averaging Method: " + inputParameters.getMAMethod());
 		notes.add("Step Function Calculation Threshold: " + inputParameters.getStepFunctionThreshold());
+
+		notes.add("Restrict Hill exponent: " + inputParameters.isRestrictHill());
+		notes.add("Restrict Exp3 exponent: " + inputParameters.isRestrictExp3());
+		notes.add("Restrict Exp5 exponent: " + inputParameters.isRestrictExp5());
 		String modelsToFit = "";
 		if (modelsToRun != null)
 		{

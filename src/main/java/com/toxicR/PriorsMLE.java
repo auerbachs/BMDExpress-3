@@ -34,6 +34,12 @@ public class PriorsMLE
 
 	public PriorsMLE(boolean ln, Boolean isIncreasing, boolean ispolymonotonic, double powerrestrict)
 	{
+		this(ln, isIncreasing, ispolymonotonic, powerrestrict, 1.0, 1.0, 0.0);
+	}
+
+	public PriorsMLE(boolean ln, Boolean isIncreasing, boolean ispolymonotonic, double powerrestrict,
+			double hillRestrict, double exp3Restrict, double exp5Restrict)
+	{
 
 		this.isPolyMonotonic = ispolymonotonic;
 
@@ -54,7 +60,7 @@ public class PriorsMLE
 					(MLE), 0, 1, 0, 100, // 1
 					(MLE), 0, .5, 0, 100, // 2
 					(MLE), 0, .5, -20, 20, // 3
-					(MLE), 0, 0.3, 1, 18, // 4
+					(MLE), 0, 0.3, exp3Restrict, 18, // 4
 					(MLE), 0, 0, 0, 18, // 5
 					(MLE), 0, 1, -18, 18// 6
 			}, 6, 5);
@@ -69,7 +75,7 @@ public class PriorsMLE
 					(MLE), 0, 1, -100, 100, // 1
 					(MLE), 0, 2, (isIncreasing ? 0 : -100), (isIncreasing ? 100 : 0), // 2
 					(MLE), 0, 1, 0, 5, // 3
-					(MLE), 0.1823216, 1, 1, 18, // 4
+					(MLE), 0.1823216, 1, hillRestrict, 18, // 4
 					(MLE), 0, 2, -18, 18, // 5
 					(MLE), 0, 2, -18, 18// 6
 			}, 6, 5);
@@ -77,7 +83,7 @@ public class PriorsMLE
 					(MLE), 0, .1, -100, 100, // 1
 					(MLE), 0, 1, (0), (100), // 2
 					(MLE), 0, .5, -20, 20, // 3
-					(MLE), 1, 0.2, 1, 18, // 4
+					(MLE), 1, 0.2, exp5Restrict, 18, // 4
 					(MLE), 0, 0.5, 0, 18, // 5
 					(MLE), 0, 1, -18, 18// 6
 			}, 6, 5);
@@ -141,14 +147,14 @@ public class PriorsMLE
 					(MLE), 0, 1, -100, 100, // 1
 					(MLE), 0, 2, (isIncreasing ? 0 : -100), (isIncreasing ? 100 : 0), // 2
 					(MLE), 0, 1, 0, 5, // 3
-					(MLE), 1, 1.2, 1, 18, // 4
+					(MLE), 1, 1.2, hillRestrict, 18, // 4
 					(MLE), 0, 1, -18, 18// 5
 			}, 5, 5);
 			exp3 = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
 					(MLE), 0, 0.1, 0, 100, // 1
 					(MLE), 0, 1, 0, 100, // 2
 					(MLE), 0, .5, -20, 20, // 3
-					(MLE), 1, 0.2, 1, 18, // 4
+					(MLE), 1, 0.2, exp3Restrict, 18, // 4
 					(MLE), 0, 1, -18, 18// 5
 			}, 5, 5);
 			power = ToxicRUtils.convert2ColumnMajorOrder(new double[] { // priors
@@ -161,7 +167,7 @@ public class PriorsMLE
 					(MLE), 0, .1, -100, 100, // 1
 					(MLE), 0, 1, 0, 100, // 2
 					(MLE), 0, 1, -10, 10, // 3
-					(MLE), 1, 0.2, 0, 18, // 4
+					(MLE), 1, 0.2, exp5Restrict, 18, // 4
 					(MLE), 0, 1, -18, 18// 5
 			}, 5, 5);
 

@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.bmdanalysis.BMDAnalysisView">
+<BorderPane maxWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.bmdanalysis.BMDAnalysisView">
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" prefHeight="665.0" prefViewportHeight="600.0" prefViewportWidth="800.0" prefWidth="1000.0">
          <content>
@@ -182,6 +182,7 @@
                                              <rowConstraints>
                                                 <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                                 <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                                <RowConstraints fillHeight="false" maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
                                                 <Label alignment="CENTER_RIGHT" layoutX="34.0" layoutY="54.0" prefHeight="17.0" text="BMR Factor:" GridPane.columnIndex="2" GridPane.halignment="RIGHT" />
@@ -211,6 +212,9 @@
                                                 <CheckBox fx:id="monotonicPolyCheckBox" mnemonicParsing="false" selected="true" text="Monotonic Poly2" GridPane.columnIndex="5" />
                                                 <Label alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="179.0" text="Step Function Threshold" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                                 <ComboBox fx:id="stepFunctionThresholdCombo" editable="true" prefHeight="25.0" prefWidth="138.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                                <CheckBox fx:id="restrictHillCheckBox" mnemonicParsing="false" selected="true" text="Restrict Hill" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                                                <CheckBox fx:id="restrictExp3CheckBox" mnemonicParsing="false" selected="true" text="Restrict Exp 3" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                                                <CheckBox fx:id="restrictExp5CheckBox" mnemonicParsing="false" selected="true" text="Restrict Exp 5" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
                                              </children>
                                           </GridPane>
                                        </children>
