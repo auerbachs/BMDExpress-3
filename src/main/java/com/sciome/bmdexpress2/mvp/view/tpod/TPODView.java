@@ -1,6 +1,7 @@
 package com.sciome.bmdexpress2.mvp.view.tpod;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,12 +9,19 @@ import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
+import com.sciome.bmdexpress2.mvp.model.tpod.FirstModeParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.MaxCurveParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters2;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
 import com.sciome.bmdexpress2.mvp.presenter.tpod.TPODPresenter;
 import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.tpod.ITPODView;
-import com.sciome.bmdexpress2.service.CategoryAnalysisService;
-import com.sciome.bmdexpress2.serviceInterface.ICategoryAnalysisService;
+import com.sciome.bmdexpress2.service.TPODAnalysisService;
+import com.sciome.bmdexpress2.serviceInterface.ITPODService;
 import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.categoryanalysis.CategoryAnalysisParameters;
@@ -86,6 +94,10 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 	private Map<String, CheckBox> labelToNode = new HashMap<>();
 
+	private List<TPODMethodCard> tpodMethods = new ArrayList<>();
+
+	private List<CheckBox> bmdMetrics = new ArrayList<>();
+
 	public TPODView()
 	{
 		this(BMDExpressEventBus.getInstance());
@@ -97,7 +109,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	public TPODView(BMDExpressEventBus eventBus)
 	{
 		super();
-		ICategoryAnalysisService service = new CategoryAnalysisService();
+		ITPODService service = new TPODAnalysisService();
 		presenter = new TPODPresenter(this, service, eventBus);
 
 	}
@@ -127,36 +139,66 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	@Override
 	public void handle_start(ActionEvent event)
 	{
-		CategoryAnalysisParameters params = null;
+		TPODInputParameters inputParameters = new TPODInputParameters();
 
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("Invalid Input");
-		alert.setHeaderText(null);
-		try
+		List<BMDEndpointType> bmdEndpointTypes = new ArrayList<>();
+		for (CheckBox cb : bmdMetrics)
 		{
-			params = this.gatherParameters();
+
+			if (cb.isSelected())
+				bmdEndpointTypes.add((BMDEndpointType) cb.getUserData());
 		}
-		catch (NumberFormatException e)
+		inputParameters.setBmdEndpointTypes(bmdEndpointTypes);
+
+		List<TPODMethodParameter> tpodParameters = new ArrayList<>();
+		for (TPODMethodCard methodCard : tpodMethods)
 		{
-			// Otherwise give user a message
-			alert.setContentText("Invalid input fields");
-			alert.showAndWait();
-		}
-		catch (IllegalArgumentException e)
-		{
-			e.printStackTrace();
-			if (e.getMessage() != null)
-				alert.setContentText(e.getMessage());
-			else
-				alert.setContentText("Invalid input fields");
-			alert.showAndWait();
+			if (!methodCard.isEnabled())
+				continue;
+
+			TPODMethodParameter tM = null;
+			if (methodCard.method.equals(TPODMethod.FIRST_MODE))
+			{
+				FirstModeParameters fm = new FirstModeParameters();
+				tM = fm;
+			}
+			else if (methodCard.method.equals(TPODMethod.LCRD))
+			{
+				LCRDParameters lp = new LCRDParameters();
+				lp.setRunLength(methodCard.getRunLength());
+				lp.setSpacingRatio(methodCard.getSpacingRatio());
+				tM = lp;
+			}
+			else if (methodCard.method.equals(TPODMethod.MAX_CURVATURE))
+			{
+				MaxCurveParameters mc = new MaxCurveParameters();
+				tM = mc;
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				NthPercentParameters2 nthP = new NthPercentParameters2();
+				nthP.setPercent(methodCard.getPercent());
+				tM = nthP;
+
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_RANK))
+			{
+				NthRankParameters nthR = new NthRankParameters();
+				nthR.setRank(methodCard.getRank());
+				tM = nthR;
+			}
+
+			tpodParameters.add(tM);
+
 		}
 
-		if (params != null)
+		inputParameters.setMethodParameters(tpodParameters);
+
+		if (inputParameters != null)
 		{
 			startButton.setDisable(true);
 			closeButton.setDisable(true);
-			presenter.startAnalyses(params);
+			presenter.startAnalyses(inputParameters);
 		}
 	}
 
@@ -288,8 +330,10 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 			cb.setStyle("-fx-font-size: 12px;");
 
-			bmdMetricsLayout.getChildren().add(cb);
+			bmdMetrics.add(cb);
 		}
+
+		bmdMetricsLayout.getChildren().addAll(bmdMetrics);
 	}
 
 	private void initializeTPODMethods()
@@ -303,9 +347,9 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				""");
 
 		for (TPODMethod method : TPODMethod.values())
-		{
-			methodsLayout.getChildren().add(new TPODMethodCard(method));
-		}
+			tpodMethods.add(new TPODMethodCard(method));
+
+		methodsLayout.getChildren().addAll(tpodMethods);
 
 	}
 

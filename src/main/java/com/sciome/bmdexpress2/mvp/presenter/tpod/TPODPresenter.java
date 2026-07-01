@@ -4,21 +4,21 @@ import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.presenter.presenterbases.ServicePresenterBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.tpod.ITPODView;
-import com.sciome.bmdexpress2.serviceInterface.ICategoryAnalysisService;
+import com.sciome.bmdexpress2.serviceInterface.ITPODService;
 import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.shared.eventbus.project.BMDProjectLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.CloseProjectRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
-import com.sciome.bmdexpress2.util.categoryanalysis.CategoryAnalysisParameters;
 import com.sciome.bmdexpress2.util.categoryanalysis.ICategoryMapToolProgress;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class TPODPresenter extends ServicePresenterBase<ITPODView, ICategoryAnalysisService>
+public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 		implements ICategoryMapToolProgress
 {
 	private List<CategoryAnalysisResults> catResults;
@@ -29,7 +29,7 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ICategoryAnal
 	 * Constructors
 	 */
 
-	public TPODPresenter(ITPODView view, ICategoryAnalysisService service, BMDExpressEventBus eventBus)
+	public TPODPresenter(ITPODView view, ITPODService service, BMDExpressEventBus eventBus)
 	{
 		super(view, service, eventBus);
 		init();
@@ -42,15 +42,15 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ICategoryAnal
 	{
 	}
 
-	public void initData(List<CategoryAnalysisResults> bmdResults, TPODAnalysisEnum tpodAnalysisEnum)
+	public void initData(List<CategoryAnalysisResults> c, TPODAnalysisEnum tpodAnalysisEnum)
 	{
-		this.catResults = bmdResults;
+		this.catResults = c;
 		this.tpodAnalysisEnum = tpodAnalysisEnum;
 
 	}
 
 	@SuppressWarnings("restriction")
-	public void startAnalyses(CategoryAnalysisParameters params)
+	public void startAnalyses(TPODInputParameters params)
 	{
 
 		// send this to the bmdanalysis tool so some progress can be updated.
@@ -102,8 +102,8 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ICategoryAnal
 						{
 							Platform.runLater(() ->
 							{
-								TPODPresenter.this.getEventBus().post(new ShowErrorEvent(
-										"Category Analysis Failure: " + exception.toString()));
+								TPODPresenter.this.getEventBus().post(
+										new ShowErrorEvent("tPOD Analysis Failure: " + exception.toString()));
 								getView().enableButtons();
 							});
 							exception.printStackTrace();
