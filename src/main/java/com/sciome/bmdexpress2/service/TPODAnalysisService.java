@@ -1,14 +1,19 @@
 package com.sciome.bmdexpress2.service;
 
 import java.util.Arrays;
-import java.util.Random;
 
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
-import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
+import com.sciome.bmdexpress2.mvp.model.tpod.FirstModeParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.MaxCurveParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
 import com.sciome.bmdexpress2.service.tpod.firstmode.ModeAntimodeResult;
 import com.sciome.bmdexpress2.service.tpod.firstmode.ModeDetector;
-import com.sciome.bmdexpress2.service.tpod.firstmode.ModeResult;
 import com.sciome.bmdexpress2.serviceInterface.ITPODService;
 import com.sciome.bmdexpress2.util.bmds.IBMDSToolProgress;
 
@@ -16,24 +21,49 @@ public class TPODAnalysisService implements ITPODService
 {
 
 	@Override
-	public TPODAnalysisResult tpodAnalysis(CategoryAnalysisResults processableData,
+	public TPODAnalysisResults tpodAnalysis(CategoryAnalysisResults processableData,
 			TPODInputParameters inputParameters, IBMDSToolProgress progressUpdater)
 	{
 
-		Random rnd = new Random(42);
-		double[] x = new double[2000];
-		for (int i = 0; i < x.length; i++)
+		// TODO: first we need to do some filtration.
+
+		// loop through each bmdendpoint type
+		for (BMDEndpointType bmdEndpointType : inputParameters.getBmdEndpointTypes())
 		{
-			x[i] = (i % 2 == 0) ? rnd.nextGaussian() * 1.0 - 4 : rnd.nextGaussian() * 1.0 + 4;
+
+			// TODO: for the bmdendpoint type, grab that from the list of category results.
+
+			// now loop through the tpod methods that will be used.
+			for (TPODMethodParameter method : inputParameters.getMethodParameters())
+			{
+
+				// given a method, calculate the tPOD
+				if (method instanceof LCRDParameters)
+				{
+					LCRDParameters lp = (LCRDParameters) method;
+				}
+				else if (method instanceof MaxCurveParameters)
+				{
+					MaxCurveParameters mc = (MaxCurveParameters) method;
+				}
+				else if (method instanceof NthRankParameters)
+				{
+					NthRankParameters nrp = (NthRankParameters) method;
+				}
+				else if (method instanceof NthPercentParameters)
+				{
+					NthPercentParameters npp = (NthPercentParameters) method;
+
+				}
+				else if (method instanceof FirstModeParameters)
+				{
+					FirstModeParameters fm = (FirstModeParameters) method;
+				}
+
+			}
+
 		}
 
-		ModeResult m2 = ModeDetector.modes2(x, 0.1);
-		System.out.println("Modes2:        " + m2);
-
-		ModeAntimodeResult ma = ModeDetector.modeAntimode(x, 0.1);
-		System.out.println("mode.antimode: " + ma);
-
-		// TODO Auto-generated method stub
 		return null;
 	}
 

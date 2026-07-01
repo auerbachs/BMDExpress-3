@@ -12,7 +12,7 @@ import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.FirstModeParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.MaxCurveParameters;
-import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters2;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
@@ -176,7 +176,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			}
 			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
 			{
-				NthPercentParameters2 nthP = new NthPercentParameters2();
+				NthPercentParameters nthP = new NthPercentParameters();
 				nthP.setPercent(methodCard.getPercent());
 				tM = nthP;
 

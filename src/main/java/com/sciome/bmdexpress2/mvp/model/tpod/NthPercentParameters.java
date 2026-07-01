@@ -1,6 +1,6 @@
 package com.sciome.bmdexpress2.mvp.model.tpod;
 
-public class NthPercentParameters2 extends TPODMethodParameter
+public class NthPercentParameters extends TPODMethodParameter
 {
 	private double percent;
 

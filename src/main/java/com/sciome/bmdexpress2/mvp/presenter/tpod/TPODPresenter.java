@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.eventbus.Subscribe;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.presenter.presenterbases.ServicePresenterBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.tpod.ITPODView;
@@ -13,13 +14,12 @@ import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.shared.eventbus.project.BMDProjectLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.CloseProjectRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
-import com.sciome.bmdexpress2.util.categoryanalysis.ICategoryMapToolProgress;
+import com.sciome.bmdexpress2.util.bmds.IBMDSToolProgress;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 
-public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
-		implements ICategoryMapToolProgress
+public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService> implements IBMDSToolProgress
 {
 	private List<CategoryAnalysisResults> catResults;
 
@@ -54,7 +54,7 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 	{
 
 		// send this to the bmdanalysis tool so some progress can be updated.
-		ICategoryMapToolProgress me = this;
+		IBMDSToolProgress me = this;
 
 		Task<Integer> task = new Task<Integer>() {
 			@Override
@@ -62,7 +62,7 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 			{
 				try
 				{
-					for (CategoryAnalysisResults bmdResult : catResults)
+					for (CategoryAnalysisResults catResult : catResults)
 					{
 
 						// for gene level analysis, just use the genes as categories
@@ -82,6 +82,9 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 						{
 							// CategoryAnalysisResults categoryAnalysisResults = getService()
 							// .categoryAnalysis(params, bmdResult, tpodAnalysisEnum, me);
+
+							TPODAnalysisResults tpodResults = getService().tpodAnalysis(catResult, params,
+									me);
 
 							Platform.runLater(() ->
 							{
@@ -150,6 +153,13 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 	{
 
 		getView().closeWindow();
+	}
+
+	@Override
+	public void clearProgress()
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }
