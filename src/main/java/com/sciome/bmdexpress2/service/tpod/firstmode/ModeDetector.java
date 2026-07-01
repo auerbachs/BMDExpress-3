@@ -1,8 +1,12 @@
-package com.sciome.bmdexpress2.service.tpod;
+package com.sciome.bmdexpress2.service.tpod.firstmode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.sciome.bmdexpress2.service.tpod.math.DensityEstimate;
+import com.sciome.bmdexpress2.service.tpod.math.KernelDensity;
+import com.sciome.bmdexpress2.service.tpod.math.MathUtils;
 
 /**
  * Direct port of the R functions Modes2() and mode.antimode():

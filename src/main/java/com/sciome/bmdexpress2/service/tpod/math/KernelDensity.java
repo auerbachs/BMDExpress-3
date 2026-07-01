@@ -1,4 +1,4 @@
-package com.sciome.bmdexpress2.service.tpod;
+package com.sciome.bmdexpress2.service.tpod.math;
 
 /**
  * Gaussian kernel density estimation matching R's density(x, bw = "nrd0").

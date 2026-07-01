@@ -1,4 +1,4 @@
-package com.sciome.bmdexpress2.service.tpod;
+package com.sciome.bmdexpress2.service.tpod.math;
 
 /**
  * Holds the (x, y) grid of a kernel density estimate — the Java analogue of

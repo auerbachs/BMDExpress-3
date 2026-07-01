@@ -6,9 +6,9 @@ import java.util.Random;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
-import com.sciome.bmdexpress2.service.tpod.ModeAntimodeResult;
-import com.sciome.bmdexpress2.service.tpod.ModeDetector;
-import com.sciome.bmdexpress2.service.tpod.ModeResult;
+import com.sciome.bmdexpress2.service.tpod.firstmode.ModeAntimodeResult;
+import com.sciome.bmdexpress2.service.tpod.firstmode.ModeDetector;
+import com.sciome.bmdexpress2.service.tpod.firstmode.ModeResult;
 import com.sciome.bmdexpress2.serviceInterface.ITPODService;
 import com.sciome.bmdexpress2.util.bmds.IBMDSToolProgress;
 
