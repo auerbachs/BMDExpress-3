@@ -3,6 +3,7 @@ package com.sciome.charts.jfree;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
@@ -35,6 +36,7 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.CategoryItemRendererState;
 import org.jfree.chart.renderer.category.MinMaxCategoryRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.ui.Layer;
 import org.jfree.data.Range;
 import org.jfree.data.category.CategoryDataset;
@@ -59,16 +61,15 @@ import javafx.scene.input.MouseButton;
 
 public class SciomeRangePlotJFree extends SciomeChartBase<String, Number> implements ChartDataExporter
 {
-	private static final int		MAX_NODES_SHOWN	= 10;
+	private static final int MAX_NODES_SHOWN = 10;
 
-	private JFreeChart				chart;
-	private SlidingCategoryDataset	slidingDataset;
+	private JFreeChart chart;
+	private SlidingCategoryDataset slidingDataset;
 
 	public SciomeRangePlotJFree(String title, List<ChartDataPack> chartDataPacks, ChartKey minKey,
 			ChartKey midKey, ChartKey maxKey, SciomeChartListener chartListener)
 	{
-		super(title, chartDataPacks, new ChartKey[] { minKey, maxKey, midKey }, true,
-				false, chartListener);
+		super(title, chartDataPacks, new ChartKey[] { minKey, maxKey, midKey }, true, false, chartListener);
 
 		// this chart defines how the axes can be edited by the user in the chart configuration.
 		showLogAxes(false, true, false, true);
@@ -132,12 +133,15 @@ public class SciomeRangePlotJFree extends SciomeChartBase<String, Number> implem
 		slidingDataset = new SlidingCategoryDataset(dataset, 0, MAX_NODES_SHOWN);
 
 		String rangeAxisLabel = minKey.toString() + ", " + midKey.toString() + ", " + maxKey.toString();
-		chart = ChartFactory.createBarChart("Range Plot", rangeAxisLabel, "Category",
-				slidingDataset, PlotOrientation.HORIZONTAL, true, true, false);
+		chart = ChartFactory.createBarChart("Range Plot", rangeAxisLabel, "Category", slidingDataset,
+				PlotOrientation.HORIZONTAL, true, true, false);
 		CategoryPlot plot = chart.getCategoryPlot();
 		plot.setRangePannable(true);
-		plot.setRangeAxis(SciomeNumberAxisGeneratorJFree.generateAxis(getLogYAxis().isSelected(),
-				rangeAxisLabel));
+		plot.setRangeAxis(
+				SciomeNumberAxisGeneratorJFree.generateAxis(getLogYAxis().isSelected(), rangeAxisLabel));
+
+		LegendTitle legend = chart.getLegend();
+		legend.setItemFont(new Font("SansSerif", Font.BOLD, 20));
 
 		if (getLockYAxis().isSelected() || getLogYAxis().isSelected())
 		{
@@ -327,32 +331,36 @@ public class SciomeRangePlotJFree extends SciomeChartBase<String, Number> implem
 				Double dataPointValueMiddleKey = (Double) chartData.getDataPoints().get(midKey);
 				Double dataPointValueMaxKey = (Double) chartData.getDataPoints().get(maxKey);
 
-				if (dataPointValueMinKey == null || dataPointValueMiddleKey == null || dataPointValueMaxKey == null) {
+				if (dataPointValueMinKey == null || dataPointValueMiddleKey == null
+						|| dataPointValueMaxKey == null)
+				{
 					continue;
 				}
-				
-				//Check to ensure the values are actually in order of min < mid < max
+
+				// Check to ensure the values are actually in order of min < mid < max
 				SciomeData<String, Number> xyData;
-				if(dataPointValueMinKey < dataPointValueMiddleKey &&
-					dataPointValueMiddleKey < dataPointValueMaxKey) {
-					xyData = new SciomeData<>(chartData.getDataPointLabel(),
-							chartData.getDataPointLabel(), dataPointValueMiddleKey,
+				if (dataPointValueMinKey < dataPointValueMiddleKey
+						&& dataPointValueMiddleKey < dataPointValueMaxKey)
+				{
+					xyData = new SciomeData<>(chartData.getDataPointLabel(), chartData.getDataPointLabel(),
+							dataPointValueMiddleKey,
 							new RangePlotExtraValue(chartData.getDataPointLabel(),
 									countMap.get(chartData.getDataPointLabel()), dataPointValueMinKey,
 									dataPointValueMaxKey, dataPointValueMiddleKey,
-									chartData.getCharttableObject().toString(), 
-									chartData.getCharttableObject()));
-				} else {
-					//If not then don't show the point
-					xyData = new SciomeData<>(chartData.getDataPointLabel(),
-							chartData.getDataPointLabel(), dataPointValueMiddleKey,
-							new RangePlotExtraValue(chartData.getDataPointLabel(),
-									countMap.get(chartData.getDataPointLabel()), 
-									new Double(0), new Double(0), new Double(0),
-									chartData.getCharttableObject().toString(), 
+									chartData.getCharttableObject().toString(),
 									chartData.getCharttableObject()));
 				}
-				
+				else
+				{
+					// If not then don't show the point
+					xyData = new SciomeData<>(chartData.getDataPointLabel(), chartData.getDataPointLabel(),
+							dataPointValueMiddleKey,
+							new RangePlotExtraValue(chartData.getDataPointLabel(),
+									countMap.get(chartData.getDataPointLabel()), new Double(0), new Double(0),
+									new Double(0), chartData.getCharttableObject().toString(),
+									chartData.getCharttableObject()));
+				}
+
 				chartLabelSet.add(chartData.getDataPointLabel());
 
 				series1.getData().add(xyData);
@@ -472,10 +480,10 @@ public class SciomeRangePlotJFree extends SciomeChartBase<String, Number> implem
 	/** Data extra values for storing close, high and low. */
 	private class RangePlotExtraValue extends ChartExtraValue
 	{
-		private Double	min;
-		private Double	max;
-		private Double	mid;
-		private String	description;
+		private Double min;
+		private Double max;
+		private Double mid;
+		private String description;
 
 		public RangePlotExtraValue(String label, Integer count, Double min, Double max, Double mid,
 				String description, Object userData)

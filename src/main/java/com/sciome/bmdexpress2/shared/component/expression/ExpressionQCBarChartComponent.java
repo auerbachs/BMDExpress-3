@@ -1,8 +1,7 @@
 package com.sciome.bmdexpress2.shared.component.expression;
 
 import java.awt.Color;
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +20,7 @@ import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.StackedBarRenderer;
 import org.jfree.chart.renderer.category.StandardBarPainter;
-import org.jfree.chart.title.TextTitle;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -369,19 +368,19 @@ public class ExpressionQCBarChartComponent extends VBox
 	private JFreeChart createChart(CategoryDataset dataset)
 	{
 
-		JFreeChart chart = ChartFactory.createStackedBarChart("UPs and DOWNs", "Dose Levels", "Value",
+		JFreeChart chart = ChartFactory.createStackedBarChart("QC Bar Chart", "Dose Levels", "Count",
 				dataset);
-		chart.addSubtitle(new TextTitle("qc bar chart"));
+		// chart.addSubtitle(new TextTitle("QC Bar Chart"));
 		CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
 		CategoryAxis xAxis = plot.getDomainAxis();
 		xAxis.setLowerMargin(0.01);
 		xAxis.setUpperMargin(0.01);
 		xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
-		AttributedString yLabel = new AttributedString("Count");
-		yLabel.addAttribute(TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD);
-		yLabel.addAttribute(TextAttribute.SIZE, 14);
-		plot.getRangeAxis().setAttributedLabel(yLabel);
+		// AttributedString yLabel = new AttributedString("Count");
+		// yLabel.addAttribute(TextAttribute.WEIGHT, TextAttribute.WEIGHT_ULTRABOLD);
+		// yLabel.addAttribute(TextAttribute.SIZE, 14);
+		// plot.getRangeAxis().setAttributedLabel(yLabel);
 		StackedBarRenderer renderer = (StackedBarRenderer) plot.getRenderer();
 		renderer.setDrawBarOutline(false);
 		renderer.setBarPainter(new StandardBarPainter());
@@ -392,6 +391,9 @@ public class ExpressionQCBarChartComponent extends VBox
 		renderer.setSeriesPaint(0, new Color(0, 55, 122));
 		renderer.setSeriesPaint(1, new Color(24, 123, 58));
 		renderer.setSeriesPaint(2, Color.RED);
+
+		LegendTitle legend = chart.getLegend();
+		legend.setItemFont(new Font("SansSerif", Font.BOLD, 20)); // bigger = larger legend
 
 		return chart;
 

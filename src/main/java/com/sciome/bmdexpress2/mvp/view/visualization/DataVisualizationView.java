@@ -53,34 +53,34 @@ public abstract class DataVisualizationView extends BMDExpressViewBase
 		implements IDataVisualizationView, SciomeChartListener
 {
 
-	protected final static String				DEFAULT_CHARTS			= "Default";
-	protected AnchorPane						graphViewAnchorPane;
+	protected final static String DEFAULT_CHARTS = "Default";
+	protected AnchorPane graphViewAnchorPane;
 
-	protected List<Node>						chartsList				= new ArrayList<>();
-	protected List<Node>						customChartsList		= new ArrayList<>();
+	protected List<Node> chartsList = new ArrayList<>();
+	protected List<Node> customChartsList = new ArrayList<>();
 
-	protected DataVisualizationPresenter		presenter;
+	protected DataVisualizationPresenter presenter;
 
-	private final int							MAX_DATASETS_TO_VIEW	= 7;
-	protected List<BMDExpressAnalysisDataSet>	results;
-	protected DataFilterPack					defaultDPack;
+	private final int MAX_DATASETS_TO_VIEW = 7;
+	protected List<BMDExpressAnalysisDataSet> results;
+	protected DataFilterPack defaultDPack;
 
-	private List<ChartDataPack>					chartDataPacks			= new ArrayList<>();
-	private Set<String>							markedData				= new HashSet<>();
+	private List<ChartDataPack> chartDataPacks = new ArrayList<>();
+	private Set<String> markedData = new HashSet<>();
 
-	private VBox								vBox;
-	protected ComboBox<String>					cBox;
-	private Button								addYourOwnChartButton	= new Button("Create Your Own Chart");
-	protected Map<String, SciomeChartBase>		chartCache				= new HashMap<>();
+	private VBox vBox;
+	protected ComboBox<String> cBox;
+	private Button addYourOwnChartButton = new Button("Create Your Own Chart");
+	protected Map<String, SciomeChartBase> chartCache = new HashMap<>();
 
 	// set this up so that charts that redrawn. this is to keep track of the
 	// closed canned charts that are stored as a hash map in implementing clases
-	protected Set<Node>							removedCharts			= new HashSet<>();
+	protected Set<Node> removedCharts = new HashSet<>();
 
 	// created this variable for the sake of the curve overlay.
 	// do not show custom charts with curve overlay plot.
 	// but also you don't have to show custom plots for anything.
-	protected boolean							ignoreCustomCharts		= false;
+	protected boolean ignoreCustomCharts = false;
 
 	public DataVisualizationView()
 	{
@@ -211,7 +211,9 @@ public abstract class DataVisualizationView extends BMDExpressViewBase
 			hbox.getChildren().add(chartsToShow.get(0));
 			hbox.setMinWidth(1500);
 			vBox.getChildren().add(hbox);
-		} else {
+		}
+		else
+		{
 			vBox = generateGridOfNodes(chartsToShow, 3);
 		}
 
@@ -228,6 +230,7 @@ public abstract class DataVisualizationView extends BMDExpressViewBase
 	private VBox generateGridOfNodes(List<Node> chartNodes, int width)
 	{
 		VBox vBox = new VBox();
+
 		vBox.setMaxHeight(1400);
 		HBox hBox = new HBox();
 		hBox.setMaxWidth(1000);
@@ -239,6 +242,7 @@ public abstract class DataVisualizationView extends BMDExpressViewBase
 				vBox.getChildren().add(hBox);
 				hBox = new HBox();
 				hBox.setMaxWidth(1000);
+
 			}
 			chart.setStyle("-fx-border-color: black;" + "-fx-padding: 0 20 30 0;");
 			hBox.getChildren().add(chart);

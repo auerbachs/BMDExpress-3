@@ -3,8 +3,6 @@ package com.sciome.charts.jfree;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,7 +14,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryLabelPositions;
 import org.jfree.chart.entity.ChartEntity;
 import org.jfree.chart.entity.XYAnnotationEntity;
-import org.jfree.chart.event.ChartChangeListener;
 import org.jfree.chart.fx.ChartCanvas;
 import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.fx.interaction.AbstractMouseHandlerFX;
@@ -41,9 +38,9 @@ import javafx.stage.Modality;
 
 public class SciomeChartViewer extends ChartViewer
 {
-	public static final double	CHART_WIDTH		= 500;
-	public static final double	CHART_HEIGHT	= 500;
-	
+	public static final double CHART_WIDTH = 500;
+	public static final double CHART_HEIGHT = 700;
+
 	public SciomeChartViewer(JFreeChart chart)
 	{
 		this(chart, CHART_WIDTH, CHART_HEIGHT);
@@ -52,7 +49,7 @@ public class SciomeChartViewer extends ChartViewer
 	public SciomeChartViewer(JFreeChart chart, double width, double height)
 	{
 		super(chart);
-		
+
 		ChartCanvas canvas = getCanvas();
 
 		// Remove the zoom handler because zoom is now done with rangeslider
@@ -64,8 +61,8 @@ public class SciomeChartViewer extends ChartViewer
 		canvas.setRangeZoomable(false);
 
 		// Set height and width of chart
-		canvas.setHeight(width);
-		canvas.setWidth(height);
+		canvas.setHeight(height);
+		canvas.setWidth(width);
 
 		addProperties();
 	}
@@ -74,12 +71,12 @@ public class SciomeChartViewer extends ChartViewer
 	{
 		return getCanvas().getRenderingInfo().getEntityCollection().getEntity(x, y);
 	}
-	
+
 	private void addDragDropMouseHandler()
 	{
 		getCanvas().addMouseHandler(new AbstractMouseHandlerFX("drag", false, false, false, false) {
-			ChartEntity						drag	= null;
-			DraggableXYPointerAnnotation	dragAnn	= null;
+			ChartEntity drag = null;
+			DraggableXYPointerAnnotation dragAnn = null;
 
 			@Override
 			public void handleMousePressed(ChartCanvas canvas, MouseEvent e)
@@ -189,13 +186,12 @@ public class SciomeChartViewer extends ChartViewer
 
 	private void handleProperties()
 	{
-		ChartEditor editor = ChartEditorManager
-				.getChartEditor(this.getChart());
+		ChartEditor editor = ChartEditorManager.getChartEditor(this.getChart());
 		JPanel panel = new JPanel();
 		panel.add((JComponent) editor);
 		SwingNode node = new SwingNode();
-		
-		SwingUtilities.invokeLater(()->
+
+		SwingUtilities.invokeLater(() ->
 		{
 			node.setContent((JComponent) editor);
 			node.setFocusTraversable(true);
@@ -216,9 +212,10 @@ public class SciomeChartViewer extends ChartViewer
 			if (buttonType == ButtonType.OK)
 			{
 				editor.updateChart(getChart());
-				if(getChart().getPlot() instanceof CategoryPlot) {
+				if (getChart().getPlot() instanceof CategoryPlot)
+				{
 					CategoryPlot plot = getChart().getCategoryPlot();
-					if(plot.getOrientation() == PlotOrientation.VERTICAL) 
+					if (plot.getOrientation() == PlotOrientation.VERTICAL)
 						plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.DOWN_90);
 					else
 						plot.getDomainAxis().setCategoryLabelPositions(CategoryLabelPositions.STANDARD);
@@ -228,33 +225,35 @@ public class SciomeChartViewer extends ChartViewer
 		});
 
 		dialog.initModality(Modality.WINDOW_MODAL);
-		
-		ChangeListener<Number> sizeListener = (o, oldSize, newSize) -> {
-				SwingUtilities.invokeLater(()->
-	   			{
-	   				node.getContent().repaint();
-	   				node.getContent().requestFocus();
-	   			});
-			};
+
+		ChangeListener<Number> sizeListener = (o, oldSize, newSize) ->
+		{
+			SwingUtilities.invokeLater(() ->
+			{
+				node.getContent().repaint();
+				node.getContent().requestFocus();
+			});
+		};
 		dialog.widthProperty().addListener(sizeListener);
 		dialog.heightProperty().addListener(sizeListener);
-		
+
 		dialog.show();
-		 new Timer().schedule(new TimerTask() {
-	           public void run() {
-	        	   try
-	        	   {
-	        		SwingUtilities.invokeLater(()->
-	       			{
-	       				node.getContent().repaint();
-	       				node.getContent().requestFocus();
-	       			});
-	        	   }
-	        	   catch(Exception e)
-	        	   {
-	        		   e.printStackTrace();
-	        	   }
-	           }
-	       }, 1000L);
+		new Timer().schedule(new TimerTask() {
+			public void run()
+			{
+				try
+				{
+					SwingUtilities.invokeLater(() ->
+					{
+						node.getContent().repaint();
+						node.getContent().requestFocus();
+					});
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}, 1000L);
 	}
 }

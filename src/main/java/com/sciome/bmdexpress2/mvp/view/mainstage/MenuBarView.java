@@ -16,6 +16,7 @@ import com.sciome.bmdexpress2.shared.BMDExpressFXUtils;
 import com.sciome.bmdexpress2.shared.BMDExpressInformation;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
+import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.ViewUtilities;
 
@@ -75,6 +76,12 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 
 	@FXML
 	private MenuItem bMDAnalysesGcurvePMenuItem;
+
+	@FXML
+	private MenuItem tPODGeneSetMenuItem;
+
+	@FXML
+	private MenuItem tPODIndividualGeneMenuItem;
 
 	MenuBarPresenter presenter;
 
@@ -388,6 +395,21 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 	}
 
 	/*
+	 * tpod analysis
+	 */
+
+	public void handle_tPODGeneSet(ActionEvent event)
+	{
+		presenter.performTPODAnalysius(TPODAnalysisEnum.GENE_SET);
+
+	}
+
+	public void handle_tPODIndividualGene(ActionEvent event)
+	{
+		presenter.performTPODAnalysius(TPODAnalysisEnum.GENE_LEVEL);
+	}
+
+	/*
 	 * show the tutorial
 	 */
 	public void handle_tutorial(ActionEvent event)
@@ -463,6 +485,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(false);
 		toggleCategoryMenuItems(true);
+		toggleTPODMenuItems(true);
 
 	}
 
@@ -474,6 +497,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+		toggleTPODMenuItems(true);
 
 		// allow curvefit prefilter on oneway anova
 		this.curveFitPrefilterMenuItem.setDisable(false);
@@ -488,6 +512,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+		toggleTPODMenuItems(true);
 
 		// allow curvefit prefilter on williams
 		this.curveFitPrefilterMenuItem.setDisable(false);
@@ -501,6 +526,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+		toggleTPODMenuItems(true);
 
 	}
 
@@ -512,6 +538,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(false);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+		toggleTPODMenuItems(true);
 
 		// allow curvefit prefilter on oriogen
 		this.curveFitPrefilterMenuItem.setDisable(false);
@@ -525,6 +552,7 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(true);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(false);
+		toggleTPODMenuItems(true);
 
 	}
 
@@ -536,6 +564,20 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		toxicRModelAveragingMenuItem.setDisable(true);
 		togglePrefilterMenuItems(true);
 		toggleCategoryMenuItems(true);
+
+		toggleTPODMenuItems(false);
+	}
+
+	@Override
+	public void tPodDataSelected()
+	{
+		this.bMDAnalysesMenuItem.setDisable(true);
+		bMDAnalysesGcurvePMenuItem.setDisable(true);
+		toxicRModelAveragingMenuItem.setDisable(true);
+		togglePrefilterMenuItems(true);
+		toggleCategoryMenuItems(true);
+
+		toggleTPODMenuItems(true);
 	}
 
 	@Override
@@ -585,6 +627,12 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		this.geneLevelBMDMenuItem.setDisable(disabled);
 	}
 
+	private void toggleTPODMenuItems(boolean disabled)
+	{
+		this.tPODGeneSetMenuItem.setDisable(disabled);
+		this.tPODIndividualGeneMenuItem.setDisable(disabled);
+	}
+
 	@Override
 	public void combinedSelected()
 	{
@@ -600,6 +648,8 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		this.GOAnalysesMenuItem.setDisable(true);
 		this.pathwayAnalysesMenuItem.setDisable(true);
 		this.definedCategoryAnalysesMenuItem.setDisable(true);
+		this.tPODGeneSetMenuItem.setDisable(true);
+		this.tPODIndividualGeneMenuItem.setDisable(true);
 
 	}
 

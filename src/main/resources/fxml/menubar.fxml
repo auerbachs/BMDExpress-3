@@ -5,7 +5,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:id="menuBar" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.mainstage.MenuBarView">
+<MenuBar fx:id="menuBar" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.mainstage.MenuBarView">
    <menus>
       <Menu mnemonicParsing="false" text="File">
          <items>
@@ -69,6 +69,12 @@
                   <MenuItem fx:id="pathwayAnalysesMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_pathwayAnalyses" text="Signaling Pathway Analyses" />
                   <MenuItem fx:id="definedCategoryAnalysesMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_definedCategoryAnalyses" text="Defined Category Analyses" />
               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="tPOD/CMC Determination">
+               <items>
+                  <MenuItem fx:id="tPODGeneSetMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_tPODGeneSet" text="Gene Set" />
+                  <MenuItem fx:id="tPODIndividualGeneMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_tPODIndividualGene" text="Individual Gene" />
+               </items>
             </Menu>
          </items>
       </Menu>

@@ -19,6 +19,7 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.PrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 
 /*
  * hold various experiments and analysis results.
@@ -41,6 +42,8 @@ public class BMDProject implements Serializable
 	private List<OriogenResults> oriogenResults = new ArrayList<>();
 	private List<BMDResult> bMDResult = new ArrayList<>();
 	private List<CategoryAnalysisResults> categoryAnalysisResults = new ArrayList<>();
+
+	private List<TPODAnalysisResults> tpodAnalysisResults = new ArrayList<>();
 
 	public String getName()
 	{
@@ -137,6 +140,16 @@ public class BMDProject implements Serializable
 		this.categoryAnalysisResults = categoryAnalysisResults;
 	}
 
+	public List<TPODAnalysisResults> getTpodAnalysisResults()
+	{
+		return tpodAnalysisResults;
+	}
+
+	public void setTpodAnalysisResults(List<TPODAnalysisResults> tpodAnalysisResults)
+	{
+		this.tpodAnalysisResults = tpodAnalysisResults;
+	}
+
 	@JsonIgnore
 	public boolean isProjectEmpty()
 	{
@@ -160,6 +173,8 @@ public class BMDProject implements Serializable
 
 		if (curveFitPrefilterResults == null)
 			curveFitPrefilterResults = new ArrayList<>();
+		if (tpodAnalysisResults == null)
+			tpodAnalysisResults = new ArrayList<>();
 
 		// now make sure all the names are unique
 		for (OneWayANOVAResults data : oneWayANOVAResults)
@@ -175,6 +190,9 @@ public class BMDProject implements Serializable
 		for (DoseResponseExperiment data : doseResponseExperiments)
 			giveBMDAnalysisUniqueName(data, data.getName(), 1);
 		for (CategoryAnalysisResults data : categoryAnalysisResults)
+			giveBMDAnalysisUniqueName(data, data.getName(), 1);
+
+		for (TPODAnalysisResults data : tpodAnalysisResults)
 			giveBMDAnalysisUniqueName(data, data.getName(), 1);
 
 		/*
@@ -197,9 +215,17 @@ public class BMDProject implements Serializable
 				if (upstreamPreFilterResults == null)
 					continue;
 
+				// Map<String, PrefilterResult> probePrefilterResultMap = upstreamPreFilterResults
+				// .getPrefilterResults().stream()
+				// .collect(Collectors.toMap(PrefilterResult::getProbeID, p -> p));
+
 				Map<String, PrefilterResult> probePrefilterResultMap = upstreamPreFilterResults
 						.getPrefilterResults().stream()
-						.collect(Collectors.toMap(PrefilterResult::getProbeID, p -> p));
+						.collect(Collectors.toMap(PrefilterResult::getProbeID, p -> p, (a, b) ->
+						{
+							System.out.println("Duplicate probeID: " + a.getProbeID());
+							return a;
+						}));
 
 				for (PrefilterResult prr : pf.getPrefilterResults())
 				{
