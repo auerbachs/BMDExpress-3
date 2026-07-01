@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
 import com.sciome.bmdexpress2.mvp.presenter.tpod.TPODPresenter;
 import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.tpod.ITPODView;
@@ -19,6 +21,7 @@ import com.sciome.bmdexpress2.util.categoryanalysis.CategoryAnalysisParameters;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -27,6 +30,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -53,6 +58,24 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	private HBox progressHBox;
 
 	@FXML
+	private BorderPane bmdMetricsBorderPane;
+
+	@FXML
+	private BorderPane filtersBorderPane;
+
+	@FXML
+	private BorderPane tpodMethodsBorderPane;
+
+	@FXML
+	private FlowPane bmdMetricsLayout;
+
+	@FXML
+	private VBox filtersLayout;
+
+	@FXML
+	private FlowPane methodsLayout;
+
+	@FXML
 	private Button startButton;
 	@FXML
 	private Button closeButton;
@@ -76,10 +99,6 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		super();
 		ICategoryAnalysisService service = new CategoryAnalysisService();
 		presenter = new TPODPresenter(this, service, eventBus);
-		// goInput = BMDExpressProperties.getInstance().getGOCategoryInput();
-		// definedInput = BMDExpressProperties.getInstance().getDefinedCategoryInput();
-		// geneInput = BMDExpressProperties.getInstance().getGeneCategoryInput();
-		// pathwayInput = BMDExpressProperties.getInstance().getPathwayCategoryInput();
 
 	}
 
@@ -87,11 +106,9 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	public void initialize(URL location, ResourceBundle resources)
 	{
 
-	}
+		initializeBMDMetrics();
 
-	private void initializeInputParameterVisibility()
-	{
-		// TODO Auto-generated method stub
+		initializeTPODMethods();
 
 	}
 
@@ -250,6 +267,162 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	{
 		if (presenter != null)
 			presenter.close();
+	}
+
+	private void initializeBMDMetrics()
+	{
+
+		// styling container
+		// bmdMetricsLayout.setSpacing(8);
+		bmdMetricsLayout.setPadding(new Insets(10));
+
+		bmdMetricsLayout.setStyle("-fx-border-color: #cfcfcf;" + "-fx-border-radius: 6;"
+				+ "-fx-background-radius: 6;" + "-fx-background-color: #fafafa;" + "-fx-border-width: 1;");
+
+		// populate enum values
+		for (BMDEndpointType type : BMDEndpointType.values())
+		{
+
+			CheckBox cb = new CheckBox(type.getLabel());
+			cb.setUserData(type);
+
+			cb.setStyle("-fx-font-size: 12px;");
+
+			bmdMetricsLayout.getChildren().add(cb);
+		}
+	}
+
+	private void initializeTPODMethods()
+	{
+
+		// methodsLayout.setSpacing(12);
+		methodsLayout.setPadding(new Insets(10));
+
+		methodsLayout.setStyle("""
+				    -fx-background-color: white;
+				""");
+
+		for (TPODMethod method : TPODMethod.values())
+		{
+			methodsLayout.getChildren().add(new TPODMethodCard(method));
+		}
+
+	}
+
+	private class TPODMethodCard extends VBox
+	{
+
+		private final TPODMethod method;
+		private final CheckBox enabledCheck = new CheckBox();
+
+		// parameter fields (only some are used per method)
+		private final TextField spacingRatioField = new TextField("1.67");
+		private final TextField runLengthField = new TextField("10");
+		private final TextField rankField = new TextField("25");
+		private final TextField percentField = new TextField("5");
+
+		public TPODMethodCard(TPODMethod method)
+		{
+			this.method = method;
+
+			this.setMinWidth(300);
+			this.setMaxWidth(300);
+			setSpacing(8);
+			setPadding(new Insets(10));
+
+			setStyle("""
+					    -fx-border-color: #cfcfcf;
+					    -fx-border-radius: 8;
+					    -fx-background-radius: 8;
+					    -fx-background-color: #fafafa;
+					""");
+
+			build();
+		}
+
+		private void build()
+		{
+
+			// ===== Top row: checkbox + label =====
+			HBox header = new HBox(10);
+
+			enabledCheck.setSelected(false);
+
+			Label title = new Label(method.getLabel());
+			title.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
+
+			header.getChildren().addAll(enabledCheck, title);
+
+			getChildren().add(header);
+
+			// ===== dynamic parameter section =====
+			switch (method)
+			{
+
+				case LCRD -> {
+					getChildren().add(labelled("Spacing ratio:", spacingRatioField));
+					getChildren().add(labelled("Run Length:", runLengthField));
+				}
+
+				case NTH_RANK -> {
+					getChildren().add(labelled("Rank:", rankField));
+				}
+
+				case NTH_PERCENTILE -> {
+					getChildren().add(labelled("Percent:", percentField));
+				}
+
+				case MAX_CURVATURE, FIRST_MODE -> {
+					Label none = new Label("No parameters");
+					none.setStyle("-fx-text-fill: #777;");
+					getChildren().add(none);
+				}
+			}
+		}
+
+		private HBox labelled(String label, TextField field)
+		{
+
+			Label l = new Label(label);
+			l.setPrefWidth(140);
+
+			field.setPrefWidth(80);
+
+			HBox box = new HBox(10, l, field);
+			return box;
+		}
+
+		// ===== getters =====
+
+		public boolean isEnabled()
+		{
+			return enabledCheck.isSelected();
+		}
+
+		public TPODMethod getMethod()
+		{
+			return method;
+		}
+
+		public double getSpacingRatio()
+		{
+			return Double.parseDouble(spacingRatioField.getText());
+		}
+
+		public int getRunLength()
+		{
+			return Integer.parseInt(runLengthField.getText());
+		}
+
+		public int getRank()
+		{
+			return Integer.parseInt(rankField.getText());
+		}
+
+		public double getPercent()
+		{
+			return Double.parseDouble(percentField.getText());
+		}
 	}
 
 }

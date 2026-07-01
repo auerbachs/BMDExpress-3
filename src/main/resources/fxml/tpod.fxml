@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane prefHeight="817.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.tpod.TPODView">
@@ -24,78 +21,39 @@
 							<children>
 												<AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 													<children>
-                              <ScrollPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <ScrollPane fitToHeight="true" fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <content>
-														<VBox fx:id="mainVBox" alignment="TOP_CENTER" prefHeight="1033.0" prefWidth="798.0" spacing="5.0">
+														<VBox fx:id="mainVBox" alignment="TOP_CENTER" spacing="5.0">
 															<children>
-																<Label alignment="CENTER" minHeight="25.0" prefHeight="25.0" text="Category Analysis  Data:" />
+																<Label alignment="CENTER" minHeight="25.0" prefHeight="25.0" text="tPOD/CMC Analysis  Data:" />
 																<HBox fx:id="selectionHBox" alignment="CENTER" minHeight="25.0" prefHeight="25.0" spacing="15.0" />
-                                          <VBox>
-                                             <children>
-                                                <GridPane>
-                                                  <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                  </columnConstraints>
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                   <children>
-                                                      <Label prefHeight="17.0" prefWidth="105.0" text="BMD Metric Type:" GridPane.halignment="RIGHT">
-                                                         <GridPane.margin>
-                                                            <Insets right="30.0" />
-                                                         </GridPane.margin>
-                                                      </Label>
-                                                      <ComboBox prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" />
-                                                   </children>
-                                                </GridPane>
-                                                <HBox prefHeight="100.0" prefWidth="200.0" />
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <GridPane>
-                                                  <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                  </columnConstraints>
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                   <children>
-                                                      <Label text="Filters:" GridPane.halignment="RIGHT">
-                                                         <padding>
-                                                            <Insets right="30.0" />
-                                                         </padding>
-                                                      </Label>
-                                                      <ComboBox prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" />
-                                                   </children>
-                                                </GridPane>
-                                                <HBox prefHeight="100.0" prefWidth="200.0" />
-                                             </children>
-                                          </VBox>
-                                          <VBox>
-                                             <children>
-                                                <GridPane>
-                                                  <columnConstraints>
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                                  </columnConstraints>
-                                                  <rowConstraints>
-                                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                  </rowConstraints>
-                                                   <children>
-                                                      <Label text="Method:" GridPane.halignment="RIGHT">
-                                                         <padding>
-                                                            <Insets right="30.0" />
-                                                         </padding>
-                                                      </Label>
-                                                      <ComboBox prefHeight="26.0" prefWidth="250.0" GridPane.columnIndex="1" />
-                                                   </children>
-                                                </GridPane>
-                                                <HBox prefHeight="100.0" prefWidth="200.0" />
-                                             </children>
-                                          </VBox>
+                                          <Separator prefWidth="200.0" />
+                                          <BorderPane fx:id="bmdMetricsBorderPane">
+                                             <center>
+                                                <FlowPane fx:id="bmdMetricsLayout" hgap="20.0" vgap="10.0" />
+                                             </center>
+                                             <top>
+                                                <Label text="BMD Metric Type(s)" BorderPane.alignment="CENTER" />
+                                             </top>
+                                          </BorderPane>
+                                          <Separator prefWidth="200.0" />
+                                          <BorderPane fx:id="filtersBorderPane">
+                                             <center>
+                                                <VBox fx:id="filtersLayout" />
+                                             </center>
+                                             <top>
+                                                <Label text="Filter(s)" BorderPane.alignment="CENTER" />
+                                             </top>
+                                          </BorderPane>
+                                          <Separator prefWidth="200.0" />
+                                          <BorderPane fx:id="tpodMethodsBorderPane">
+                                             <center>
+                                                <FlowPane fx:id="methodsLayout" hgap="20.0" vgap="10.0" />
+                                             </center>
+                                             <top>
+                                                <Label text="tPOD/CMD Method(s)" BorderPane.alignment="CENTER" />
+                                             </top>
+                                          </BorderPane>
 															</children>
 														</VBox>
                                  </content>
