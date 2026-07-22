@@ -124,13 +124,13 @@ public class MainDataPresenter extends PresenterBase<IMainDataView>
 	@Subscribe
 	public void onSelectTPODAnalysisResult(TPODAnalysisDataSelectedEvent event)
 	{
-		getView().loadCategoryAnalysis(event.GetPayload());
+		getView().loadTPODAnalysis(event.GetPayload());
 	}
 
 	@Subscribe
 	public void onSelectTPODAnalysisResult(TPODAnalysisDataCombinedSelectedEvent event)
 	{
-		getView().loadCategoryAnalysis(event.GetPayload());
+		getView().loadTPODAnalysis(event.GetPayload());
 	}
 
 	@Subscribe

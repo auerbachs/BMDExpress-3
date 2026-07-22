@@ -21,6 +21,9 @@ public class TableInformation
 	private Map<String, Boolean> categoryAnalysisMap;
 	private LinkedList<String> categoryAnalysisOrder;
 
+	private Map<String, Boolean> tpodAnalysisMap;
+	private LinkedList<String> tpodAnalysisOrder;
+
 	public TableInformation()
 	{
 		this.williamsTrendMap = new HashMap<String, Boolean>();
@@ -29,6 +32,7 @@ public class TableInformation
 		this.oriogenMap = new HashMap<String, Boolean>();
 		this.bmdMap = new HashMap<String, Boolean>();
 		this.categoryAnalysisMap = new HashMap<String, Boolean>();
+		this.tpodAnalysisMap = new HashMap<String, Boolean>();
 
 		this.williamsTrendOrder = new LinkedList<String>();
 		this.curveFitOrder = new LinkedList<String>();
@@ -36,6 +40,7 @@ public class TableInformation
 		this.oriogenOrder = new LinkedList<String>();
 		this.bmdOrder = new LinkedList<String>();
 		this.categoryAnalysisOrder = new LinkedList<String>();
+		this.tpodAnalysisOrder = new LinkedList<String>();
 	}
 
 	public Map<String, Boolean> getCurveFitMap()
@@ -157,4 +162,25 @@ public class TableInformation
 	{
 		this.categoryAnalysisOrder = categoryAnalysisOrder;
 	}
+
+	public LinkedList<String> getTpodAnalysisOrder()
+	{
+		return tpodAnalysisOrder;
+	}
+
+	public void setTpodAnalysisOrder(LinkedList<String> tpodAnalysisOrder)
+	{
+		this.tpodAnalysisOrder = tpodAnalysisOrder;
+	}
+
+	public void setTpodAnalysisMap(Map<String, Boolean> tpodAnalysisMap)
+	{
+		this.tpodAnalysisMap = tpodAnalysisMap;
+	}
+
+	public Map<String, Boolean> getTpodAnalysisMap()
+	{
+		return tpodAnalysisMap;
+	}
+
 }

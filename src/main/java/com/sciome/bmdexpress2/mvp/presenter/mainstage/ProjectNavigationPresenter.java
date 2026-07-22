@@ -480,6 +480,11 @@ public class ProjectNavigationPresenter
 			getView().addCurveFitPrefilterAnalysis(cfpr, false);
 		}
 
+		for (TPODAnalysisResults tpod : bmdProject.getTpodAnalysisResults())
+		{
+			getView().addTPODAnalysis(tpod, false);
+		}
+
 		getView().expandTree();
 
 	}
@@ -767,6 +772,8 @@ public class ProjectNavigationPresenter
 			this.currentProject.getDoseResponseExperiments().remove(catAnalysisResults);
 		else if (catAnalysisResults instanceof CurveFitPrefilterResults)
 			this.currentProject.getCurveFitPrefilterResults().remove(catAnalysisResults);
+		else if (catAnalysisResults instanceof TPODAnalysisResults)
+			this.currentProject.getTpodAnalysisResults().remove(catAnalysisResults);
 
 	}
 
