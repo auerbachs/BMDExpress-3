@@ -1,107 +1,197 @@
 package com.sciome.bmdexpress2.service.tpod.lcrd;
 
-/**
- * Lowest Consistent Response Dose (LCRD)
- *
- * Finds the lowest index i such that for runLength consecutive points:
- *
- * values[i+k] >= values[i] * spacingRatio^k
- */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.sciome.bmdexpress2.service.tpod.CalcResult;
+
 public class LCRD
 {
 
-	public static class Result
-	{
-		public final int index;
-		public final double dose;
-
-		public Result(int index, double dose)
-		{
-			this.index = index;
-			this.dose = dose;
-		}
-
-		@Override
-		public String toString()
-		{
-			return "Result{index=" + index + ", dose=" + dose + "}";
-		}
-	}
-
 	/**
-	 * Main function
+	 * Equivalent to the R function:
+	 * LCRD(x, ratio=1.66, run.length=NULL)
 	 *
 	 * @param values
-	 *            sorted ascending dose-response or dose array
+	 *            Input values (does not modify original array)
+	 * @param ratio
+	 *            Ratio threshold
 	 * @param runLength
-	 *            number of consecutive points required
-	 * @param spacingRatio
-	 *            geometric spacing ratio between doses
+	 *            null to use original algorithm, otherwise minimum run length
+	 * @return LCRD value, or Double.NaN if none found
 	 */
-	public static Result compute(double[] values, int runLength, double spacingRatio)
+	public static CalcResult calculate(double[] values, double ratio, Integer runLength)
 	{
 
-		if (values == null || values.length == 0)
-			throw new IllegalArgumentException("values cannot be empty");
+		if (values == null || values.length < 2)
+		{
+			return new CalcResult(-1, Double.NaN);
 
-		if (runLength <= 0)
-			throw new IllegalArgumentException("runLength must be > 0");
+		}
 
-		if (runLength > values.length)
-			return new Result(-1, Double.NaN);
+		// Sort ascending
+		double[] x = values.clone();
+		Arrays.sort(x);
 
-		for (int i = 0; i <= values.length - runLength; i++)
+		int n = x.length;
+
+		// Calculate consecutive ratios
+		double[] ratios = new double[n - 1];
+		for (int i = 0; i < n - 1; i++)
+		{
+			ratios[i] = x[i + 1] / x[i];
+		}
+
+		List<Integer> indexes = new ArrayList<>();
+		List<Integer> nonIndexes = new ArrayList<>();
+
+		// R indices are 1-based
+		for (int i = 0; i < ratios.length; i++)
+		{
+			if (ratios[i] < ratio)
+			{
+				indexes.add(i + 1);
+			}
+			else
+			{
+				nonIndexes.add(i + 1);
+			}
+		}
+
+		if (runLength == null)
 		{
 
-			double base = values[i];
+			Integer lcrdIndex;
 
-			boolean consistent = true;
-
-			for (int k = 1; k < runLength; k++)
+			if (!nonIndexes.isEmpty())
 			{
+				lcrdIndex = CollectionsUtil.max(nonIndexes) + 1;
+			}
+			else if (!indexes.isEmpty())
+			{
+				lcrdIndex = indexes.get(0);
+			}
+			else
+			{
+				return new CalcResult(-1, Double.NaN);
+			}
 
-				double expectedMin = base * Math.pow(spacingRatio, k);
+			// Do not allow last ranked BMC
+			if (lcrdIndex == n)
+			{
+				return new CalcResult(-1, Double.NaN);
+			}
 
-				if (values[i + k] < expectedMin)
+			return new CalcResult(lcrdIndex - 1, x[lcrdIndex - 1]);
+		}
+
+		// ---------------------------------------------------------
+		// run.length version
+		// ---------------------------------------------------------
+
+		List<Integer> runSizes = new ArrayList<>();
+
+		if (nonIndexes.size() > 1)
+		{
+			for (int i = 0; i < nonIndexes.size() - 1; i++)
+			{
+				runSizes.add(nonIndexes.get(i + 1) - nonIndexes.get(i));
+			}
+		}
+
+		Integer lcrdIndex = null;
+
+		if (!nonIndexes.isEmpty() && nonIndexes.get(0) != (n - 1))
+		{
+
+			runSizes.add(n - nonIndexes.get(nonIndexes.size() - 1));
+
+			for (int i = 0; i < runSizes.size(); i++)
+			{
+				if (runSizes.get(i) >= runLength)
 				{
-					consistent = false;
+					lcrdIndex = nonIndexes.get(i);
 					break;
 				}
 			}
 
-			if (consistent)
+			if (lcrdIndex != null && lcrdIndex < (n - 1))
 			{
-				double dose = indexToDose(values, i, spacingRatio);
-				return new Result(i, dose);
+				lcrdIndex++;
+			}
+
+			if (lcrdIndex == null && !indexes.isEmpty() && indexes.get(0) == 1)
+			{
+
+				int firstRun = nonIndexes.get(0) - 1;
+
+				if (firstRun >= runLength)
+				{
+					lcrdIndex = indexes.get(0);
+				}
+			}
+
+		}
+		else
+		{
+
+			if (!indexes.isEmpty())
+			{
+				runSizes.add(indexes.get(indexes.size() - 1));
+			}
+
+			for (int i = 0; i < runSizes.size(); i++)
+			{
+				if (runSizes.get(i) >= runLength)
+				{
+					lcrdIndex = indexes.get(i);
+					break;
+				}
 			}
 		}
 
-		return new Result(-1, Double.NaN);
+		if (lcrdIndex == null)
+		{
+			return new CalcResult(-1, Double.NaN);
+		}
+
+		return new CalcResult(lcrdIndex - 1, x[lcrdIndex - 1]);
 	}
 
 	/**
-	 * Reconstructs dose assuming geometric spacing.
-	 * If values are already doses, this just returns values[i].
+	 * Convenience overload matching R defaults.
 	 */
-	private static double indexToDose(double[] values, int i, double spacingRatio)
+	public static CalcResult calculate(double[] values)
 	{
+		return calculate(values, 1.66, null);
+	}
 
-		// If spacingRatio ~ 1, assume values already are doses
-		if (Math.abs(spacingRatio - 1.0) < 1e-9)
+	/**
+	 * Simple helper since Java lacks Collections.max for primitive lists.
+	 */
+	private static class CollectionsUtil
+	{
+		static int max(List<Integer> list)
 		{
-			return values[i];
+			int max = Integer.MIN_VALUE;
+			for (int v : list)
+			{
+				if (v > max)
+				{
+					max = v;
+				}
+			}
+			return max;
 		}
-
-		return values[i];
 	}
 
 	public static void main(String[] args)
 	{
 
-		double[] values = { 1, 2, 4, 8, 16, 32 };
+		double[] x = { 1.2, 1.3, 1.31, 1.35, 2.6, 2.8, 3.0, 3.2 };
 
-		Result r = compute(values, 3, 2.0);
-
-		System.out.println(r);
+		System.out.println(calculate(x));
+		System.out.println(calculate(x, 1.66, 3));
 	}
 }

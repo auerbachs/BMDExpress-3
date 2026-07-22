@@ -14,4 +14,10 @@ public class NthRankParameters extends TPODMethodParameter
 		this.rank = rank;
 	}
 
+	@Override
+	public TPODMethod getMethod()
+	{
+		return TPODMethod.NTH_RANK;
+	}
+
 }

@@ -9,9 +9,7 @@ import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
-import com.sciome.bmdexpress2.mvp.model.tpod.FirstModeParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
-import com.sciome.bmdexpress2.mvp.model.tpod.MaxCurveParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
@@ -157,23 +155,15 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				continue;
 
 			TPODMethodParameter tM = null;
-			if (methodCard.method.equals(TPODMethod.FIRST_MODE))
-			{
-				FirstModeParameters fm = new FirstModeParameters();
-				tM = fm;
-			}
-			else if (methodCard.method.equals(TPODMethod.LCRD))
+
+			if (methodCard.method.equals(TPODMethod.LCRD))
 			{
 				LCRDParameters lp = new LCRDParameters();
 				lp.setRunLength(methodCard.getRunLength());
 				lp.setSpacingRatio(methodCard.getSpacingRatio());
 				tM = lp;
 			}
-			else if (methodCard.method.equals(TPODMethod.MAX_CURVATURE))
-			{
-				MaxCurveParameters mc = new MaxCurveParameters();
-				tM = mc;
-			}
+
 			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
 			{
 				NthPercentParameters nthP = new NthPercentParameters();
@@ -187,6 +177,21 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				nthR.setRank(methodCard.getRank());
 				tM = nthR;
 			}
+			else
+				continue;
+			/*
+			 * else if (methodCard.method.equals(TPODMethod.FIRST_MODE))
+			 * {
+			 * FirstModeParameters fm = new FirstModeParameters();
+			 * fm.setMinSize(methodCard.getMinSize());
+			 * tM = fm;
+			 * }
+			 * else if (methodCard.method.equals(TPODMethod.MAX_CURVATURE))
+			 * {
+			 * MaxCurveParameters mc = new MaxCurveParameters();
+			 * tM = mc;
+			 * }
+			 */
 
 			tpodParameters.add(tM);
 
@@ -329,6 +334,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			cb.setUserData(type);
 
 			cb.setStyle("-fx-font-size: 12px;");
+			cb.setSelected(true);
 
 			bmdMetrics.add(cb);
 		}
@@ -347,7 +353,11 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				""");
 
 		for (TPODMethod method : TPODMethod.values())
+		{
+			if (method.equals(TPODMethod.MAX_CURVATURE) || method.equals(TPODMethod.FIRST_MODE))
+				continue;
 			tpodMethods.add(new TPODMethodCard(method));
+		}
 
 		methodsLayout.getChildren().addAll(tpodMethods);
 
@@ -364,6 +374,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		private final TextField runLengthField = new TextField("10");
 		private final TextField rankField = new TextField("25");
 		private final TextField percentField = new TextField("5");
+		private final TextField minSizeField = new TextField("0.055");
 
 		public TPODMethodCard(TPODMethod method)
 		{
@@ -390,7 +401,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			// ===== Top row: checkbox + label =====
 			HBox header = new HBox(10);
 
-			enabledCheck.setSelected(false);
+			enabledCheck.setSelected(true);
 
 			Label title = new Label(method.getLabel());
 			title.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
@@ -415,12 +426,15 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				case NTH_PERCENTILE -> {
 					getChildren().add(labelled("Percent:", percentField));
 				}
+				// case FIRST_MODE -> {
+				// getChildren().add(labelled("Min Size:", minSizeField));
+				// }
 
-				case MAX_CURVATURE, FIRST_MODE -> {
-					Label none = new Label("No parameters");
-					none.setStyle("-fx-text-fill: #777;");
-					getChildren().add(none);
-				}
+				// case MAX_CURVATURE -> {
+				// Label none = new Label("No parameters");
+				// none.setStyle("-fx-text-fill: #777;");
+				// getChildren().add(none);
+				// }
 			}
 		}
 
@@ -466,6 +480,11 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		public double getPercent()
 		{
 			return Double.parseDouble(percentField.getText());
+		}
+
+		public double getMinSize()
+		{
+			return Double.parseDouble(minSizeField.getText());
 		}
 	}
 

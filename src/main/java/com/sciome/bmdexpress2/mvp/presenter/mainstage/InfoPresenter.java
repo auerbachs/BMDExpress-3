@@ -17,6 +17,8 @@ import com.sciome.bmdexpress2.shared.eventbus.analysis.OneWayANOVADataCombinedSe
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OneWayANOVADataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataCombinedSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.BMDProjectLoadedEvent;
@@ -109,6 +111,14 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 	}
 
 	@Subscribe
+	public void onSelectTPODAnalysis(TPODAnalysisDataSelectedEvent event)
+	{
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
+	}
+
+	@Subscribe
 	public void onLoadCombinedExperiement(ExpressionDataCombinedSelectedEvent event)
 	{
 		if (event.GetPayload().getAnalysisInfo(false) != null
@@ -158,6 +168,14 @@ public class InfoPresenter extends PresenterBase<IInfoView>
 
 	@Subscribe
 	public void onSelectCombinedCategoryAnalysis(CategoryAnalysisDataCombinedSelectedEvent event)
+	{
+		if (event.GetPayload().getAnalysisInfo(false) != null
+				&& event.GetPayload().getAnalysisInfo(false).size() > 0)
+			getView().showAnalysisInfo(event.GetPayload().getAnalysisInfo(false).get(0));
+	}
+
+	@Subscribe
+	public void onSelectCombinedTPODAnalysis(TPODAnalysisDataCombinedSelectedEvent event)
 	{
 		if (event.GetPayload().getAnalysisInfo(false) != null
 				&& event.GetPayload().getAnalysisInfo(false).size() > 0)

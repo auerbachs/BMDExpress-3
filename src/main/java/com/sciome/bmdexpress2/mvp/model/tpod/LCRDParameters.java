@@ -25,4 +25,10 @@ public class LCRDParameters extends TPODMethodParameter
 		this.runLength = runLength;
 	}
 
+	@Override
+	public TPODMethod getMethod()
+	{
+		return TPODMethod.LCRD;
+	}
+
 }

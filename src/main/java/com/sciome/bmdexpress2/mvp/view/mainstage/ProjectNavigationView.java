@@ -229,6 +229,12 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 					this.analysisCheckList.getScene().getWindow(), mouseEvent.getScreenX(),
 					mouseEvent.getScreenY());
 		}
+		else if (selectedItem instanceof TPODAnalysisResults)
+		{
+			showTPODAnalysisContextMenu((TPODAnalysisResults) selectedItem).show(
+					this.analysisCheckList.getScene().getWindow(), mouseEvent.getScreenX(),
+					mouseEvent.getScreenY());
+		}
 	}
 
 	/*
@@ -1187,6 +1193,17 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		});
 
 		ctxMenu.getItems().add(exportModeledResponsesMenuItem);
+
+		return ctxMenu;
+
+	}
+
+	private ContextMenu showTPODAnalysisContextMenu(TPODAnalysisResults tpodResults)
+	{
+		ContextMenu ctxMenu = new ContextMenu();
+
+		ctxMenu.getItems().addAll(getCommonMenuItems());
+		setContextMenuCommonHandlers("TPOD Analysis", ctxMenu, tpodResults);
 
 		return ctxMenu;
 

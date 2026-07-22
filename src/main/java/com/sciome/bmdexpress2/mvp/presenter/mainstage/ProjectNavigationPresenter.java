@@ -66,7 +66,9 @@ import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataSelectedForPro
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.ShowBMDExpressDataAnalysisInSeparateWindow;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.ShowDoseResponseExperimentInSeparateWindowEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataLoadedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedForProcessingEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataCombinedSelectedEvent;
@@ -144,6 +146,8 @@ public class ProjectNavigationPresenter
 			getEventBus().post(new CategoryAnalysisDataSelectedEvent((CategoryAnalysisResults) dataset));
 		else if (dataset instanceof BMDResult)
 			getEventBus().post(new BMDAnalysisDataSelectedEvent((BMDResult) dataset));
+		else if (dataset instanceof TPODAnalysisResults)
+			getEventBus().post(new TPODAnalysisDataSelectedEvent((TPODAnalysisResults) dataset));
 
 	}
 
@@ -987,6 +991,8 @@ public class ProjectNavigationPresenter
 			getEventBus().post(new OriogenDataCombinedSelectedEvent(combined));
 		else if (selectedItems.get(0) instanceof CategoryAnalysisResults)
 			getEventBus().post(new CategoryAnalysisDataCombinedSelectedEvent(combined));
+		else if (selectedItems.get(0) instanceof TPODAnalysisResults)
+			getEventBus().post(new TPODAnalysisDataCombinedSelectedEvent(combined));
 		else if (selectedItems.get(0) instanceof BMDResult)
 			getEventBus().post(new BMDAnalysisDataCombinedSelectedEvent(combined));
 		else if (selectedItems.get(0) instanceof DoseResponseExperiment)
@@ -1011,6 +1017,7 @@ public class ProjectNavigationPresenter
 		classesOfInterest.add(OriogenResults.class);
 		classesOfInterest.add(DoseResponseExperiment.class);
 		classesOfInterest.add(CurveFitPrefilterResults.class);
+		classesOfInterest.add(TPODAnalysisResults.class);
 		for (Class c : classesOfInterest)
 			classesOfInterestMapCount.put(c, 0);
 		for (Object obj : selectedItems)

@@ -11,6 +11,7 @@ import com.sciome.bmdexpress2.mvp.viewinterface.tpod.ITPODView;
 import com.sciome.bmdexpress2.serviceInterface.ITPODService;
 import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.BMDProjectLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.CloseProjectRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.ShowErrorEvent;
@@ -65,8 +66,6 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 					for (CategoryAnalysisResults catResult : catResults)
 					{
 
-						// for gene level analysis, just use the genes as categories
-						// basically recreate the defined pathway
 						if (tpodAnalysisEnum == TPODAnalysisEnum.GENE_LEVEL)
 						{
 							// params.setCategoryFileParameters(GeneLevelUtils
@@ -80,9 +79,6 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 						});
 						try
 						{
-							// CategoryAnalysisResults categoryAnalysisResults = getService()
-							// .categoryAnalysis(params, bmdResult, tpodAnalysisEnum, me);
-
 							TPODAnalysisResults tpodResults = getService().tpodAnalysis(catResult, params,
 									me);
 
@@ -90,13 +86,10 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 							{
 
 								getView().finishedTPODDetermination();
-								// if (categoryAnalysisResults != null)
-								// {
-
-								// getEventBus().post(
-								// new CategoryAnalysisDataLoadedEvent(categoryAnalysisResults));
-
-								// }
+								if (tpodResults != null)
+								{
+									getEventBus().post(new TPODAnalysisDataLoadedEvent(tpodResults));
+								}
 
 							});
 

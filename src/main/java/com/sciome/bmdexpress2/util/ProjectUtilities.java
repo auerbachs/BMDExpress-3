@@ -8,6 +8,7 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 
 public class ProjectUtilities
 {
@@ -44,6 +45,12 @@ public class ProjectUtilities
 			project.getOriogenResults().add(data);
 		}
 
+		for (CurveFitPrefilterResults data : newProject.getCurveFitPrefilterResults())
+		{
+			project.giveBMDAnalysisUniqueName(data, data.getName());
+			project.getCurveFitPrefilterResults().add(data);
+		}
+
 		for (BMDResult data : newProject.getbMDResult())
 		{
 			project.giveBMDAnalysisUniqueName(data, data.getName());
@@ -53,6 +60,12 @@ public class ProjectUtilities
 		{
 			project.giveBMDAnalysisUniqueName(data, data.getName());
 			project.getCategoryAnalysisResults().add(data);
+		}
+
+		for (TPODAnalysisResults data : newProject.getTpodAnalysisResults())
+		{
+			project.giveBMDAnalysisUniqueName(data, data.getName());
+			project.getTpodAnalysisResults().add(data);
 		}
 	}
 

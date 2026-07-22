@@ -23,6 +23,8 @@ import com.sciome.bmdexpress2.shared.eventbus.analysis.OneWayANOVADataSelectedEv
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataCombinedSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataSelectedEvent;
@@ -118,6 +120,12 @@ public class MainPresenter extends PresenterBase<IMainView>
 		getView().updateSelectionLabel(event.GetPayload().getName());
 	}
 
+	@Subscribe
+	public void onSelectTPODAnalysis(TPODAnalysisDataSelectedEvent event)
+	{
+		getView().updateSelectionLabel(event.GetPayload().getName());
+	}
+
 	/*
 	 * listen for loading an experiement so we can add it to the project.
 	 */
@@ -177,6 +185,12 @@ public class MainPresenter extends PresenterBase<IMainView>
 	 */
 	@Subscribe
 	public void onSelectCategoryAnalysis(CategoryAnalysisDataCombinedSelectedEvent event)
+	{
+		getView().updateSelectionLabel(event.GetPayload().getName());
+	}
+
+	@Subscribe
+	public void onSelectTPODAnalysis(TPODAnalysisDataCombinedSelectedEvent event)
 	{
 		getView().updateSelectionLabel(event.GetPayload().getName());
 	}

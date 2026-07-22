@@ -22,6 +22,8 @@ public interface IMainDataView
 
 	void loadCategoryAnalysis(BMDExpressAnalysisDataSet getPayload);
 
+	void loadTPODAnalysis(BMDExpressAnalysisDataSet getPayload);
+
 	void showBMDExpressAnalysisInSeparateWindow(BMDExpressAnalysisDataSet getPayload);
 
 	void showExpressDataInSeparateWindow(DoseResponseExperiment experiment);

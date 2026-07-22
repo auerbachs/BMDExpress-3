@@ -155,7 +155,7 @@ public class BMDProject implements Serializable
 	{
 		if (doseResponseExperiments.size() > 0 || oneWayANOVAResults.size() > 0
 				|| williamsTrendResults.size() > 0 || oriogenResults.size() > 0 || bMDResult.size() > 0
-				|| categoryAnalysisResults.size() > 0)
+				|| categoryAnalysisResults.size() > 0 || tpodAnalysisResults.size() > 0)
 			return false;
 		return true;
 	}
@@ -266,6 +266,8 @@ public class BMDProject implements Serializable
 			dataSetWithNames = (List<BMDExpressAnalysisDataSet>) (List<?>) categoryAnalysisResults;
 		else if (dataSet instanceof DoseResponseExperiment)
 			dataSetWithNames = (List<BMDExpressAnalysisDataSet>) (List<?>) doseResponseExperiments;
+		else if (dataSet instanceof TPODAnalysisResults)
+			dataSetWithNames = (List<BMDExpressAnalysisDataSet>) (List<?>) tpodAnalysisResults;
 
 		int count = 0;
 		for (BMDExpressAnalysisDataSet ds : dataSetWithNames)

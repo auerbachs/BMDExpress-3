@@ -1,5 +1,7 @@
 package com.sciome.bmdexpress2.service.tpod.nthperc;
 
+import com.sciome.bmdexpress2.service.tpod.CalcResult;
+
 public class NthPercentile
 {
 
@@ -12,7 +14,7 @@ public class NthPercentile
 	 *            value from 0 to 100
 	 * @return percentile value
 	 */
-	public static double percentile(double[] sortedValues, double percent)
+	public static CalcResult percentile(double[] sortedValues, double percent)
 	{
 
 		if (sortedValues == null || sortedValues.length == 0)
@@ -24,30 +26,22 @@ public class NthPercentile
 		int n = sortedValues.length;
 
 		if (n == 1)
-			return sortedValues[0];
+			return new CalcResult(0, sortedValues[0]);
 
 		double rank = (percent / 100.0) * (n - 1);
 
 		int lowerIndex = (int) Math.floor(rank);
 		int upperIndex = (int) Math.ceil(rank);
 
-		if (lowerIndex == upperIndex)
-		{
-			return sortedValues[lowerIndex];
-		}
+		if (lowerIndex != upperIndex)
+			lowerIndex = upperIndex;
 
-		double weight = rank - lowerIndex;
+		return new CalcResult(lowerIndex, sortedValues[lowerIndex]);
 
-		return sortedValues[lowerIndex] * (1 - weight) + sortedValues[upperIndex] * weight;
+		// double weight = rank - lowerIndex;
+
+		// return new CalcResult(lowerIndex, upperIndex,
+		// sortedValues[lowerIndex] * (1 - weight) + sortedValues[upperIndex] * weight);
 	}
 
-	public static void main(String[] args)
-	{
-
-		double[] values = { 1, 2, 4, 8, 16 };
-
-		System.out.println(percentile(values, 0)); // min
-		System.out.println(percentile(values, 50)); // median-ish
-		System.out.println(percentile(values, 100)); // max
-	}
 }

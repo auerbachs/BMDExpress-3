@@ -7,10 +7,12 @@ import java.util.ResourceBundle;
 import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisDataSet;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.mvp.presenter.mainstage.MainDataPresenter;
 import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
 import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.BMDAnalysisResultsDataView;
@@ -20,6 +22,7 @@ import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.CurveFitPrefilterDataV
 import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.ExpressionDataSetDataView;
 import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.OneWayANOVADataView;
 import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.OriogenDataView;
+import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.TPODAnalysisDataView;
 import com.sciome.bmdexpress2.mvp.view.mainstage.dataview.WilliamsTrendDataView;
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.IMainDataView;
 import com.sciome.bmdexpress2.shared.BMDExpressFXUtils;
@@ -164,6 +167,20 @@ public class MainDataView extends BMDExpressViewBase implements IMainDataView, I
 
 	}
 
+	@Override
+	public void loadTPODAnalysis(BMDExpressAnalysisDataSet tpodAnalysisResults)
+	{
+		// clear data in tableview if it is not null
+		if (spreadSheetTableView != null)
+		{
+			spreadSheetTableView.close();
+		}
+		spreadSheetTableView = new TPODAnalysisDataView(tpodAnalysisResults, "main");
+
+		updateSpreadSheet();
+
+	}
+
 	private void updateSpreadSheet()
 	{
 		tableAnchorPane.getChildren().clear();
@@ -200,10 +217,20 @@ public class MainDataView extends BMDExpressViewBase implements IMainDataView, I
 			tableView = new OriogenDataView(dataSet, "spreadsheet");
 			resultDesc = "Oriogen Results: ";
 		}
+		else if (dataSet instanceof CurveFitPrefilterResults)
+		{
+			tableView = new CurveFitPrefilterDataView(dataSet, "spreadsheet");
+			resultDesc = "Curve Fit Prefilter Results: ";
+		}
 		else if (dataSet instanceof CategoryAnalysisResults)
 		{
 			tableView = new CategoryAnalysisDataView(dataSet, "spreadsheet");
 			resultDesc = "Category Analysis Results: ";
+		}
+		else if (dataSet instanceof TPODAnalysisResults)
+		{
+			tableView = new TPODAnalysisDataView(dataSet, "spreadsheet");
+			resultDesc = "TPOD Analysis Results: ";
 		}
 
 		showTableView(tableView, resultDesc + dataSet.getName());
@@ -269,4 +296,5 @@ public class MainDataView extends BMDExpressViewBase implements IMainDataView, I
 			presenter.destroy();
 
 	}
+
 }

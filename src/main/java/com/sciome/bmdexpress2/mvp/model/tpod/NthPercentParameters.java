@@ -14,4 +14,10 @@ public class NthPercentParameters extends TPODMethodParameter
 		this.percent = percent;
 	}
 
+	@Override
+	public TPODMethod getMethod()
+	{
+		return TPODMethod.NTH_PERCENTILE;
+	}
+
 }
