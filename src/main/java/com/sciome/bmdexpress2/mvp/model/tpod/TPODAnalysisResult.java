@@ -10,6 +10,7 @@ import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
 public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Serializable
 {
 
+	private static final long serialVersionUID = 5656264289893604853L;
 	private TPODMethod tpodMethod;
 	private BMDEndpointType bmdEndpointType;
 	private Double bmd;
@@ -84,17 +85,18 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 	public List<Object> getRow()
 	{
 		if (row == null || row.size() == 0)
-			createRowData();
+			createRowData("");
 		return row;
 	}
 
-	protected void createRowData()
+	protected void createRowData(String experimentName)
 	{
 		stringBuffer = getStringBuffer();
 		if (row != null)
 			return;
 
 		row = new ArrayList<>();
+		row.add(experimentName);
 		row.add(tpodMethod);
 		row.add(bmdEndpointType);
 		row.add(bmd);
@@ -115,6 +117,7 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 	{
 		List<String> header = new ArrayList<>();
 
+		header.add("Experiment Name");
 		header.add("TPOD Method");
 		header.add("BMD Endpoint Type");
 		header.add("BMD");

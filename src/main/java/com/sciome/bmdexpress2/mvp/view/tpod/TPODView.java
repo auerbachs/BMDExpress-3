@@ -12,6 +12,7 @@ import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
@@ -28,17 +29,22 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -76,7 +82,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	private FlowPane bmdMetricsLayout;
 
 	@FXML
-	private VBox filtersLayout;
+	private FlowPane filtersLayout;
 
 	@FXML
 	private FlowPane methodsLayout;
@@ -93,6 +99,8 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	private Map<String, CheckBox> labelToNode = new HashMap<>();
 
 	private List<TPODMethodCard> tpodMethods = new ArrayList<>();
+
+	private List<TPODFilterCard> tpodFilters = new ArrayList<>();
 
 	private List<CheckBox> bmdMetrics = new ArrayList<>();
 
@@ -179,19 +187,6 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			}
 			else
 				continue;
-			/*
-			 * else if (methodCard.method.equals(TPODMethod.FIRST_MODE))
-			 * {
-			 * FirstModeParameters fm = new FirstModeParameters();
-			 * fm.setMinSize(methodCard.getMinSize());
-			 * tM = fm;
-			 * }
-			 * else if (methodCard.method.equals(TPODMethod.MAX_CURVATURE))
-			 * {
-			 * MaxCurveParameters mc = new MaxCurveParameters();
-			 * tM = mc;
-			 * }
-			 */
 
 			tpodParameters.add(tM);
 
@@ -361,6 +356,14 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 		methodsLayout.getChildren().addAll(tpodMethods);
 
+		for (TPODAnalysisFilter filter : TPODAnalysisFilter.values())
+		{
+
+			tpodFilters.add(new TPODFilterCard(filter));
+		}
+
+		filtersLayout.getChildren().addAll(tpodFilters);
+
 	}
 
 	private class TPODMethodCard extends VBox
@@ -426,6 +429,8 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				case NTH_PERCENTILE -> {
 					getChildren().add(labelled("Percent:", percentField));
 				}
+				case FIRST_GENESET -> {
+				}
 				// case FIRST_MODE -> {
 				// getChildren().add(labelled("Min Size:", minSizeField));
 				// }
@@ -447,6 +452,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			field.setPrefWidth(80);
 
 			HBox box = new HBox(10, l, field);
+			box.setAlignment(Pos.CENTER_LEFT);
 			return box;
 		}
 
@@ -460,6 +466,153 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		public TPODMethod getMethod()
 		{
 			return method;
+		}
+
+		public double getSpacingRatio()
+		{
+			return Double.parseDouble(spacingRatioField.getText());
+		}
+
+		public int getRunLength()
+		{
+			return Integer.parseInt(runLengthField.getText());
+		}
+
+		public int getRank()
+		{
+			return Integer.parseInt(rankField.getText());
+		}
+
+		public double getPercent()
+		{
+			return Double.parseDouble(percentField.getText());
+		}
+
+		public double getMinSize()
+		{
+			return Double.parseDouble(minSizeField.getText());
+		}
+	}
+
+	private class TPODFilterCard extends VBox
+	{
+
+		private final TPODAnalysisFilter filter;
+		private final CheckBox enabledCheck = new CheckBox();
+
+		// parameter fields (only some are used per method)
+		private final TextField spacingRatioField = new TextField("1.67");
+		private final TextField runLengthField = new TextField("10");
+		private final TextField rankField = new TextField("25");
+		private final TextField percentField = new TextField("5");
+		private final TextField minSizeField = new TextField("0.055");
+
+		private final ToggleGroup directionGroup = new ToggleGroup();
+
+		private final RadioButton upRadio = new RadioButton("UP");
+
+		private final RadioButton downRadio = new RadioButton("DOWN");
+
+		public TPODFilterCard(TPODAnalysisFilter filter)
+		{
+			this.filter = filter;
+
+			this.setMinWidth(300);
+			this.setMaxWidth(300);
+			setSpacing(8);
+			setPadding(new Insets(10));
+
+			setStyle("""
+					    -fx-border-color: #cfcfcf;
+					    -fx-border-radius: 8;
+					    -fx-background-radius: 8;
+					    -fx-background-color: #fafafa;
+					""");
+
+			build();
+		}
+
+		private void build()
+		{
+
+			// ===== Top row: checkbox + label =====
+			HBox header = new HBox(10);
+
+			enabledCheck.setSelected(true);
+
+			Label title = new Label(filter.getLabel());
+			title.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
+
+			header.getChildren().addAll(enabledCheck, title);
+
+			getChildren().add(header);
+
+			// ===== dynamic parameter section =====
+			switch (filter)
+			{
+
+				case FISHERS_RIGHT_P_VALUE -> {
+					getChildren().add(labelled("<=", spacingRatioField));
+				}
+
+				case GENS_PASS_ALL_FILTERS -> {
+					getChildren().add(labelled(">=", rankField));
+				}
+
+				case OVERALLDIRECTION -> {
+					upRadio.setToggleGroup(directionGroup);
+					upRadio.setSelected(true); // Default selection
+					downRadio.setToggleGroup(directionGroup);
+					HBox directionBox = new HBox(10, upRadio, downRadio);
+					directionBox.setPadding(new Insets(10));
+					directionBox.setMinWidth(200);
+					getChildren().add(labelled("Direction", directionBox));
+				}
+
+				case PERCENTAGE -> {
+					getChildren().add(labelled(">=", percentField));
+				}
+
+			}
+		}
+
+		private HBox labelled(String label, Control field)
+		{
+
+			Label l = new Label(label);
+			// l.setPrefWidth(140);
+
+			// field.setPrefWidth(380);
+
+			HBox box = new HBox(10, l, field);
+
+			box.setAlignment(Pos.CENTER_LEFT);
+			return box;
+		}
+
+		private HBox labelled(String label, Pane field)
+		{
+
+			Label l = new Label(label);
+			l.setPrefWidth(140);
+
+			field.setPrefWidth(80);
+
+			HBox box = new HBox(10, l, field);
+			box.setAlignment(Pos.CENTER_LEFT);
+			return box;
+		}
+
+		// ===== getters =====
+
+		public boolean isEnabled()
+		{
+			return enabledCheck.isSelected();
+		}
+
+		public TPODAnalysisFilter getFilter()
+		{
+			return filter;
 		}
 
 		public double getSpacingRatio()

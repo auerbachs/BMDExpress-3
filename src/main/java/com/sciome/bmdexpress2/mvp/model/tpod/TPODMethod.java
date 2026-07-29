@@ -4,8 +4,8 @@ public enum TPODMethod
 {
 
 	MAX_CURVATURE("Max Curvature (inflection point)"), LCRD(
-			"Lowest Consistent Response Dose (LCRD)"), NTH_PERCENTILE(
-					"Nth Percentile"), NTH_RANK("Nth Rank"), FIRST_MODE("First Mode (distribution peak)");
+			"Lowest Consistent Response Dose (LCRD)"), NTH_PERCENTILE("Nth Percentile"), NTH_RANK(
+					"Nth Rank"), FIRST_MODE("First Mode (distribution peak)"), FIRST_GENESET("First Geneset");
 
 	private final String label;
 

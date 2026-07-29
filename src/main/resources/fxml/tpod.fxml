@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane prefHeight="817.0" prefWidth="843.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sciome.bmdexpress2.mvp.view.tpod.TPODView">
 	<center>
@@ -25,7 +26,10 @@
                                  <content>
 														<VBox fx:id="mainVBox" alignment="TOP_CENTER" spacing="5.0">
 															<children>
-																<Label alignment="CENTER" minHeight="25.0" prefHeight="25.0" text="tPOD/CMC Analysis  Data:" />
+																<Label alignment="CENTER" minHeight="25.0" prefHeight="25.0" text="tPOD/CMC Analysis  Data:">
+                                             <font>
+                                                <Font name="System Bold" size="24.0" />
+                                             </font></Label>
 																<HBox fx:id="selectionHBox" alignment="CENTER" minHeight="25.0" prefHeight="25.0" spacing="15.0" />
                                           <Separator prefWidth="200.0" />
                                           <BorderPane fx:id="bmdMetricsBorderPane">
@@ -33,16 +37,22 @@
                                                 <FlowPane fx:id="bmdMetricsLayout" hgap="20.0" vgap="10.0" />
                                              </center>
                                              <top>
-                                                <Label text="BMD Metric Type(s)" BorderPane.alignment="CENTER" />
+                                                <Label text="BMD Metric Type(s)" BorderPane.alignment="CENTER">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font></Label>
                                              </top>
                                           </BorderPane>
                                           <Separator prefWidth="200.0" />
                                           <BorderPane fx:id="filtersBorderPane">
                                              <center>
-                                                <VBox fx:id="filtersLayout" />
+                                                <FlowPane fx:id="filtersLayout" />
                                              </center>
                                              <top>
-                                                <Label text="Filter(s)" BorderPane.alignment="CENTER" />
+                                                <Label text="Filter(s)" BorderPane.alignment="CENTER">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font></Label>
                                              </top>
                                           </BorderPane>
                                           <Separator prefWidth="200.0" />
@@ -51,7 +61,10 @@
                                                 <FlowPane fx:id="methodsLayout" hgap="20.0" vgap="10.0" />
                                              </center>
                                              <top>
-                                                <Label text="tPOD/CMD Method(s)" BorderPane.alignment="CENTER" />
+                                                <Label text="tPOD/CMD Method(s)" BorderPane.alignment="CENTER">
+                                                   <font>
+                                                      <Font size="18.0" />
+                                                   </font></Label>
                                              </top>
                                           </BorderPane>
 															</children>

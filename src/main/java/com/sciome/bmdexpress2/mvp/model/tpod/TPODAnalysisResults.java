@@ -86,7 +86,8 @@ public class TPODAnalysisResults extends BMDExpressAnalysisDataSet implements Se
 			fillColumnHeader();
 			// refresh all the data rows so all transient properties are availabe
 			for (TPODAnalysisResult result : this.tpodAnalysisResults)
-				result.createRowData();
+				result.createRowData(
+						this.categoryAnalysisResults.getBmdResult().getDoseResponseExperiment().getName());
 		}
 		return columnHeader;
 	}
