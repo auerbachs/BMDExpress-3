@@ -13,6 +13,7 @@ import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputFilter;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
@@ -194,6 +195,44 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 		inputParameters.setMethodParameters(tpodParameters);
 
+		List<TPODInputFilter> filters = new ArrayList<>();
+
+		for (TPODFilterCard filterCard : tpodFilters)
+		{
+			if (!filterCard.isEnabled())
+				continue;
+
+			TPODInputFilter tf = null;
+
+			if (filterCard.filter.equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
+			{
+				tf = new TPODInputFilter(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
+						filterCard.getFishersRightField());
+			}
+
+			else if (filterCard.filter.equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
+			{
+				tf = new TPODInputFilter(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
+						filterCard.getGenesThatPassed());
+			}
+			else if (filterCard.filter.equals(TPODAnalysisFilter.PERCENTAGE))
+			{
+				tf = new TPODInputFilter(TPODAnalysisFilter.PERCENTAGE, filterCard.getPercent());
+			}
+			else if (filterCard.filter.equals(TPODAnalysisFilter.OVERALLDIRECTION))
+			{
+				tf = new TPODInputFilter(TPODAnalysisFilter.OVERALLDIRECTION,
+						filterCard.getOverallDirection());
+			}
+			else
+				continue;
+
+			filters.add(tf);
+
+		}
+
+		inputParameters.setInputFilters(filters);
+
 		if (inputParameters != null)
 		{
 			startButton.setDisable(true);
@@ -344,6 +383,12 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		methodsLayout.setPadding(new Insets(10));
 
 		methodsLayout.setStyle("""
+				    -fx-background-color: white;
+				""");
+
+		filtersLayout.setPadding(new Insets(10));
+
+		filtersLayout.setStyle("""
 				    -fx-background-color: white;
 				""");
 
@@ -501,9 +546,9 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		private final CheckBox enabledCheck = new CheckBox();
 
 		// parameter fields (only some are used per method)
-		private final TextField spacingRatioField = new TextField("1.67");
+		private final TextField fishersRightField = new TextField("1.67");
 		private final TextField runLengthField = new TextField("10");
-		private final TextField rankField = new TextField("25");
+		private final TextField genesThatPassedField = new TextField("25");
 		private final TextField percentField = new TextField("5");
 		private final TextField minSizeField = new TextField("0.055");
 
@@ -552,11 +597,11 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			{
 
 				case FISHERS_RIGHT_P_VALUE -> {
-					getChildren().add(labelled("<=", spacingRatioField));
+					getChildren().add(labelled("<=", fishersRightField));
 				}
 
-				case GENS_PASS_ALL_FILTERS -> {
-					getChildren().add(labelled(">=", rankField));
+				case GENES_PASS_ALL_FILTERS -> {
+					getChildren().add(labelled(">=", genesThatPassedField));
 				}
 
 				case OVERALLDIRECTION -> {
@@ -615,19 +660,14 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return filter;
 		}
 
-		public double getSpacingRatio()
+		public double getFishersRightField()
 		{
-			return Double.parseDouble(spacingRatioField.getText());
+			return Double.parseDouble(fishersRightField.getText());
 		}
 
-		public int getRunLength()
+		public int getGenesThatPassed()
 		{
-			return Integer.parseInt(runLengthField.getText());
-		}
-
-		public int getRank()
-		{
-			return Integer.parseInt(rankField.getText());
+			return Integer.parseInt(genesThatPassedField.getText());
 		}
 
 		public double getPercent()
@@ -635,10 +675,14 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return Double.parseDouble(percentField.getText());
 		}
 
-		public double getMinSize()
+		public int getOverallDirection()
 		{
-			return Double.parseDouble(minSizeField.getText());
+			if (upRadio.isSelected())
+				return 1;
+
+			return -1;
 		}
+
 	}
 
 }

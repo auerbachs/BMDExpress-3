@@ -46,7 +46,7 @@
                                           <Separator prefWidth="200.0" />
                                           <BorderPane fx:id="filtersBorderPane">
                                              <center>
-                                                <FlowPane fx:id="filtersLayout" />
+                                                <FlowPane fx:id="filtersLayout" hgap="20.0" vgap="10.0" />
                                              </center>
                                              <top>
                                                 <Label text="Filter(s)" BorderPane.alignment="CENTER">

@@ -2,8 +2,11 @@ package com.sciome.bmdexpress2.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.sciome.bmdexpress2.mvp.model.category.AdverseDirectionEnum;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
@@ -11,8 +14,10 @@ import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputFilter;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
 import com.sciome.bmdexpress2.service.tpod.CalcResult;
@@ -33,6 +38,72 @@ public class TPODAnalysisService implements ITPODService
 	{
 
 		// TODO: first we need to do some filtration.
+		List<CategoryAnalysisResult> filteredResults = new ArrayList<>();
+		Map<TPODAnalysisFilter, Integer> filteredByType = new HashMap<>();
+		filteredByType.put(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE, 0);
+		filteredByType.put(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS, 0);
+		filteredByType.put(TPODAnalysisFilter.PERCENTAGE, 0);
+		filteredByType.put(TPODAnalysisFilter.OVERALLDIRECTION, 0);
+
+		int failCount = 0;
+		for (CategoryAnalysisResult res : processableData.getCategoryAnalsyisResults())
+		{
+
+			boolean pass = true;
+			for (TPODInputFilter filter : inputParameters.getInputFilters())
+			{
+
+				if (filter.getTpodFilter().equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
+				{
+					if (res.getFishersExactRightPValue() > filter.getValue().doubleValue())
+					{
+						pass = false;
+						filteredByType.put(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
+								filteredByType.get(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE) + 1);
+					}
+				}
+
+				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
+				{
+					if (res.getGenesThatPassedAllFilters() < filter.getValue().intValue())
+					{
+						pass = false;
+						filteredByType.put(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
+								filteredByType.get(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS) + 1);
+
+					}
+				}
+				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.PERCENTAGE))
+				{
+					if (res.getPercentage() < filter.getValue().doubleValue())
+					{
+						pass = false;
+						filteredByType.put(TPODAnalysisFilter.PERCENTAGE,
+								filteredByType.get(TPODAnalysisFilter.PERCENTAGE) + 1);
+
+					}
+				}
+				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.OVERALLDIRECTION))
+				{
+					if ((res.getOverallDirection().equals(AdverseDirectionEnum.UP)
+							&& filter.getValue().intValue() == -1)
+							|| (res.getOverallDirection().equals(AdverseDirectionEnum.DOWN)
+									&& filter.getValue().intValue() == 1)
+							|| res.getOverallDirection().equals(AdverseDirectionEnum.CONFLICT))
+					{
+						pass = false;
+						filteredByType.put(TPODAnalysisFilter.OVERALLDIRECTION,
+								filteredByType.get(TPODAnalysisFilter.OVERALLDIRECTION) + 1);
+
+					}
+				}
+
+				if (pass)
+					filteredResults.add(res);
+				else
+					failCount++;
+			}
+		}
 
 		long startTime = System.currentTimeMillis();
 		AnalysisInfo analysisInfo = new AnalysisInfo();
@@ -49,13 +120,11 @@ public class TPODAnalysisService implements ITPODService
 		for (BMDEndpointType bmdEndpointType : inputParameters.getBmdEndpointTypes())
 		{
 
-			System.out.println(bmdEndpointType.toString());
-
 			// TODO: for the bmdendpoint type, grab that from the list of category results.
 
 			List<CategoryAnalysisResult> valueList = new ArrayList<>();
 
-			for (CategoryAnalysisResult res : processableData.getCategoryAnalsyisResults())
+			for (CategoryAnalysisResult res : filteredResults)
 			{
 				if (bmdEndpointType.equals(BMDEndpointType.BMD_10TH_PERCENTILE)
 						&& res.getBmdTenthPercentileTotalGenes() != null)

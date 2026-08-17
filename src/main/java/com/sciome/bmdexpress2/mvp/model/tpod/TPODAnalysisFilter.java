@@ -3,7 +3,7 @@ package com.sciome.bmdexpress2.mvp.model.tpod;
 public enum TPODAnalysisFilter
 {
 
-	GENS_PASS_ALL_FILTERS("Genes That Passed All Filters)"), PERCENTAGE("Percentage"), FISHERS_RIGHT_P_VALUE(
+	GENES_PASS_ALL_FILTERS("Genes That Passed All Filters)"), PERCENTAGE("Percentage"), FISHERS_RIGHT_P_VALUE(
 			"Fisher’s Exact Right P-Value"), OVERALLDIRECTION("Overall Direction");
 
 	private final String label;

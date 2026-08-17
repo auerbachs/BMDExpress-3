@@ -1,20 +1,36 @@
 package com.sciome.bmdexpress2.mvp.model.tpod;
 
-import java.util.Map;
-
 public class TPODInputFilter
 {
 
-	Map<FilterCriterion, Number> filterMap;
+	TPODAnalysisFilter tpodFilter;
+	Number value;
 
-	public Map<FilterCriterion, Number> getFilterMap()
+	public TPODInputFilter(TPODAnalysisFilter tpodFilter, Number value)
 	{
-		return filterMap;
+		super();
+		this.tpodFilter = tpodFilter;
+		this.value = value;
 	}
 
-	public void setFilterMap(Map<FilterCriterion, Number> filterMap)
+	public TPODAnalysisFilter getTpodFilter()
 	{
-		this.filterMap = filterMap;
+		return tpodFilter;
+	}
+
+	public void setTpodFilter(TPODAnalysisFilter tpodFilter)
+	{
+		this.tpodFilter = tpodFilter;
+	}
+
+	public Number getValue()
+	{
+		return value;
+	}
+
+	public void setValue(Number value)
+	{
+		this.value = value;
 	}
 
 }
