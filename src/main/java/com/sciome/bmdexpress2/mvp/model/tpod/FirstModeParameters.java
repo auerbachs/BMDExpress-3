@@ -20,4 +20,10 @@ public class FirstModeParameters extends TPODMethodParameter
 		return TPODMethod.FIRST_MODE;
 	}
 
+	@Override
+	public String getParameterString()
+	{
+		return "minSize=" + minSize;
+	}
+
 }

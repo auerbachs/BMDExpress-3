@@ -9,4 +9,11 @@ public class MaxCurveParameters extends TPODMethodParameter
 		return TPODMethod.MAX_CURVATURE;
 	}
 
+	@Override
+	public String getParameterString()
+	{
+		// TODO Auto-generated method stub
+		return "";
+	}
+
 }

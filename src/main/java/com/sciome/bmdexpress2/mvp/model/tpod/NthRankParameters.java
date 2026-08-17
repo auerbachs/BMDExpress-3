@@ -20,4 +20,10 @@ public class NthRankParameters extends TPODMethodParameter
 		return TPODMethod.NTH_RANK;
 	}
 
+	@Override
+	public String getParameterString()
+	{
+		return "rank=" + rank;
+	}
+
 }

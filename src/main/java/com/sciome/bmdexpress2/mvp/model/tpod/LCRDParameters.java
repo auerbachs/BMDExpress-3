@@ -31,4 +31,10 @@ public class LCRDParameters extends TPODMethodParameter
 		return TPODMethod.LCRD;
 	}
 
+	@Override
+	public String getParameterString()
+	{
+		return "spacingRatio=" + spacingRatio + ", runLenght=" + runLength;
+	}
+
 }

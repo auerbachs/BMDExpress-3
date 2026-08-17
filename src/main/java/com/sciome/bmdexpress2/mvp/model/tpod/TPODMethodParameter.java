@@ -4,4 +4,6 @@ public abstract class TPODMethodParameter
 {
 	public abstract TPODMethod getMethod();
 
+	public abstract String getParameterString();
+
 }
