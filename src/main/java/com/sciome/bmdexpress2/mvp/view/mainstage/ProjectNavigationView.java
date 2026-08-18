@@ -2020,9 +2020,11 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 					FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + view));
 
 					Stage stage = BMDExpressFXUtils.getInstance().generateStage("");
+					boolean isGeneSet = true;
 					if (tpodAnalysisType == TPODAnalysisEnum.GENE_LEVEL)
 					{
 						stage.setTitle("tPOD/CMC Determination Gene Level");
+						isGeneSet = false;
 					}
 					else if (tpodAnalysisType == TPODAnalysisEnum.GENE_SET)
 					{
@@ -2031,7 +2033,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 					stage.setScene(new Scene((BorderPane) loader.load()));
 					TPODView viewCode = loader.<TPODView> getController();
-					viewCode.initData(selectedItems, tpodAnalysisType);
+					viewCode.initData(selectedItems, tpodAnalysisType, isGeneSet);
 					stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 						@Override
 						public void handle(WindowEvent event)

@@ -5,6 +5,8 @@ import java.util.List;
 public class TPODInputParameters
 {
 
+	private boolean isGeneSet = true;
+
 	private List<TPODMethodParameter> methodParameters;
 
 	private List<TPODInputFilter> inputFilters;
@@ -39,6 +41,16 @@ public class TPODInputParameters
 	public void setBmdEndpointTypes(List<BMDEndpointType> bmdEndpointTypes)
 	{
 		this.bmdEndpointTypes = bmdEndpointTypes;
+	}
+
+	public boolean isGeneSet()
+	{
+		return isGeneSet;
+	}
+
+	public void setGeneSet(boolean isGeneSet)
+	{
+		this.isGeneSet = isGeneSet;
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.LowestGenesetParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
@@ -105,6 +106,8 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 	private List<CheckBox> bmdMetrics = new ArrayList<>();
 
+	private boolean isGeneSet;
+
 	public TPODView()
 	{
 		this(BMDExpressEventBus.getInstance());
@@ -124,10 +127,6 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-
-		initializeBMDMetrics();
-
-		initializeTPODMethods();
 
 	}
 
@@ -154,6 +153,13 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 			if (cb.isSelected())
 				bmdEndpointTypes.add((BMDEndpointType) cb.getUserData());
+		}
+
+		inputParameters.setGeneSet(isGeneSet);
+
+		if (!this.isGeneSet) // one gene...
+		{
+			bmdEndpointTypes.add(BMDEndpointType.BMD_MEDIAN);
 		}
 		inputParameters.setBmdEndpointTypes(bmdEndpointTypes);
 
@@ -185,6 +191,12 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				NthRankParameters nthR = new NthRankParameters();
 				nthR.setRank(methodCard.getRank());
 				tM = nthR;
+			}
+			else if (methodCard.method.equals(TPODMethod.FIRST_GENESET))
+			{
+				LowestGenesetParameters lgs = new LowestGenesetParameters();
+
+				tM = lgs;
 			}
 			else
 				continue;
@@ -255,11 +267,27 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void initData(List<CategoryAnalysisResults> catResults, TPODAnalysisEnum tpodAnalysisEnum)
+	public void initData(List<CategoryAnalysisResults> catResults, TPODAnalysisEnum tpodAnalysisEnum,
+			boolean isGeneSet)
 	{
 		this.tpodAnalysisEnum = tpodAnalysisEnum;
 
 		presenter.initData(catResults, tpodAnalysisEnum);
+		this.isGeneSet = isGeneSet;
+
+		if (this.isGeneSet)
+		{
+			initializeBMDMetrics();
+		}
+		else
+		{
+			this.filtersBorderPane.setVisible(false);
+			this.filtersBorderPane.setManaged(false);
+			this.bmdMetricsBorderPane.setVisible(false);
+			this.bmdMetricsBorderPane.setManaged(false);
+		}
+
+		initializeTPODMethods();
 
 	}
 
@@ -401,13 +429,16 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 		methodsLayout.getChildren().addAll(tpodMethods);
 
-		for (TPODAnalysisFilter filter : TPODAnalysisFilter.values())
+		if (this.isGeneSet)
 		{
+			for (TPODAnalysisFilter filter : TPODAnalysisFilter.values())
+			{
 
-			tpodFilters.add(new TPODFilterCard(filter));
+				tpodFilters.add(new TPODFilterCard(filter));
+			}
+
+			filtersLayout.getChildren().addAll(tpodFilters);
 		}
-
-		filtersLayout.getChildren().addAll(tpodFilters);
 
 	}
 

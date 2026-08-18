@@ -13,6 +13,7 @@ import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.LowestGenesetParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
@@ -237,6 +238,12 @@ public class TPODAnalysisService implements ITPODService
 				{
 					NthPercentParameters npp = (NthPercentParameters) method;
 					res = NthPercentile.percentile(valueArray, npp.getPercent());
+
+				}
+				else if (method instanceof LowestGenesetParameters)
+				{
+
+					res = NthRank.rankSorted(valueArray, 1);
 
 				}
 

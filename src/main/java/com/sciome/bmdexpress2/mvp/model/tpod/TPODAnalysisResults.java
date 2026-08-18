@@ -18,6 +18,13 @@ import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 public class TPODAnalysisResults extends BMDExpressAnalysisDataSet implements Serializable
 {
 
+	public static final String BMDU = "BMDU";
+	public static final String BMDL = "BMDL";
+	public static final String BMD = "BMD";
+	public static final String BMD_ENDPOINT_TYPE = "BMD Endpoint Type";
+	public static final String TPOD_METHOD = "TPOD Method";
+	public static final String EXPERIMENT_NAME = "Experiment Name";
+
 	private static final long serialVersionUID = 5135935005024600791L;
 	private String name;
 	private List<TPODAnalysisResult> tpodAnalysisResults;
