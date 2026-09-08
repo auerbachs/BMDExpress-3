@@ -74,6 +74,7 @@ public class CategoryMapTool
 	String pathwayDB;
 
 	private CategoryAnalysisParameters params;
+	private int genesetsByPlatform;
 
 	/**
 	 * Class constructor
@@ -413,7 +414,7 @@ public class CategoryMapTool
 				for (ReferenceGene refg : refgene.getReferenceGenes())
 					genesFromExpression.add(refg.getId());
 
-		int genesetsByPlatform = 0;
+		genesetsByPlatform = 0;
 		int genesetsByExpression = 0;
 		int geensetsByPlatformFiltered = 0;
 		int genesetsByExpressionFiltered = 0;
@@ -472,6 +473,8 @@ public class CategoryMapTool
 			analysisInfo.getNotes().add("Eliminate Gene Set Redundancy: " + params.getDeduplicateGeneSets());
 		}
 
+		// never change this text. deserialization depends on it to pull this number that is used
+		// possibl in the tPOD analysis
 		analysisInfo.getNotes()
 				.add("# Gene sets platform – no gene set size restriction:" + genesetsByPlatform);
 		// analysisInfo.getNotes()
@@ -579,6 +582,8 @@ public class CategoryMapTool
 	{
 		CategoryAnalysisResults categoryAnalysisResults = new CategoryAnalysisResults();
 		categoryAnalysisResults.setCategoryAnalsyisResults(new ArrayList<CategoryAnalysisResult>());
+
+		categoryAnalysisResults.setTotalGeneSetCount(genesetsByPlatform);
 
 		int rows = categoryGeneMap.categoryMappingCount();
 

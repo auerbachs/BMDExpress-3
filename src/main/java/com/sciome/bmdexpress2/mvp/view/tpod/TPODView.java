@@ -183,6 +183,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			{
 				NthPercentParameters nthP = new NthPercentParameters();
 				nthP.setPercent(methodCard.getPercent());
+				nthP.setAllGenes(methodCard.getAllGenes());
 				tM = nthP;
 
 			}
@@ -454,6 +455,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		private final TextField rankField = new TextField("25");
 		private final TextField percentField = new TextField("5");
 		private final TextField minSizeField = new TextField("0.055");
+		private final CheckBox percentAllGenesCheckBox = new CheckBox("All Genes/Gene Sets");
 
 		public TPODMethodCard(TPODMethod method)
 		{
@@ -482,7 +484,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 			enabledCheck.setSelected(true);
 
-			Label title = new Label(method.getLabel());
+			Label title = new Label(getMethodLabel(method));
 			title.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
 
 			header.getChildren().addAll(enabledCheck, title);
@@ -504,6 +506,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 				case NTH_PERCENTILE -> {
 					getChildren().add(labelled("Percent:", percentField));
+					getChildren().add(percentAllGenesCheckBox);
 				}
 				case FIRST_GENESET -> {
 				}
@@ -564,9 +567,40 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return Double.parseDouble(percentField.getText());
 		}
 
-		public double getMinSize()
+		public boolean getAllGenes()
 		{
-			return Double.parseDouble(minSizeField.getText());
+			return this.percentAllGenesCheckBox.isSelected();
+		}
+
+		private String getMethodLabel(TPODMethod method)
+		{
+
+			if (method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				if (isGeneSet)
+					return "Nth Percentile Gene Set";
+				else
+					return "Nth Percentile Gene";
+
+			}
+			else if (method.equals(TPODMethod.NTH_RANK))
+			{
+				if (isGeneSet)
+					return "Nth Rank Gene Set";
+				else
+					return "Nth Rank Gene";
+
+			}
+			if (method.equals(TPODMethod.FIRST_GENESET))
+			{
+				if (isGeneSet)
+					return "Lowest Gene Set BMD Gene Set";
+				else
+					return "Lowest Gene Set BMD Gene";
+
+			}
+
+			return method.getLabel();
 		}
 	}
 
@@ -577,11 +611,9 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		private final CheckBox enabledCheck = new CheckBox();
 
 		// parameter fields (only some are used per method)
-		private final TextField fishersRightField = new TextField("1.67");
-		private final TextField runLengthField = new TextField("10");
-		private final TextField genesThatPassedField = new TextField("25");
+		private final TextField fishersRightField = new TextField(".05");
+		private final TextField genesThatPassedField = new TextField("3");
 		private final TextField percentField = new TextField("5");
-		private final TextField minSizeField = new TextField("0.055");
 
 		private final ToggleGroup directionGroup = new ToggleGroup();
 

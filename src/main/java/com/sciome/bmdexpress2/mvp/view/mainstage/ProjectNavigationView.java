@@ -2023,7 +2023,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 					boolean isGeneSet = true;
 					if (tpodAnalysisType == TPODAnalysisEnum.GENE_LEVEL)
 					{
-						stage.setTitle("tPOD/CMC Determination Gene Level");
+						stage.setTitle("tPOD/CMC Determination Individual Gene");
 						isGeneSet = false;
 					}
 					else if (tpodAnalysisType == TPODAnalysisEnum.GENE_SET)

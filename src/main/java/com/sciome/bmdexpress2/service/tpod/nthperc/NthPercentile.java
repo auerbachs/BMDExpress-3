@@ -12,9 +12,11 @@ public class NthPercentile
 	 *            ascending sorted array
 	 * @param percent
 	 *            value from 0 to 100
+	 * @param b
 	 * @return percentile value
 	 */
-	public static CalcResult percentile(double[] sortedValues, double percent)
+	public static CalcResult percentile(double[] sortedValues, double percent, boolean isAllGeneSets,
+			Integer numGenesInGeneSet)
 	{
 
 		if (sortedValues == null || sortedValues.length == 0)
@@ -28,6 +30,11 @@ public class NthPercentile
 		if (n == 1)
 			return new CalcResult(0, sortedValues[0]);
 
+		if (isAllGeneSets && numGenesInGeneSet != null)
+			n = numGenesInGeneSet;
+		else if (isAllGeneSets)
+			throw new IllegalArgumentException("All genesets is being used, but number of gene sets is null");
+
 		double rank = (percent / 100.0) * (n - 1);
 
 		int lowerIndex = (int) Math.floor(rank);
@@ -36,7 +43,12 @@ public class NthPercentile
 		if (lowerIndex != upperIndex)
 			lowerIndex = upperIndex;
 
-		return new CalcResult(lowerIndex, sortedValues[lowerIndex]);
+		double result = Double.NaN;
+
+		if (lowerIndex < sortedValues.length)
+			result = sortedValues[lowerIndex];
+
+		return new CalcResult(lowerIndex, result);
 
 		// double weight = rank - lowerIndex;
 

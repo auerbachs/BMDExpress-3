@@ -3,6 +3,7 @@ package com.sciome.bmdexpress2.mvp.model.tpod;
 public class NthPercentParameters extends TPODMethodParameter
 {
 	private double percent;
+	private boolean allGenes;
 
 	public double getPercent()
 	{
@@ -14,6 +15,16 @@ public class NthPercentParameters extends TPODMethodParameter
 		this.percent = percent;
 	}
 
+	public boolean isAllGenes()
+	{
+		return allGenes;
+	}
+
+	public void setAllGenes(boolean allGenes)
+	{
+		this.allGenes = allGenes;
+	}
+
 	@Override
 	public TPODMethod getMethod()
 	{
@@ -23,7 +34,7 @@ public class NthPercentParameters extends TPODMethodParameter
 	@Override
 	public String getParameterString()
 	{
-		return "percent=" + percent;
+		return "percent=" + percent + ";all_genes=" + allGenes;
 	}
 
 }

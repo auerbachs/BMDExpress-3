@@ -40,7 +40,7 @@ public class TPODAnalysisService implements ITPODService
 			TPODInputParameters inputParameters, IBMDSToolProgress progressUpdater)
 	{
 
-		// TODO: first we need to do some filtration.
+		// TODO: first we need to do some filtration. Gene sets platform
 		List<CategoryAnalysisResult> filteredResults = new ArrayList<>();
 		Map<TPODAnalysisFilter, Integer> filteredByType = new HashMap<>();
 		filteredByType.put(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE, 0);
@@ -150,7 +150,8 @@ public class TPODAnalysisService implements ITPODService
 
 		String resultsName = "TPOD";
 		TPODAnalysisResults results = new TPODAnalysisResults();
-		results.setName(resultsName);
+		results.setName(
+				processableData.getBmdResult().getDoseResponseExperiment().getName() + "_" + resultsName);
 		results.setAnalysisInfo(analysisInfo);
 		List<TPODAnalysisResult> resultList = new ArrayList<>();
 		// loop through each bmdendpoint type
@@ -212,8 +213,6 @@ public class TPODAnalysisService implements ITPODService
 			for (TPODMethodParameter method : inputParameters.getMethodParameters())
 			{
 
-				System.out.println(method.getMethod());
-
 				TPODAnalysisResult tpodResult = new TPODAnalysisResult();
 
 				tpodResult.setBmdEndpointType(bmdEndpointType);
@@ -237,7 +236,15 @@ public class TPODAnalysisService implements ITPODService
 				else if (method instanceof NthPercentParameters)
 				{
 					NthPercentParameters npp = (NthPercentParameters) method;
-					res = NthPercentile.percentile(valueArray, npp.getPercent());
+
+					Integer totalGeneset = null;
+					// subtract the number of filtered out genes from total geneset count
+					// in the case that the user selected all genes/gene sets.
+					if (processableData.getTotalGeneSetCount() != null)
+						totalGeneset = processableData.getTotalGeneSetCount() - failCount;
+
+					res = NthPercentile.percentile(valueArray, npp.getPercent(), npp.isAllGenes(),
+							totalGeneset);
 
 				}
 				else if (method instanceof LowestGenesetParameters)
