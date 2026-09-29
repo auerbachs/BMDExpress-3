@@ -24,6 +24,7 @@ public class TPODAnalysisResults extends BMDExpressAnalysisDataSet implements Se
 	public static final String BMD_ENDPOINT_TYPE = "BMD Endpoint Type";
 	public static final String TPOD_METHOD = "TPOD Method";
 	public static final String EXPERIMENT_NAME = "Experiment Name";
+	public static final String TPOD_RECORD_LABEL = "TPOD Record Label";
 
 	private static final long serialVersionUID = 5135935005024600791L;
 	private String name;

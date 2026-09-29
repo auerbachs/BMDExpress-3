@@ -96,6 +96,7 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 			return;
 
 		row = new ArrayList<>();
+		row.add(experimentName + "/" + tpodMethod + "/" + bmdEndpointType);
 		row.add(experimentName);
 		row.add(tpodMethod);
 		row.add(bmdEndpointType);
@@ -117,6 +118,7 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 	{
 		List<String> header = new ArrayList<>();
 
+		header.add(TPODAnalysisResults.TPOD_RECORD_LABEL);
 		header.add(TPODAnalysisResults.EXPERIMENT_NAME);
 		header.add(TPODAnalysisResults.TPOD_METHOD);
 		header.add(TPODAnalysisResults.BMD_ENDPOINT_TYPE);

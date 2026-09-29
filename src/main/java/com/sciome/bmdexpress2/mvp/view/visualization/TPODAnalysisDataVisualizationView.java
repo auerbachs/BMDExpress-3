@@ -13,6 +13,7 @@ import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.charts.SciomeChartBase;
 import com.sciome.charts.data.ChartDataPack;
 import com.sciome.charts.jfree.SciomeAccumulationPlotJFree;
+import com.sciome.charts.jfree.SciomeRangePlotJFree;
 import com.sciome.charts.jfree.SciomeScatterChartJFree;
 import com.sciome.filter.DataFilterPack;
 
@@ -24,6 +25,7 @@ public class TPODAnalysisDataVisualizationView extends DataVisualizationView imp
 {
 
 	private static final String BMD_BMDL_SCATTER = "BMD vs BMDL Scatter Plots";
+	private final static String RANGE_PLOT = "Range Plot";
 
 	public TPODAnalysisDataVisualizationView()
 	{
@@ -47,6 +49,10 @@ public class TPODAnalysisDataVisualizationView extends DataVisualizationView imp
 						new ChartKey(TPODAnalysisResults.BMDU, null),
 						new ChartKey(TPODAnalysisResults.BMDL, null),
 						TPODAnalysisDataVisualizationView.this));
+
+		chartCache.put(RANGE_PLOT, new SciomeRangePlotJFree("Range Plot", new ArrayList<>(),
+				new ChartKey(TPODAnalysisResults.BMDL, null), new ChartKey(TPODAnalysisResults.BMD, null),
+				new ChartKey(TPODAnalysisResults.BMDU, null), TPODAnalysisDataVisualizationView.this));
 
 		chartCache.put("DEFAULT-Accumulation", new SciomeAccumulationPlotJFree("Accumulation",
 				new ArrayList<>(), new ChartKey(TPODAnalysisResults.BMD, null), 0.0, this));
@@ -82,6 +88,11 @@ public class TPODAnalysisDataVisualizationView extends DataVisualizationView imp
 			chartsList.add(chart4);
 
 		}
+		else if (chartKey.equals(RANGE_PLOT))
+		{
+			SciomeChartBase chart1 = chartCache.get(RANGE_PLOT);
+			chartsList.add(chart1);
+		}
 		else if (chartKey.equals(DEFAULT_CHARTS))
 		{
 			SciomeChartBase chart1 = chartCache.get("DEFAULT-Accumulation");
@@ -91,7 +102,7 @@ public class TPODAnalysisDataVisualizationView extends DataVisualizationView imp
 
 		List<ChartDataPack> chartDataPacks = presenter.getBMDAnalysisDataSetChartDataPack(results, pack,
 				getUsedChartKeys(), getMathedChartKeys(),
-				new ChartKey(TPODAnalysisResults.TPOD_METHOD, null));
+				new ChartKey(TPODAnalysisResults.TPOD_RECORD_LABEL, null));
 
 		showCharts(chartDataPacks);
 
@@ -104,6 +115,7 @@ public class TPODAnalysisDataVisualizationView extends DataVisualizationView imp
 		resultList.add(DEFAULT_CHARTS);
 
 		resultList.add(BMD_BMDL_SCATTER);
+		resultList.add(RANGE_PLOT);
 
 		return resultList;
 	}

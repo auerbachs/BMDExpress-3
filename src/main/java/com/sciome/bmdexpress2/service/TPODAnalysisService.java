@@ -269,30 +269,40 @@ public class TPODAnalysisService implements ITPODService
 				{
 					tpodResult.setBmd(res.getValue());
 
-					if (bmdEndpointType.equals(BMDEndpointType.BMD_10TH_PERCENTILE))
+					tpodResult.setBmdl(Double.NaN);
+					tpodResult.setBmdu(Double.NaN);
+
+					if (res.getIndex() < valueList.size())
 					{
-						tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlTenthPercentileTotalGenes());
-						tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduTenthPercentileTotalGenes());
-					}
-					else if (bmdEndpointType.equals(BMDEndpointType.BMD_5TH_PERCENTILE))
-					{
-						tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlFifthPercentileTotalGenes());
-						tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduFifthPercentileTotalGenes());
-					}
-					else if (bmdEndpointType.equals(BMDEndpointType.BMD_MEAN))
-					{
-						tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMean());
-						tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMean());
-					}
-					else if (bmdEndpointType.equals(BMDEndpointType.BMD_MEDIAN))
-					{
-						tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMedian());
-						tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMedian());
-					}
-					else if (bmdEndpointType.equals(BMDEndpointType.BMD_MINIMUM))
-					{
-						tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMinimum());
-						tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMinimum());
+						if (bmdEndpointType.equals(BMDEndpointType.BMD_10TH_PERCENTILE))
+						{
+							tpodResult.setBmdl(
+									valueList.get(res.getIndex()).getBmdlTenthPercentileTotalGenes());
+							tpodResult.setBmdu(
+									valueList.get(res.getIndex()).getBmduTenthPercentileTotalGenes());
+						}
+						else if (bmdEndpointType.equals(BMDEndpointType.BMD_5TH_PERCENTILE))
+						{
+							tpodResult.setBmdl(
+									valueList.get(res.getIndex()).getBmdlFifthPercentileTotalGenes());
+							tpodResult.setBmdu(
+									valueList.get(res.getIndex()).getBmduFifthPercentileTotalGenes());
+						}
+						else if (bmdEndpointType.equals(BMDEndpointType.BMD_MEAN))
+						{
+							tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMean());
+							tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMean());
+						}
+						else if (bmdEndpointType.equals(BMDEndpointType.BMD_MEDIAN))
+						{
+							tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMedian());
+							tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMedian());
+						}
+						else if (bmdEndpointType.equals(BMDEndpointType.BMD_MINIMUM))
+						{
+							tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMinimum());
+							tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMinimum());
+						}
 					}
 
 					resultList.add(tpodResult);
