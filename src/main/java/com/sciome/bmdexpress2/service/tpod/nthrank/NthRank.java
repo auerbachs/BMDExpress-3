@@ -23,7 +23,10 @@ public class NthRank
 			throw new IllegalArgumentException("values cannot be empty");
 
 		if (n <= 0 || n > sortedValues.length)
-			throw new IllegalArgumentException("n must be between 1 and " + sortedValues.length);
+		{
+			return new CalcResult(-1, Double.NaN);
+		}
+		// throw new IllegalArgumentException("n must be between 1 and " + sortedValues.length);
 
 		return new CalcResult(n - 1, sortedValues[n - 1]);
 	}

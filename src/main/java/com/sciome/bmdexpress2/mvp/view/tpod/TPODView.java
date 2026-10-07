@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.category.GeneLevelAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.LowestGenesetParameters;
@@ -107,6 +108,9 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	private List<CheckBox> bmdMetrics = new ArrayList<>();
 
 	private boolean isGeneSet;
+
+	boolean hasIndividualGene = false;
+	boolean hasGeneSet = false;
 
 	public TPODView()
 	{
@@ -272,6 +276,18 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			boolean isGeneSet)
 	{
 		this.tpodAnalysisEnum = tpodAnalysisEnum;
+
+		for (CategoryAnalysisResults result : catResults)
+		{
+			if (result.getCategoryAnalsyisResults().get(0) instanceof GeneLevelAnalysisResult)
+			{
+				hasIndividualGene = true;
+			}
+			else
+			{
+				hasGeneSet = true;
+			}
+		}
 
 		presenter.initData(catResults, tpodAnalysisEnum);
 		this.isGeneSet = isGeneSet;

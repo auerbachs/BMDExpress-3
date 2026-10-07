@@ -664,6 +664,7 @@ public class AnalyzeRunner
 
 		inputParameters.setBmdlCalculation(1);
 		inputParameters.setBmdCalculation(1);
+
 		inputParameters.setConstantVariance((bmdsConfig.getBmdsInputConfig().getConstantVariance()) ? 1 : 0);
 		// for simulation only?
 		// inputParameters.setRestirctPower((bmdsConfig.getBmdsInputConfig().getRestrictPower()) ? 1 : 0);
@@ -743,6 +744,9 @@ public class AnalyzeRunner
 
 		// figure out which models are going to be run
 		List<StatModel> modelsToRun = new ArrayList<>();
+		inputParameters.setRestrictHill(false);
+		inputParameters.setRestrictExp3(false);
+		inputParameters.setRestrictExp5(false);
 		for (BMDSModelConfig modelConfig : bmdsConfig.getModelConfigs())
 		{
 			if (modelConfig instanceof HillConfig)
@@ -753,6 +757,11 @@ public class AnalyzeRunner
 				// else
 				hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
 				modelsToRun.add(hillModel);
+
+				if (((HillConfig) modelConfig).isRestrictPower() != null
+						&& ((HillConfig) modelConfig).isRestrictPower())
+					inputParameters.setRestrictHill(((HillConfig) modelConfig).isRestrictPower());
+
 			}
 			if (modelConfig instanceof PowerConfig)
 			{
@@ -783,6 +792,17 @@ public class AnalyzeRunner
 
 				exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
 
+				Boolean isRestrictPower = ((ExponentialConfig) modelConfig).isRestrictPower();
+
+				if (isRestrictPower != null)
+				{
+					if (((ExponentialConfig) modelConfig).getExpModel().equals(3))
+						inputParameters.setRestrictExp3(isRestrictPower);
+					else if (((ExponentialConfig) modelConfig).getExpModel().equals(5))
+					{
+						inputParameters.setRestrictExp5(isRestrictPower);
+					}
+				}
 				// if (bmdsConfig.getMethod().equals(1))
 				// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
 				// else
@@ -926,6 +946,12 @@ public class AnalyzeRunner
 				HillModel hillModel = new HillModel();
 				hillModel.setVersion("ToxicR 3.x.x");
 				modelsToRun.add(hillModel);
+
+				Boolean isRestrictPower = ((HillConfig) modelConfig).isRestrictPower();
+
+				if (isRestrictPower != null)
+					inputParameters.setRestrictHill(isRestrictPower);
+
 			}
 			if (modelConfig instanceof PowerConfig)
 			{
@@ -947,6 +973,19 @@ public class AnalyzeRunner
 				exponentialModel.setVersion("ToxicR 3.x.x");
 				exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
 				modelsToRun.add(exponentialModel);
+
+				Boolean isRestrictPower = ((ExponentialConfig) modelConfig).isRestrictPower();
+
+				if (isRestrictPower != null)
+				{
+					if (((ExponentialConfig) modelConfig).getExpModel().equals(3))
+						inputParameters.setRestrictExp3(isRestrictPower);
+					else if (((ExponentialConfig) modelConfig).getExpModel().equals(5))
+					{
+						inputParameters.setRestrictExp5(isRestrictPower);
+					}
+				}
+
 			}
 
 		}

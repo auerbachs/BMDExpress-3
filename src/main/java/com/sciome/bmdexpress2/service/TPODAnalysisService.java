@@ -272,7 +272,7 @@ public class TPODAnalysisService implements ITPODService
 					tpodResult.setBmdl(Double.NaN);
 					tpodResult.setBmdu(Double.NaN);
 
-					if (res.getIndex() < valueList.size())
+					if (res.getIndex() < valueList.size() && res.getIndex() >= 0)
 					{
 						if (bmdEndpointType.equals(BMDEndpointType.BMD_10TH_PERCENTILE))
 						{
