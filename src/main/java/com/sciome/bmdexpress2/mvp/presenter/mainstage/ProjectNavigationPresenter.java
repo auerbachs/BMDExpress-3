@@ -22,6 +22,7 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.mvp.presenter.presenterbases.ServicePresenterBase;
 import com.sciome.bmdexpress2.mvp.view.mainstage.ProjectNavigationView;
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.IProjectNavigationView;
@@ -65,6 +66,11 @@ import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataSelectedForPro
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.ShowBMDExpressDataAnalysisInSeparateWindow;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.ShowDoseResponseExperimentInSeparateWindowEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataCombinedSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataLoadedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedForProcessingEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataLoadedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataSelectedEvent;
@@ -140,6 +146,8 @@ public class ProjectNavigationPresenter
 			getEventBus().post(new CategoryAnalysisDataSelectedEvent((CategoryAnalysisResults) dataset));
 		else if (dataset instanceof BMDResult)
 			getEventBus().post(new BMDAnalysisDataSelectedEvent((BMDResult) dataset));
+		else if (dataset instanceof TPODAnalysisResults)
+			getEventBus().post(new TPODAnalysisDataSelectedEvent((TPODAnalysisResults) dataset));
 
 	}
 
@@ -169,6 +177,8 @@ public class ProjectNavigationPresenter
 		else if (dataset instanceof CategoryAnalysisResults)
 			getEventBus().post(
 					new CategoryAnalysisDataSelectedForProcessingEvent((CategoryAnalysisResults) dataset));
+		else if (dataset instanceof TPODAnalysisResults)
+			getEventBus().post(new TPODAnalysisDataSelectedForProcessingEvent((TPODAnalysisResults) dataset));
 		else if (dataset instanceof BMDResult)
 			getEventBus().post(new BMDAnalysisDataSelectedForProcessingEvent((BMDResult) dataset));
 
@@ -308,6 +318,17 @@ public class ProjectNavigationPresenter
 		currentProject.getCategoryAnalysisResults().add(event.GetPayload());
 	}
 
+	@Subscribe
+	public void onLoadTPODAnalysis(TPODAnalysisDataLoadedEvent event)
+	{
+		if (event.GetPayload() == null)
+			return;
+		// first make sure the name is unique
+		currentProject.giveBMDAnalysisUniqueName(event.GetPayload(), event.GetPayload().getName());
+		getView().addTPODAnalysis(event.GetPayload(), true);
+		currentProject.getTpodAnalysisResults().add(event.GetPayload());
+	}
+
 	/*
 	 * some one asked to do a oneway anova. So let's tell the view about it so it can figure out what objects
 	 * are selected and do the right thing
@@ -398,6 +419,12 @@ public class ProjectNavigationPresenter
 		getView().performCategoryAnalysis(event.GetPayload());
 	}
 
+	@Subscribe
+	public void onTPODAnalysisRequest(TPODAnalysisRequestEvent event)
+	{
+		getView().performTPODAnalysis(event.GetPayload());
+	}
+
 	/*
 	 * a project has been loaded. must update view.
 	 */
@@ -451,6 +478,11 @@ public class ProjectNavigationPresenter
 		for (CurveFitPrefilterResults cfpr : bmdProject.getCurveFitPrefilterResults())
 		{
 			getView().addCurveFitPrefilterAnalysis(cfpr, false);
+		}
+
+		for (TPODAnalysisResults tpod : bmdProject.getTpodAnalysisResults())
+		{
+			getView().addTPODAnalysis(tpod, false);
 		}
 
 		getView().expandTree();
@@ -740,6 +772,8 @@ public class ProjectNavigationPresenter
 			this.currentProject.getDoseResponseExperiments().remove(catAnalysisResults);
 		else if (catAnalysisResults instanceof CurveFitPrefilterResults)
 			this.currentProject.getCurveFitPrefilterResults().remove(catAnalysisResults);
+		else if (catAnalysisResults instanceof TPODAnalysisResults)
+			this.currentProject.getTpodAnalysisResults().remove(catAnalysisResults);
 
 	}
 
@@ -964,6 +998,8 @@ public class ProjectNavigationPresenter
 			getEventBus().post(new OriogenDataCombinedSelectedEvent(combined));
 		else if (selectedItems.get(0) instanceof CategoryAnalysisResults)
 			getEventBus().post(new CategoryAnalysisDataCombinedSelectedEvent(combined));
+		else if (selectedItems.get(0) instanceof TPODAnalysisResults)
+			getEventBus().post(new TPODAnalysisDataCombinedSelectedEvent(combined));
 		else if (selectedItems.get(0) instanceof BMDResult)
 			getEventBus().post(new BMDAnalysisDataCombinedSelectedEvent(combined));
 		else if (selectedItems.get(0) instanceof DoseResponseExperiment)
@@ -988,6 +1024,7 @@ public class ProjectNavigationPresenter
 		classesOfInterest.add(OriogenResults.class);
 		classesOfInterest.add(DoseResponseExperiment.class);
 		classesOfInterest.add(CurveFitPrefilterResults.class);
+		classesOfInterest.add(TPODAnalysisResults.class);
 		for (Class c : classesOfInterest)
 			classesOfInterestMapCount.put(c, 0);
 		for (Object obj : selectedItems)
@@ -1027,6 +1064,8 @@ public class ProjectNavigationPresenter
 			getEventBus().post(new OriogenDataSelectedForProcessingEvent(null));
 		else if (selectedItems.get(0) instanceof CategoryAnalysisResults)
 			getEventBus().post(new CategoryAnalysisDataSelectedForProcessingEvent(null));
+		else if (selectedItems.get(0) instanceof TPODAnalysisResults)
+			getEventBus().post(new TPODAnalysisDataSelectedForProcessingEvent(null));
 		else if (selectedItems.get(0) instanceof BMDResult)
 			getEventBus().post(new BMDAnalysisDataSelectedForProcessingEvent(null));
 		else if (selectedItems.get(0) instanceof DoseResponseExperiment)

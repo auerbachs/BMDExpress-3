@@ -18,6 +18,7 @@
 package com.sciome.bmdexpress2.util.visualizations.curvefit;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.FieldPosition;
@@ -42,6 +43,7 @@ import org.jfree.chart.fx.ChartViewer;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.Range;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -105,6 +107,9 @@ public class JFreeCurve
 				true, // tooltips
 				false // urls
 		);
+
+		LegendTitle legend = chart.getLegend();
+		legend.setItemFont(new Font("SansSerif", Font.BOLD, 36));
 		// configure default renderer options
 
 		XYPlot plot = (XYPlot) chart.getPlot();

@@ -1,5 +1,6 @@
 package com.sciome.bmdexpress2.mvp.model.category;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,6 +34,8 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 	private AnalysisInfo analysisInfo;
 
 	private BMDResult bmdResult;
+
+	private Integer totalGeneSetCount = null;
 
 	private transient List<String> columnHeader;
 
@@ -219,6 +222,16 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 		this.analysisInfo = analysisInfo;
 	}
 
+	public Integer getTotalGeneSetCount()
+	{
+		return totalGeneSetCount;
+	}
+
+	public void setTotalGeneSetCount(Integer totalGeneSetCount)
+	{
+		this.totalGeneSetCount = totalGeneSetCount;
+	}
+
 	/*
 	 * fill the column header for table display or file export purposes.
 	 */
@@ -400,6 +413,40 @@ public class CategoryAnalysisResults extends BMDExpressAnalysisDataSet implement
 		for (CategoryAnalysisResult cResult : getCategoryAnalsyisResults())
 		{
 			cResult.getRow();
+		}
+
+	}
+
+	/*
+	 * perform post deserialization logic
+	 */
+	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		in.defaultReadObject();
+
+		// if totalGeneSetCount is null, try to parse it from the
+		// analysis notes.
+		if (this.totalGeneSetCount == null)
+		{
+
+			// not pretty but need to parse this from the strings.
+
+			for (String note : this.analysisInfo.getNotes())
+			{
+				if (note.contains("# Gene sets platform – no gene set size restriction:"))
+				{
+					String[] vals = note.split(":");
+					if (vals.length > 1)
+					{
+						try
+						{
+							this.totalGeneSetCount = Integer.valueOf(vals[1]);
+						}
+						catch (Exception e)
+						{}
+					}
+				}
+			}
 		}
 
 	}

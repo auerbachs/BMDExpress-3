@@ -51,8 +51,18 @@ public class ToxicRJNI
 			boolean isMLE, boolean isLogNormal, boolean isIncreasing, boolean isFast, boolean isPolyMonotonic)
 			throws JsonMappingException, JsonProcessingException
 	{
+		// default power constraints...pow 1, hill 1, exp3 1, exp5 constant variance(0), non-constant(1)
+		return runContinuous(model, Y, doses, bmdType, BMR, isMLE, isLogNormal, isIncreasing, isFast,
+				isPolyMonotonic, 1, 1, 1, 0);
+	}
 
-		PriorsMLE pr = new PriorsMLE(isLogNormal, isIncreasing, isPolyMonotonic);
+	public ContinuousResult runContinuous(int model, double[] Y, double[] doses, int bmdType, double BMR,
+			boolean isMLE, boolean isNcv, boolean isIncreasing, boolean isFast, boolean isPolyMonotonic,
+			double powerConstraint, double hillConstraint, double exp3Constraint, double exp5Constraint)
+			throws JsonMappingException, JsonProcessingException
+	{
+
+		PriorsMLE pr = new PriorsMLE(isNcv, isIncreasing, isPolyMonotonic);
 		double[] sd = new double[10];
 		double[] n_group = new double[10];
 		int modelToRun = getModelToRun(model);
@@ -77,11 +87,11 @@ public class ToxicRJNI
 
 	// entry point to run continuous
 	public NormalDeviance calculateDeviance(int model, double[] Y, double[] doses, int bmdType, double BMR,
-			boolean isMLE, boolean isLogNormal, boolean isIncreasing)
+			boolean isMLE, boolean isNcv, boolean isIncreasing)
 			throws JsonMappingException, JsonProcessingException
 	{
 
-		PriorsMLE pr = new PriorsMLE(isLogNormal, isIncreasing, false);
+		PriorsMLE pr = new PriorsMLE(isNcv, isIncreasing, false);
 		double[] sd = new double[10];
 		double[] n_group = new double[10];
 		int modelToRun = getModelToRun(model);
@@ -116,7 +126,16 @@ public class ToxicRJNI
 
 	// entry point to run coninuous model averaging
 	public ContinuousResultMA runContinuousMA(int[] models, double[] Y, double[] doses, int bmdType,
-			double BMR, boolean isMLE, boolean isLogNormal, boolean isIncreasing, boolean isFast)
+			double BMR, boolean isMLE, boolean isNcv, boolean isIncreasing, boolean isFast)
+			throws JsonMappingException, JsonProcessingException
+	{
+		return runContinuousMA(models, Y, doses, bmdType, BMR, isMLE, isNcv, isIncreasing, isFast, 0, 0,
+				0, 0);
+	}
+
+	public ContinuousResultMA runContinuousMA(int[] models, double[] Y, double[] doses, int bmdType,
+			double BMR, boolean isMLE, boolean isNcv, boolean isIncreasing, boolean isFast,
+			double powerConstraint, double hillConstraint, double exp3Constraint, double exp5Constraint)
 			throws JsonMappingException, JsonProcessingException
 	{
 
@@ -128,7 +147,8 @@ public class ToxicRJNI
 		// System.out.println();
 		double lv = Math.log(StatUtils.variance(Y));
 
-		PriorsMA pr = new PriorsMA(isLogNormal, lv);
+		PriorsMA pr = new PriorsMA(isNcv, lv, powerConstraint, hillConstraint, exp3Constraint,
+				exp5Constraint);
 		int[] disttypes = new int[models.length];
 		for (int i = 0; i < models.length; i++)
 			disttypes[i] = pr.getDistType();
@@ -155,10 +175,20 @@ public class ToxicRJNI
 
 	// entry point to run continuous mcmc
 	public ContinuousMCMCResult runContinuousMCMC(int model, double[] Y, double[] doses, int bmdType,
-			double BMR, int samples, int burnnin, boolean isMLE, boolean isLogNormal, boolean isIncreasing,
+			double BMR, int samples, int burnnin, boolean isMLE, boolean isNcv, boolean isIncreasing,
 			boolean isFast) throws JsonMappingException, JsonProcessingException
 	{
-		PriorsMA pr = new PriorsMA(isLogNormal, Math.log(StatUtils.variance(Y)));
+		return runContinuousMCMC(model, Y, doses, bmdType, BMR, samples, burnnin, isMLE, isNcv,
+				isIncreasing, isFast, 0, 0, 0, 0);
+	}
+
+	public ContinuousMCMCResult runContinuousMCMC(int model, double[] Y, double[] doses, int bmdType,
+			double BMR, int samples, int burnnin, boolean isMLE, boolean isLogNormal, boolean isIncreasing,
+			boolean isFast, double powerConstraint, double hillConstraint, double exp3Constraint,
+			double exp5Constraint) throws JsonMappingException, JsonProcessingException
+	{
+		PriorsMA pr = new PriorsMA(isLogNormal, Math.log(StatUtils.variance(Y)), powerConstraint,
+				hillConstraint, exp3Constraint, exp5Constraint);
 		double[] sd = new double[10];
 		double[] n_group = new double[10];
 		int modelToRun = getModelToRun(model);
@@ -183,11 +213,22 @@ public class ToxicRJNI
 	}
 
 	// entry point to run coninuous mcmc model averaging
+
 	public ContinuousMCMCMAResult runContinuousMCMCMA(int[] models, double[] Y, double[] doses, int bmdType,
 			double BMR, int samples, int burnnin, boolean isMLE, boolean isLogNormal, boolean isIncreasing,
 			boolean isFast) throws JsonMappingException, JsonProcessingException
 	{
-		PriorsMA pr = new PriorsMA(isLogNormal, Math.log(StatUtils.variance(Y)));
+		return runContinuousMCMCMA(models, Y, doses, bmdType, BMR, samples, burnnin, isMLE, isLogNormal,
+				isIncreasing, isFast, 0, 0, 0, 0);
+	}
+
+	public ContinuousMCMCMAResult runContinuousMCMCMA(int[] models, double[] Y, double[] doses, int bmdType,
+			double BMR, int samples, int burnnin, boolean isMLE, boolean isLogNormal, boolean isIncreasing,
+			boolean isFast, double powerConstraint, double hillConstraint, double exp3Constraint,
+			double exp5Constraint) throws JsonMappingException, JsonProcessingException
+	{
+		PriorsMA pr = new PriorsMA(isLogNormal, Math.log(StatUtils.variance(Y)), powerConstraint,
+				hillConstraint, exp3Constraint, exp5Constraint);
 		int[] disttypes = new int[models.length];
 		for (int i = 0; i < models.length; i++)
 			disttypes[i] = pr.getDistType();

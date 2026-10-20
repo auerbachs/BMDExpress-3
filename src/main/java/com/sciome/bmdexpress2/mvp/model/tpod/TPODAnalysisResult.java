@@ -1,0 +1,144 @@
+package com.sciome.bmdexpress2.mvp.model.tpod;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sciome.bmdexpress2.mvp.model.BMDExpressAnalysisRow;
+
+public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Serializable
+{
+
+	private static final long serialVersionUID = 5656264289893604853L;
+	private TPODMethod tpodMethod;
+	private BMDEndpointType bmdEndpointType;
+	private Double bmd;
+	private Double bmdl;
+	private Double bmdu;
+	private String geneSetName;
+
+	// row data for the table view.
+	protected transient List<Object> row;
+
+	// converting the object data to row data will require lots of string buffers.
+	// let them all use the same object to reduce instantiation
+	private transient StringBuffer stringBuffer = new StringBuffer();
+
+	public TPODMethod getTpodMethod()
+	{
+		return tpodMethod;
+	}
+
+	public void setTpodMethod(TPODMethod tpodMethod)
+	{
+		this.tpodMethod = tpodMethod;
+	}
+
+	public BMDEndpointType getBmdEndpointType()
+	{
+		return bmdEndpointType;
+	}
+
+	public void setBmdEndpointType(BMDEndpointType bmdEndpointType)
+	{
+		this.bmdEndpointType = bmdEndpointType;
+	}
+
+	public Double getBmd()
+	{
+		return bmd;
+	}
+
+	public void setBmd(Double bmd)
+	{
+		this.bmd = bmd;
+	}
+
+	public Double getBmdl()
+	{
+		return bmdl;
+	}
+
+	public void setBmdl(Double bmdl)
+	{
+		this.bmdl = bmdl;
+	}
+
+	public Double getBmdu()
+	{
+		return bmdu;
+	}
+
+	public void setBmdu(Double bmdu)
+	{
+		this.bmdu = bmdu;
+	}
+
+	public String getGeneSetName()
+	{
+		return geneSetName;
+	}
+
+	public void setGeneSetName(String geneSetName)
+	{
+		this.geneSetName = geneSetName;
+	}
+
+	@Override
+	public Object getObject()
+	{
+		return this;
+	}
+
+	@Override
+	@JsonIgnore
+	public List<Object> getRow()
+	{
+		if (row == null || row.size() == 0)
+			createRowData("");
+		return row;
+	}
+
+	protected void createRowData(String experimentName)
+	{
+		stringBuffer = getStringBuffer();
+		if (row != null)
+			return;
+
+		row = new ArrayList<>();
+		row.add(experimentName + "/" + tpodMethod + "/" + bmdEndpointType);
+		row.add(experimentName);
+		row.add(tpodMethod);
+		row.add(bmdEndpointType);
+		row.add(bmd);
+		row.add(bmdl);
+		row.add(bmdu);
+		row.add(geneSetName);
+
+	}
+
+	private StringBuffer getStringBuffer()
+	{
+		if (this.stringBuffer == null)
+			stringBuffer = new StringBuffer();
+
+		return stringBuffer;
+	}
+
+	public List<String> generateColumnHeader()
+	{
+		List<String> header = new ArrayList<>();
+
+		header.add(TPODAnalysisResults.TPOD_RECORD_LABEL);
+		header.add(TPODAnalysisResults.EXPERIMENT_NAME);
+		header.add(TPODAnalysisResults.TPOD_METHOD);
+		header.add(TPODAnalysisResults.BMD_ENDPOINT_TYPE);
+		header.add(TPODAnalysisResults.BMD);
+		header.add(TPODAnalysisResults.BMDL);
+		header.add(TPODAnalysisResults.BMDU);
+		header.add(TPODAnalysisResults.GENESETNAME);
+		return header;
+	}
+
+}

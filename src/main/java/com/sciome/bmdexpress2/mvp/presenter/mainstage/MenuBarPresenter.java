@@ -10,6 +10,7 @@ import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.presenter.presenterbases.PresenterBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.IMenuBarView;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
+import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.BMDAnalysisDataSelectedForProcessingEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.BMDAnalysisGCurvePRequestEvent;
@@ -26,6 +27,8 @@ import com.sciome.bmdexpress2.shared.eventbus.analysis.OneWayANOVADataSelectedFo
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OneWayANOVARequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataSelectedForProcessingEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenRequestEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedForProcessingEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataSelectedForProcessingEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendRequestEvent;
 import com.sciome.bmdexpress2.shared.eventbus.project.AddProjectRequestEvent;
@@ -138,6 +141,21 @@ public class MenuBarPresenter extends PresenterBase<IMenuBarView>
 
 	}
 
+	/*
+	 * tpod request
+	 */
+
+	/*
+	 * request for someone to perform category analysis
+	 */
+	public void performTPODAnalysius(TPODAnalysisEnum tpodAnalysisType)
+	{
+		// fire off an event to tell somebody do this. MenuBar view doesn't have any information to figure out
+		// which dataset to analyze
+		getEventBus().post(new TPODAnalysisRequestEvent(tpodAnalysisType));
+
+	}
+
 	public void addProject(File selectedFile)
 	{
 		this.getEventBus().post(new AddProjectRequestEvent(selectedFile));
@@ -233,6 +251,13 @@ public class MenuBarPresenter extends PresenterBase<IMenuBarView>
 	public void onCategoryAnalysisSelected(CategoryAnalysisDataSelectedForProcessingEvent event)
 	{
 		getView().functionalCategoryDataSelected();
+	}
+
+	@Subscribe
+	@AllowConcurrentEvents
+	public void onTPODAnalysisSelected(TPODAnalysisDataSelectedForProcessingEvent event)
+	{
+		getView().tPodDataSelected();
 	}
 
 	@Subscribe

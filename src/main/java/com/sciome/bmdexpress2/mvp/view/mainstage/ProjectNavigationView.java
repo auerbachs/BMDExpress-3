@@ -30,6 +30,7 @@ import com.sciome.bmdexpress2.mvp.model.probe.ProbeResponse;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
 import com.sciome.bmdexpress2.mvp.model.stat.HillResult;
 import com.sciome.bmdexpress2.mvp.model.stat.StatResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.mvp.presenter.mainstage.ProjectNavigationPresenter;
 import com.sciome.bmdexpress2.mvp.view.bmdanalysis.BMDAnalysisGCurvePView;
 import com.sciome.bmdexpress2.mvp.view.bmdanalysis.BMDAnalysisView;
@@ -38,12 +39,14 @@ import com.sciome.bmdexpress2.mvp.view.prefilter.CurveFitPrefilterView;
 import com.sciome.bmdexpress2.mvp.view.prefilter.OneWayANOVAView;
 import com.sciome.bmdexpress2.mvp.view.prefilter.OriogenView;
 import com.sciome.bmdexpress2.mvp.view.prefilter.WilliamsTrendView;
+import com.sciome.bmdexpress2.mvp.view.tpod.TPODView;
 import com.sciome.bmdexpress2.mvp.viewinterface.mainstage.IProjectNavigationView;
 import com.sciome.bmdexpress2.service.ProjectNavigationService;
 import com.sciome.bmdexpress2.serviceInterface.IProjectNavigationService;
 import com.sciome.bmdexpress2.shared.BMDExpressFXUtils;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
+import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
 import com.sciome.bmdexpress2.util.MatrixData;
 import com.sciome.bmdexpress2.util.ViewUtilities;
@@ -94,6 +97,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private final String ORIOGEN_DATA = "Oriogen";
 	private final String BENCHMARK_DATA = "Benchmark Dose Analyses";
 	private final String CATEGORY_DATA = "Functional Classifications";
+
+	private final String TPOD_DATA = "TPOD/CMC Determinations";
 
 	private final String RENAME = "Rename";
 	private final String REMOVE = "Remove";
@@ -221,6 +226,12 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		else if (selectedItem instanceof BMDResult)
 		{
 			showBMDAnalysisContextMenu((BMDResult) selectedItem).show(
+					this.analysisCheckList.getScene().getWindow(), mouseEvent.getScreenX(),
+					mouseEvent.getScreenY());
+		}
+		else if (selectedItem instanceof TPODAnalysisResults)
+		{
+			showTPODAnalysisContextMenu((TPODAnalysisResults) selectedItem).show(
 					this.analysisCheckList.getScene().getWindow(), mouseEvent.getScreenX(),
 					mouseEvent.getScreenY());
 		}
@@ -375,6 +386,18 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	{
 
 		addDataSetToList(CATEGORY_DATA, categoryAnalysisResults);
+
+	}
+
+	/*
+	 * put the tpod analysis into the tree.
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void addTPODAnalysis(TPODAnalysisResults tpAnalysisResults, boolean selectIt)
+	{
+
+		addDataSetToList(TPOD_DATA, tpAnalysisResults);
 
 	}
 
@@ -1175,6 +1198,17 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 
 	}
 
+	private ContextMenu showTPODAnalysisContextMenu(TPODAnalysisResults tpodResults)
+	{
+		ContextMenu ctxMenu = new ContextMenu();
+
+		ctxMenu.getItems().addAll(getCommonMenuItems());
+		setContextMenuCommonHandlers("TPOD Analysis", ctxMenu, tpodResults);
+
+		return ctxMenu;
+
+	}
+
 	/*
 	 * deal with handling common menu items for BMDAnalysisDataSet objects
 	 */
@@ -1746,6 +1780,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 		dataSetMap.put(ORIOGEN_DATA, new ArrayList<>());
 		dataSetMap.put(BENCHMARK_DATA, new ArrayList<>());
 		dataSetMap.put(CATEGORY_DATA, new ArrayList<>());
+		dataSetMap.put(TPOD_DATA, new ArrayList<>());
+
 	}
 
 	private void refreshAnalysisList(String forDataGroup)
@@ -1761,7 +1797,7 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 	private void initializeDataGroupCombo()
 	{
 		dataGroupCombo.getItems().addAll(Arrays.asList(EXPRESSION_DATA, ONEWAY_DATA, WILLIAMS_DATA,
-				CURVE_FIT_PREFILTER_DATA, ORIOGEN_DATA, BENCHMARK_DATA, CATEGORY_DATA));
+				CURVE_FIT_PREFILTER_DATA, ORIOGEN_DATA, BENCHMARK_DATA, CATEGORY_DATA, TPOD_DATA));
 
 		dataGroupCombo.setValue(EXPRESSION_DATA);
 
@@ -1859,6 +1895,8 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 			dataSetMap.get(BENCHMARK_DATA).remove(selectedItem);
 		else if (selectedItem instanceof CategoryAnalysisResults)
 			dataSetMap.get(CATEGORY_DATA).remove(selectedItem);
+		else if (selectedItem instanceof TPODAnalysisResults)
+			dataSetMap.get(TPOD_DATA).remove(selectedItem);
 
 	}
 
@@ -1942,6 +1980,69 @@ public class ProjectNavigationView extends VBox implements IProjectNavigationVie
 					analysisCheckList.getStyleClass().remove("textboxfilterchanged");
 				});
 			});
+		});
+
+	}
+
+	@Override
+	public void performTPODAnalysis(TPODAnalysisEnum tpodAnalysisType)
+	{
+		List<BMDExpressAnalysisDataSet> datasets = getSelectedItems();
+		List<CategoryAnalysisResults> selectedItems = new ArrayList<>();
+		for (BMDExpressAnalysisDataSet selectedItem : datasets)
+		{
+			if (selectedItem instanceof CategoryAnalysisResults)
+			{
+				// this will fill out all the rows. not a good solution,
+				// but needed to ensure fold change values and other prefilter values.
+				CategoryAnalysisResults processableData = (CategoryAnalysisResults) selectedItem;
+				processableData.getColumnHeader();
+				selectedItems.add(processableData);
+			}
+		}
+
+		if (selectedItems.size() == 0)
+		{
+			return;
+		}
+
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run()
+			{
+
+				// currently the category analsyis request can be one of 3 views.
+				String view = "tpod.fxml";
+
+				try
+				{
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + view));
+
+					Stage stage = BMDExpressFXUtils.getInstance().generateStage("");
+
+					stage.setTitle("tPOD/CMC Determination");
+
+					stage.setScene(new Scene((BorderPane) loader.load()));
+					TPODView viewCode = loader.<TPODView> getController();
+					viewCode.initData(selectedItems, tpodAnalysisType);
+					stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+						@Override
+						public void handle(WindowEvent event)
+						{
+							viewCode.close();
+						}
+					});
+					stage.sizeToScene();
+					stage.show();
+
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+
+			}
 		});
 
 	}

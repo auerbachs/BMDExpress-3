@@ -1,5 +1,6 @@
 package com.sciome.bmdexpress2.shared.component.expression;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.SymbolAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -206,6 +208,9 @@ public class TissueContaminationChartComponent extends VBox
 		XYPlot plot = (XYPlot) chart.getPlot();
 
 		plot.setDomainAxis(xAxis);
+
+		LegendTitle legend = chart.getLegend();
+		legend.setItemFont(new Font("SansSerif", Font.BOLD, 36));
 
 		return chart;
 

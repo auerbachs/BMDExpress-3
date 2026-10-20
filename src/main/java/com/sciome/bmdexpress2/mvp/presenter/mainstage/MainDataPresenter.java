@@ -18,6 +18,8 @@ import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataCombinedSelect
 import com.sciome.bmdexpress2.shared.eventbus.analysis.OriogenDataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.ShowBMDExpressDataAnalysisInSeparateWindow;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.ShowDoseResponseExperimentInSeparateWindowEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataCombinedSelectedEvent;
+import com.sciome.bmdexpress2.shared.eventbus.analysis.TPODAnalysisDataSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataCombinedSelectedEvent;
 import com.sciome.bmdexpress2.shared.eventbus.analysis.WilliamsTrendDataSelectedEvent;
 
@@ -117,6 +119,18 @@ public class MainDataPresenter extends PresenterBase<IMainDataView>
 	public void onSelectCategoryAnalysisResult(CategoryAnalysisDataCombinedSelectedEvent event)
 	{
 		getView().loadCategoryAnalysis(event.GetPayload());
+	}
+
+	@Subscribe
+	public void onSelectTPODAnalysisResult(TPODAnalysisDataSelectedEvent event)
+	{
+		getView().loadTPODAnalysis(event.GetPayload());
+	}
+
+	@Subscribe
+	public void onSelectTPODAnalysisResult(TPODAnalysisDataCombinedSelectedEvent event)
+	{
+		getView().loadTPODAnalysis(event.GetPayload());
 	}
 
 	@Subscribe

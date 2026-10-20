@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,15 +37,34 @@ import com.sciome.bmdexpress2.commandline.config.prefilter.CurveFitPrefilterConf
 import com.sciome.bmdexpress2.commandline.config.prefilter.OriogenConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.PrefilterConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.WilliamsConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.GeneSetConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.IndividualGeneConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.LCRDConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.LowestConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.NthPercentileConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.NthRankConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODMethod;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.category.GeneLevelAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.prefilter.CurveFitPrefilterResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
+import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.LowestGenesetParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputFilter;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
@@ -185,6 +205,15 @@ public class AnalyzeRunner
 			System.out.println("Performing Category Analysis");
 			for (CategoryConfig catConfig : catConfigs)
 				doCatAnalysis(catConfig);
+		}
+
+		// 6: get all the tpod analysis configs
+		List<TPODConfig> tpodConfigs = runConfig.getTpodAnalysisConfigs();
+		if (tpodConfigs != null)
+		{
+			System.out.println("Performing tPOD Analysis");
+			for (TPODConfig tpodConfig : tpodConfigs)
+				doTPODAnalysis(tpodConfig);
 		}
 
 		// 6. see if this needs exporting to json
@@ -664,6 +693,7 @@ public class AnalyzeRunner
 
 		inputParameters.setBmdlCalculation(1);
 		inputParameters.setBmdCalculation(1);
+
 		inputParameters.setConstantVariance((bmdsConfig.getBmdsInputConfig().getConstantVariance()) ? 1 : 0);
 		// for simulation only?
 		// inputParameters.setRestirctPower((bmdsConfig.getBmdsInputConfig().getRestrictPower()) ? 1 : 0);
@@ -743,6 +773,9 @@ public class AnalyzeRunner
 
 		// figure out which models are going to be run
 		List<StatModel> modelsToRun = new ArrayList<>();
+		inputParameters.setRestrictHill(false);
+		inputParameters.setRestrictExp3(false);
+		inputParameters.setRestrictExp5(false);
 		for (BMDSModelConfig modelConfig : bmdsConfig.getModelConfigs())
 		{
 			if (modelConfig instanceof HillConfig)
@@ -753,6 +786,11 @@ public class AnalyzeRunner
 				// else
 				hillModel.setVersion("Hill EPA BMDS MLE ToxicR");
 				modelsToRun.add(hillModel);
+
+				if (((HillConfig) modelConfig).isRestrictPower() != null
+						&& ((HillConfig) modelConfig).isRestrictPower())
+					inputParameters.setRestrictHill(((HillConfig) modelConfig).isRestrictPower());
+
 			}
 			if (modelConfig instanceof PowerConfig)
 			{
@@ -783,6 +821,17 @@ public class AnalyzeRunner
 
 				exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
 
+				Boolean isRestrictPower = ((ExponentialConfig) modelConfig).isRestrictPower();
+
+				if (isRestrictPower != null)
+				{
+					if (((ExponentialConfig) modelConfig).getExpModel().equals(3))
+						inputParameters.setRestrictExp3(isRestrictPower);
+					else if (((ExponentialConfig) modelConfig).getExpModel().equals(5))
+					{
+						inputParameters.setRestrictExp5(isRestrictPower);
+					}
+				}
 				// if (bmdsConfig.getMethod().equals(1))
 				// exponentialModel.setVersion(BMDExpressProperties.getInstance().getExponentialVersion());
 				// else
@@ -926,6 +975,12 @@ public class AnalyzeRunner
 				HillModel hillModel = new HillModel();
 				hillModel.setVersion("ToxicR 3.x.x");
 				modelsToRun.add(hillModel);
+
+				Boolean isRestrictPower = ((HillConfig) modelConfig).isRestrictPower();
+
+				if (isRestrictPower != null)
+					inputParameters.setRestrictHill(isRestrictPower);
+
 			}
 			if (modelConfig instanceof PowerConfig)
 			{
@@ -947,6 +1002,19 @@ public class AnalyzeRunner
 				exponentialModel.setVersion("ToxicR 3.x.x");
 				exponentialModel.setOption(((ExponentialConfig) modelConfig).getExpModel());
 				modelsToRun.add(exponentialModel);
+
+				Boolean isRestrictPower = ((ExponentialConfig) modelConfig).isRestrictPower();
+
+				if (isRestrictPower != null)
+				{
+					if (((ExponentialConfig) modelConfig).getExpModel().equals(3))
+						inputParameters.setRestrictExp3(isRestrictPower);
+					else if (((ExponentialConfig) modelConfig).getExpModel().equals(5))
+					{
+						inputParameters.setRestrictExp5(isRestrictPower);
+					}
+				}
+
 			}
 
 		}
@@ -1359,6 +1427,184 @@ public class AnalyzeRunner
 							expressionConfig.getHasHeaders()));
 		}
 
+	}
+
+	// Tpod analysis
+	/*
+	 * perform category analysis based on the category configuration.
+	 */
+	private void doTPODAnalysis(TPODConfig tpodConfig) throws Exception
+	{
+
+		if (veryverbose)
+			System.out.println(getJsonForObject(tpodConfig));
+
+		TPODInputParameters params = new TPODInputParameters();
+
+		String analysisSpecificMessage = "";
+
+		String type = "Gene Set";
+		boolean isGeneSetConfig = true;
+		if (tpodConfig instanceof GeneSetConfig)
+		{
+			type = "Gene Set";
+		}
+		else if (tpodConfig instanceof IndividualGeneConfig)
+		{
+			isGeneSetConfig = false;
+
+			type = "Individual Gene";
+		}
+
+		if (tpodConfig.getInputName() != null)
+			System.out.println(type + " tPOD analysis on " + tpodConfig.getInputName());
+		else
+			System.out.println(type + " tPOD analysis");
+
+		System.out.println(analysisSpecificMessage);
+
+		List<CategoryAnalysisResults> catResultsToRun = new ArrayList<>();
+		for (CategoryAnalysisResults result : project.getCategoryAnalysisResults())
+			if (tpodConfig.getInputName() == null)
+				catResultsToRun.add(result);
+			else if (result.getName().equalsIgnoreCase(tpodConfig.getInputName()))
+				catResultsToRun.add(result);
+
+		List<TPODMethodParameter> tpodMethodParameters = new ArrayList<>();
+		for (TPODMethod method : tpodConfig.getTpodMethodConfig().getMethods())
+		{
+			TPODMethodParameter tmp = null;
+			if (method instanceof LCRDConfig)
+			{
+				LCRDConfig lc = (LCRDConfig) method;
+				LCRDParameters lp = new LCRDParameters();
+				lp.setRunLength(lc.getRunLength());
+				lp.setSpacingRatio(lc.getSpacingRatio());
+				tmp = lp;
+			}
+			else if (method instanceof NthRankConfig)
+			{
+				NthRankConfig nc = (NthRankConfig) method;
+				NthRankParameters np = new NthRankParameters();
+				np.setRank(nc.getRank());
+				tmp = np;
+			}
+			else if (method instanceof NthPercentileConfig)
+			{
+				NthPercentileConfig npc = (NthPercentileConfig) method;
+				NthPercentParameters npp = new NthPercentParameters();
+				npp.setAllGenes(npc.getAllGeneSetsPlatform());
+				npp.setPercent(npc.getPercentile());
+				tmp = npp;
+			}
+			else if (method instanceof LowestConfig)
+			{
+				LowestConfig lc = (LowestConfig) method;
+				LowestGenesetParameters lgp = new LowestGenesetParameters();
+				tmp = lgp;
+
+			}
+
+			if (tmp != null)
+				tpodMethodParameters.add(tmp);
+		}
+		params.setMethodParameters(tpodMethodParameters);
+
+		if (tpodConfig instanceof GeneSetConfig)
+		{
+
+			GeneSetConfig gsConfig = (GeneSetConfig) tpodConfig;
+			List<BMDEndpointType> endpointTypes = new ArrayList<>();
+
+			for (String bmdmetric : gsConfig.getBmdMetricTypes())
+			{
+				if (bmdmetric.equals(GeneSetConfig.BMD10th))
+				{
+					endpointTypes.add(BMDEndpointType.BMD_10TH_PERCENTILE);
+				}
+				else if (bmdmetric.equals(GeneSetConfig.BMD5th))
+				{
+					endpointTypes.add(BMDEndpointType.BMD_5TH_PERCENTILE);
+				}
+				else if (bmdmetric.equals(GeneSetConfig.BMDMEAN))
+				{
+					endpointTypes.add(BMDEndpointType.BMD_MEAN);
+				}
+				else if (bmdmetric.equals(GeneSetConfig.BMDMEDIAN))
+				{
+					endpointTypes.add(BMDEndpointType.BMD_MEDIAN);
+				}
+				else if (bmdmetric.equals(GeneSetConfig.BMDMIN))
+				{
+					endpointTypes.add(BMDEndpointType.BMD_MINIMUM);
+				}
+			}
+			params.setBmdEndpointTypes(endpointTypes);
+
+			List<TPODInputFilter> inputFilters = new ArrayList<>();
+
+			if (gsConfig.getFishersExactRightPValue() != null)
+			{
+				inputFilters.add(new TPODInputFilter(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
+						gsConfig.getFishersExactRightPValue()));
+			}
+			if (gsConfig.getOverallDirection() != null)
+			{
+				inputFilters.add(new TPODInputFilter(TPODAnalysisFilter.OVERALLDIRECTION,
+						gsConfig.getOverallDirection()));
+			}
+			if (gsConfig.getGenesThatPassedFilters() != null)
+			{
+				inputFilters.add(new TPODInputFilter(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
+						gsConfig.getGenesThatPassedFilters()));
+
+			}
+			if (gsConfig.getPercentage() != null)
+			{
+				inputFilters
+						.add(new TPODInputFilter(TPODAnalysisFilter.PERCENTAGE, gsConfig.getPercentage()));
+			}
+			params.setInputFilters(inputFilters);
+
+		}
+
+		if (tpodConfig instanceof IndividualGeneConfig)
+		{
+			params.setBmdEndpointTypes(Arrays.asList(BMDEndpointType.BMD_MEDIAN));
+		}
+
+		for (CategoryAnalysisResults catResult : catResultsToRun)
+		{
+
+			System.out.println(catResult.getName());
+			boolean catIsGeneSet = true;
+			if (catResult.getCategoryAnalsyisResults().size() > 0
+					&& catResult.getCategoryAnalsyisResults().get(0) instanceof GeneLevelAnalysisResult)
+			{
+				catIsGeneSet = false;
+			}
+			if (isGeneSetConfig && !catIsGeneSet)
+			{
+				System.out.println(
+						catResult.getName() + " is Gene Level and config is for gene set...skippping");
+				continue;
+			}
+			if (!isGeneSetConfig && catIsGeneSet)
+			{
+				System.out.println(
+						catResult.getName() + " is Gene Set and config is for individual gene...skippping");
+				continue;
+			}
+
+			TPODAnalysisResults tpodResults = new TPODAnalysisRunner().runTPODAnalysis(catResult, params,
+					params);
+
+			if (tpodConfig.getOutputName() != null)
+				tpodResults.setName(tpodConfig.getOutputName());
+			else
+				project.giveBMDAnalysisUniqueName(tpodResults, tpodResults.getName());
+			project.getTpodAnalysisResults().add(tpodResults);
+		}
 	}
 
 	// deserialize the json file and return the RunConfig object

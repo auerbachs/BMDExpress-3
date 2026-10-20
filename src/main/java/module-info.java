@@ -35,12 +35,14 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.view.mainstage.dataview to javafx.fxml;
 	opens com.sciome.bmdexpress2.mvp.view.visualization to javafx.fxml;
 	opens com.sciome.bmdexpress2.mvp.view.categorization to javafx.fxml;
+	opens com.sciome.bmdexpress2.mvp.view.tpod to javafx.fxml;
 	opens com.sciome.bmdexpress2.util.bmds.shared to com.fasterxml.jackson.databind;
 	opens com.toxicR.model to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.prefilter to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.probe to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.category to com.fasterxml.jackson.databind;
+	opens com.sciome.bmdexpress2.mvp.model.tpod to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.category.identifier to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.category.ivive to com.fasterxml.jackson.databind;
 	opens com.sciome.bmdexpress2.mvp.model.chip to com.fasterxml.jackson.databind;
@@ -55,6 +57,7 @@ module com.sciome.bmdexpress2
 	opens com.sciome.bmdexpress2.mvp.presenter.prefilter to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.bmdanalysis to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.categorization to com.google.common;
+	opens com.sciome.bmdexpress2.mvp.presenter.tpod to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.visualization to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.mainstage.dataview to com.google.common;
 	opens com.sciome.bmdexpress2.mvp.presenter.mainstage to com.google.common;
@@ -73,6 +76,7 @@ module com.sciome.bmdexpress2
 	exports com.sciome.bmdexpress2.mvp.model;
 	exports com.sciome.bmdexpress2.mvp.model.stat;
 	exports com.sciome.bmdexpress2.mvp.model.category;
+	exports com.sciome.bmdexpress2.mvp.model.tpod;
 	exports com.sciome.bmdexpress2.mvp.model.category.identifier;
 	exports com.sciome.bmdexpress2.mvp.model.info;
 	exports com.sciome.bmdexpress2.mvp.view.visualization;

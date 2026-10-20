@@ -225,6 +225,9 @@ public class BMDSTool implements IModelProgressUpdater, IProbeIndexGetter
 			notes.add("Use Wald (Fast BMD): " + inputParameters.isFast());
 
 		notes.add("Step Function Calculation Threshold: " + inputParameters.getStepFunctionThreshold());
+		notes.add("Restrict Hill exponent: " + inputParameters.isRestrictHill());
+		notes.add("Restrict Exp3 exponent: " + inputParameters.isRestrictExp3());
+		notes.add("Restrict Exp5 exponent: " + inputParameters.isRestrictExp5());
 
 		analysisInfo.setNotes(notes);
 

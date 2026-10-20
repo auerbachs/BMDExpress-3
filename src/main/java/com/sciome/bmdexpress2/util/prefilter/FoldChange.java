@@ -7,13 +7,13 @@ import com.sciome.bmdexpress2.mvp.model.probe.Treatment;
 
 public class FoldChange
 {
-	List<Treatment>		treatments;
+	List<Treatment> treatments;
 
 	// indexes of like dose'd doseresponses
-	List<List<Integer>>	indexBuckets		= new ArrayList<>();
-	boolean				isLogTransformation	= true;
-	double				baseValue;
-	List<Float>			foldChanges			= new ArrayList<>();
+	List<List<Integer>> indexBuckets = new ArrayList<>();
+	boolean isLogTransformation = true;
+	double baseValue;
+	List<Float> foldChanges = new ArrayList<>();
 
 	public FoldChange(List<Treatment> treatments, boolean isLogTransformation, double baseValue)
 	{
@@ -71,8 +71,8 @@ public class FoldChange
 		}
 		for (Float floatValue : floatsToAverage)
 		{
-			//sum += (float) Math.pow(baseValue, (double) (floatValue));
-			sum+=floatValue;
+			// sum += (float) Math.pow(baseValue, (double) (floatValue));
+			sum += floatValue;
 		}
 
 		return sum / floatsToAverage.size();
@@ -97,9 +97,6 @@ public class FoldChange
 		}
 		Float max = Math.max(averageA, averageB);
 		Float min = Math.min(averageA, averageB);
-		float antilogFoldChange =(float)(sign * max /  min);
-		float v1 = (float)(sign * Math.pow(baseValue, (double) (max - min)));
-		float v2 = (float)(sign * Math.pow(baseValue, (double) (max)) / Math.pow(baseValue, (double) (min)));
 		if (isLogTransformation)
 		{
 			return (float) (sign * Math.pow(baseValue, (double) (max - min)));

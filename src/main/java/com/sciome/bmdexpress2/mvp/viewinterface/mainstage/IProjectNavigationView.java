@@ -11,7 +11,9 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
+import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.util.MatrixData;
 import com.sciome.bmdexpress2.util.annotation.FileAnnotation;
 
@@ -67,5 +69,9 @@ public interface IProjectNavigationView
 	public void performBMDAnalysisGCurveP();
 
 	public void performBMDAnalysisToxicR();
+
+	public void performTPODAnalysis(TPODAnalysisEnum getPayload);
+
+	void addTPODAnalysis(TPODAnalysisResults tpAnalysisResults, boolean selectIt);
 
 }

@@ -82,6 +82,13 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	private CheckBox funlCheckBox;
 
 	@FXML
+	private CheckBox restrictExp3CheckBox;
+	@FXML
+	private CheckBox restrictExp5CheckBox;
+	@FXML
+	private CheckBox restrictHillCheckBox;
+
+	@FXML
 	private CheckBox monotonicPolyCheckBox;
 
 	@FXML
@@ -1059,6 +1066,11 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 	{
 		ModelInputParameters inputParameters = new ModelInputParameters();
 		inputParameters.setPolyMonotonic(this.monotonicPolyCheckBox.isSelected());
+
+		inputParameters.setRestrictExp3(this.restrictExp3CheckBox.isSelected());
+		inputParameters.setRestrictExp5(this.restrictExp5CheckBox.isSelected());
+		inputParameters.setRestrictHill(this.restrictHillCheckBox.isSelected());
+
 		boolean isModelAveraging = false;
 		if (this.toxicRMCMCMAMethodRadio.isSelected() || this.toxicRMAMethodRadio.isSelected())
 			isModelAveraging = true;
@@ -1108,12 +1120,6 @@ public class BMDAnalysisView extends BMDExpressViewBase implements IBMDAnalysisV
 					.setConstantVariance((this.varianceType.getValue().equals(CONSTANT_VARIANCE)) ? 1 : 0);
 			// for simulation only?
 			// ßinputParameters.setRestirctPower(restrictPowerComboBox.getSelectionModel().getSelectedIndex());
-
-			// restrict hill has been tried, but to no avail. we will default restrict hill to 1. but we have
-			// code
-			// if in the future we want to turn this on
-			// inputParameters.setRestrictHill(restrictHillComboBox.getSelectionModel().getSelectedIndex());
-			inputParameters.setRestrictHill(1);
 
 			if (inputParameters.getConstantVariance() == 0)
 			{
