@@ -338,8 +338,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void initData(List<CategoryAnalysisResults> catResults, TPODAnalysisEnum tpodAnalysisEnum,
-			boolean isGeneSet)
+	public void initData(List<CategoryAnalysisResults> catResults, TPODAnalysisEnum tpodAnalysisEnum)
 	{
 		this.tpodAnalysisEnum = tpodAnalysisEnum;
 

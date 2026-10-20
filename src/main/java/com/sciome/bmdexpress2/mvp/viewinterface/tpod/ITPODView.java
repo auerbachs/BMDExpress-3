@@ -26,7 +26,6 @@ public interface ITPODView
 
 	public void enableButtons();
 
-	void initData(List<CategoryAnalysisResults> catResults, TPODAnalysisEnum catAnalysisEnum,
-			boolean isGeneSet);
+	void initData(List<CategoryAnalysisResults> catResults, TPODAnalysisEnum catAnalysisEnum);
 
 }
