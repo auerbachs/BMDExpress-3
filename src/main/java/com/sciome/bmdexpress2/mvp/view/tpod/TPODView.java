@@ -15,6 +15,8 @@ import com.sciome.bmdexpress2.mvp.model.tpod.LowestGenesetParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthPercentParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.NthRankParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisFilter;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODGeneSetInput;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODIndividualGeneInput;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputFilter;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
@@ -24,16 +26,15 @@ import com.sciome.bmdexpress2.mvp.view.BMDExpressViewBase;
 import com.sciome.bmdexpress2.mvp.viewinterface.tpod.ITPODView;
 import com.sciome.bmdexpress2.service.TPODAnalysisService;
 import com.sciome.bmdexpress2.serviceInterface.ITPODService;
+import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.TPODAnalysisEnum;
 import com.sciome.bmdexpress2.shared.eventbus.BMDExpressEventBus;
-import com.sciome.bmdexpress2.util.categoryanalysis.CategoryAnalysisParameters;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -123,9 +124,15 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	boolean hasIndividualGene = false;
 	boolean hasGeneSet = false;
 
+	private TPODGeneSetInput tpodGeneSetInput;
+	private TPODIndividualGeneInput tpodIndividualGeneInput;
+
 	public TPODView()
 	{
 		this(BMDExpressEventBus.getInstance());
+
+		this.tpodIndividualGeneInput = BMDExpressProperties.getInstance().getTpodIndividualGeneInput();
+		this.tpodGeneSetInput = BMDExpressProperties.getInstance().getTpodGeneSetInput();
 	}
 
 	/*
@@ -273,6 +280,11 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	public void handle_saveSettingsButtonPressed(ActionEvent event)
 	{
 
+		saveSettings();
+
+		BMDExpressProperties.getInstance().saveTPODInput(tpodGeneSetInput);
+		BMDExpressProperties.getInstance().saveTPODInput(tpodIndividualGeneInput);
+
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle("Saved Settings");
 		alert.setHeaderText(null);
@@ -331,45 +343,258 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 		initializeTPODMethods();
 
+		loadSettings();
+
 	}
 
-	/*
-	 * set up the parameters object to send to the presenter.
-	 */
-	private CategoryAnalysisParameters gatherParameters()
+	private void saveSettings()
 	{
-		CategoryAnalysisParameters params = new CategoryAnalysisParameters();
 
-		return params;
+		for (TPODMethodCard methodCard : this.tpodGeneLevelMethods)
+		{
+			if (methodCard.method.equals(TPODMethod.LCRD))
+			{
+				tpodIndividualGeneInput.setLcrdMethod(methodCard.isEnabled());
+				tpodIndividualGeneInput.setRunLength(methodCard.getRunLength());
+				tpodIndividualGeneInput.setSpacingRatio(methodCard.getSpacingRatio());
+			}
+
+			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				tpodIndividualGeneInput.setNthPercentileMethod(methodCard.isEnabled());
+				tpodIndividualGeneInput.setPercent(methodCard.getPercent());
+				tpodIndividualGeneInput.setAllGeneSets(methodCard.getAllGenes());
+
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_RANK))
+			{
+
+				tpodIndividualGeneInput.setNthRankMethod(methodCard.isEnabled());
+				tpodIndividualGeneInput.setRank(methodCard.getRank());
+			}
+			else if (methodCard.method.equals(TPODMethod.FIRST_GENESET))
+			{
+				LowestGenesetParameters lgs = new LowestGenesetParameters();
+				tpodIndividualGeneInput.setLowestGeneSetMethod(methodCard.isEnabled());
+			}
+			else
+				continue;
+		}
+
+		for (TPODMethodCard methodCard : this.tpodMethods)
+		{
+			if (methodCard.method.equals(TPODMethod.LCRD))
+			{
+				tpodGeneSetInput.setLcrdMethod(methodCard.isEnabled());
+				tpodGeneSetInput.setRunLength(methodCard.getRunLength());
+				tpodGeneSetInput.setSpacingRatio(methodCard.getSpacingRatio());
+			}
+
+			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				tpodGeneSetInput.setNthPercentileMethod(methodCard.isEnabled());
+				tpodGeneSetInput.setPercent(methodCard.getPercent());
+				tpodGeneSetInput.setAllGeneSets(methodCard.getAllGenes());
+
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_RANK))
+			{
+
+				tpodGeneSetInput.setNthRankMethod(methodCard.isEnabled());
+				tpodGeneSetInput.setRank(methodCard.getRank());
+			}
+			else if (methodCard.method.equals(TPODMethod.FIRST_GENESET))
+			{
+				tpodGeneSetInput.setLowestGeneSetMethod(methodCard.isEnabled());
+			}
+			else
+				continue;
+		}
+
+		for (TPODFilterCard filterCard : this.tpodFilters)
+		{
+			if (filterCard.filter.equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
+			{
+				tpodGeneSetInput.setFishersExactRightPFilter(filterCard.isEnabled());
+
+				tpodGeneSetInput.setFishersExactRightPFilterValue(filterCard.getFishersRightField());
+			}
+
+			else if (filterCard.filter.equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
+			{
+				tpodGeneSetInput.setGenesThatPassedAllFilters(filterCard.isEnabled());
+				tpodGeneSetInput.setGenesThatPassedAllFiltersValue(filterCard.getGenesThatPassed());
+			}
+			else if (filterCard.filter.equals(TPODAnalysisFilter.PERCENTAGE))
+			{
+				tpodGeneSetInput.setPercentageFilter(filterCard.isEnabled());
+				tpodGeneSetInput.setPercentageFilterValue(filterCard.getPercent());
+			}
+			else if (filterCard.filter.equals(TPODAnalysisFilter.OVERALLDIRECTION))
+			{
+
+				tpodGeneSetInput.setOverallDirectionFilter(filterCard.isEnabled());
+				tpodGeneSetInput.setOverallDirectionFilterValue(filterCard.getOverallDirection());
+
+			}
+			else
+				continue;
+
+		}
+
+		for (CheckBox cb : bmdMetrics)
+		{
+
+			BMDEndpointType type = (BMDEndpointType) cb.getUserData();
+			if (type.equals(BMDEndpointType.BMD_10TH_PERCENTILE))
+			{
+				this.tpodGeneSetInput.setBmd10th(cb.isSelected());
+			}
+			else if (type.equals(BMDEndpointType.BMD_5TH_PERCENTILE))
+			{
+				this.tpodGeneSetInput.setBmd5th(cb.isSelected());
+			}
+			else if (type.equals(BMDEndpointType.BMD_MEAN))
+			{
+				this.tpodGeneSetInput.setBmdMean(cb.isSelected());
+			}
+			else if (type.equals(BMDEndpointType.BMD_MEDIAN))
+			{
+				this.tpodGeneSetInput.setBmdMedian(cb.isSelected());
+			}
+			else if (type.equals(BMDEndpointType.BMD_MINIMUM))
+			{
+				this.tpodGeneSetInput.setBmdMin(cb.isSelected());
+			}
+
+		}
+
 	}
 
-	/*
-	 * hide certain input parameters
-	 * 
-	 * 
-	 */
-	private void hideParameter(String parameterLabel)
+	private void loadSettings()
 	{
-		CheckBox node2Hide = labelToNode.get(parameterLabel);
-		if (node2Hide == null)
-			return;
-		node2Hide.setSelected(false);
-		node2Hide.getParent().setVisible(false);
-		node2Hide.getParent().setManaged(false);
-	}
 
-	/*
-	 * show certain input parameters
-	 * 
-	 * 
-	 */
-	private void showParameter(String parameterLabel)
-	{
-		Node node2Hide = labelToNode.get(parameterLabel);
-		if (node2Hide == null)
-			return;
-		node2Hide.getParent().setVisible(true);
-		node2Hide.getParent().setManaged(true);
+		for (TPODMethodCard methodCard : this.tpodGeneLevelMethods)
+		{
+			if (methodCard.method.equals(TPODMethod.LCRD))
+			{
+				methodCard.setEnabled(tpodIndividualGeneInput.getLcrdMethod());
+				methodCard.setRunLength(tpodIndividualGeneInput.getRunLength());
+				methodCard.setSpacingRatio(tpodIndividualGeneInput.getSpacingRatio());
+
+			}
+
+			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				methodCard.setEnabled(tpodIndividualGeneInput.getNthPercentileMethod());
+				methodCard.setPercent(tpodIndividualGeneInput.getPercent());
+				methodCard.setAllGenes(tpodIndividualGeneInput.getAllGeneSets());
+
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_RANK))
+			{
+				methodCard.setEnabled(tpodIndividualGeneInput.getNthRankMethod());
+				methodCard.setRank(tpodIndividualGeneInput.getRank());
+
+			}
+			else if (methodCard.method.equals(TPODMethod.FIRST_GENESET))
+			{
+				methodCard.setEnabled(tpodIndividualGeneInput.getLowestGeneSetMethod());
+			}
+			else
+				continue;
+		}
+
+		for (TPODMethodCard methodCard : this.tpodMethods)
+		{
+			if (methodCard.method.equals(TPODMethod.LCRD))
+			{
+				methodCard.setEnabled(tpodGeneSetInput.getLcrdMethod());
+				methodCard.setRunLength(tpodGeneSetInput.getRunLength());
+				methodCard.setSpacingRatio(tpodGeneSetInput.getSpacingRatio());
+
+			}
+
+			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				methodCard.setEnabled(tpodGeneSetInput.getNthPercentileMethod());
+				methodCard.setPercent(tpodGeneSetInput.getPercent());
+				methodCard.setAllGenes(tpodGeneSetInput.getAllGeneSets());
+
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_RANK))
+			{
+				methodCard.setEnabled(tpodGeneSetInput.getNthRankMethod());
+				methodCard.setRank(tpodGeneSetInput.getRank());
+
+			}
+			else if (methodCard.method.equals(TPODMethod.FIRST_GENESET))
+			{
+				methodCard.setEnabled(tpodGeneSetInput.getLowestGeneSetMethod());
+			}
+			else
+				continue;
+		}
+
+		for (TPODFilterCard filterCard : this.tpodFilters)
+		{
+			if (filterCard.filter.equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
+			{
+				filterCard.setEnabled(tpodGeneSetInput.getFishersExactRightPFilter());
+				filterCard.setFishersRightField(tpodGeneSetInput.getFishersExactRightPFilterValue());
+
+			}
+
+			else if (filterCard.filter.equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
+			{
+				filterCard.setEnabled(tpodGeneSetInput.getGenesThatPassedAllFilters());
+				filterCard.setGenesThatPassed(tpodGeneSetInput.getGenesThatPassedAllFiltersValue());
+
+			}
+			else if (filterCard.filter.equals(TPODAnalysisFilter.PERCENTAGE))
+			{
+				filterCard.setEnabled(tpodGeneSetInput.getPercentageFilter());
+				filterCard.setPercent(tpodGeneSetInput.getPercentageFilterValue());
+
+			}
+			else if (filterCard.filter.equals(TPODAnalysisFilter.OVERALLDIRECTION))
+			{
+				filterCard.setEnabled(tpodGeneSetInput.getOverallDirectionFilter());
+				filterCard.setOverallDirection(tpodGeneSetInput.getOverallDirectionFilterValue());
+
+			}
+			else
+				continue;
+
+		}
+
+		for (CheckBox cb : bmdMetrics)
+		{
+
+			BMDEndpointType type = (BMDEndpointType) cb.getUserData();
+			if (type.equals(BMDEndpointType.BMD_10TH_PERCENTILE))
+			{
+				cb.setSelected(tpodGeneSetInput.getBmd10th());
+			}
+			else if (type.equals(BMDEndpointType.BMD_5TH_PERCENTILE))
+			{
+				cb.setSelected(tpodGeneSetInput.getBmd5th());
+			}
+			else if (type.equals(BMDEndpointType.BMD_MEAN))
+			{
+				cb.setSelected(tpodGeneSetInput.getBmdMean());
+			}
+			else if (type.equals(BMDEndpointType.BMD_MEDIAN))
+			{
+				cb.setSelected(tpodGeneSetInput.getBmdMedian());
+			}
+			else if (type.equals(BMDEndpointType.BMD_MINIMUM))
+			{
+				cb.setSelected(tpodGeneSetInput.getBmdMin());
+			}
+
+		}
+
 	}
 
 	@Override
@@ -601,6 +826,11 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return enabledCheck.isSelected();
 		}
 
+		public void setEnabled(Boolean val)
+		{
+			enabledCheck.setSelected(val);
+		}
+
 		public TPODMethod getMethod()
 		{
 			return method;
@@ -611,9 +841,20 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return Double.parseDouble(spacingRatioField.getText());
 		}
 
+		public void setSpacingRatio(Double val)
+		{
+			spacingRatioField.setText(String.valueOf(val));
+		}
+
 		public int getRunLength()
 		{
 			return Integer.parseInt(runLengthField.getText());
+
+		}
+
+		public void setRunLength(Integer val)
+		{
+			runLengthField.setText(String.valueOf(val));
 		}
 
 		public int getRank()
@@ -621,14 +862,29 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return Integer.parseInt(rankField.getText());
 		}
 
+		public void setRank(Integer val)
+		{
+			rankField.setText(String.valueOf(val));
+		}
+
 		public double getPercent()
 		{
 			return Double.parseDouble(percentField.getText());
 		}
 
+		public void setPercent(Double val)
+		{
+			percentField.setText(String.valueOf(val));
+		}
+
 		public boolean getAllGenes()
 		{
 			return this.percentAllGenesCheckBox.isSelected();
+		}
+
+		public void setAllGenes(Boolean val)
+		{
+			percentAllGenesCheckBox.setSelected(val);
 		}
 
 		private String getMethodLabel(TPODMethod method)
@@ -777,6 +1033,11 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return enabledCheck.isSelected();
 		}
 
+		public void setEnabled(Boolean val)
+		{
+			enabledCheck.setSelected(val);
+		}
+
 		public TPODAnalysisFilter getFilter()
 		{
 			return filter;
@@ -787,14 +1048,30 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			return Double.parseDouble(fishersRightField.getText());
 		}
 
+		public void setFishersRightField(Double val)
+		{
+			fishersRightField.setText(String.valueOf(val));
+		}
+
 		public int getGenesThatPassed()
 		{
 			return Integer.parseInt(genesThatPassedField.getText());
 		}
 
+		public void setGenesThatPassed(Integer val)
+		{
+			genesThatPassedField.setText(String.valueOf(val));
+		}
+
 		public double getPercent()
 		{
 			return Double.parseDouble(percentField.getText());
+		}
+
+		public void setPercent(Double val)
+		{
+			percentField.setText(String.valueOf(val));
+
 		}
 
 		public int getOverallDirection()
@@ -803,6 +1080,14 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 				return 1;
 
 			return -1;
+		}
+
+		public void setOverallDirection(Integer val)
+		{
+			if (val.equals(1))
+				upRadio.setSelected(true);
+			else
+				downRadio.setSelected(true);
 		}
 
 	}

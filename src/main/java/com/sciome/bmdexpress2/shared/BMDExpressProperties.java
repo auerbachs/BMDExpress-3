@@ -96,8 +96,8 @@ public class BMDExpressProperties
 	private DefinedCategoryInput definedCategoryInput;
 	private GeneCategoryInput geneCategoryInput;
 
-	private TPODGeneSetInput geneSetInput;
-	private TPODIndividualGeneInput individualGeneInput;
+	private TPODGeneSetInput tpodGeneSetInput;
+	private TPODIndividualGeneInput tpodIndividualGeneInput;
 
 	private String processInformation;
 
@@ -173,6 +173,11 @@ public class BMDExpressProperties
 
 		File curveFitPrefilterInputFile = new File(
 				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "curveFitPrefilter.json");
+
+		File geneSetTpodInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + "GeneSettpodInput.json");
+		File individualGeneTpodInputFile = new File(BMDExpressConstants.getInstance().BMDBASEPATH
+				+ File.separator + "IndividualGenetpodInput.json");
 
 		if (curveFitPrefilterInputFile.exists())
 		{
@@ -280,6 +285,29 @@ public class BMDExpressProperties
 			gCurvePInput = new GCurvePInput();
 			mapper.writerWithDefaultPrettyPrinter().writeValue(gCurvePInputFile, gCurvePInput);
 		}
+
+		if (geneSetTpodInputFile.exists())
+		{
+			this.tpodGeneSetInput = mapper.readValue(geneSetTpodInputFile, TPODGeneSetInput.class);
+		}
+		else
+		{
+			tpodGeneSetInput = new TPODGeneSetInput();
+			mapper.writerWithDefaultPrettyPrinter().writeValue(geneSetTpodInputFile, tpodGeneSetInput);
+		}
+
+		if (individualGeneTpodInputFile.exists())
+		{
+			this.tpodIndividualGeneInput = mapper.readValue(individualGeneTpodInputFile,
+					TPODIndividualGeneInput.class);
+		}
+		else
+		{
+			tpodIndividualGeneInput = new TPODIndividualGeneInput();
+			mapper.writerWithDefaultPrettyPrinter().writeValue(individualGeneTpodInputFile,
+					tpodIndividualGeneInput);
+		}
+
 	}
 
 	public void saveWilliamsInput(WilliamsTrendInput input)
@@ -482,12 +510,12 @@ public class BMDExpressProperties
 	{
 		if (tpodInput instanceof TPODIndividualGeneInput)
 		{
-			this.individualGeneInput = (TPODIndividualGeneInput) tpodInput;
+			this.tpodIndividualGeneInput = (TPODIndividualGeneInput) tpodInput;
 			return "IndividualGene";
 		}
 		else if (tpodInput instanceof TPODGeneSetInput)
 		{
-			this.geneSetInput = (TPODGeneSetInput) tpodInput;
+			this.tpodGeneSetInput = (TPODGeneSetInput) tpodInput;
 			return "GeneSet";
 		}
 
@@ -1228,6 +1256,26 @@ public class BMDExpressProperties
 	public PathwayCategoryInput getPathwayCategoryInput()
 	{
 		return pathwayCategoryInput;
+	}
+
+	public TPODGeneSetInput getTpodGeneSetInput()
+	{
+		return tpodGeneSetInput;
+	}
+
+	public void setTpodGeneSetInput(TPODGeneSetInput tpodGeneSetInput)
+	{
+		this.tpodGeneSetInput = tpodGeneSetInput;
+	}
+
+	public TPODIndividualGeneInput getTpodIndividualGeneInput()
+	{
+		return tpodIndividualGeneInput;
+	}
+
+	public void setTpodIndividualGeneInput(TPODIndividualGeneInput tpodIndividualGeneInput)
+	{
+		this.tpodIndividualGeneInput = tpodIndividualGeneInput;
 	}
 
 	public TableInformation getTableInformation()
