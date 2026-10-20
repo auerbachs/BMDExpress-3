@@ -48,6 +48,9 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendInput;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDInput;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDMAInput;
 import com.sciome.bmdexpress2.mvp.model.stat.GCurvePInput;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODGeneSetInput;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODIndividualGeneInput;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInput;
 import com.sciome.filter.DataFilter;
 import com.sciome.filter.DataFilterPack;
 
@@ -92,6 +95,9 @@ public class BMDExpressProperties
 	private PathwayCategoryInput pathwayCategoryInput;
 	private DefinedCategoryInput definedCategoryInput;
 	private GeneCategoryInput geneCategoryInput;
+
+	private TPODGeneSetInput geneSetInput;
+	private TPODIndividualGeneInput individualGeneInput;
 
 	private String processInformation;
 
@@ -409,6 +415,25 @@ public class BMDExpressProperties
 		}
 	}
 
+	public void saveTPODInput(TPODInput input)
+	{
+
+		String prefix = getTPODInputPrefixAndAssignProperty(input);
+
+		File tpodInputFile = new File(
+				BMDExpressConstants.getInstance().BMDBASEPATH + File.separator + prefix + "tpodInput.json");
+		ObjectMapper mapper = new ObjectMapper();
+
+		try
+		{
+			mapper.writerWithDefaultPrettyPrinter().writeValue(tpodInputFile, input);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public void saveVisibleCategoryInput(CategoryInput input)
 	{
 		String prefix = getCategoryInputPrefixAndAssignProperty(input);
@@ -447,6 +472,23 @@ public class BMDExpressProperties
 		{
 			this.pathwayCategoryInput = (PathwayCategoryInput) categoryInput;
 			return "PATHWAY";
+		}
+
+		else
+			return "";
+	}
+
+	private String getTPODInputPrefixAndAssignProperty(TPODInput tpodInput)
+	{
+		if (tpodInput instanceof TPODIndividualGeneInput)
+		{
+			this.individualGeneInput = (TPODIndividualGeneInput) tpodInput;
+			return "IndividualGene";
+		}
+		else if (tpodInput instanceof TPODGeneSetInput)
+		{
+			this.geneSetInput = (TPODGeneSetInput) tpodInput;
+			return "GeneSet";
 		}
 
 		else
