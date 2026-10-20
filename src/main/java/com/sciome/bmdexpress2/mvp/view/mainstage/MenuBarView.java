@@ -80,9 +80,6 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 	@FXML
 	private MenuItem tPODGeneSetMenuItem;
 
-	@FXML
-	private MenuItem tPODIndividualGeneMenuItem;
-
 	MenuBarPresenter presenter;
 
 	public MenuBarView()
@@ -404,11 +401,6 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 
 	}
 
-	public void handle_tPODIndividualGene(ActionEvent event)
-	{
-		presenter.performTPODAnalysius(TPODAnalysisEnum.GENE_LEVEL);
-	}
-
 	/*
 	 * show the tutorial
 	 */
@@ -630,7 +622,6 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 	private void toggleTPODMenuItems(boolean disabled)
 	{
 		this.tPODGeneSetMenuItem.setDisable(disabled);
-		this.tPODIndividualGeneMenuItem.setDisable(disabled);
 	}
 
 	@Override
@@ -649,7 +640,6 @@ public class MenuBarView extends BMDExpressViewBase implements IMenuBarView, Ini
 		this.pathwayAnalysesMenuItem.setDisable(true);
 		this.definedCategoryAnalysesMenuItem.setDisable(true);
 		this.tPODGeneSetMenuItem.setDisable(true);
-		this.tPODIndividualGeneMenuItem.setDisable(true);
 
 	}
 

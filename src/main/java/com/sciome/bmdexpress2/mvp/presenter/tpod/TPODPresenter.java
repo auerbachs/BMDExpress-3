@@ -51,7 +51,7 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 	}
 
 	@SuppressWarnings("restriction")
-	public void startAnalyses(TPODInputParameters params)
+	public void startAnalyses(TPODInputParameters paramsGeneSet, TPODInputParameters paramsGeneLevel)
 	{
 
 		// send this to the bmdanalysis tool so some progress can be updated.
@@ -79,8 +79,8 @@ public class TPODPresenter extends ServicePresenterBase<ITPODView, ITPODService>
 						});
 						try
 						{
-							TPODAnalysisResults tpodResults = getService().tpodAnalysis(catResult, params,
-									me);
+							TPODAnalysisResults tpodResults = getService().tpodAnalysis(catResult,
+									paramsGeneSet, paramsGeneLevel, me);
 
 							Platform.runLater(() ->
 							{

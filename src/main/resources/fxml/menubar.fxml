@@ -72,8 +72,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="tPOD/CMC Determination">
                <items>
-                  <MenuItem fx:id="tPODGeneSetMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_tPODGeneSet" text="Gene Set" />
-                  <MenuItem fx:id="tPODIndividualGeneMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_tPODIndividualGene" text="Individual Gene" />
+                  <MenuItem fx:id="tPODGeneSetMenuItem" disable="true" mnemonicParsing="false" onAction="#handle_tPODGeneSet" text="tPOD Analysis" />
                </items>
             </Menu>
          </items>

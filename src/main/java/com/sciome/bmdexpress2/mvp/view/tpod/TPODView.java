@@ -42,6 +42,8 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
@@ -79,9 +81,6 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	private BorderPane filtersBorderPane;
 
 	@FXML
-	private BorderPane tpodMethodsBorderPane;
-
-	@FXML
 	private FlowPane bmdMetricsLayout;
 
 	@FXML
@@ -91,17 +90,29 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 	private FlowPane methodsLayout;
 
 	@FXML
+	private FlowPane methodsGeneLevelLayout;
+
+	@FXML
 	private Button startButton;
 	@FXML
 	private Button closeButton;
 	@FXML
 	private Button saveSettingsButton;
 
+	@FXML
+	private Tab geneSetTab;
+	@FXML
+	private Tab geneLevelTab;
+
+	@FXML
+	private TabPane tabPane;
+
 	TextField stringAutoCompleteSelector;
 
 	private Map<String, CheckBox> labelToNode = new HashMap<>();
 
 	private List<TPODMethodCard> tpodMethods = new ArrayList<>();
+	private List<TPODMethodCard> tpodGeneLevelMethods = new ArrayList<>();
 
 	private List<TPODFilterCard> tpodFilters = new ArrayList<>();
 
@@ -254,7 +265,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		{
 			startButton.setDisable(true);
 			closeButton.setDisable(true);
-			presenter.startAnalyses(inputParameters);
+			presenter.startAnalyses(inputParameters, null);
 		}
 	}
 
@@ -287,6 +298,20 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 			{
 				hasGeneSet = true;
 			}
+		}
+
+		tabPane.getSelectionModel().select(geneSetTab);
+		if (!hasGeneSet)
+			geneSetTab.setDisable(true);
+
+		if (!hasIndividualGene)
+		{
+			geneLevelTab.setDisable(true);
+
+		}
+		else if (!hasGeneSet)
+		{
+			tabPane.getSelectionModel().select(geneLevelTab);
 		}
 
 		presenter.initData(catResults, tpodAnalysisEnum);
@@ -446,16 +471,34 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 		methodsLayout.getChildren().addAll(tpodMethods);
 
-		if (this.isGeneSet)
+		// if (this.isGeneSet)
+		// {
+		for (TPODAnalysisFilter filter : TPODAnalysisFilter.values())
 		{
-			for (TPODAnalysisFilter filter : TPODAnalysisFilter.values())
-			{
 
-				tpodFilters.add(new TPODFilterCard(filter));
-			}
-
-			filtersLayout.getChildren().addAll(tpodFilters);
+			tpodFilters.add(new TPODFilterCard(filter));
 		}
+
+		filtersLayout.getChildren().addAll(tpodFilters);
+		// }
+
+		// methodsLayout.setSpacing(12);
+		methodsGeneLevelLayout.setPadding(new Insets(10));
+
+		methodsLayout.setStyle("""
+				    -fx-background-color: white;
+				""");
+
+		methodsGeneLevelLayout.setPadding(new Insets(10));
+
+		for (TPODMethod method : TPODMethod.values())
+		{
+			if (method.equals(TPODMethod.MAX_CURVATURE) || method.equals(TPODMethod.FIRST_MODE))
+				continue;
+			tpodGeneLevelMethods.add(new TPODMethodCard(method));
+		}
+
+		methodsGeneLevelLayout.getChildren().addAll(tpodGeneLevelMethods);
 
 	}
 

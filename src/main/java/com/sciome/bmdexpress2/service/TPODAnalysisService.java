@@ -37,7 +37,8 @@ public class TPODAnalysisService implements ITPODService
 
 	@Override
 	public TPODAnalysisResults tpodAnalysis(CategoryAnalysisResults processableData,
-			TPODInputParameters inputParameters, IBMDSToolProgress progressUpdater)
+			TPODInputParameters geneSetInputParameters, TPODInputParameters geneLevelInputParameters,
+			IBMDSToolProgress progressUpdater)
 	{
 
 		// TODO: first we need to do some filtration. Gene sets platform
@@ -54,7 +55,7 @@ public class TPODAnalysisService implements ITPODService
 		{
 
 			boolean pass = true;
-			for (TPODInputFilter filter : inputParameters.getInputFilters())
+			for (TPODInputFilter filter : geneSetInputParameters.getInputFilters())
 			{
 
 				if (filter.getTpodFilter().equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
@@ -129,19 +130,19 @@ public class TPODAnalysisService implements ITPODService
 				+ processableData.getCategoryAnalsyisResults().size());
 		notes.add("Gene sets filtered out in analysis: " + failCount);
 		notes.add("Gene sets used in analysis: " + successCount);
-		for (TPODInputFilter filter : inputParameters.getInputFilters())
+		for (TPODInputFilter filter : geneSetInputParameters.getInputFilters())
 		{
 			Integer filteredCount = filteredByType.get(filter.getTpodFilter());
 			notes.add("Filtered out by " + filter.getTpodFilter().toString() + ": " + filteredCount);
 		}
 
-		String endpointTypes = inputParameters.getBmdEndpointTypes().stream().map(Enum::name)
+		String endpointTypes = geneSetInputParameters.getBmdEndpointTypes().stream().map(Enum::name)
 				.collect(Collectors.joining(","));
 
 		notes.add("BMD Endpoint Types: " + endpointTypes);
 		analysisInfo.setNotes(notes);
 
-		for (TPODMethodParameter method : inputParameters.getMethodParameters())
+		for (TPODMethodParameter method : geneSetInputParameters.getMethodParameters())
 		{
 
 			notes.add("Method used: " + method.getMethod().toString() + ": " + method.getParameterString());
@@ -155,7 +156,7 @@ public class TPODAnalysisService implements ITPODService
 		results.setAnalysisInfo(analysisInfo);
 		List<TPODAnalysisResult> resultList = new ArrayList<>();
 		// loop through each bmdendpoint type
-		for (BMDEndpointType bmdEndpointType : inputParameters.getBmdEndpointTypes())
+		for (BMDEndpointType bmdEndpointType : geneSetInputParameters.getBmdEndpointTypes())
 		{
 
 			// TODO: for the bmdendpoint type, grab that from the list of category results.
@@ -210,7 +211,7 @@ public class TPODAnalysisService implements ITPODService
 			}
 
 			// now loop through the tpod methods that will be used.
-			for (TPODMethodParameter method : inputParameters.getMethodParameters())
+			for (TPODMethodParameter method : geneSetInputParameters.getMethodParameters())
 			{
 
 				TPODAnalysisResult tpodResult = new TPODAnalysisResult();
