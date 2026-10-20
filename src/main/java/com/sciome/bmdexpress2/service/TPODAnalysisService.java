@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.sciome.bmdexpress2.mvp.model.category.AdverseDirectionEnum;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.category.CategoryAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.category.GeneLevelAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.info.AnalysisInfo;
 import com.sciome.bmdexpress2.mvp.model.tpod.BMDEndpointType;
 import com.sciome.bmdexpress2.mvp.model.tpod.LCRDParameters;
@@ -21,6 +22,7 @@ import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResult;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputFilter;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethod;
 import com.sciome.bmdexpress2.mvp.model.tpod.TPODMethodParameter;
 import com.sciome.bmdexpress2.service.tpod.CalcResult;
 import com.sciome.bmdexpress2.service.tpod.firstmode.ModeAntimodeResult;
@@ -51,62 +53,71 @@ public class TPODAnalysisService implements ITPODService
 
 		int failCount = 0;
 		int successCount = 0;
+		TPODInputParameters theInputParameters = geneSetInputParameters;
+		if (processableData.getCategoryAnalsyisResults().size() > 0
+				&& processableData.getCategoryAnalsyisResults().get(0) instanceof GeneLevelAnalysisResult)
+		{
+			theInputParameters = geneLevelInputParameters;
+		}
+
 		for (CategoryAnalysisResult res : processableData.getCategoryAnalsyisResults())
 		{
 
 			boolean pass = true;
-			for (TPODInputFilter filter : geneSetInputParameters.getInputFilters())
-			{
-
-				if (filter.getTpodFilter().equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
+			if (theInputParameters.getInputFilters() != null)
+				for (TPODInputFilter filter : theInputParameters.getInputFilters())
 				{
-					if (res.getFishersExactRightPValue() == null
-							|| res.getFishersExactRightPValue() >= filter.getValue().doubleValue())
+
+					if (filter.getTpodFilter().equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
 					{
-						pass = false;
-						filteredByType.put(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
-								filteredByType.get(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE) + 1);
+						if (res.getFishersExactRightPValue() == null
+								|| res.getFishersExactRightPValue() > filter.getValue().doubleValue())
+						{
+							pass = false;
+							filteredByType.put(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
+									filteredByType.get(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE) + 1);
+						}
 					}
-				}
 
-				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
-				{
-					if (res.getGenesThatPassedAllFilters() == null
-							|| res.getGenesThatPassedAllFilters() <= filter.getValue().intValue())
+					else if (filter.getTpodFilter().equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
 					{
-						pass = false;
-						filteredByType.put(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
-								filteredByType.get(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS) + 1);
+						if (res.getGenesThatPassedAllFilters() == null
+								|| res.getGenesThatPassedAllFilters() < filter.getValue().intValue())
+						{
+							pass = false;
+							filteredByType.put(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
+									filteredByType.get(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS) + 1);
 
+						}
 					}
-				}
-				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.PERCENTAGE))
-				{
-					if (res.getPercentage() == null || res.getPercentage() <= filter.getValue().doubleValue())
+					else if (filter.getTpodFilter().equals(TPODAnalysisFilter.PERCENTAGE))
 					{
-						pass = false;
-						filteredByType.put(TPODAnalysisFilter.PERCENTAGE,
-								filteredByType.get(TPODAnalysisFilter.PERCENTAGE) + 1);
+						if (res.getPercentage() == null
+								|| res.getPercentage() < filter.getValue().doubleValue())
+						{
+							pass = false;
+							filteredByType.put(TPODAnalysisFilter.PERCENTAGE,
+									filteredByType.get(TPODAnalysisFilter.PERCENTAGE) + 1);
 
+						}
 					}
-				}
-				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.OVERALLDIRECTION))
-				{
-					if (res.getOverallDirection() == null
-							|| (res.getOverallDirection().equals(AdverseDirectionEnum.UP)
-									&& filter.getValue().intValue() == -1)
-							|| (res.getOverallDirection().equals(AdverseDirectionEnum.DOWN)
-									&& filter.getValue().intValue() == 1)
-							|| res.getOverallDirection().equals(AdverseDirectionEnum.CONFLICT))
+					else if (filter.getTpodFilter().equals(TPODAnalysisFilter.OVERALLDIRECTION))
 					{
-						pass = false;
-						filteredByType.put(TPODAnalysisFilter.OVERALLDIRECTION,
-								filteredByType.get(TPODAnalysisFilter.OVERALLDIRECTION) + 1);
+						if (res.getOverallDirection() == null
+								|| (res.getOverallDirection().equals(AdverseDirectionEnum.UP)
+										&& filter.getValue().intValue() == -1)
+								|| (res.getOverallDirection().equals(AdverseDirectionEnum.DOWN)
+										&& filter.getValue().intValue() == 1)
+								|| res.getOverallDirection().equals(AdverseDirectionEnum.CONFLICT))
+						{
+							pass = false;
+							filteredByType.put(TPODAnalysisFilter.OVERALLDIRECTION,
+									filteredByType.get(TPODAnalysisFilter.OVERALLDIRECTION) + 1);
 
+						}
 					}
-				}
 
-			}
+				}
 			if (pass)
 			{
 				filteredResults.add(res);
@@ -121,31 +132,47 @@ public class TPODAnalysisService implements ITPODService
 		AnalysisInfo analysisInfo = new AnalysisInfo();
 		List<String> notes = new ArrayList<>();
 
+		String descriptionGeneSet = "Genes sets";
+		if (!theInputParameters.isGeneSet())
+		{
+			descriptionGeneSet = "Genes";
+		}
+
 		notes.add("Data Source: " + processableData.getBmdResult().getDoseResponseExperiment().getName());
 		notes.add("Work Source: " + processableData.getName());
 		notes.add("BMDExpress3 Version: " + BMDExpressProperties.getInstance().getVersion());
 		notes.add("Timestamp (Start Time): " + BMDExpressProperties.getInstance().getTimeStamp());
 
-		notes.add("Gene sets in input before filters applied: "
+		notes.add(descriptionGeneSet + " in input before filters applied: "
 				+ processableData.getCategoryAnalsyisResults().size());
-		notes.add("Gene sets filtered out in analysis: " + failCount);
-		notes.add("Gene sets used in analysis: " + successCount);
-		for (TPODInputFilter filter : geneSetInputParameters.getInputFilters())
-		{
-			Integer filteredCount = filteredByType.get(filter.getTpodFilter());
-			notes.add("Filtered out by " + filter.getTpodFilter().toString() + ": " + filteredCount);
-		}
+		notes.add(descriptionGeneSet + " filtered out in analysis: " + failCount);
+		notes.add(descriptionGeneSet + " used in analysis: " + successCount);
+		if (theInputParameters.getInputFilters() != null)
+			for (TPODInputFilter filter : theInputParameters.getInputFilters())
+			{
+				Integer filteredCount = filteredByType.get(filter.getTpodFilter());
+				notes.add("Filtered out by " + filter.getTpodFilter().toString() + ": " + filteredCount);
+			}
 
-		String endpointTypes = geneSetInputParameters.getBmdEndpointTypes().stream().map(Enum::name)
+		String endpointTypes = theInputParameters.getBmdEndpointTypes().stream().map(Enum::name)
 				.collect(Collectors.joining(","));
 
 		notes.add("BMD Endpoint Types: " + endpointTypes);
 		analysisInfo.setNotes(notes);
 
-		for (TPODMethodParameter method : geneSetInputParameters.getMethodParameters())
+		for (TPODMethodParameter method : theInputParameters.getMethodParameters())
 		{
 
 			notes.add("Method used: " + method.getMethod().toString() + ": " + method.getParameterString());
+			if (method.getMethod().equals(TPODMethod.NTH_PERCENTILE))
+			{
+				NthPercentParameters npp = (NthPercentParameters) method;
+				if (npp.isAllGenes())
+				{
+					notes.add("Percentile based on all gene sets platform: "
+							+ processableData.getTotalGeneSetCount());
+				}
+			}
 
 		}
 
@@ -156,7 +183,7 @@ public class TPODAnalysisService implements ITPODService
 		results.setAnalysisInfo(analysisInfo);
 		List<TPODAnalysisResult> resultList = new ArrayList<>();
 		// loop through each bmdendpoint type
-		for (BMDEndpointType bmdEndpointType : geneSetInputParameters.getBmdEndpointTypes())
+		for (BMDEndpointType bmdEndpointType : theInputParameters.getBmdEndpointTypes())
 		{
 
 			// TODO: for the bmdendpoint type, grab that from the list of category results.
@@ -211,7 +238,7 @@ public class TPODAnalysisService implements ITPODService
 			}
 
 			// now loop through the tpod methods that will be used.
-			for (TPODMethodParameter method : geneSetInputParameters.getMethodParameters())
+			for (TPODMethodParameter method : theInputParameters.getMethodParameters())
 			{
 
 				TPODAnalysisResult tpodResult = new TPODAnalysisResult();

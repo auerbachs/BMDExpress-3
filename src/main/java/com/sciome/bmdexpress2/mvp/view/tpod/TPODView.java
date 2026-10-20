@@ -2,6 +2,7 @@ package com.sciome.bmdexpress2.mvp.view.tpod;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,8 +120,6 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 	private List<CheckBox> bmdMetrics = new ArrayList<>();
 
-	private boolean isGeneSet;
-
 	boolean hasIndividualGene = false;
 	boolean hasGeneSet = false;
 
@@ -172,17 +171,12 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		List<BMDEndpointType> bmdEndpointTypes = new ArrayList<>();
 		for (CheckBox cb : bmdMetrics)
 		{
-
 			if (cb.isSelected())
 				bmdEndpointTypes.add((BMDEndpointType) cb.getUserData());
 		}
 
-		inputParameters.setGeneSet(isGeneSet);
+		inputParameters.setGeneSet(true);
 
-		if (!this.isGeneSet) // one gene...
-		{
-			bmdEndpointTypes.add(BMDEndpointType.BMD_MEDIAN);
-		}
 		inputParameters.setBmdEndpointTypes(bmdEndpointTypes);
 
 		List<TPODMethodParameter> tpodParameters = new ArrayList<>();
@@ -268,11 +262,60 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 
 		inputParameters.setInputFilters(filters);
 
+		TPODInputParameters inputParametersIndividualGene = new TPODInputParameters();
+		inputParametersIndividualGene.setGeneSet(false);
+		inputParametersIndividualGene.setBmdEndpointTypes(Arrays.asList(BMDEndpointType.BMD_MEDIAN));
+
+		List<TPODMethodParameter> tpodParametersIndividual = new ArrayList<>();
+		for (TPODMethodCard methodCard : tpodGeneLevelMethods)
+		{
+			if (!methodCard.isEnabled())
+				continue;
+
+			TPODMethodParameter tM = null;
+
+			if (methodCard.method.equals(TPODMethod.LCRD))
+			{
+				LCRDParameters lp = new LCRDParameters();
+				lp.setRunLength(methodCard.getRunLength());
+				lp.setSpacingRatio(methodCard.getSpacingRatio());
+				tM = lp;
+			}
+
+			else if (methodCard.method.equals(TPODMethod.NTH_PERCENTILE))
+			{
+				NthPercentParameters nthP = new NthPercentParameters();
+				nthP.setPercent(methodCard.getPercent());
+				nthP.setAllGenes(methodCard.getAllGenes());
+				tM = nthP;
+
+			}
+			else if (methodCard.method.equals(TPODMethod.NTH_RANK))
+			{
+				NthRankParameters nthR = new NthRankParameters();
+				nthR.setRank(methodCard.getRank());
+				tM = nthR;
+			}
+			else if (methodCard.method.equals(TPODMethod.FIRST_GENESET))
+			{
+				LowestGenesetParameters lgs = new LowestGenesetParameters();
+
+				tM = lgs;
+			}
+			else
+				continue;
+
+			tpodParametersIndividual.add(tM);
+
+		}
+
+		inputParametersIndividualGene.setMethodParameters(tpodParametersIndividual);
+
 		if (inputParameters != null)
 		{
 			startButton.setDisable(true);
 			closeButton.setDisable(true);
-			presenter.startAnalyses(inputParameters, null);
+			presenter.startAnalyses(inputParameters, inputParametersIndividualGene);
 		}
 	}
 
@@ -327,21 +370,9 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		}
 
 		presenter.initData(catResults, tpodAnalysisEnum);
-		this.isGeneSet = isGeneSet;
-
-		if (this.isGeneSet)
-		{
-			initializeBMDMetrics();
-		}
-		else
-		{
-			this.filtersBorderPane.setVisible(false);
-			this.filtersBorderPane.setManaged(false);
-			this.bmdMetricsBorderPane.setVisible(false);
-			this.bmdMetricsBorderPane.setManaged(false);
-		}
 
 		initializeTPODMethods();
+		initializeBMDMetrics();
 
 		loadSettings();
 
@@ -691,7 +722,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		{
 			if (method.equals(TPODMethod.MAX_CURVATURE) || method.equals(TPODMethod.FIRST_MODE))
 				continue;
-			tpodMethods.add(new TPODMethodCard(method));
+			tpodMethods.add(new TPODMethodCard(method, true));
 		}
 
 		methodsLayout.getChildren().addAll(tpodMethods);
@@ -720,7 +751,7 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		{
 			if (method.equals(TPODMethod.MAX_CURVATURE) || method.equals(TPODMethod.FIRST_MODE))
 				continue;
-			tpodGeneLevelMethods.add(new TPODMethodCard(method));
+			tpodGeneLevelMethods.add(new TPODMethodCard(method, false));
 		}
 
 		methodsGeneLevelLayout.getChildren().addAll(tpodGeneLevelMethods);
@@ -741,9 +772,12 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		private final TextField minSizeField = new TextField("0.055");
 		private final CheckBox percentAllGenesCheckBox = new CheckBox("All Genes/Gene Sets");
 
-		public TPODMethodCard(TPODMethod method)
+		private boolean isGeneSet;
+
+		public TPODMethodCard(TPODMethod method, boolean isGeneSet)
 		{
 			this.method = method;
+			this.isGeneSet = isGeneSet;
 
 			this.setMinWidth(300);
 			this.setMaxWidth(300);
