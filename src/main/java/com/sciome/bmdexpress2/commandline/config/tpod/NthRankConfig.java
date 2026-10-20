@@ -1,6 +1,6 @@
 package com.sciome.bmdexpress2.commandline.config.tpod;
 
-public class NthRank extends TPODMethod
+public class NthRankConfig extends TPODMethod
 {
 
 	private Integer rank;

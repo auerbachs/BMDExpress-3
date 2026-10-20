@@ -1,6 +1,6 @@
 package com.sciome.bmdexpress2.commandline.config.tpod;
 
-public class NthPercentile extends TPODMethod
+public class NthPercentileConfig extends TPODMethod
 {
 
 	private Boolean allGeneSetsPlatform = false;
