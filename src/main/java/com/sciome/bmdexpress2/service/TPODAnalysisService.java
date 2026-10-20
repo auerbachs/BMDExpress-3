@@ -61,7 +61,7 @@ public class TPODAnalysisService implements ITPODService
 				if (filter.getTpodFilter().equals(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE))
 				{
 					if (res.getFishersExactRightPValue() == null
-							|| res.getFishersExactRightPValue() > filter.getValue().doubleValue())
+							|| res.getFishersExactRightPValue() >= filter.getValue().doubleValue())
 					{
 						pass = false;
 						filteredByType.put(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
@@ -72,7 +72,7 @@ public class TPODAnalysisService implements ITPODService
 				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS))
 				{
 					if (res.getGenesThatPassedAllFilters() == null
-							|| res.getGenesThatPassedAllFilters() < filter.getValue().intValue())
+							|| res.getGenesThatPassedAllFilters() <= filter.getValue().intValue())
 					{
 						pass = false;
 						filteredByType.put(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
@@ -82,7 +82,7 @@ public class TPODAnalysisService implements ITPODService
 				}
 				else if (filter.getTpodFilter().equals(TPODAnalysisFilter.PERCENTAGE))
 				{
-					if (res.getPercentage() == null || res.getPercentage() < filter.getValue().doubleValue())
+					if (res.getPercentage() == null || res.getPercentage() <= filter.getValue().doubleValue())
 					{
 						pass = false;
 						filteredByType.put(TPODAnalysisFilter.PERCENTAGE,
