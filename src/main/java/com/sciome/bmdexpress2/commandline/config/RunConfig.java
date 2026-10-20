@@ -8,6 +8,7 @@ import com.sciome.bmdexpress2.commandline.config.category.CategoryConfig;
 import com.sciome.bmdexpress2.commandline.config.expression.ExpressionDataConfig;
 import com.sciome.bmdexpress2.commandline.config.nonparametric.NonParametricConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.PrefilterConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODConfig;
 
 public class RunConfig
 {
@@ -18,6 +19,8 @@ public class RunConfig
 	private List<ModelAveragingConfig> maConfigs;
 	private List<NonParametricConfig> nonParametricConfigs;
 	private List<CategoryConfig> categoryAnalysisConfigs;
+
+	private List<TPODConfig> tpodAnalysisConfigs;
 
 	private String bm2FileName;
 	private String basePath;
@@ -145,6 +148,16 @@ public class RunConfig
 	public void setNonParametricConfigs(List<NonParametricConfig> nonParametricConfigs)
 	{
 		this.nonParametricConfigs = nonParametricConfigs;
+	}
+
+	public List<TPODConfig> getTpodAnalysisConfigs()
+	{
+		return tpodAnalysisConfigs;
+	}
+
+	public void setTpodAnalysisConfigs(List<TPODConfig> tpodAnalysisConfigs)
+	{
+		this.tpodAnalysisConfigs = tpodAnalysisConfigs;
 	}
 
 }

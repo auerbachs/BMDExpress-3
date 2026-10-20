@@ -36,6 +36,9 @@ import com.sciome.bmdexpress2.commandline.config.prefilter.CurveFitPrefilterConf
 import com.sciome.bmdexpress2.commandline.config.prefilter.OriogenConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.PrefilterConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.WilliamsConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.GeneSetConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.IndividualGeneConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODConfig;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
@@ -45,6 +48,8 @@ import com.sciome.bmdexpress2.mvp.model.prefilter.OneWayANOVAResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.OriogenResults;
 import com.sciome.bmdexpress2.mvp.model.prefilter.WilliamsTrendResults;
 import com.sciome.bmdexpress2.mvp.model.stat.BMDResult;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODAnalysisResults;
+import com.sciome.bmdexpress2.mvp.model.tpod.TPODInputParameters;
 import com.sciome.bmdexpress2.shared.BMDExpressConstants;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 import com.sciome.bmdexpress2.shared.CategoryAnalysisEnum;
@@ -185,6 +190,15 @@ public class AnalyzeRunner
 			System.out.println("Performing Category Analysis");
 			for (CategoryConfig catConfig : catConfigs)
 				doCatAnalysis(catConfig);
+		}
+
+		// 6: get all the tpod analysis configs
+		List<TPODConfig> tpodConfigs = runConfig.getTpodAnalysisConfigs();
+		if (tpodConfigs != null)
+		{
+			System.out.println("Performing tPOD Analysis");
+			for (TPODConfig tpodConfig : tpodConfigs)
+				doTPODAnalysis(tpodConfig);
 		}
 
 		// 6. see if this needs exporting to json
@@ -1398,6 +1412,72 @@ public class AnalyzeRunner
 							expressionConfig.getHasHeaders()));
 		}
 
+	}
+
+	// Tpod analysis
+	/*
+	 * perform category analysis based on the category configuration.
+	 */
+	private void doTPODAnalysis(TPODConfig tpodConfig) throws Exception
+	{
+
+		if (veryverbose)
+			System.out.println(getJsonForObject(tpodConfig));
+
+		TPODInputParameters params = new TPODInputParameters();
+
+		String analysisSpecificMessage = "";
+
+		String type = "Gene Set";
+		if (tpodConfig instanceof GeneSetConfig)
+		{
+			type = "Gene Set";
+			// catAn = CategoryAnalysisEnum.GO;
+			// analysisSpecificMessage = "GO category = " + ((GOConfig) catConfig).getGoCategory();
+		}
+		else if (tpodConfig instanceof IndividualGeneConfig)
+		{
+			// catAn = CategoryAnalysisEnum.DEFINED;
+
+			type = "Individual Gene";
+		}
+
+		if (tpodConfig.getInputName() != null)
+			System.out.println(type + " tPOD analysis on " + tpodConfig.getInputName());
+		else
+			System.out.println(type + " tPOD analysis");
+
+		System.out.println(analysisSpecificMessage);
+
+		List<CategoryAnalysisResults> catResultsToRun = new ArrayList<>();
+		for (CategoryAnalysisResults result : project.getCategoryAnalysisResults())
+			if (tpodConfig.getInputName() == null)
+				catResultsToRun.add(result);
+			else if (result.getName().equalsIgnoreCase(tpodConfig.getInputName()))
+				catResultsToRun.add(result);
+		if (tpodConfig instanceof GeneSetConfig)
+		{
+
+		}
+
+		if (tpodConfig instanceof IndividualGeneConfig)
+		{
+
+		}
+
+		for (CategoryAnalysisResults catResult : catResultsToRun)
+		{
+
+			System.out.println(catResult.getName());
+			TPODAnalysisResults tpodResults = new TPODAnalysisRunner().runTPODAnalysis(catResult, params,
+					null);
+
+			if (tpodConfig.getOutputName() != null)
+				tpodResults.setName(tpodConfig.getOutputName());
+			else
+				project.giveBMDAnalysisUniqueName(tpodResults, tpodResults.getName());
+			project.getTpodAnalysisResults().add(tpodResults);
+		}
 	}
 
 	// deserialize the json file and return the RunConfig object
