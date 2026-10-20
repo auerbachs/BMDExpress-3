@@ -5,16 +5,16 @@ import java.util.List;
 public class TPODGeneSetConfig extends TPODConfig
 {
 	// >=
-	private Integer genesThatPassedFilters;
+	private Integer genesThatPassedFilter;
 
 	// <=
-	private Double fishersExactRightPValue;
+	private Double fishersExactRightPValueFilter;
 
 	// >=
-	private Double percentage;
+	private Double percentageFilter;
 
 	// -1 or 1. (down or up)
-	private Integer overallDirection;
+	private Integer overallDirectionFilter;
 
 	private List<String> bmdMetricTypes;
 
@@ -28,43 +28,43 @@ public class TPODGeneSetConfig extends TPODConfig
 		this.bmdMetricTypes = bmdMetricTypes;
 	}
 
-	public Integer getGenesThatPassedFilters()
+	public Integer getGenesThatPassedFilter()
 	{
-		return genesThatPassedFilters;
+		return genesThatPassedFilter;
 	}
 
-	public void setGenesThatPassedFilters(Integer genesThatPassedFilters)
+	public void setGenesThatPassedFilter(Integer genesThatPassedFilters)
 	{
-		this.genesThatPassedFilters = genesThatPassedFilters;
+		this.genesThatPassedFilter = genesThatPassedFilters;
 	}
 
-	public Double getFishersExactRightPValue()
+	public Double getFishersExactRightPValueFilter()
 	{
-		return fishersExactRightPValue;
+		return fishersExactRightPValueFilter;
 	}
 
-	public void setFishersExactRightPValue(Double fishersExactRightPValue)
+	public void setFishersExactRightPValueFilter(Double fishersExactRightPValue)
 	{
-		this.fishersExactRightPValue = fishersExactRightPValue;
+		this.fishersExactRightPValueFilter = fishersExactRightPValue;
 	}
 
-	public Double getPercentage()
+	public Double getPercentageFilter()
 	{
-		return percentage;
+		return percentageFilter;
 	}
 
-	public void setPercentage(Double percentage)
+	public void setPercentageFilter(Double percentage)
 	{
-		this.percentage = percentage;
+		this.percentageFilter = percentage;
 	}
 
-	public Integer getOverallDirection()
+	public Integer getOverallDirectionFilter()
 	{
-		return overallDirection;
+		return overallDirectionFilter;
 	}
 
-	public void setOverallDirection(Integer overallDirection)
+	public void setOverallDirectionFilter(Integer overallDirection)
 	{
-		this.overallDirection = overallDirection;
+		this.overallDirectionFilter = overallDirection;
 	}
 }

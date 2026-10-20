@@ -344,10 +344,10 @@ public class BMDExpressCommandLine
 
 		geneSetConfig.setBmdMetricTypes(Arrays.asList(TPODGeneSetConfig.BMD10th, TPODGeneSetConfig.BMD5th,
 				TPODGeneSetConfig.BMDMEAN, TPODGeneSetConfig.BMDMEDIAN, TPODGeneSetConfig.BMDMIN));
-		geneSetConfig.setFishersExactRightPValue(0.05);
-		geneSetConfig.setGenesThatPassedFilters(3);
-		geneSetConfig.setPercentage(5.0);
-		geneSetConfig.setOverallDirection(1);
+		geneSetConfig.setFishersExactRightPValueFilter(0.05);
+		geneSetConfig.setGenesThatPassedFilter(3);
+		geneSetConfig.setPercentageFilter(5.0);
+		geneSetConfig.setOverallDirectionFilter(1);
 
 		LCRDConfig lcrd = new LCRDConfig();
 		lcrd.setRunLength(10);

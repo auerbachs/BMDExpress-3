@@ -293,7 +293,7 @@ public class AnalyzeRunner
 
 		List<BMDResult> bmdResultsToRun = new ArrayList<>();
 		for (BMDResult result : project.getbMDResult())
-			if (catConfig.getInputName() == null)
+			if (catConfig.getInputName() == null || catConfig.getInputName().equals(""))
 				bmdResultsToRun.add(result);
 			else if (result.getName().equalsIgnoreCase(catConfig.getInputName()))
 				bmdResultsToRun.add(result);
@@ -853,7 +853,7 @@ public class AnalyzeRunner
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
 			{
 				System.out.println("Performing MLE BMD Analysis on One-way ANOVA Test Results");
-				if (bmdsConfig.getInputName() == null)
+				if (bmdsConfig.getInputName() == null || bmdsConfig.getInputName().equals(""))
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(ways);
@@ -863,7 +863,7 @@ public class AnalyzeRunner
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
 			{
 				System.out.println("Performing MLE BMD Analysis on Williams Trend Test Results");
-				if (bmdsConfig.getInputName() == null)
+				if (bmdsConfig.getInputName() == null || bmdsConfig.getInputName().equals(""))
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(will);
@@ -873,7 +873,7 @@ public class AnalyzeRunner
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
 			{
 				System.out.println("Performing MLE BMD Analysis on Oriogen Test Results");
-				if (bmdsConfig.getInputName() == null)
+				if (bmdsConfig.getInputName() == null || bmdsConfig.getInputName().equals(""))
 					processables.add(ori);
 				else if (ori.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(ori);
@@ -883,7 +883,7 @@ public class AnalyzeRunner
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
 			{
 				System.out.println("Performing MLE BMD Analysis on Curve Fit Prefilter Test Results");
-				if (bmdsConfig.getInputName() == null)
+				if (bmdsConfig.getInputName() == null || bmdsConfig.getInputName().equals(""))
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(curve);
@@ -893,7 +893,7 @@ public class AnalyzeRunner
 			if (bmdsConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
 			{
 				System.out.println("Performing MLE BMD Analysis on Expression Data");
-				if (bmdsConfig.getInputName() == null)
+				if (bmdsConfig.getInputName() == null || bmdsConfig.getInputName().equals(""))
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(bmdsConfig.getInputName()))
 					processables.add(exps);
@@ -1030,7 +1030,7 @@ public class AnalyzeRunner
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ONE_WAY_ANOVA))
 			{
 				System.out.println(outPrefix + " on One-way ANOVA Test Results");
-				if (maConfig.getInputName() == null)
+				if (maConfig.getInputName() == null || maConfig.getInputName().equals(""))
 					processables.add(ways);
 				else if (ways.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(ways);
@@ -1041,7 +1041,7 @@ public class AnalyzeRunner
 			{
 				System.out.println(outPrefix + " Williams Trend Test Results");
 
-				if (maConfig.getInputName() == null)
+				if (maConfig.getInputName() == null || maConfig.getInputName().equals(""))
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(will);
@@ -1051,7 +1051,7 @@ public class AnalyzeRunner
 		{
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
 				System.out.println(outPrefix + " Oriogen Test Results");
-			if (maConfig.getInputName() == null)
+			if (maConfig.getInputName() == null || maConfig.getInputName().equals(""))
 				processables.add(ori);
 			else if (ori.getName().equalsIgnoreCase(maConfig.getInputName()))
 				processables.add(ori);
@@ -1061,7 +1061,7 @@ public class AnalyzeRunner
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
 			{
 				System.out.println(outPrefix + " Curve Fit Prefilter Test Results");
-				if (maConfig.getInputName() == null)
+				if (maConfig.getInputName() == null || maConfig.getInputName().equals(""))
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(curve);
@@ -1071,7 +1071,7 @@ public class AnalyzeRunner
 			if (maConfig.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
 			{
 				System.out.println(outPrefix + " Expression Data");
-				if (maConfig.getInputName() == null)
+				if (maConfig.getInputName() == null || maConfig.getInputName().equals(""))
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(maConfig.getInputName()))
 					processables.add(exps);
@@ -1131,28 +1131,28 @@ public class AnalyzeRunner
 
 		for (WilliamsTrendResults will : project.getWilliamsTrendResults())
 			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.WILLIAMS))
-				if (config.getInputName() == null)
+				if (config.getInputName() == null || config.getInputName().equals(""))
 					processables.add(will);
 				else if (will.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(will);
 
 		for (OriogenResults ori : project.getOriogenResults())
 			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.ORIOGEN))
-				if (config.getInputName() == null)
+				if (config.getInputName() == null || config.getInputName().equals(""))
 					processables.add(ori);
 				else if (ori.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(ori);
 
 		for (CurveFitPrefilterResults curve : project.getCurveFitPrefilterResults())
 			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.CURVE_FIT_PREFILTER))
-				if (config.getInputName() == null)
+				if (config.getInputName() == null || config.getInputName().equals(""))
 					processables.add(curve);
 				else if (curve.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(curve);
 
 		for (DoseResponseExperiment exps : project.getDoseResponseExperiments())
 			if (config.getInputCategory().equalsIgnoreCase(BMDExpressCommandLine.EXPRESSION))
-				if (config.getInputName() == null)
+				if (config.getInputName() == null || config.getInputName().equals(""))
 					processables.add(exps);
 				else if (exps.getName().equalsIgnoreCase(config.getInputName()))
 					processables.add(exps);
@@ -1465,7 +1465,7 @@ public class AnalyzeRunner
 
 		List<CategoryAnalysisResults> catResultsToRun = new ArrayList<>();
 		for (CategoryAnalysisResults result : project.getCategoryAnalysisResults())
-			if (tpodConfig.getInputName() == null)
+			if (tpodConfig.getInputName() == null || tpodConfig.getInputName().equals(""))
 				catResultsToRun.add(result);
 			else if (result.getName().equalsIgnoreCase(tpodConfig.getInputName()))
 				catResultsToRun.add(result);
@@ -1543,26 +1543,26 @@ public class AnalyzeRunner
 
 			List<TPODInputFilter> inputFilters = new ArrayList<>();
 
-			if (gsConfig.getFishersExactRightPValue() != null)
+			if (gsConfig.getFishersExactRightPValueFilter() != null)
 			{
 				inputFilters.add(new TPODInputFilter(TPODAnalysisFilter.FISHERS_RIGHT_P_VALUE,
-						gsConfig.getFishersExactRightPValue()));
+						gsConfig.getFishersExactRightPValueFilter()));
 			}
-			if (gsConfig.getOverallDirection() != null)
+			if (gsConfig.getOverallDirectionFilter() != null)
 			{
 				inputFilters.add(new TPODInputFilter(TPODAnalysisFilter.OVERALLDIRECTION,
-						gsConfig.getOverallDirection()));
+						gsConfig.getOverallDirectionFilter()));
 			}
-			if (gsConfig.getGenesThatPassedFilters() != null)
+			if (gsConfig.getGenesThatPassedFilter() != null)
 			{
 				inputFilters.add(new TPODInputFilter(TPODAnalysisFilter.GENES_PASS_ALL_FILTERS,
-						gsConfig.getGenesThatPassedFilters()));
+						gsConfig.getGenesThatPassedFilter()));
 
 			}
-			if (gsConfig.getPercentage() != null)
+			if (gsConfig.getPercentageFilter() != null)
 			{
-				inputFilters
-						.add(new TPODInputFilter(TPODAnalysisFilter.PERCENTAGE, gsConfig.getPercentage()));
+				inputFilters.add(
+						new TPODInputFilter(TPODAnalysisFilter.PERCENTAGE, gsConfig.getPercentageFilter()));
 			}
 			params.setInputFilters(inputFilters);
 
@@ -1586,13 +1586,13 @@ public class AnalyzeRunner
 			if (isGeneSetConfig && !catIsGeneSet)
 			{
 				System.out.println(
-						catResult.getName() + " is Gene Level and config is for gene set...skippping");
+						catResult.getName() + " is Gene Level and config is for gene set...skipping");
 				continue;
 			}
 			if (!isGeneSetConfig && catIsGeneSet)
 			{
 				System.out.println(
-						catResult.getName() + " is Gene Set and config is for individual gene...skippping");
+						catResult.getName() + " is Gene Set and config is for individual gene...skipping");
 				continue;
 			}
 
