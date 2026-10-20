@@ -2,10 +2,10 @@ package com.sciome.bmdexpress2.commandline.config.tpod;
 
 import java.util.List;
 
-public class GeneSetConfig extends TPODConfig
+public class TPODGeneSetConfig extends TPODConfig
 {
 	// >=
-	private Double genesThatPassedFilters;
+	private Integer genesThatPassedFilters;
 
 	// <=
 	private Double fishersExactRightPValue;
@@ -28,12 +28,12 @@ public class GeneSetConfig extends TPODConfig
 		this.bmdMetricTypes = bmdMetricTypes;
 	}
 
-	public Double getGenesThatPassedFilters()
+	public Integer getGenesThatPassedFilters()
 	{
 		return genesThatPassedFilters;
 	}
 
-	public void setGenesThatPassedFilters(Double genesThatPassedFilters)
+	public void setGenesThatPassedFilters(Integer genesThatPassedFilters)
 	{
 		this.genesThatPassedFilters = genesThatPassedFilters;
 	}

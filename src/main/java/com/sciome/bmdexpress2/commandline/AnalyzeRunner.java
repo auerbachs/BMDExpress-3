@@ -37,14 +37,14 @@ import com.sciome.bmdexpress2.commandline.config.prefilter.CurveFitPrefilterConf
 import com.sciome.bmdexpress2.commandline.config.prefilter.OriogenConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.PrefilterConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.WilliamsConfig;
-import com.sciome.bmdexpress2.commandline.config.tpod.GeneSetConfig;
-import com.sciome.bmdexpress2.commandline.config.tpod.IndividualGeneConfig;
 import com.sciome.bmdexpress2.commandline.config.tpod.LCRDConfig;
 import com.sciome.bmdexpress2.commandline.config.tpod.LowestConfig;
 import com.sciome.bmdexpress2.commandline.config.tpod.NthPercentileConfig;
 import com.sciome.bmdexpress2.commandline.config.tpod.NthRankConfig;
 import com.sciome.bmdexpress2.commandline.config.tpod.TPODConfig;
-import com.sciome.bmdexpress2.commandline.config.tpod.TPODMethod;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODGeneSetConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODIndividualGeneConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODMethodConfig;
 import com.sciome.bmdexpress2.mvp.model.BMDProject;
 import com.sciome.bmdexpress2.mvp.model.DoseResponseExperiment;
 import com.sciome.bmdexpress2.mvp.model.IStatModelProcessable;
@@ -216,7 +216,7 @@ public class AnalyzeRunner
 				doTPODAnalysis(tpodConfig);
 		}
 
-		// 6. see if this needs exporting to json
+		// 7. see if this needs exporting to json
 		if (runConfig.getJsonExportFileName() != null)
 		{
 			System.out.println("Exporting as JSON: " + runConfig.getJsonExportFileName());
@@ -1431,7 +1431,7 @@ public class AnalyzeRunner
 
 	// Tpod analysis
 	/*
-	 * perform category analysis based on the category configuration.
+	 * perform tpod analysis based on the tpod configuration.
 	 */
 	private void doTPODAnalysis(TPODConfig tpodConfig) throws Exception
 	{
@@ -1445,11 +1445,11 @@ public class AnalyzeRunner
 
 		String type = "Gene Set";
 		boolean isGeneSetConfig = true;
-		if (tpodConfig instanceof GeneSetConfig)
+		if (tpodConfig instanceof TPODGeneSetConfig)
 		{
 			type = "Gene Set";
 		}
-		else if (tpodConfig instanceof IndividualGeneConfig)
+		else if (tpodConfig instanceof TPODIndividualGeneConfig)
 		{
 			isGeneSetConfig = false;
 
@@ -1471,7 +1471,7 @@ public class AnalyzeRunner
 				catResultsToRun.add(result);
 
 		List<TPODMethodParameter> tpodMethodParameters = new ArrayList<>();
-		for (TPODMethod method : tpodConfig.getTpodMethodConfig().getMethods())
+		for (TPODMethodConfig method : tpodConfig.getTpodMethodConfig())
 		{
 			TPODMethodParameter tmp = null;
 			if (method instanceof LCRDConfig)
@@ -1510,31 +1510,31 @@ public class AnalyzeRunner
 		}
 		params.setMethodParameters(tpodMethodParameters);
 
-		if (tpodConfig instanceof GeneSetConfig)
+		if (tpodConfig instanceof TPODGeneSetConfig)
 		{
 
-			GeneSetConfig gsConfig = (GeneSetConfig) tpodConfig;
+			TPODGeneSetConfig gsConfig = (TPODGeneSetConfig) tpodConfig;
 			List<BMDEndpointType> endpointTypes = new ArrayList<>();
 
 			for (String bmdmetric : gsConfig.getBmdMetricTypes())
 			{
-				if (bmdmetric.equals(GeneSetConfig.BMD10th))
+				if (bmdmetric.equals(TPODGeneSetConfig.BMD10th))
 				{
 					endpointTypes.add(BMDEndpointType.BMD_10TH_PERCENTILE);
 				}
-				else if (bmdmetric.equals(GeneSetConfig.BMD5th))
+				else if (bmdmetric.equals(TPODGeneSetConfig.BMD5th))
 				{
 					endpointTypes.add(BMDEndpointType.BMD_5TH_PERCENTILE);
 				}
-				else if (bmdmetric.equals(GeneSetConfig.BMDMEAN))
+				else if (bmdmetric.equals(TPODGeneSetConfig.BMDMEAN))
 				{
 					endpointTypes.add(BMDEndpointType.BMD_MEAN);
 				}
-				else if (bmdmetric.equals(GeneSetConfig.BMDMEDIAN))
+				else if (bmdmetric.equals(TPODGeneSetConfig.BMDMEDIAN))
 				{
 					endpointTypes.add(BMDEndpointType.BMD_MEDIAN);
 				}
-				else if (bmdmetric.equals(GeneSetConfig.BMDMIN))
+				else if (bmdmetric.equals(TPODGeneSetConfig.BMDMIN))
 				{
 					endpointTypes.add(BMDEndpointType.BMD_MINIMUM);
 				}
@@ -1568,7 +1568,7 @@ public class AnalyzeRunner
 
 		}
 
-		if (tpodConfig instanceof IndividualGeneConfig)
+		if (tpodConfig instanceof TPODIndividualGeneConfig)
 		{
 			params.setBmdEndpointTypes(Arrays.asList(BMDEndpointType.BMD_MEDIAN));
 		}

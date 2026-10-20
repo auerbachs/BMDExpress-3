@@ -35,6 +35,13 @@ import com.sciome.bmdexpress2.commandline.config.prefilter.ANOVAConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.CurveFitPrefilterConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.OriogenConfig;
 import com.sciome.bmdexpress2.commandline.config.prefilter.WilliamsConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.LCRDConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.LowestConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.NthPercentileConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.NthRankConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODGeneSetConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODIndividualGeneConfig;
+import com.sciome.bmdexpress2.commandline.config.tpod.TPODMethodConfig;
 import com.sciome.bmdexpress2.mvp.model.LogTransformationEnum;
 import com.sciome.bmdexpress2.shared.BMDExpressProperties;
 
@@ -332,6 +339,42 @@ public class BMDExpressCommandLine
 		configs.addAll(getCategoryConfigs("express1_anova_bmds"));
 		configs.addAll(getCategoryConfigs("express2_anova_bmds"));
 		runConfig.setCategoryAnalysisConfigs(configs);
+
+		TPODGeneSetConfig geneSetConfig = new TPODGeneSetConfig();
+
+		geneSetConfig.setBmdMetricTypes(Arrays.asList(TPODGeneSetConfig.BMD10th, TPODGeneSetConfig.BMD5th,
+				TPODGeneSetConfig.BMDMEAN, TPODGeneSetConfig.BMDMEDIAN, TPODGeneSetConfig.BMDMIN));
+		geneSetConfig.setFishersExactRightPValue(0.05);
+		geneSetConfig.setGenesThatPassedFilters(3);
+		geneSetConfig.setPercentage(5.0);
+		geneSetConfig.setOverallDirection(1);
+
+		LCRDConfig lcrd = new LCRDConfig();
+		lcrd.setRunLength(10);
+		lcrd.setSpacingRatio(1.67);
+		LowestConfig lowest = new LowestConfig();
+		NthPercentileConfig percentile = new NthPercentileConfig();
+		percentile.setAllGeneSetsPlatform(true);
+		percentile.setPercentile(5.0);
+		NthRankConfig rank = new NthRankConfig();
+		rank.setRank(5);
+
+		List<TPODMethodConfig> methods = new ArrayList<>();
+		methods.add(percentile);
+		methods.add(lowest);
+		methods.add(rank);
+		methods.add(lcrd);
+		geneSetConfig.setTpodMethodConfig(methods);
+		geneSetConfig.setInputName("");
+		geneSetConfig.setOutputName("tpod_output_gene_set");
+
+		TPODIndividualGeneConfig geneConfig = new TPODIndividualGeneConfig();
+		geneConfig.setTpodMethodConfig(methods);
+
+		geneConfig.setInputName("");
+		geneConfig.setOutputName("tpod_output_individual_gene");
+
+		runConfig.setTpodAnalysisConfigs(Arrays.asList(geneSetConfig, geneConfig));
 
 		ObjectMapper mapper = new ObjectMapper();
 

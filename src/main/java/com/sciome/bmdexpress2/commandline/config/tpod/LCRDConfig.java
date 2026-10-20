@@ -1,6 +1,6 @@
 package com.sciome.bmdexpress2.commandline.config.tpod;
 
-public class LCRDConfig extends TPODMethod
+public class LCRDConfig extends TPODMethodConfig
 {
 
 	private Integer runLength;

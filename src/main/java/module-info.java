@@ -96,5 +96,6 @@ module com.sciome.bmdexpress2
 	exports com.sciome.bmdexpress2.commandline.config.expression;
 	exports com.sciome.bmdexpress2.commandline.config.nonparametric;
 	exports com.sciome.bmdexpress2.commandline.config.category;
+	exports com.sciome.bmdexpress2.commandline.config.tpod;
 	exports com.sciome.bmdexpress2.commandline;
 }

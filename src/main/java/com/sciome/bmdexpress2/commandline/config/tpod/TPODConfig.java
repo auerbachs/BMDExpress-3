@@ -1,13 +1,15 @@
 package com.sciome.bmdexpress2.commandline.config.tpod;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 
 @JsonTypeInfo(use = Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "@type")
-@JsonSubTypes({ @Type(value = IndividualGeneConfig.class, name = "individualgene"),
-		@Type(value = GeneSetConfig.class, name = "geneset") })
+@JsonSubTypes({ @Type(value = TPODIndividualGeneConfig.class, name = "individualgene"),
+		@Type(value = TPODGeneSetConfig.class, name = "geneset") })
 public abstract class TPODConfig
 {
 
@@ -23,7 +25,7 @@ public abstract class TPODConfig
 	// name of output for the analysis
 	private String outputName;
 
-	private TPODMethodConfig tpodMethodConfig;
+	private List<TPODMethodConfig> tpodMethodConfig;
 
 	public String getInputName()
 	{
@@ -45,12 +47,12 @@ public abstract class TPODConfig
 		this.outputName = outputName;
 	}
 
-	public TPODMethodConfig getTpodMethodConfig()
+	public List<TPODMethodConfig> getTpodMethodConfig()
 	{
 		return tpodMethodConfig;
 	}
 
-	public void setTpodMethodConfig(TPODMethodConfig tpodMethodConfig)
+	public void setTpodMethodConfig(List<TPODMethodConfig> tpodMethodConfig)
 	{
 		this.tpodMethodConfig = tpodMethodConfig;
 	}
