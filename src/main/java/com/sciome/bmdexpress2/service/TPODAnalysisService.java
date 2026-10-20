@@ -132,7 +132,7 @@ public class TPODAnalysisService implements ITPODService
 		AnalysisInfo analysisInfo = new AnalysisInfo();
 		List<String> notes = new ArrayList<>();
 
-		String descriptionGeneSet = "Genes sets";
+		String descriptionGeneSet = "Gene sets";
 		if (!theInputParameters.isGeneSet())
 		{
 			descriptionGeneSet = "Genes";
@@ -169,7 +169,7 @@ public class TPODAnalysisService implements ITPODService
 				NthPercentParameters npp = (NthPercentParameters) method;
 				if (npp.isAllGenes())
 				{
-					notes.add("Percentile based on all gene sets platform: "
+					notes.add("Percentile based on all " + descriptionGeneSet.toLowerCase() + " platform: "
 							+ processableData.getTotalGeneSetCount());
 				}
 			}
@@ -331,6 +331,9 @@ public class TPODAnalysisService implements ITPODService
 							tpodResult.setBmdl(valueList.get(res.getIndex()).getBmdlMinimum());
 							tpodResult.setBmdu(valueList.get(res.getIndex()).getBmduMinimum());
 						}
+
+						tpodResult.setGeneSetName(
+								valueList.get(res.getIndex()).getCategoryIdentifier().getTitle());
 					}
 
 					resultList.add(tpodResult);

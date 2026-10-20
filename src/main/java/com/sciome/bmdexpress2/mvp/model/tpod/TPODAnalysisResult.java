@@ -16,6 +16,7 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 	private Double bmd;
 	private Double bmdl;
 	private Double bmdu;
+	private String geneSetName;
 
 	// row data for the table view.
 	protected transient List<Object> row;
@@ -74,6 +75,16 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 		this.bmdu = bmdu;
 	}
 
+	public String getGeneSetName()
+	{
+		return geneSetName;
+	}
+
+	public void setGeneSetName(String geneSetName)
+	{
+		this.geneSetName = geneSetName;
+	}
+
 	@Override
 	public Object getObject()
 	{
@@ -103,6 +114,7 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 		row.add(bmd);
 		row.add(bmdl);
 		row.add(bmdu);
+		row.add(geneSetName);
 
 	}
 
@@ -125,6 +137,7 @@ public class TPODAnalysisResult extends BMDExpressAnalysisRow implements Seriali
 		header.add(TPODAnalysisResults.BMD);
 		header.add(TPODAnalysisResults.BMDL);
 		header.add(TPODAnalysisResults.BMDU);
+		header.add(TPODAnalysisResults.GENESETNAME);
 		return header;
 	}
 

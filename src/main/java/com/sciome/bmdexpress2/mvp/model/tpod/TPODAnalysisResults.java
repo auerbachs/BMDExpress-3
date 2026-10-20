@@ -25,6 +25,7 @@ public class TPODAnalysisResults extends BMDExpressAnalysisDataSet implements Se
 	public static final String TPOD_METHOD = "TPOD Method";
 	public static final String EXPERIMENT_NAME = "Experiment Name";
 	public static final String TPOD_RECORD_LABEL = "TPOD Record Label";
+	public static final String GENESETNAME = "Gene/Gene Set Name";
 
 	private static final long serialVersionUID = 5135935005024600791L;
 	private String name;
