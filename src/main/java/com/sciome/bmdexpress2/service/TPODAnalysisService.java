@@ -62,6 +62,8 @@ public class TPODAnalysisService implements ITPODService
 
 		for (CategoryAnalysisResult res : processableData.getCategoryAnalsyisResults())
 		{
+			// this triggers calculating non-stored fields.
+			processableData.getColumnHeader();
 
 			boolean pass = true;
 			if (theInputParameters.getInputFilters() != null)

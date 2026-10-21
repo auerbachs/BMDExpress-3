@@ -19,11 +19,11 @@ public class NthPercentile
 			Integer numGenesInGeneSet)
 	{
 
-		if (sortedValues == null || sortedValues.length == 0)
-			throw new IllegalArgumentException("Array cannot be empty");
+		if (sortedValues == null || sortedValues.length < 2)
+		{
+			return new CalcResult(-1, Double.NaN);
 
-		if (percent < 0 || percent > 100)
-			throw new IllegalArgumentException("Percent must be in [0, 100]");
+		}
 
 		int n = sortedValues.length;
 
@@ -33,7 +33,11 @@ public class NthPercentile
 		if (isAllGeneSets && numGenesInGeneSet != null)
 			n = numGenesInGeneSet;
 		else if (isAllGeneSets)
-			throw new IllegalArgumentException("All genesets is being used, but number of gene sets is null");
+		{
+			System.out.println("All genesets is being used, but number of gene sets is null");
+			return new CalcResult(-1, Double.NaN);
+
+		}
 
 		double rank = (percent / 100.0) * (n - 1);
 

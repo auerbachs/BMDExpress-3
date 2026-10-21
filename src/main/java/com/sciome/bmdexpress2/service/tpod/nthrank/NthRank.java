@@ -19,8 +19,11 @@ public class NthRank
 	public static CalcResult rankSorted(double[] sortedValues, int n)
 	{
 
-		if (sortedValues == null || sortedValues.length == 0)
-			throw new IllegalArgumentException("values cannot be empty");
+		if (sortedValues == null || sortedValues.length < 2)
+		{
+			return new CalcResult(-1, Double.NaN);
+
+		}
 
 		if (n <= 0 || n > sortedValues.length)
 		{
