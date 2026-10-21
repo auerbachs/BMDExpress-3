@@ -2,11 +2,11 @@ package com.sciome.bmdexpress2.mvp.model.tpod;
 
 public class TPODGeneSetInput extends TPODInput
 {
-	private Boolean bmd5th;
-	private Boolean bmd10th;
-	private Boolean bmdMedian;
-	private Boolean bmdMean;
-	private Boolean bmdMin;
+	private Boolean bmd5th = true;
+	private Boolean bmd10th = true;
+	private Boolean bmdMedian = true;
+	private Boolean bmdMean = true;
+	private Boolean bmdMin = true;
 
 	private Boolean genesThatPassedAllFilters = true;
 	private Integer genesThatPassedAllFiltersValue = 3;
@@ -22,6 +22,8 @@ public class TPODGeneSetInput extends TPODInput
 
 	public Boolean getBmd5th()
 	{
+		if (bmd5th == null)
+			bmd5th = true;
 		return bmd5th;
 	}
 
@@ -32,6 +34,8 @@ public class TPODGeneSetInput extends TPODInput
 
 	public Boolean getBmd10th()
 	{
+		if (bmd10th == null)
+			bmd10th = true;
 		return bmd10th;
 	}
 
@@ -42,6 +46,8 @@ public class TPODGeneSetInput extends TPODInput
 
 	public Boolean getBmdMedian()
 	{
+		if (bmdMedian == null)
+			bmdMedian = true;
 		return bmdMedian;
 	}
 
@@ -52,6 +58,8 @@ public class TPODGeneSetInput extends TPODInput
 
 	public Boolean getBmdMean()
 	{
+		if (bmdMean == null)
+			bmdMean = true;
 		return bmdMean;
 	}
 
@@ -62,6 +70,8 @@ public class TPODGeneSetInput extends TPODInput
 
 	public Boolean getBmdMin()
 	{
+		if (bmdMin == null)
+			bmdMin = true;
 		return bmdMin;
 	}
 
