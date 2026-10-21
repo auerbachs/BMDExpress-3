@@ -51,6 +51,8 @@ public class TPODAnalysisService implements ITPODService
 		filteredByType.put(TPODAnalysisFilter.PERCENTAGE, 0);
 		filteredByType.put(TPODAnalysisFilter.OVERALLDIRECTION, 0);
 
+		filteredByType.put(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS, 0);
+
 		int failCount = 0;
 		int successCount = 0;
 		TPODInputParameters theInputParameters = geneSetInputParameters;
@@ -67,6 +69,7 @@ public class TPODAnalysisService implements ITPODService
 
 			boolean pass = true;
 			if (theInputParameters.getInputFilters() != null)
+			{
 				for (TPODInputFilter filter : theInputParameters.getInputFilters())
 				{
 
@@ -120,6 +123,25 @@ public class TPODAnalysisService implements ITPODService
 					}
 
 				}
+				if (res.getGenesThatPassedAllFilters() == null || res.getGenesThatPassedAllFilters() < 1)
+				{
+					pass = false;
+					filteredByType.put(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS,
+							filteredByType.get(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS) + 1);
+
+				}
+
+			}
+			else // special case if zero genes, get rid of it
+			{
+				if (res.getGenesThatPassedAllFilters() == null || res.getGenesThatPassedAllFilters() < 1)
+				{
+					pass = false;
+					filteredByType.put(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS,
+							filteredByType.get(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS) + 1);
+
+				}
+			}
 			if (pass)
 			{
 				filteredResults.add(res);
@@ -129,6 +151,10 @@ public class TPODAnalysisService implements ITPODService
 			else
 				failCount++;
 		}
+
+		// if individual gene..then background filter to remove
+		// all that have 0 that passed all filters...
+		// TODO:
 
 		long startTime = System.currentTimeMillis();
 		AnalysisInfo analysisInfo = new AnalysisInfo();
@@ -155,6 +181,11 @@ public class TPODAnalysisService implements ITPODService
 				Integer filteredCount = filteredByType.get(filter.getTpodFilter());
 				notes.add("Filtered out by " + filter.getTpodFilter().toString() + ": " + filteredCount);
 			}
+
+		// any genes/sets that are filtered out because of non-zero number of genes that passed all filter
+		Integer filteredCount = filteredByType.get(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS);
+		notes.add("Filtered out by " + TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS.toString() + ": "
+				+ filteredCount);
 
 		String endpointTypes = theInputParameters.getBmdEndpointTypes().stream().map(Enum::name)
 				.collect(Collectors.joining(","));
@@ -271,7 +302,7 @@ public class TPODAnalysisService implements ITPODService
 					// subtract the number of filtered out genes from total geneset count
 					// in the case that the user selected all genes/gene sets.
 					if (processableData.getTotalGeneSetCount() != null)
-						totalGeneset = processableData.getTotalGeneSetCount() - failCount;
+						totalGeneset = processableData.getTotalGeneSetCount();
 
 					res = NthPercentile.percentile(valueArray, npp.getPercent(), npp.isAllGenes(),
 							totalGeneset);

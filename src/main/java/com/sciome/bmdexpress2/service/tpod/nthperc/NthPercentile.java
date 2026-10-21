@@ -39,7 +39,7 @@ public class NthPercentile
 
 		}
 
-		double rank = (percent / 100.0) * (n - 1);
+		double rank = (percent / 100.0) * n;
 
 		int lowerIndex = (int) Math.floor(rank);
 		int upperIndex = (int) Math.ceil(rank);

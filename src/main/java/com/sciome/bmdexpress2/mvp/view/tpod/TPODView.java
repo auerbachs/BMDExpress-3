@@ -731,6 +731,8 @@ public class TPODView extends BMDExpressViewBase implements ITPODView, Initializ
 		for (TPODAnalysisFilter filter : TPODAnalysisFilter.values())
 		{
 
+			if (filter.equals(TPODAnalysisFilter.ZERO_GENES_PASS_ALL_FILTERS))
+				continue;
 			tpodFilters.add(new TPODFilterCard(filter));
 		}
 
