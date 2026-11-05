@@ -45,7 +45,11 @@ public class NthPercentile
 		int upperIndex = (int) Math.ceil(rank);
 
 		if (lowerIndex != upperIndex)
+		{
 			lowerIndex = upperIndex;
+			if (lowerIndex > 0)
+				lowerIndex--;
+		}
 
 		double result = Double.NaN;
 
